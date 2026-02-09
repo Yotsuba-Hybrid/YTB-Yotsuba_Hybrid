@@ -1,0 +1,70 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build: SandBoxGame.DesktopGL",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/SandBoxGame.DesktopGL/SandBoxGame.DesktopGL.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary",
+                "/tl:off"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Build: SandBoxGame.DesktopVK",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/SandBoxGame.DesktopVK/SandBoxGame.DesktopVK.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary",
+                "/tl:off"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Build: SandBoxGame.WindowsDX12",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/SandBoxGame.WindowsDX12/SandBoxGame.WindowsDX12.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary",
+                "/tl:off"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Build: SandBoxGame.Android",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/SandBoxGame.Android/SandBoxGame.Android.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary",
+                "/tl:off"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Build: SandBoxGame.iOS",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/SandBoxGame.iOS/SandBoxGame.iOS.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary",
+                "/tl:off"
+            ],
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}

@@ -1,0 +1,32 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "SandBoxGame (DesktopGL)",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/SandBoxGame.DesktopGL/SandBoxGame.DesktopGL.csproj",
+            "preLaunchTask": "Build: SandBoxGame.DesktopGL"
+        },
+        {
+            "name": "SandBoxGame (DesktopVK)",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/SandBoxGame.DesktopVK/SandBoxGame.DesktopVK.csproj",
+            "preLaunchTask": "Build: SandBoxGame.DesktopVK"
+        },
+        {
+            "name": "SandBoxGame (WindowsDX12)",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/SandBoxGame.WindowsDX12/SandBoxGame.WindowsDX12.csproj",
+            "preLaunchTask": "Build: SandBoxGame.WindowsDX12"
+        },
+        {
+            "name": "SandBoxGame (Android / iOS)",
+            "type": "maui",
+            "request": "launch",
+            "preLaunchTask": "maui: Build"
+        }
+    ]
+}

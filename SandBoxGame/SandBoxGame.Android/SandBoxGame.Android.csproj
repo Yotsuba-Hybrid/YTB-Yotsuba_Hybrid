@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0-android</TargetFramework>
+    <SupportedOSPlatformVersion>21</SupportedOSPlatformVersion>
+    <ApplicationId>com.companyname.SandBoxGame</ApplicationId>
+    <ApplicationVersion>1</ApplicationVersion>
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    <AssemblyName>SandBoxGame</AssemblyName>
+    <MonoGamePlatform>Android</MonoGamePlatform>
+    <Configurations>Debug;Release;YTB</Configurations>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
+    <RunAOTCompilation>False</RunAOTCompilation>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <RunAOTCompilation>False</RunAOTCompilation>
+    <PublishTrimmed>True</PublishTrimmed>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='YTB|AnyCPU'">
+    <RunAOTCompilation>False</RunAOTCompilation>
+    <PublishTrimmed>True</PublishTrimmed>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SandBoxGame.Core\SandBoxGame.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="$(OutputPath)Content\**\*">
+      <Link>Content\%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </AndroidAsset>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.Android" Version="3.8.5-preview.*" />
+  </ItemGroup>
+  <Import Project="..\SandBoxGame.Content\BuildContent.targets" />
+</Project>

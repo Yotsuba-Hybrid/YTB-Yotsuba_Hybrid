@@ -1,0 +1,27 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Debug" />
+    <BuildType Name="Release" />
+    <BuildType Name="YTB" />
+  </Configurations>
+  <Folder Name="/Platforms/">
+    <Project Path="SandBoxGame.Android/SandBoxGame.Android.csproj">
+      <Deploy />
+    </Project>
+    <Project Path="SandBoxGame.DesktopGL/SandBoxGame.DesktopGL.csproj" />
+    <Project Path="SandBoxGame.DesktopVK/SandBoxGame.DesktopVK.csproj" />
+    <Project Path="SandBoxGame.iOS/SandBoxGame.iOS.csproj">
+      <Deploy Solution="YTB|*" />
+    </Project>
+    <Project Path="SandBoxGame.WindowsDX12/SandBoxGame.WindowsDX12.csproj" />
+  </Folder>
+  <Folder Name="/YotsubaEngine/">
+    <Project Path="../YotsubaEngine/YotsubaEngine.csproj" />
+    <Project Path="../YTBContentBuilder/YTBContentBuilder.csproj" Id="e5a9f17e-eb06-43ba-95c1-033dec5340af" />
+  </Folder>
+  <Folder Name="/Platforms/AssetBuilder/">
+    <Project Path="SandBoxGame.Content/SandBoxGame.Content.csproj" />
+  </Folder>
+  <Project Path="SandBoxGame.Core/SandBoxGame.Core.csproj" />
+
+</Solution>
