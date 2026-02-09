@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yotsuba Hybrid - YTBEditor</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>?? Yotsuba Hybrid - YTBEditor</h1>
+            <div class="header-actions">
+                <button id="loadBtn" class="btn btn-secondary">?? Cargar JSON</button>
+                <button id="saveBtn" class="btn btn-primary">?? Guardar JSON</button>
+                <button id="exportBtn" class="btn btn-accent">?? Exportar</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>?? Escenas</h2>
+                <button id="addSceneBtn" class="btn btn-small btn-success">+ Escena</button>
+            </div>
+            <ul id="sceneList" class="scene-list"></ul>
+        </aside>
+
+        <section class="editor-panel">
+            <div id="welcomePanel" class="welcome-panel">
+                <div class="welcome-content">
+                    <h2>?? Bienvenido al YTBEditor</h2>
+                    <p>Selecciona una escena del panel izquierdo o carga un archivo JSON para comenzar.</p>
+                    <button id="loadJsonBtn" class="btn btn-primary btn-large">?? Cargar YotsubaGame.ytb</button>
+                </div>
+            </div>
+
+            <div id="sceneEditor" class="scene-editor hidden">
+                <div class="editor-header">
+                    <h2 id="sceneTitle">Escena</h2>
+                    <div class="editor-actions">
+                        <button id="addEntityBtn" class="btn btn-success">+ Entidad</button>
+                        <button id="deleteSceneBtn" class="btn btn-danger">??? Eliminar Escena</button>
+                    </div>
+                </div>
+
+                <div class="scene-name-edit">
+                    <label for="sceneNameInput">Nombre de la Escena:</label>
+                    <input type="text" id="sceneNameInput" class="input-field" placeholder="Nombre de la escena">
+                </div>
+
+                <div id="entitiesContainer" class="entities-container"></div>
+            </div>
+        </section>
+    </main>
+
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Modal</h3>
+                <button id="closeModalBtn" class="btn-close">&times;</button>
+            </div>
+            <div id="modalBody" class="modal-body"></div>
+            <div class="modal-footer">
+                <button id="modalCancelBtn" class="btn btn-secondary">Cancelar</button>
+                <button id="modalConfirmBtn" class="btn btn-primary">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+
+    <input type="file" id="fileInput" accept=".ytb,.json" style="display: none;">
+
+    <script src="script.js"></script>
+</body>
+</html>

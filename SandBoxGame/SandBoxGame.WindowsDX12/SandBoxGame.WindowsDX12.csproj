@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <PublishReadyToRun>false</PublishReadyToRun>
+    <TieredCompilation>false</TieredCompilation>
+	  <PublishAot>true</PublishAot>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>../SandBoxGame.Core/Assets/Icon.ico</ApplicationIcon>
+    <AssemblyName>SandBoxGame</AssemblyName>
+    <MonoGamePlatform>WindowsDX12</MonoGamePlatform>
+    <Configurations>Debug;Release;YTB</Configurations>
+  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)' == 'YTB'">
+		<DefineConstants>YOTSUBA</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup>
+		<DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+	</PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SandBoxGame.Core\SandBoxGame.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.Native" Version="3.8.5-preview.*" />
+    <PackageReference Include="MonoGame.Runtime.Windows.DX12" Version="3.8.5-preview.*" />
+  </ItemGroup>
+  <Import Project="..\SandBoxGame.Content\BuildContent.targets" />
+</Project>

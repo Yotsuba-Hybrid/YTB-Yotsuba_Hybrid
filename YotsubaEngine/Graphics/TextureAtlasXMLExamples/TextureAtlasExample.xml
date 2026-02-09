@@ -1,0 +1,13 @@
+<textureatlas imagepath="spritesheet.png">
+<subtexture name="pong-atlas" x="0" y="875" width="576" height="288"></subtexture>
+<subtexture name="logo" x="577" y="875" width="608" height="128"></subtexture>
+<subtexture name="guia aqua 1" x="0" y="0" width="1586" height="874"></subtexture>
+	<animation name="PrimeraAnimacion" delay="200">
+		<Frame region="pong-atlas"/>
+		<Frame region="logo"/>
+	</animation>
+	<animation name="SegundaAnimacion" delay="100">
+		<Frame region="pong-atlas"/>
+		<Frame region="guia aqua 1"/>
+	</animation>
+</textureatlas>

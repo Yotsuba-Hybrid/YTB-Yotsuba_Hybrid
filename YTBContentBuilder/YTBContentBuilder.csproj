@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+	  <OutputType>Library</OutputType>
+	  <Configurations>Debug;Release;YTB</Configurations>
+
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Ensure the build doesn't rely on ref assemblies which may not be produced in some CI/IDE setups -->
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+  </PropertyGroup>
+	<PropertyGroup>
+		<DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="MonoGame.Framework.Content.Pipeline" Version="3.8.5-preview.*" />
+		<PackageReference Include="MonoGame.Framework.Native" Version="3.8.5-preview.*" />
+		<PackageReference Include="MonoGame.Library.FreeType" Version="2.13.2.2" />
+		<PackageReference Include="MonoGame.Library.MojoShader" Version="1.0.0.3" />
+		<PackageReference Include="MonoGame.Tool.Basisu" Version="1.60.0.3" />
+		<PackageReference Include="MonoGame.Tool.Crunch" Version="1.0.4.5" />
+		<PackageReference Include="MonoGame.Tool.Dxc" Version="1.8.2505.10" />
+		<PackageReference Include="MonoGame.Tool.FFmpeg" Version="7.0.0.9" />
+		<PackageReference Include="MonoGame.Tool.FFprobe" Version="7.0.0.9" />
+	</ItemGroup>
+</Project>

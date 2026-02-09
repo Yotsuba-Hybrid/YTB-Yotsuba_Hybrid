@@ -1,0 +1,201 @@
+{
+  "main": {
+    "id": "2c21dba00185fed5",
+    "type": "split",
+    "children": [
+      {
+        "id": "fa8bcfe394f39e3d",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "3c3e0fb2706327b7",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "YotsubaEngine/PlanDevelop/cli_tool_tutorial.md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "cli_tool_tutorial"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "b1197f9db94abdc1",
+    "type": "split",
+    "children": [
+      {
+        "id": "ec133dba31838daf",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "67708540d1e3a5e6",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Explorador de archivos"
+            }
+          },
+          {
+            "id": "4ee7e635061e3b73",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Buscar"
+            }
+          },
+          {
+            "id": "5ef88a8c023c3a15",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Marcadores"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "28371847a1ead4fe",
+    "type": "split",
+    "children": [
+      {
+        "id": "7a144edfd8b45b5b",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "7d3d1a8e3a37011e",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "YotsubaEngine/PlanDevelop/cli_tool_tutorial.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Enlaces entrantes de cli_tool_tutorial"
+            }
+          },
+          {
+            "id": "50cc4e2a8436fe47",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Enlaces salientes"
+            }
+          },
+          {
+            "id": "8a1b67ac092899b1",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Etiquetas"
+            }
+          },
+          {
+            "id": "f06a55a2580630a4",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "Todas las propiedades"
+            }
+          },
+          {
+            "id": "11ddcf5410daf927",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Esquema"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Abrir selector rápido": false,
+      "graph:Abrir vista gráfica": false,
+      "canvas:Crear nuevo lienzo": false,
+      "daily-notes:Abrir la nota de hoy": false,
+      "templates:Insertar plantilla": false,
+      "command-palette:Abrir paleta de comandos": false,
+      "bases:Crear nueva base": false
+    }
+  },
+  "active": "3c3e0fb2706327b7",
+  "lastOpenFiles": [
+    "Complements",
+    "Nueva carpeta",
+    "YotsubaEngine/YotsubaEngine/UserCases/SpriteBatch.md",
+    "YotsubaEngine/YotsubaEngine/UserCases/README_WASD_PHYSICS.md",
+    "YotsubaEngine/IMPLEMENTATION_SUMMARY.md",
+    "YotsubaEngine/HOW_TO_USE_FONT_DRAG.md",
+    "YotsubaEngine/SandBoxGame/$null",
+    "YotsubaEngine/HISTORY_UI_IMPLEMENTATION.md",
+    "YotsubaEngine/FONT_DETECTION_FIX.md",
+    "YotsubaEngine/filetree.md",
+    "YotsubaEngine/DEBUG_OVERLAY_IMPLEMENTATION.md",
+    "YotsubaEngine/CAMERA_COMPONENT_FIX.md",
+    "Clippings/IMS Breve.md",
+    "Clippings"
+  ]
+}
