@@ -69,6 +69,7 @@ namespace YotsubaEngine.Core.System.S_2D
 
 #endif
 
+			if (EntityManager == null) return;
 			Point MousePosition = InputManager.Mouse.Position;
             var touch = InputManager.Touch;
 

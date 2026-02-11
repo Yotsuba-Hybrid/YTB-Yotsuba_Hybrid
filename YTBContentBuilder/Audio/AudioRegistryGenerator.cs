@@ -27,7 +27,7 @@ namespace YotsubaEngine.YTBContentBuilder.Audio
         /// <param name="outputPath">Path where the generated file will be written (without extension).</param>
         public static void GenerateRegistry(string sourcePath, string outputPath)
         {
-            Console.WriteLine($"[AudioRegistry] Scanning for audio files in: {sourcePath}");
+            //Console.WriteLine($"[AudioRegistry] Scanning for audio files in: {sourcePath}");
 
             var soundEffects = new List<(string Name, string RelativePath)>();
             var songs = new List<(string Name, string RelativePath)>();
@@ -44,7 +44,7 @@ namespace YotsubaEngine.YTBContentBuilder.Audio
                 }
                 catch (DirectoryNotFoundException)
                 {
-                    Console.WriteLine($"[AudioRegistry] Directory not found: {sourcePath}");
+                    //Console.WriteLine($"[AudioRegistry] Directory not found: {sourcePath}");
                     continue;
                 }
 
@@ -71,7 +71,7 @@ namespace YotsubaEngine.YTBContentBuilder.Audio
                         if (!songs.Exists(s => s.Name == fileName))
                         {
                             songs.Add((fileName, relativePath));
-                            Console.WriteLine($"[AudioRegistry] Song found: {fileName} ({relativePath})");
+                            //Console.WriteLine($"[AudioRegistry] Song found: {fileName} ({relativePath})");
                         }
                     }
                     else
@@ -79,7 +79,7 @@ namespace YotsubaEngine.YTBContentBuilder.Audio
                         if (!soundEffects.Exists(s => s.Name == fileName))
                         {
                             soundEffects.Add((fileName, relativePath));
-                            Console.WriteLine($"[AudioRegistry] SoundEffect found: {fileName} ({relativePath})");
+                            //Console.WriteLine($"[AudioRegistry] SoundEffect found: {fileName} ({relativePath})");
                         }
                     }
                 }
@@ -265,8 +265,8 @@ namespace YotsubaEngine.YTBContentBuilder.Audio
 
             string fullOutputPath = outputPath + ".cs";
             File.WriteAllText(fullOutputPath, sb.ToString());
-            Console.WriteLine($"[AudioRegistry] Registry generated at: {fullOutputPath}");
-            Console.WriteLine($"[AudioRegistry] Found {soundEffects.Count} sound effects and {songs.Count} songs.");
+            //Console.WriteLine($"[AudioRegistry] Registry generated at: {fullOutputPath}");
+            //Console.WriteLine($"[AudioRegistry] Found {soundEffects.Count} sound effects and {songs.Count} songs.");
         }
     }
 }

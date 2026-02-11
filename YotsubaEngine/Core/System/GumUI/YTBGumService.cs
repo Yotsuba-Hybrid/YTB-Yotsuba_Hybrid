@@ -55,7 +55,10 @@ namespace YotsubaEngine.Core.System.GumUI
             }
 
             _game = game ?? throw new ArgumentNullException(nameof(game));
+
+
             GumService.Default.Initialize(game, version);
+ 
             _isInitialized = true;
         }
 

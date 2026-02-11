@@ -86,6 +86,7 @@ namespace YotsubaEngine.Core.System.S_2D
             if (GameWontRun.GameWontRunByException) return;
 #endif
 
+            if (EntityManager == null) return;
             foreach (Yotsuba entity in EntityManager.YotsubaEntities)
             {
                 if (!entity.HasComponent(YTBComponent.Animation) || !entity.HasComponent(YTBComponent.Sprite)) continue;

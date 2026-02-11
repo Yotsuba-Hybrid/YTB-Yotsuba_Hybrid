@@ -254,17 +254,16 @@ namespace YotsubaEngine
         /// </summary>
         protected override void LoadContent()
         {
-            base.LoadContent();
-
             try
             {
+
                 _spriteBatch = new SpriteBatch(GraphicsDevice);
                 
                 // Initialize the audio system
                 // Inicializar el sistema de audio
                 AudioSystem.Initialize();
                 
-                SceneManager = YTBFileToGameData.GenerateSceneManager(_graphics).GetAwaiter().GetResult();
+                SceneManager = YTBFileToGameData.GenerateSceneManager(_graphics);
 
                 SceneManager.CurrentScene.Initialize(Content);
             }
@@ -272,6 +271,8 @@ namespace YotsubaEngine
             {
                 EngineUISystem.SendLog($"[YTBGame] Error al cargar el contenido del juego: {ex.Message}");
             }
+
+            base.LoadContent();
         }
 
         /// <summary>

@@ -128,6 +128,7 @@ namespace YotsubaEngine.Core.System.S_2D
                     YTBGlobalState.OffsetCamera;
 #endif
             EntityManager entityManager = YTBGlobalState.Game.SceneManager.CurrentScene.EntityManager;
+            if (entityManager == null) return;
             var cameraEntity = entityManager.Camera;
             Matrix viewMatrix = Matrix.Identity;
 

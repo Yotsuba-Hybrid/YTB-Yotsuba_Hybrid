@@ -63,6 +63,7 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
 #if YTB
 			if (GameWontRun.GameWontRunByException || !RenderSystem2D.IsGameActive) return;
 #endif
+			if (EntityManager == null) return;
 			if (!entity.HasComponent(YTBComponent.Script)) return;
             ref ScriptComponent component = ref EntityManager.ScriptComponents[entity.Id];
             foreach(var script in component.Scripts)
@@ -82,6 +83,7 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
 #if YTB
 			if (GameWontRun.GameWontRunByException) return;
 #endif
+			if (EntityManager == null) return;
 			if (!entity.HasComponent(YTBComponent.Script)) return;
 
             ref ScriptComponent component = ref EntityManager.ScriptComponents[entity.Id];
@@ -122,6 +124,7 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
             if (GameWontRun.GameWontRunByException) return;
 #endif
 
+            if (EntityManager == null) return;
 
             foreach (var entities in EntityManager.YotsubaEntities)
             {
@@ -143,6 +146,8 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
 #if YTB
             if (GameWontRun.GameWontRunByException) return;
 #endif
+
+            if (EntityManager == null) return;
 
             foreach(var entities in EntityManager.YotsubaEntities)
             {

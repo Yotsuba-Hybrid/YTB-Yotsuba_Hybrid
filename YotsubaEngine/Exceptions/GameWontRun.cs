@@ -9,6 +9,34 @@ using YotsubaEngine.Core.System.YotsubaEngineUI;
 namespace YotsubaEngine.Exceptions
 {
 	/// <summary>
+	/// Stores detailed context about a parsing or validation error.
+	/// Almacena el contexto detallado de un error de parseo o validación.
+	/// </summary>
+	public class ErrorDetail
+	{
+		public GameWontRun.YTBErrors ErrorType { get; set; }
+		public string SceneName { get; set; }
+		public string EntityName { get; set; }
+		public string ComponentName { get; set; }
+		public string PropertyName { get; set; }
+		public string Message { get; set; }
+		public string HowToFix { get; set; }
+
+		public override string ToString()
+		{
+			var sb = new StringBuilder();
+			sb.Append($"[{ErrorType}] ");
+			if (!string.IsNullOrEmpty(SceneName)) sb.Append($"Escena: {SceneName} | ");
+			if (!string.IsNullOrEmpty(EntityName)) sb.Append($"Entidad: {EntityName} | ");
+			if (!string.IsNullOrEmpty(ComponentName)) sb.Append($"Componente: {ComponentName} | ");
+			if (!string.IsNullOrEmpty(PropertyName)) sb.Append($"Propiedad: {PropertyName} | ");
+			sb.Append(Message);
+			if (!string.IsNullOrEmpty(HowToFix)) sb.Append($" | Fix: {HowToFix}");
+			return sb.ToString();
+		}
+	}
+
+	/// <summary>
 	/// Exception that signals the game cannot run due to a critical error.
 	/// Esta es una clase que indica que el juego no puede ejecutarse debido a una excepción crítica.
 	/// </summary>
@@ -20,6 +48,12 @@ namespace YotsubaEngine.Exceptions
 		/// Activa o desactiva flags de errores
 		/// </summary>
 		public static long ErrorStorage { get; set; } = 0;
+
+		/// <summary>
+		/// List of detailed error descriptions for UI display.
+		/// Lista de errores detallados para mostrar en la UI.
+		/// </summary>
+		public static List<ErrorDetail> ErrorDetails { get; set; } = new List<ErrorDetail>();
 
 		/// <summary>
 		/// Indicates whether the game cannot run due to a critical exception.
@@ -78,6 +112,39 @@ namespace YotsubaEngine.Exceptions
 
 		}
 
+		/// <summary>
+		/// Initializes a new GameWontRun exception with full context about where the error occurred.
+		/// Inicializa una nueva excepción GameWontRun con contexto completo sobre dónde ocurrió el error.
+		/// </summary>
+		/// <param name="error">Error flag. Bandera de error.</param>
+		/// <param name="sceneName">Scene name. Nombre de la escena.</param>
+		/// <param name="entityName">Entity name. Nombre de la entidad.</param>
+		/// <param name="componentName">Component name. Nombre del componente.</param>
+		/// <param name="propertyName">Property name. Nombre de la propiedad.</param>
+		/// <param name="message">Descriptive message. Mensaje descriptivo.</param>
+		/// <param name="howToFix">How to fix the error. Cómo arreglar el error.</param>
+		public GameWontRun(YTBErrors error, string sceneName, string entityName, string componentName, string propertyName, string message, string howToFix) : base(message)
+		{
+			GameWontRunByException = true;
+			CauseWontRunByException = message;
+			SetError(error);
+
+			var detail = new ErrorDetail
+			{
+				ErrorType = error,
+				SceneName = sceneName,
+				EntityName = entityName,
+				ComponentName = componentName,
+				PropertyName = propertyName,
+				Message = message,
+				HowToFix = howToFix
+			};
+			ErrorDetails.Add(detail);
+
+			EngineUISystem.SendLog("Game Will Not Work", Color.Red);
+			EngineUISystem.SendLog(detail.ToString(), Color.Red);
+		}
+
 
 		/// <summary>
 		/// Activates the error flag in the engine.
@@ -117,6 +184,7 @@ namespace YotsubaEngine.Exceptions
 			GameWontRunByException = false;
 			CauseWontRunByException = string.Empty;
 			DetailWontRunByException = string.Empty;
+			ErrorDetails.Clear();
 			EngineUISystem.SendLog("GameWontRun state has been reset. Game can run again.");
 		}
 
@@ -179,6 +247,66 @@ namespace YotsubaEngine.Exceptions
 			/// El modelo 3D no pudo cargarse.
 			/// </summary>
 			Model3DLoadFailed = 1 << 10,
+
+			/// <summary>
+			/// TransformComponent parse failed.
+			/// Error al parsear TransformComponent.
+			/// </summary>
+			TransformParseFailed = 1 << 11,
+
+			/// <summary>
+			/// SpriteComponent2D parse failed.
+			/// Error al parsear SpriteComponent2D.
+			/// </summary>
+			SpriteParseFailed = 1 << 12,
+
+			/// <summary>
+			/// RigidBodyComponent2D parse failed.
+			/// Error al parsear RigidBodyComponent2D.
+			/// </summary>
+			RigidBody2DParseFailed = 1 << 13,
+
+			/// <summary>
+			/// ButtonComponent2D parse failed.
+			/// Error al parsear ButtonComponent2D.
+			/// </summary>
+			ButtonParseFailed = 1 << 14,
+
+			/// <summary>
+			/// AnimationComponent2D parse failed.
+			/// Error al parsear AnimationComponent2D.
+			/// </summary>
+			AnimationParseFailed = 1 << 15,
+
+			/// <summary>
+			/// CameraComponent3D parse failed.
+			/// Error al parsear CameraComponent3D.
+			/// </summary>
+			CameraParseFailed = 1 << 16,
+
+			/// <summary>
+			/// InputComponent parse failed.
+			/// Error al parsear InputComponent.
+			/// </summary>
+			InputParseFailed = 1 << 17,
+
+			/// <summary>
+			/// ScriptComponent parse failed.
+			/// Error al parsear ScriptComponent.
+			/// </summary>
+			ScriptParseFailed = 1 << 18,
+
+			/// <summary>
+			/// FontComponent2D parse failed.
+			/// Error al parsear FontComponent2D.
+			/// </summary>
+			FontParseFailed = 1 << 19,
+
+			/// <summary>
+			/// TileMapComponent2D parse failed.
+			/// Error al parsear TileMapComponent2D.
+			/// </summary>
+			TileMapParseFailed = 1 << 20,
         }
 	}
 }

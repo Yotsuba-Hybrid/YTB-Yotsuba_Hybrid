@@ -164,6 +164,7 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
 
             InputManager.Update(gameTime);
             var entityManager = EntityManager;
+            if (entityManager == null) return;
 
 
             if (entityManager.YotsubaEntities.Count > 1000)
