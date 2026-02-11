@@ -1023,7 +1023,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 
 				if (prop.Item1 == "GamePadIndex")
 				{
-					RenderEnumCombo(component, prop, new[] { " ", "One", "Two", "Three", "Four" });
+					RenderEnumCombo(component, prop, new[] { "One", "Two", "Three", "Four" });
 					continue;
 				}
 
@@ -1033,8 +1033,8 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 
                     // 1. PREPARACIÓN DE DATOS (Simulación de tus opciones disponibles)
                     // En tu código real, estas deberían venir de una clase estática o configuración global.
-                    string[] todasLasAcciones = { "MoveUp", "MoveDown", "MoveLeft", "MoveRight", "Jump", "Attack" };
-                    string[] todasLasTeclas = { "W", "A", "S", "D", "Space", "Enter", "Esc", "Shift", "Ctrl" };
+                    string[] todasLasAcciones = { " ", "MoveUp", "MoveDown", "MoveLeft", "MoveRight", "Jump", "Attack" };
+                    string[] todasLasTeclas = { " ", "W", "A", "S", "D", "Space", "Enter", "Esc", "Shift", "Ctrl" };
 
                     // 2. PARSEO DEL STRING ACTUAL (Deserialización)
                     // Separamos por comas y luego por dos puntos para obtener pares [Acción, Tecla]
@@ -1383,6 +1383,12 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 			ImGui.TextDisabled(prop.Item1);
 			ImGui.SameLine();
 
+			// Prepend empty option if not already present
+			if (options.Length == 0 || options[0] != " ")
+			{
+				options = new[] { " " }.Concat(options).ToArray();
+			}
+
 			int selectedIndex = Array.IndexOf(options, prop.Item2);
 			if (selectedIndex < 0) selectedIndex = 0;
 
@@ -1396,7 +1402,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 					ImGui.PushID("model_" + i);
 					if (ImGui.Selectable(options[i], isSelected))
 					{
-						UpdateProperty(component, prop.Item1, options[i]);
+						UpdateProperty(component, prop.Item1, options[i] == " " ? "" : options[i]);
 					}
 					ImGui.PopID();
 					if (isSelected)

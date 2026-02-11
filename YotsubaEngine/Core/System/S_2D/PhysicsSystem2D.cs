@@ -66,6 +66,7 @@ namespace YotsubaEngine.Core.System.S_2D
 
 #endif
 
+			if (EntityManager == null) return;
 			YTB<Yotsuba> entities = EntityManager.YotsubaEntities;
             YTB<TransformComponent> transformComponents = EntityManager.TransformComponents;
             YTB<RigidBodyComponent2D> rigidbodyComponents = EntityManager.Rigidbody2DComponents;

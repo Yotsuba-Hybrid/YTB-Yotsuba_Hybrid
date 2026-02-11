@@ -77,6 +77,7 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
 			if (GameWontRun.GameWontRunByException) return;
 #endif
 
+			if (EntityManager == null) return;
 			ref TransformComponent transform = ref EntityManager.TransformComponents[EntityManager.Camera.EntityToFollow];
             EntityManager.Camera.Update();
         }

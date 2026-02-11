@@ -57,6 +57,7 @@ namespace YotsubaEngine.Core.System.S_3D
 
         void CreateObjects3DExaples()
         {
+            if (EntityManager == null) return;
             Yotsuba storageObjectS3DEntity = new(0);
             ListObject3D storageObjectS3D = new();
             storageObjectS3D.IsVisible = true;
@@ -93,6 +94,7 @@ namespace YotsubaEngine.Core.System.S_3D
 			if (GameWontRun.GameWontRunByException) return;
 #endif
 
+            if (EntityManager == null) return;
             CreateObjects3DExaples();
 
             ref var entities = ref EntityManager.YotsubaEntities;

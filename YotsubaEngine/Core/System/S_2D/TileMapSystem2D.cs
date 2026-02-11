@@ -82,6 +82,10 @@ namespace YotsubaEngine.Core.System.S_2D
 
 
             EntityManager entityManager = EntityManager;
+
+#if YTB
+            if (entityManager == null) return;
+#endif
             var cameraEntity = EntityManager.Camera;
             Matrix viewMatrix = Matrix.Identity;
             if (cameraEntity != null)

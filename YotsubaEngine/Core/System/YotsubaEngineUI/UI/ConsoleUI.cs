@@ -29,7 +29,61 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 
 			GameWithoutScenes();
 
+			RenderErrorDetailsPanel();
+
 			ImGui.End();
+		}
+
+		/// <summary>
+		/// Renders a panel listing all accumulated parsing/validation errors with full context.
+		/// Renderiza un panel listando todos los errores de parseo/validación acumulados con contexto completo.
+		/// </summary>
+		private void RenderErrorDetailsPanel()
+		{
+			if (GameWontRun.ErrorDetails.Count == 0)
+				return;
+
+			ImGui.OpenPopup("Errores de Parseo");
+
+			if (ImGui.BeginPopupModal("Errores de Parseo", ImGuiWindowFlags.AlwaysAutoResize))
+			{
+				ImGui.TextWrapped("Se encontraron errores al procesar los archivos del juego.");
+				ImGui.TextWrapped("Corrija los errores y presione 'Recompilar Assets' para intentar nuevamente.");
+				ImGui.Separator();
+
+				for (int i = 0; i < GameWontRun.ErrorDetails.Count; i++)
+				{
+					var detail = GameWontRun.ErrorDetails[i];
+					ImGui.PushID(i);
+
+					ImGui.TextColored(Color.Red.ToVector4().ToNumerics(), $"Error #{i + 1}: {detail.ErrorType}");
+
+					if (!string.IsNullOrEmpty(detail.SceneName))
+						ImGui.Text($"  Escena: {detail.SceneName}");
+					if (!string.IsNullOrEmpty(detail.EntityName))
+						ImGui.Text($"  Entidad: {detail.EntityName}");
+					if (!string.IsNullOrEmpty(detail.ComponentName))
+						ImGui.Text($"  Componente: {detail.ComponentName}");
+					if (!string.IsNullOrEmpty(detail.PropertyName))
+						ImGui.Text($"  Propiedad: {detail.PropertyName}");
+
+					ImGui.TextColored(Color.Yellow.ToVector4().ToNumerics(), $"  Detalle: {detail.Message}");
+
+					if (!string.IsNullOrEmpty(detail.HowToFix))
+						ImGui.TextColored(Color.LimeGreen.ToVector4().ToNumerics(), $"  Como arreglar: {detail.HowToFix}");
+
+					ImGui.Separator();
+					ImGui.PopID();
+				}
+
+				if (ImGui.Button("Entendido, los corregire"))
+				{
+					GameWontRun.ErrorDetails.Clear();
+					ImGui.CloseCurrentPopup();
+				}
+
+				ImGui.EndPopup();
+			}
 		}
 
 		/// <summary>
