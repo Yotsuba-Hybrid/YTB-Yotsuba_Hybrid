@@ -5,26 +5,26 @@ using System;
 namespace YotsubaEngine.Core.Component.C_2D
 {
     /// <summary>
-    /// Describes a 2D button interaction component.
     /// Describe un componente de interacción de botón 2D.
+    /// <para>Describes a 2D button interaction component.</para>
     /// </summary>
     public struct ButtonComponent2D
     {
         /// <summary>
-        /// Indicates whether the button is active and can trigger actions.
-        /// Propiedad que define si el botón estará activo o no, que haga una acción, o que no haga nada.
+        /// Indica si el botón está activo y puede ejecutar acciones.
+        /// <para>Indicates whether the button is active and can trigger actions.</para>
         /// </summary>
         public bool IsActive { get; set; }
 
         /// <summary>
-        /// Defines the effective clickable area of the button.
-        /// Area efectiva del botón
+        /// Área efectiva del botón.
+        /// <para>Defines the effective clickable area of the button.</para>
         /// </summary>
         public Rectangle EffectiveArea { get; set; }
 
         /// <summary>
-        /// Action executed when the button is pressed.
-        /// Operación que realizara el botón al ser presionado
+        /// Operación que realizará el botón al ser presionado.
+        /// <para>Action executed when the button is pressed.</para>
         /// </summary>
         public Action Action { get; set; }
         

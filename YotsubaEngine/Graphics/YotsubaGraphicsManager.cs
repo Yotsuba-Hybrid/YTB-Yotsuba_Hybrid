@@ -13,8 +13,8 @@ using YotsubaEngine.Core.System.YotsubaEngineCore;
 namespace YotsubaEngine.Graphics
 {
     /// <summary>
-    /// Provides helper factories for common graphics assets.
     /// Proporciona fábricas auxiliares para recursos gráficos comunes.
+    /// <para>Provides helper factories for common graphics assets.</para>
     /// </summary>
     public static class YotsubaGraphicsManager
     {
@@ -31,6 +31,11 @@ namespace YotsubaEngine.Graphics
         internal static readonly Dictionary<string, TextureRegion> PreloadedTextureRegions = new(StringComparer.OrdinalIgnoreCase);
 #endif
 
+        /// <summary>
+        /// Precarga texturas y las almacena en caché.
+        /// <para>Preloads textures and caches them.</para>
+        /// </summary>
+        /// <param name="textures">Rutas de texturas a cargar. <para>Texture paths to load.</para></param>
         public static void PreloadTextures(params string[] textures)
         {
             foreach (var texture in textures)
@@ -39,6 +44,12 @@ namespace YotsubaEngine.Graphics
             }
         }
 
+        /// <summary>
+        /// Precarga texturas y fuentes proporcionadas.
+        /// <para>Preloads the provided textures and fonts.</para>
+        /// </summary>
+        /// <param name="textures">Rutas de texturas a cargar. <para>Texture paths to load.</para></param>
+        /// <param name="fonts">Rutas de fuentes a cargar. <para>Font paths to load.</para></param>
         public static void InitializeAssets(IEnumerable<string> textures, IEnumerable<string> fonts)
         {
             if (textures != null)

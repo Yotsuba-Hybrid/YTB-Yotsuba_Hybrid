@@ -10,26 +10,26 @@ using static YotsubaEngine.Core.System.S_AGNOSTIC.InputSystem;
 namespace YotsubaEngine.Input
 {
     /// <summary>
-    /// Provides all relevant information about the mouse.
-    /// Clase que nos da toda la informacion relevante sobre el mouse
+    /// Clase que nos da toda la información relevante sobre el mouse.
+    /// <para>Provides all relevant information about the mouse.</para>
     /// </summary>
     public class MouseInfo
     {
         /// <summary>
-        /// The state of mouse input during the previous update cycle.
         /// El estado del mouse durante el ciclo de actualización anterior.
+        /// <para>The state of mouse input during the previous update cycle.</para>
         /// </summary>
         public MouseState PreviousState { get; private set; }
 
         /// <summary>
-        /// The state of mouse input during the current update cycle.
         /// El estado del mouse durante el ciclo de actualización actual.
+        /// <para>The state of mouse input during the current update cycle.</para>
         /// </summary>
         public MouseState CurrentState { get; private set; }
 
         /// <summary>
-        /// Gets or Sets the current position of the mouse cursor in screen space.
         /// Obtiene o establece la posición del cursor en el espacio de pantalla.
+        /// <para>Gets or sets the current position of the mouse cursor in screen space.</para>
         /// </summary>
         public Point Position
         {
@@ -38,8 +38,8 @@ namespace YotsubaEngine.Input
         }
 
         /// <summary>
-        /// Gets or Sets the current x-coordinate position of the mouse cursor in screen space.
         /// Obtiene o establece la coordenada X del cursor en pantalla.
+        /// <para>Gets or sets the current x-coordinate position of the mouse cursor in screen space.</para>
         /// </summary>
         public int X
         {
@@ -48,8 +48,8 @@ namespace YotsubaEngine.Input
         }
 
         /// <summary>
-        /// Gets or Sets the current y-coordinate position of the mouse cursor in screen space.
         /// Obtiene o establece la coordenada Y del cursor en pantalla.
+        /// <para>Gets or sets the current y-coordinate position of the mouse cursor in screen space.</para>
         /// </summary>
         public int Y
         {
@@ -58,44 +58,44 @@ namespace YotsubaEngine.Input
         }
 
         /// <summary>
-        /// Gets the difference in the mouse cursor position between the previous and current frame.
         /// Obtiene la diferencia de posición del cursor entre el frame anterior y el actual.
+        /// <para>Gets the difference in the mouse cursor position between the previous and current frame.</para>
         /// </summary>
         public Point PositionDelta => CurrentState.Position - PreviousState.Position;
 
         /// <summary>
-        /// Gets the difference in the mouse cursor x-position between the previous and current frame.
         /// Obtiene la diferencia en X del cursor entre el frame anterior y el actual.
+        /// <para>Gets the difference in the mouse cursor x-position between the previous and current frame.</para>
         /// </summary>
         public int XDelta => CurrentState.X - PreviousState.X;
 
         /// <summary>
-        /// Gets the difference in the mouse cursor y-position between the previous and current frame.
         /// Obtiene la diferencia en Y del cursor entre el frame anterior y el actual.
+        /// <para>Gets the difference in the mouse cursor y-position between the previous and current frame.</para>
         /// </summary>
         public int YDelta => CurrentState.Y - PreviousState.Y;
 
         /// <summary>
-        /// Gets a value that indicates if the mouse cursor moved between the previous and current frames.
         /// Obtiene un valor que indica si el cursor se movió entre frames.
+        /// <para>Gets a value that indicates if the mouse cursor moved between the previous and current frames.</para>
         /// </summary>
         public bool WasMoved => PositionDelta != Point.Zero;
 
         /// <summary>
-        /// Gets the cumulative value of the mouse scroll wheel since the start of the game.
         /// Obtiene el valor acumulado de la rueda del mouse desde el inicio del juego.
+        /// <para>Gets the cumulative value of the mouse scroll wheel since the start of the game.</para>
         /// </summary>
         public int ScrollWheel => CurrentState.ScrollWheelValue;
 
         /// <summary>
-        /// Gets the value of the scroll wheel between the previous and current frame.
         /// Obtiene el valor de la rueda del mouse entre el frame anterior y el actual.
+        /// <para>Gets the value of the scroll wheel between the previous and current frame.</para>
         /// </summary>
         public int ScrollWheelDelta => CurrentState.ScrollWheelValue - PreviousState.ScrollWheelValue;
 
         /// <summary>
-        /// Creates a new MouseInfo.
         /// Crea una nueva instancia de MouseInfo.
+        /// <para>Creates a new MouseInfo.</para>
         /// </summary>
         public MouseInfo()
         {
@@ -104,8 +104,8 @@ namespace YotsubaEngine.Input
         }
 
         /// <summary>
-        /// Updates the state information about mouse input.
         /// Actualiza la información de estado del mouse.
+        /// <para>Updates the state information about mouse input.</para>
         /// </summary>
         public void Update()
         {
@@ -114,11 +114,11 @@ namespace YotsubaEngine.Input
         }
 
         /// <summary>
-        /// Returns a value that indicates whether the specified mouse button is currently down.
         /// Devuelve un valor que indica si el botón del mouse está presionado.
+        /// <para>Returns a value that indicates whether the specified mouse button is currently down.</para>
         /// </summary>
-        /// <param name="button">The mouse button to check. El botón del mouse a comprobar.</param>
-        /// <returns>true if the specified mouse button is currently down; otherwise, false. true si el botón está presionado; de lo contrario, false.</returns>
+        /// <param name="button">El botón del mouse a comprobar. <para>The mouse button to check.</para></param>
+        /// <returns>True si el botón está presionado; de lo contrario, false. <para>True if the specified mouse button is currently down; otherwise, false.</para></returns>
         public bool IsButtonDown(MouseButton button)
         {
             switch (button)
@@ -139,11 +139,11 @@ namespace YotsubaEngine.Input
         }
 
         /// <summary>
-        /// Returns a value that indicates whether the specified mouse button is current up.
         /// Devuelve un valor que indica si el botón del mouse está suelto.
+        /// <para>Returns a value that indicates whether the specified mouse button is currently up.</para>
         /// </summary>
-        /// <param name="button">The mouse button to check. El botón del mouse a comprobar.</param>
-        /// <returns>true if the specified mouse button is currently up; otherwise, false. true si el botón está suelto; de lo contrario, false.</returns>
+        /// <param name="button">El botón del mouse a comprobar. <para>The mouse button to check.</para></param>
+        /// <returns>True si el botón está suelto; de lo contrario, false. <para>True if the specified mouse button is currently up; otherwise, false.</para></returns>
         public bool IsButtonUp(MouseButton button)
         {
             switch (button)
@@ -164,11 +164,11 @@ namespace YotsubaEngine.Input
         }
 
         /// <summary>
-        /// Returns a value that indicates whether the specified mouse button was just pressed on the current frame.
         /// Devuelve un valor que indica si el botón se presionó en este frame.
+        /// <para>Returns a value that indicates whether the specified mouse button was just pressed on the current frame.</para>
         /// </summary>
-        /// <param name="button">The mouse button to check. El botón del mouse a comprobar.</param>
-        /// <returns>true if the specified mouse button was just pressed on the current frame; otherwise, false. true si el botón se presionó en este frame; de lo contrario, false.</returns>
+        /// <param name="button">El botón del mouse a comprobar. <para>The mouse button to check.</para></param>
+        /// <returns>True si el botón se presionó en este frame; de lo contrario, false. <para>True if the specified mouse button was just pressed on the current frame; otherwise, false.</para></returns>
         public bool WasButtonJustPressed(MouseButton button)
         {
             switch (button)
@@ -189,11 +189,11 @@ namespace YotsubaEngine.Input
         }
 
         /// <summary>
-        /// Returns a value that indicates whether the specified mouse button was just released on the current frame.
         /// Devuelve un valor que indica si el botón se soltó en este frame.
+        /// <para>Returns a value that indicates whether the specified mouse button was just released on the current frame.</para>
         /// </summary>
-        /// <param name="button">The mouse button to check. El botón del mouse a comprobar.</param>
-        /// <returns>true if the specified mouse button was just released on the current frame; otherwise, false. true si el botón se soltó en este frame; de lo contrario, false.</returns>
+        /// <param name="button">El botón del mouse a comprobar. <para>The mouse button to check.</para></param>
+        /// <returns>True si el botón se soltó en este frame; de lo contrario, false. <para>True if the specified mouse button was just released on the current frame; otherwise, false.</para></returns>
         public bool WasButtonJustReleased(MouseButton button)
         {
             switch (button)
@@ -214,11 +214,11 @@ namespace YotsubaEngine.Input
         }
 
         /// <summary>
-        /// Sets the current position of the mouse cursor in screen space and updates the CurrentState with the new position.
         /// Establece la posición actual del cursor y actualiza el estado actual.
+        /// <para>Sets the current position of the mouse cursor in screen space and updates the CurrentState with the new position.</para>
         /// </summary>
-        /// <param name="x">The x-coordinate location of the mouse cursor in screen space. La coordenada X del cursor en pantalla.</param>
-        /// <param name="y">The y-coordinate location of the mouse cursor in screen space. La coordenada Y del cursor en pantalla.</param>
+        /// <param name="x">La coordenada X del cursor en pantalla. <para>The x-coordinate location of the mouse cursor in screen space.</para></param>
+        /// <param name="y">La coordenada Y del cursor en pantalla. <para>The y-coordinate location of the mouse cursor in screen space.</para></param>
         public void SetPosition(int x, int y)
         {
             Mouse.SetPosition(x, y);

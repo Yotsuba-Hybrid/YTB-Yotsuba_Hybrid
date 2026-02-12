@@ -5,8 +5,8 @@ using System;
 namespace YotsubaEngine.Graphics.Shaders
 {
     /// <summary>
-    /// Sistema de transiciones entre escenas usando shaders.
-    /// Compatible con AOT y multiplataforma.
+    /// Sistema de transiciones entre escenas usando shaders, compatible con AOT y multiplataforma.
+    /// <para>Scene transition system using shaders, AOT and cross-platform compatible.</para>
     /// </summary>
     public class SceneTransition
     {
@@ -20,14 +20,20 @@ namespace YotsubaEngine.Graphics.Shaders
 
         /// <summary>
         /// El progreso actual de la transición (0.0 a 1.0).
+        /// <para>Current transition progress (0.0 to 1.0).</para>
         /// </summary>
         public float Progress => _progress;
 
         /// <summary>
         /// Indica si hay una transición activa.
+        /// <para>Indicates whether a transition is active.</para>
         /// </summary>
         public bool IsTransitioning => _isTransitioning;
 
+        /// <summary>
+        /// Crea una nueva transición de escena.
+        /// <para>Creates a new scene transition.</para>
+        /// </summary>
         public SceneTransition()
         {
             _progress = 0f;
@@ -35,12 +41,12 @@ namespace YotsubaEngine.Graphics.Shaders
         }
 
         /// <summary>
-        /// Inicia una transición de escena.
-        /// Si ya hay una transición en curso, se completará inmediatamente antes de iniciar la nueva.
+        /// Inicia una transición de escena y completa la anterior si está activa.
+        /// <para>Starts a scene transition and completes the previous one if active.</para>
         /// </summary>
-        /// <param name="type">Tipo de transición (Fade o Dissolve)</param>
-        /// <param name="duration">Duración en segundos</param>
-        /// <param name="onComplete">Callback al completar la transición</param>
+        /// <param name="type">Tipo de transición (Fade o Dissolve). <para>Transition type (Fade or Dissolve).</para></param>
+        /// <param name="duration">Duración en segundos. <para>Duration in seconds.</para></param>
+        /// <param name="onComplete">Callback al completar la transición. <para>Callback invoked when the transition completes.</para></param>
         public void StartTransition(TransitionType type, float duration, Action onComplete = null)
         {
             if (_isTransitioning)
@@ -63,8 +69,9 @@ namespace YotsubaEngine.Graphics.Shaders
 
         /// <summary>
         /// Actualiza la transición.
+        /// <para>Updates the transition.</para>
         /// </summary>
-        /// <param name="gameTime">Tiempo de juego</param>
+        /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
         public void Update(GameTime gameTime)
         {
             if (!_isTransitioning) return;
@@ -79,11 +86,10 @@ namespace YotsubaEngine.Graphics.Shaders
         }
 
         /// <summary>
-        /// Aplica la transición al SpriteBatch.
-        /// Llamar esto al dibujar la escena.
+        /// Aplica la transición al SpriteBatch al dibujar la escena.
+        /// <para>Applies the transition to the SpriteBatch when drawing the scene.</para>
         /// </summary>
-        /// <param name="spriteBatch">SpriteBatch para renderizar</param>
-        /// <returns>El efecto a usar, o null si no hay transición</returns>
+        /// <returns>Efecto a usar, o null si no hay transición. <para>Effect to use, or null if no transition.</para></returns>
         public Effect GetTransitionEffect()
         {
             if (!_isTransitioning || _transitionEffect == null)
@@ -109,6 +115,7 @@ namespace YotsubaEngine.Graphics.Shaders
 
         /// <summary>
         /// Cancela la transición actual.
+        /// <para>Cancels the current transition.</para>
         /// </summary>
         public void CancelTransition()
         {
@@ -120,16 +127,19 @@ namespace YotsubaEngine.Graphics.Shaders
 
     /// <summary>
     /// Tipos de transición disponibles.
+    /// <para>Available transition types.</para>
     /// </summary>
     public enum TransitionType
     {
         /// <summary>
         /// Transición de fundido simple (fade in/out).
+        /// <para>Simple fade in/out transition.</para>
         /// </summary>
         Fade = 0,
 
         /// <summary>
         /// Transición de disolución usando textura de ruido.
+        /// <para>Dissolve transition using a noise texture.</para>
         /// </summary>
         Dissolve = 1
     }

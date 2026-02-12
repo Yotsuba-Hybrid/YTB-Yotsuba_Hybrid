@@ -16,7 +16,8 @@ using Num = System.Numerics;
 namespace YotsubaEngine.Core.System.S_3D
 {
     /// <summary>
-    /// Sistema que gestiona todo lo que se ve en pantalla y que sea 3D especificamente, renderizar modelos 3D.
+    /// Sistema que gestiona todo lo que se ve en pantalla y que sea 3D específicamente, renderizar modelos 3D.
+    /// <para>System that manages everything rendered in 3D, including 3D models.</para>
     /// </summary>
     public class RenderSystem3D : ISystem
     {
@@ -38,6 +39,11 @@ namespace YotsubaEngine.Core.System.S_3D
         private Texture2D Texture2D;
 
         
+        /// <summary>
+        /// Inicializa el sistema de renderizado 3D.
+        /// <para>Initializes the 3D render system.</para>
+        /// </summary>
+        /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
         public void InitializeSystem(EntityManager entities)
         {
             
@@ -85,6 +91,11 @@ namespace YotsubaEngine.Core.System.S_3D
             EntityManager.AddEntity(storageObjectS3DEntity);
             EntityManager.AddStorageObject3D(storageObjectS3DEntity, storageObjectS3D);
         }
+        /// <summary>
+        /// Actualiza el renderizado 3D en cada frame.
+        /// <para>Updates 3D rendering each frame.</para>
+        /// </summary>
+        /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
         public void UpdateSystem(GameTime gameTime)
         {
 
@@ -130,11 +141,22 @@ namespace YotsubaEngine.Core.System.S_3D
             }
         }
 
+        /// <summary>
+        /// Hook de actualización compartida por entidad (no usado).
+        /// <para>Shared per-entity update hook (unused).</para>
+        /// </summary>
+        /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
+        /// <param name="time">Tiempo de juego. <para>Game time.</para></param>
         public void SharedEntityForEachUpdate(Yotsuba Entidad, GameTime time)
         {
             // 3D render system does not require per-entity updates; handled in UpdateSystem
         }
 
+        /// <summary>
+        /// Hook de inicialización compartida por entidad (no usado).
+        /// <para>Shared per-entity initialization hook (unused).</para>
+        /// </summary>
+        /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
         public void SharedEntityInitialize(Yotsuba Entidad)
         {
             // 3D entity initialization is currently handled externally (Coming Soon)

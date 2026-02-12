@@ -10,11 +10,15 @@ using static YotsubaEngine.Exceptions.GameWontRun;
 namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 {
 	/// <summary>
-	/// Renders the engine console panel with runtime messages and errors.
 	/// Renderiza el panel de consola del motor con mensajes y errores en runtime.
+	/// <para>Renders the engine console panel with runtime messages and errors.</para>
 	/// </summary>
 	public class ConsoleUI
 	{
+		/// <summary>
+		/// Renderiza la consola del motor.
+		/// <para>Renders the engine console.</para>
+		/// </summary>
 		public void Render()
 		{
 			ImGui.Begin("Consola");
@@ -139,6 +143,10 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 			}
 		}
 
+		/// <summary>
+		/// Muestra el modal cuando una escena no tiene entidades.
+		/// <para>Shows the modal when a scene has no entities.</para>
+		/// </summary>
 		public void GameSceneWithoutEntities()
 		{
 			if (GameWontRun.HasError(YTBErrors.GameSceneWithoutEntities))

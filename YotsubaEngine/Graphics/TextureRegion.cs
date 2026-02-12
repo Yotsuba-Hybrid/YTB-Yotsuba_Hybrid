@@ -4,44 +4,46 @@ using Microsoft.Xna.Framework.Graphics;
 namespace YotsubaEngine.Graphics
 {
     /// <summary>
-    /// Represents a texture region to render from a larger texture.
-    /// Es una region de Textura, en vez de contener un Texture2D solamente, almacena tambien la region especifica a renderizar
+    /// Representa una región de textura para renderizar desde una textura mayor.
+    /// <para>Represents a texture region to render from a larger texture.</para>
     /// </summary>
+    /// <param name="texture2D">Textura origen de la región. <para>Source texture for the region.</para></param>
+    /// <param name="sourceRectangle">Rectángulo de la región. <para>Region rectangle.</para></param>
     public readonly struct TextureRegion(Texture2D texture2D, Rectangle sourceRectangle)
     {
         /// <summary>
-        /// Source texture for the region.
-        /// Textura de la cual se sacara la region.
+        /// Textura de la cual se extrae la región.
+        /// <para>Source texture for the region.</para>
         /// </summary>
         public readonly Texture2D Texture { get; } = texture2D;
 
         /// <summary>
-        /// Specific rectangle within the texture.
-        /// Zona especifica de la textura.
+        /// Rectángulo específico dentro de la textura.
+        /// <para>Specific rectangle within the texture.</para>
         /// </summary>
         public readonly Rectangle SourceRectangle { get; } = sourceRectangle;
 
         /// <summary>
-        /// Gets the region width.
-        /// Helper para obtener el ancho.
+        /// Obtiene el ancho de la región.
+        /// <para>Gets the region width.</para>
         /// </summary>
         public int Width => SourceRectangle.Width;
 
         /// <summary>
-        /// Gets the region height.
-        /// Helper para obtener el alto.
+        /// Obtiene el alto de la región.
+        /// <para>Gets the region height.</para>
         /// </summary>
         public int Height => SourceRectangle.Height;
 
         /// <summary>
-        /// Creates a region from rectangle coordinates.
-        /// Constructor secundario que recibe los parametros de un rectangle
+        /// Crea una región a partir de coordenadas de rectángulo.
+        /// <para>Creates a region from rectangle coordinates.</para>
         /// </summary>
-        /// <param name="texture">Source texture. Textura origen.</param>
-        /// <param name="x">X coordinate. Coordenada X.</param>
-        /// <param name="y">Y coordinate. Coordenada Y.</param>
-        /// <param name="width">Width of the region. Ancho de la región.</param>
-        /// <param name="height">Height of the region. Alto de la región.</param>
+        /// <param name="texture">Textura origen. <para>Source texture.</para></param>
+        /// <param name="x">Coordenada X. <para>X coordinate.</para></param>
+        /// <param name="y">Coordenada Y. <para>Y coordinate.</para></param>
+        /// <param name="width">Ancho de la región. <para>Width of the region.</para></param>
+        /// <param name="height">Alto de la región. <para>Height of the region.</para></param>
         public TextureRegion(Texture2D texture, int x, int y, int width, int height) : this(texture, new Rectangle(x, y, width, height)) { }
 
     }

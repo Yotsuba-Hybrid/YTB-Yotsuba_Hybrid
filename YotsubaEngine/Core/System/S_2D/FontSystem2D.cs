@@ -14,16 +14,16 @@ using YotsubaEngine.HighestPerformanceTypes;
 namespace YotsubaEngine.Core.System.S_2D
 {
     /// <summary>
-    /// Renders 2D font components with camera-aware culling.
     /// Renderiza componentes de fuente 2D con recorte basado en cámara.
+    /// <para>Renders 2D font components with camera-aware culling.</para>
     /// </summary>
     public class FontSystem2D : ISystem
     {
 
 #if YTB
         /// <summary>
-        /// Tracks whether the game view is active in debug mode.
         /// Controla si la vista del juego está activa en modo depuración.
+        /// <para>Tracks whether the game view is active in debug mode.</para>
         /// </summary>
         public static bool IsGameActive = false;
 
@@ -35,15 +35,16 @@ namespace YotsubaEngine.Core.System.S_2D
         private EntityManager Entities;
 
         /// <summary>
-        /// Gets the loaded sprite font cache by asset name.
         /// Obtiene la caché de fuentes sprite cargadas por nombre de recurso.
+        /// <para>Gets the loaded sprite font cache by asset name.</para>
         /// </summary>
         public Dictionary<string, SpriteFont> Fuentes { get; private set; } = new Dictionary<string, SpriteFont>();
 
         /// <summary>
-        /// Initializes the system with the shared entity manager.
         /// Inicializa el sistema con el administrador de entidades compartido.
+        /// <para>Initializes the system with the shared entity manager.</para>
         /// </summary>
+        /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
         public void InitializeSystem(EntityManager entities)
         {
             Entities = entities;
@@ -55,9 +56,10 @@ namespace YotsubaEngine.Core.System.S_2D
         }
 
         /// <summary>
-        /// Loads font assets for entities that include font components.
         /// Carga recursos de fuente para entidades que incluyen componentes de fuente.
+        /// <para>Loads font assets for entities that include font components.</para>
         /// </summary>
+        /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
         public void SharedEntityInitialize(Yotsuba Entidad)
         {
 
@@ -97,9 +99,11 @@ namespace YotsubaEngine.Core.System.S_2D
 
 
         /// <summary>
-        /// Draws all visible font entities using camera culling.
         /// Dibuja todas las entidades de fuente visibles usando recorte por cámara.
+        /// <para>Draws all visible font entities using camera culling.</para>
         /// </summary>
+        /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
+        /// <param name="brocha">Sprite batch para dibujar. <para>Sprite batch for drawing.</para></param>
         public void DrawSystem(GameTime gameTime, SpriteBatch brocha)
         {
 
@@ -216,9 +220,11 @@ namespace YotsubaEngine.Core.System.S_2D
         }
 
         /// <summary>
-        /// Updates a font entity during the shared update pass.
         /// Actualiza una entidad de fuente durante el pase de actualización compartido.
+        /// <para>Updates a font entity during the shared update pass.</para>
         /// </summary>
+        /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
+        /// <param name="time">Tiempo de juego. <para>Game time.</para></param>
         public void SharedEntityForEachUpdate(Yotsuba Entidad, GameTime time)
         {
             // No per-entity update logic required for fonts
@@ -226,9 +232,10 @@ namespace YotsubaEngine.Core.System.S_2D
 
 
         /// <summary>
-        /// Updates the font system each frame.
         /// Actualiza el sistema de fuentes en cada frame.
+        /// <para>Updates the font system each frame.</para>
         /// </summary>
+        /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
         public void UpdateSystem(GameTime gameTime)
         {
             // No system-level update logic required for fonts

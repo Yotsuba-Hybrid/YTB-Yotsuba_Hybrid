@@ -13,15 +13,19 @@ namespace SandBoxGame.Core.Localization;
 internal class LocalizationManager
 {
     /// <summary>
-    /// the culture code we default to
+    /// Código de cultura predeterminado.
+    /// <para>Default culture code.</para>
     /// </summary>
     public const string DEFAULT_CULTURE_CODE = "en-EN";
 
     /// <summary>
-    /// Retrieves a list of supported cultures based on available language resources in the game.
-    /// This method checks the current culture settings and the satellite assemblies for available localized resources.
+    /// Recupera la lista de culturas compatibles según los recursos de idioma disponibles.
+    /// <para>Retrieves a list of supported cultures based on available language resources.</para>
     /// </summary>
-    /// <returns>A list of <see cref="CultureInfo"/> objects representing the cultures supported by the game.</returns>
+    /// <returns>
+    /// Lista de <see cref="CultureInfo"/> con las culturas soportadas.
+    /// <para>List of <see cref="CultureInfo"/> objects representing supported cultures.</para>
+    /// </returns>
     /// <remarks>
     /// This method iterates through all specific cultures defined in the satellite assemblies and attempts to load the corresponding resource set.
     /// If a resource set is found for a particular culture, that culture is added to the list of supported cultures. The invariant culture
@@ -65,10 +69,13 @@ internal class LocalizationManager
     }
 
     /// <summary>
-    /// Sets the current culture of the game based on the specified culture code.
-    /// This method updates both the current culture and UI culture for the current thread.
+    /// Establece la cultura actual del juego según el código indicado.
+    /// <para>Sets the game's current culture based on the provided culture code.</para>
     /// </summary>
-    /// <param name="cultureCode">The culture code (e.g., "en-US", "fr-FR") to set for the game.</param>
+    /// <param name="cultureCode">
+    /// Código de cultura (por ejemplo, "en-US", "fr-FR") a establecer.
+    /// <para>Culture code (e.g., "en-US", "fr-FR") to set.</para>
+    /// </param>
     /// <remarks>
     /// This method modifies the <see cref="Thread.CurrentThread.CurrentCulture"/> and <see cref="Thread.CurrentThread.CurrentUICulture"/> properties,
     /// which affect how dates, numbers, and other culture-specific values are formatted, as well as how localized resources are loaded.

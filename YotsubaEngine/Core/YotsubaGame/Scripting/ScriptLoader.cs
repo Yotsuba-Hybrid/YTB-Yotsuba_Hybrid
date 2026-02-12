@@ -3,15 +3,17 @@ using System.IO;
 namespace YotsubaEngine.Core.YotsubaGame.Scripting
 {
     /// <summary>
-    /// Loads script instances from registry identifiers.
     /// Carga instancias de scripts desde identificadores de registro.
+    /// <para>Loads script instances from registry identifiers.</para>
     /// </summary>
     public static class ScriptLoader
     {
         /// <summary>
-        /// Creates a script instance from the provided script path.
         /// Crea una instancia de script a partir de la ruta proporcionada.
+        /// <para>Creates a script instance from the provided script path.</para>
         /// </summary>
+        /// <param name="scriptPath">Ruta del script. <para>Script path.</para></param>
+        /// <returns>Instancia del script creada. <para>Created script instance.</para></returns>
         public static BaseScript LoadScriptInstance(string scriptPath)
         {
             string scriptName = Path.GetFileName(scriptPath);

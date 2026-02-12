@@ -80,8 +80,20 @@ SpriteSheetPathValidator.ValidateImagePaths(assetsDirectory);
 
 return builder.FailedToBuild > 0 ? -1 : 0;
 
+/// <summary>
+/// Builder de contenido para compilar assets del juego.
+/// <para>Content builder used to compile game assets.</para>
+/// </summary>
 public class Builder : ContentBuilder
 {
+    /// <summary>
+    /// Obtiene la colección de contenido a compilar.
+    /// <para>Gets the content collection to build.</para>
+    /// </summary>
+    /// <returns>
+    /// Colección de contenido configurada para el build.
+    /// <para>Configured content collection for the build.</para>
+    /// </returns>
     public override IContentCollection GetContentCollection()
     {
         var contentCollection = new ContentCollection();

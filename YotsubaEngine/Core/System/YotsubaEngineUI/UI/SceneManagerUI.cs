@@ -18,8 +18,8 @@ using Num = System.Numerics;
 namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 {
     /// <summary>
-    /// Scene Manager sencillo y estable: lista de escenas con sus entidades,
-    /// botones para crear/eliminar y confirmaciones modales.
+    /// Scene Manager sencillo y estable: lista de escenas con sus entidades, botones para crear/eliminar y confirmaciones modales.
+    /// <para>Simple and stable Scene Manager: lists scenes with entities, create/delete buttons, and modal confirmations.</para>
     /// </summary>
     public class SceneManagerUI
     {
@@ -60,9 +60,13 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
         bool deleteEntities = false;
         string deleteName = "";
 
+        /// <summary>
+        /// Renderiza la interfaz del administrador de escenas.
+        /// <para>Renders the scene manager UI.</para>
+        /// </summary>
         public void Render()
         {
-            ImGui.Begin("Scene Manager");
+            ImGui.Begin("Administrador de Escenas");
 
             // --- encabezado ---
             ImGui.TextColored(new Num.Vector4(0.45f, 0.8f, 1f, 1f), "Escenas del proyecto");
@@ -99,7 +103,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
             ImGui.Spacing();
 
             int id = 0;
-            string[] options = ["Play scene", "Preview", "Add entity", "Rename scene", "Delete scene"];
+            string[] options = ["Reproducir escena", "Vista previa", "Agregar entidad", "Renombrar escena", "Eliminar escena"];
 
             // --- recorrer escenas ---
             foreach (var scene in _gameInfo.Scene.ToImmutableArray())
@@ -150,7 +154,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
                                     _sourceSceneForEntity = scene;
                                     _isMovingEntity = true;
                                     _moveOrDuplicatePopupTitle = $"Mover entidad '{entity.Name}'";
-                                    ImGui.OpenPopup("MoveOrDuplicateEntityPopup");
+                                    ImGui.OpenPopup("Mover o duplicar entidad");
                                 }
 
                                 if (ImGui.MenuItem("Duplicar en otra escena..."))
@@ -159,7 +163,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
                                     _sourceSceneForEntity = scene;
                                     _isMovingEntity = false;
                                     _moveOrDuplicatePopupTitle = $"Duplicar entidad '{entity.Name}'";
-                                    ImGui.OpenPopup("MoveOrDuplicateEntityPopup");
+                                    ImGui.OpenPopup("Mover o duplicar entidad");
                                 }
                                 ImGui.EndPopup();
                             }
@@ -198,7 +202,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
                   
 
                     // --- MENU DE OPCIONES ---
-                    if (ImGui.BeginMenu("Options ##" + scene.Name))
+                    if (ImGui.BeginMenu("Opciones ##" + scene.Name))
                     {
                         foreach (string option in options)
                         {
@@ -206,22 +210,22 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
                             {
                                 switch (option)
                                 {
-                                    case "Play scene":
+                                    case "Reproducir escena":
                                         SystemCall.ChangeScene(scene.Name);
                                         break;
-                                    case "Preview":
+                                    case "Vista previa":
                                         SystemCall.ChangeScenePreview(scene.Name);
                                         break;
-                                    case "Add entity":
+                                    case "Agregar entidad":
                                         CreateNewEntity(scene);
                                         break;
-                                    case "Rename scene":
+                                    case "Renombrar escena":
                                         // CORRECCIÓN AQUÍ TAMBIÉN:
                                         _sceneToRename = scene;
                                         _nuevoNombreEscena = scene.Name;
                                         _triggerRenameScene = true; // Activar bandera
                                         break;
-                                    case "Delete scene":
+                                    case "Eliminar escena":
                                         _sceneToDelete = scene.Name;
                                         _triggerDeleteScene = true;
                                         break;
@@ -365,7 +369,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
             }
 
             // --- Popup para mover/duplicar entidad ---
-            if (ImGui.BeginPopupModal("MoveOrDuplicateEntityPopup", ImGuiWindowFlags.AlwaysAutoResize))
+            if (ImGui.BeginPopupModal("Mover o duplicar entidad", ImGuiWindowFlags.AlwaysAutoResize))
             {
                 // ... (Tu código de mover entidad tal cual) ...
                 ImGui.TextColored(new Num.Vector4(0.45f, 0.8f, 1f, 1f), _moveOrDuplicatePopupTitle);

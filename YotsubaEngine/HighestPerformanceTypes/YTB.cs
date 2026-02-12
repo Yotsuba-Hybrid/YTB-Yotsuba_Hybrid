@@ -8,8 +8,8 @@ using YotsubaEngine.Core.Entity;
 namespace YotsubaEngine.HighestPerformanceTypes
 {
     /// <summary>
-    /// High-performance growable array used by the engine.
     /// Arreglo dinámico de alto rendimiento usado por el motor.
+    /// <para>High-performance growable array used by the engine.</para>
     /// </summary>
     public class YTB<T> : IEnumerable<T>
     {
@@ -25,6 +25,7 @@ namespace YotsubaEngine.HighestPerformanceTypes
 
         /// <summary>
         /// Propiedad para acceder al índice actual en el arreglo de tamaños predeterminados.
+        /// <para>Property to access the current index in the preset size array.</para>
         /// </summary>
         public int Capacity { get => _predetSizesOfYTB[predetCurrentSizeIndex]; private set => predetCurrentSizeIndex = value < 14 ? value : predetCurrentSizeIndex; }
 
@@ -34,12 +35,14 @@ namespace YotsubaEngine.HighestPerformanceTypes
         private T[] _ytb { get; set; } 
 
         /// <summary>
-        /// Numero de elementos en el arreglo.
+        /// Número de elementos en el arreglo.
+        /// <para>Number of elements in the array.</para>
         /// </summary>
         public int Count { get; private set; }
 
         /// <summary>
         /// Inicializa una nueva instancia de la clase YTB con capacidad inicial predeterminada.
+        /// <para>Initializes a new YTB instance with the default initial capacity.</para>
         /// </summary>
         public YTB()
         {
@@ -49,11 +52,12 @@ namespace YotsubaEngine.HighestPerformanceTypes
         }
 
         /// <summary>
-        /// Agrega un elemento al final del arreglo, redimensionando si es necesario.\
+        /// Agrega un elemento al final del arreglo, redimensionando si es necesario.
+        /// <para>Adds an element to the end of the array, resizing if needed.</para>
         /// </summary>
-        /// <param name="item"></param>
-        /// <returns>Retorna el indice del arreglo al que se introdujo</returns>
-        /// <exception cref="System.IndexOutOfRangeException"></exception>
+        /// <param name="item">Elemento a agregar. <para>Item to add.</para></param>
+        /// <returns>Retorna el índice del arreglo al que se introdujo. <para>Returns the index where the item was inserted.</para></returns>
+        /// <exception cref="System.IndexOutOfRangeException">Se excede la capacidad máxima de YTB. <para>Thrown when YTB exceeds its maximum capacity.</para></exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int Add(T item)
         {
@@ -72,11 +76,13 @@ namespace YotsubaEngine.HighestPerformanceTypes
         }
 
         /// <summary>
-        /// Agrega un elemento al final del arreglo, redimensionando si es necesario.\
+        /// Agrega un elemento al final del arreglo, redimensionando si es necesario.
+        /// <para>Adds an element to the end of the array, resizing if needed.</para>
         /// </summary>
-        /// <param name="item"></param>
-        /// <returns>Retorna el indice del arreglo al que se introdujo</returns>
-        /// <exception cref="System.IndexOutOfRangeException"></exception>
+        /// <param name="item">Elemento a agregar. <para>Item to add.</para></param>
+        /// <param name="Index">Índice donde se insertó. <para>Index where the item was inserted.</para></param>
+        /// <returns>Retorna el índice del arreglo al que se introdujo. <para>Returns the index where the item was inserted.</para></returns>
+        /// <exception cref="System.IndexOutOfRangeException">Se excede la capacidad máxima de YTB. <para>Thrown when YTB exceeds its maximum capacity.</para></exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int Add(T item, out int Index)
         {
@@ -96,10 +102,11 @@ namespace YotsubaEngine.HighestPerformanceTypes
         }
 
         /// <summary>
-        /// remueve el elemento en la posicion index, y desplaza los elementos posteriores una posicion hacia adelante.
+        /// Remueve el elemento en la posición indicada y desplaza los elementos posteriores una posición hacia adelante.
+        /// <para>Removes the element at the specified position and shifts subsequent elements forward.</para>
         /// </summary>
-        /// <param name="index"></param>
-        /// <returns>Retorna true si se pudo eliminar, false si el index esta fuera de rango</returns>
+        /// <param name="index">Índice del elemento a eliminar. <para>Index of the element to remove.</para></param>
+        /// <returns>Retorna true si se pudo eliminar; false si el índice está fuera de rango. <para>Returns true if removed; otherwise, false when the index is out of range.</para></returns>
         public bool RemoveAt(int index)
         {
             if (index < 0 || index >= Count)
@@ -115,10 +122,11 @@ namespace YotsubaEngine.HighestPerformanceTypes
 
         /// <summary>
         /// Elimina la primera ocurrencia de un elemento especificado del YTB.
+        /// <para>Removes the first occurrence of the specified element from the YTB.</para>
         /// </summary>
-        /// <param name="item">El elemento a eliminar del YTB.</param>
-        /// <remarks>Si el elemento no se encuentra, el YTB permanece sin cambios.</remarks>
-        /// <returns>Retorna true si el elemento fue encontrado y eliminado; de lo contrario, false.</returns>
+        /// <param name="item">El elemento a eliminar del YTB. <para>The element to remove from the YTB.</para></param>
+        /// <remarks>Si el elemento no se encuentra, el YTB permanece sin cambios. <para>If the element is not found, the YTB remains unchanged.</para></remarks>
+        /// <returns>Retorna true si el elemento fue encontrado y eliminado; de lo contrario, false. <para>Returns true if the element was found and removed; otherwise, false.</para></returns>
         public bool Remove(T item)
         {
             int index = Array.IndexOf(_ytb, item, 0, Count);
@@ -128,11 +136,12 @@ namespace YotsubaEngine.HighestPerformanceTypes
         }
 
         /// <summary>
-        ///Este metod es para obtener un valor. Cuando index es int, se obtiene el objeto, cuando es uint, es para reemplazar el objeto en esa posicion.
-        /// <param name="index"></param>
-        /// <returns>Retorna una referencia del objeto</returns>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// Obtiene una referencia del objeto en la posición indicada.
+        /// <para>Gets a reference to the object at the specified position.</para>
         /// </summary>
+        /// <param name="index">Índice del elemento. <para>Element index.</para></param>
+        /// <returns>Referencia al objeto. <para>Reference to the object.</para></returns>
+        /// <exception cref="ArgumentOutOfRangeException">El índice está fuera del rango válido. <para>The index is outside the valid range.</para></exception>
         public ref T this[int index]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -145,11 +154,12 @@ namespace YotsubaEngine.HighestPerformanceTypes
         }
 
         /// <summary>
-        ///Este metod es para obtener un valor. Cuando index es int, se obtiene el objeto, cuando es uint, es para reemplazar el objeto en esa posicion.
-        /// <param name="index"></param>
-        /// <returns>Retorna una referencia del objeto</returns>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// Obtiene una referencia del objeto asociado a la entidad indicada.
+        /// <para>Gets a reference to the object associated with the specified entity.</para>
         /// </summary>
+        /// <param name="entity">Entidad cuyo id se usa como índice. <para>Entity whose id is used as the index.</para></param>
+        /// <returns>Referencia al objeto. <para>Reference to the object.</para></returns>
+        /// <exception cref="ArgumentOutOfRangeException">El id de la entidad está fuera del rango válido. <para>The entity id is outside the valid range.</para></exception>
         public ref T this[Yotsuba entity]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -162,11 +172,12 @@ namespace YotsubaEngine.HighestPerformanceTypes
         }
 
         /// <summary>
-        /// Este metodo es para settear un valor. Si quieres reemplazar un objeto en una posicion especifica. El index es uint, no int, debes hacer cast (uint)index.
+        /// Establece un valor en una posición específica usando índice uint.
+        /// <para>Sets a value at a specific position using a uint index.</para>
         /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <param name="index">Índice en el arreglo. <para>Array index.</para></param>
+        /// <param name="value">Valor a asignar. <para>Value to assign.</para></param>
+        /// <exception cref="ArgumentOutOfRangeException">El índice está fuera del rango válido. <para>The index is outside the valid range.</para></exception>
         public T this[uint index]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -180,9 +191,10 @@ namespace YotsubaEngine.HighestPerformanceTypes
 
 
         /// <summary>
-        /// Devuelve una copia del arreglo;
+        /// Devuelve una copia del arreglo.
+        /// <para>Returns a copy of the array.</para>
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Copia del arreglo. <para>Copy of the array.</para></returns>
         public T[] ToArray()
         {
             T[] result = new T[Count];
@@ -191,9 +203,10 @@ namespace YotsubaEngine.HighestPerformanceTypes
         }
 
         /// <summary>
-        /// Metodo que convierte el contenido del YTB a una lista de tipo List<T>.
+        /// Método que convierte el contenido del YTB a una lista de tipo List&lt;T&gt;.
+        /// <para>Method that converts the YTB contents into a List&lt;T&gt;.</para>
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Lista con los elementos. <para>List containing the elements.</para></returns>
         public List<T> ToList()
         {
             List<T> List = new List<T>(Count);
@@ -202,25 +215,28 @@ namespace YotsubaEngine.HighestPerformanceTypes
         }
 
         /// <summary>
-        /// Devuelve una vista de solo lectura del arreglo como ReadOnlySpan<T>.
+        /// Devuelve una vista de solo lectura del arreglo como ReadOnlySpan&lt;T&gt;.
+        /// <para>Returns a read-only view of the array as ReadOnlySpan&lt;T&gt;.</para>
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Vista de solo lectura del arreglo. <para>Read-only view of the array.</para></returns>
         public ReadOnlySpan<T> AsReadOnlySpan()
         {
             return _ytb.AsSpan(0, Count);
         }
 
         /// <summary>
-        /// Devuelve una vista del arreglo como Span<T>.
+        /// Devuelve una vista del arreglo como Span&lt;T&gt;.
+        /// <para>Returns a view of the array as Span&lt;T&gt;.</para>
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Vista del arreglo. <para>View of the array.</para></returns>
         public Span<T> AsSpan()
         {
             return _ytb.AsSpan(0, Count);
         }
 
         /// <summary>
-        /// Limpia el arreglo, reseteando el conteo y capacidad.
+        /// Limpia el arreglo, reseteando el conteo y la capacidad.
+        /// <para>Clears the array, resetting the count and capacity.</para>
         /// </summary>
         public void Clear()
         {
@@ -230,9 +246,10 @@ namespace YotsubaEngine.HighestPerformanceTypes
         }
 
         /// <summary>
-        /// Implementacion de la interfaz IEnumerable<T> para permitir la iteracion sobre los elementos del YTB.
+        /// Implementación de la interfaz IEnumerable&lt;T&gt; para permitir la iteración sobre los elementos del YTB.
+        /// <para>Implementation of IEnumerable&lt;T&gt; to allow iteration over YTB elements.</para>
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Enumerador de los elementos. <para>Enumerator of the elements.</para></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerator<T> GetEnumerator()
         {
@@ -241,8 +258,9 @@ namespace YotsubaEngine.HighestPerformanceTypes
 
         /// <summary>
         /// La implementación no genérica de IEnumerable.
+        /// <para>The non-generic IEnumerable implementation.</para>
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Enumerador no genérico. <para>Non-generic enumerator.</para></returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();

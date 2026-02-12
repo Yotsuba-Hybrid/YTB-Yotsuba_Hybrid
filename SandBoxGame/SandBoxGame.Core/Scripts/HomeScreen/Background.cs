@@ -12,6 +12,10 @@ using YotsubaEngine.Core.YotsubaGame.Scripting;
 namespace SandBoxGame.Core.Scripts.HomeScreen
 {
     [Script]
+    /// <summary>
+    /// Script que dibuja el fondo animado del menú principal.
+    /// <para>Script that draws the animated background for the main menu.</para>
+    /// </summary>
     public class Background : BaseScript
     {
         // The texture used for the background pattern.
@@ -26,6 +30,10 @@ namespace SandBoxGame.Core.Scripts.HomeScreen
 
         float _progress = 0;
         bool ASC = true;
+        /// <summary>
+        /// Inicializa el fondo y carga la textura del patrón.
+        /// <para>Initializes the background and loads the pattern texture.</para>
+        /// </summary>
         public override void Initialize()
         {
             // Initialize the offset of the background pattern at zero.
@@ -45,6 +53,14 @@ namespace SandBoxGame.Core.Scripts.HomeScreen
         }
 
        
+        /// <summary>
+        /// Actualiza el estado del fondo cada cuadro.
+        /// <para>Updates the background state each frame.</para>
+        /// </summary>
+        /// <param name="gameTime">
+        /// Tiempo de juego actual.
+        /// <para>Current game time.</para>
+        /// </param>
         public override void Update(GameTime gameTime)
         {
 
@@ -55,6 +71,18 @@ namespace SandBoxGame.Core.Scripts.HomeScreen
         }
 
 
+        /// <summary>
+        /// Dibuja el fondo en 2D durante el renderizado.
+        /// <para>Draws the background in 2D during rendering.</para>
+        /// </summary>
+        /// <param name="spriteBatch">
+        /// SpriteBatch usado para dibujar.
+        /// <para>SpriteBatch used for drawing.</para>
+        /// </param>
+        /// <param name="gameTime">
+        /// Tiempo de juego actual.
+        /// <para>Current game time.</para>
+        /// </param>
         public override void Draw2D(SpriteBatch spriteBatch, GameTime gameTime)
         {
 

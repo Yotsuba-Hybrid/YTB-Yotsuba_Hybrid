@@ -5,12 +5,13 @@
 			<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 			<Configurations>Debug;Release;YTB</Configurations>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)' == 'YTB'">
-		<DefineConstants>YOTSUBA</DefineConstants>
-	</PropertyGroup>
-	<PropertyGroup>
-		<HotReloadAutoRestart>true</HotReloadAutoRestart>
-	</PropertyGroup>
+<PropertyGroup Condition="'$(Configuration)' == 'YTB'">
+  <DefineConstants>DEBUG;YOTSUBA</DefineConstants>
+  <DebugType>portable</DebugType>
+  <DebugSymbols>true</DebugSymbols>
+  <Optimize>false</Optimize>
+  <HotReloadEnabled>true</HotReloadEnabled>
+</PropertyGroup>
 	<PropertyGroup>
 		<DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
 	</PropertyGroup>

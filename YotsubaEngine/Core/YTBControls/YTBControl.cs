@@ -14,8 +14,8 @@ namespace YotsubaEngine.Core.YTBControls
 {
 
     /// <summary>
-    /// Provides an abstract base class for drawable UI controls that manage and render colored rectangles using a
-    /// shared pixel texture.
+    /// Proporciona una clase base abstracta para controles UI dibujables que gestionan y renderizan rectángulos de color usando una textura de píxel compartida.
+    /// <para>Provides an abstract base class for drawable UI controls that manage and render colored rectangles using a shared pixel texture.</para>
     /// </summary>
     /// <remarks>YTBControl maintains a collection of colored rectangles and offers methods to add rectangles
     /// and render them using a SpriteBatch. The shared pixel texture is initialized on first use and reused for
@@ -30,7 +30,8 @@ namespace YotsubaEngine.Core.YTBControls
         protected EntityManager EntityManager { get; set; }
 
         /// <summary>
-        /// Gets a 1x1 white texture that can be used for drawing solid colored shapes or backgrounds.
+        /// Obtiene una textura blanca 1x1 que puede usarse para dibujar formas o fondos sólidos.
+        /// <para>Gets a 1x1 white texture that can be used for drawing solid colored shapes or backgrounds.</para>
         /// </summary>
         /// <remarks>This texture is commonly used as a utility for rendering rectangles, lines, or other
         /// primitives by scaling and tinting it as needed. The texture is typically initialized elsewhere and should be
@@ -38,7 +39,8 @@ namespace YotsubaEngine.Core.YTBControls
         public static Texture2D pixel;
 
         /// <summary>
-        /// Represents the collection of rectangle indices used by the containing type.
+        /// Representa la colección de índices de rectángulos usados por el control.
+        /// <para>Represents the collection of rectangle indices used by the containing type.</para>
         /// </summary>
         public List<int> IndexRectangles;
 
@@ -56,7 +58,8 @@ namespace YotsubaEngine.Core.YTBControls
 
         
         /// <summary>
-        /// Initializes the pixel resource if it has not already been created.
+        /// Inicializa el recurso de píxel si aún no se ha creado.
+        /// <para>Initializes the pixel resource if it has not already been created.</para>
         /// </summary>
         /// <remarks>Call this method before performing operations that require the pixel resource. This
         /// method is safe to call multiple times; initialization occurs only if the resource is not already
@@ -71,12 +74,19 @@ namespace YotsubaEngine.Core.YTBControls
         }
 
         /// <summary>
-        /// Adds one or more color and rectangle pairs to the collection.
+        /// Agrega un rectángulo de color y devuelve el identificador de la entidad creada.
+        /// <para>Adds a colored rectangle and returns the identifier of the created entity.</para>
         /// </summary>
-        /// <remarks>This method appends all specified pairs to the end of the collection. The order of
-        /// the added pairs is preserved.</remarks>
-        /// <param name="parameters">An array of tuples, each containing a <see cref="Color"/> and a <see cref="Rectangle"/> to be added. Cannot
-        /// be null.</param>
+        /// <param name="color">Color del rectángulo. <para>Rectangle color.</para></param>
+        /// <param name="x">Posición X. <para>X position.</para></param>
+        /// <param name="y">Posición Y. <para>Y position.</para></param>
+        /// <param name="width">Ancho. <para>Width.</para></param>
+        /// <param name="heigth">Alto. <para>Height.</para></param>
+        /// <param name="scale">Escala. <para>Scale.</para></param>
+        /// <param name="rotation">Rotación. <para>Rotation.</para></param>
+        /// <param name="LayerDeep">Profundidad de capa. <para>Layer depth.</para></param>
+        /// <param name="effect">Efecto de sprite. <para>Sprite effect.</para></param>
+        /// <returns>Identificador de la entidad creada. <para>Identifier of the created entity.</para></returns>
         public int Add(Color color, float x = 0f, float y = 0f, float width = 300f, float heigth = 100f, float scale = 1f, float rotation = 0f, float LayerDeep = 0f, SpriteEffects effect = SpriteEffects.None)
         {
             TransformComponent transformComponent = new TransformComponent() 
@@ -106,11 +116,12 @@ namespace YotsubaEngine.Core.YTBControls
         }
 
         /// <summary>
-        /// Adds a new entity with the specified color and transform component to the entity manager.
+        /// Agrega una nueva entidad con el color y componente de transformación especificados.
+        /// <para>Adds a new entity with the specified color and transform component to the entity manager.</para>
         /// </summary>
-        /// <param name="color">The color to assign to the new entity's transform component.</param>
-        /// <param name="transformComponent">The transform component that defines the position and size of the new entity. Cannot be null.</param>
-        /// <returns>The unique identifier of the newly added entity.</returns>
+        /// <param name="color">Color para el componente de transformación. <para>The color to assign to the new entity's transform component.</para></param>
+        /// <param name="transformComponent">Componente de transformación que define posición y tamaño. <para>The transform component that defines the position and size of the new entity.</para></param>
+        /// <returns>Identificador único de la entidad creada. <para>The unique identifier of the newly added entity.</para></returns>
         public int Add(Color color, TransformComponent transformComponent)
         {
             transformComponent.Color = color;
