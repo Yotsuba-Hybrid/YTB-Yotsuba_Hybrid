@@ -3,8 +3,8 @@ using System.Collections.Generic;
 namespace YotsubaEngine.Graphics
 {
     /// <summary>
-    /// Base registry for 3D model assets used by the engine.
     /// Registro base para activos de modelos 3D usados por el motor.
+    /// <para>Base registry for 3D model assets used by the engine.</para>
     /// </summary>
     /// <remarks>
     /// Games must inherit from this class and register their models in the constructor.
@@ -23,8 +23,8 @@ namespace YotsubaEngine.Graphics
         private static List<string> _allModelsList = new List<string> { "" };
 
         /// <summary>
-        /// Array of all available 3D model paths for UI dropdown/combo.
         /// Array de todas las rutas de modelos 3D disponibles para dropdown/combo en la UI.
+        /// <para>Array of all available 3D model paths for UI dropdown/combo.</para>
         /// </summary>
         public static string[] AllModels => _allModelsList.ToArray();
 
@@ -41,8 +41,8 @@ namespace YotsubaEngine.Graphics
         }
 
         /// <summary>
-        /// Clears all registered models (useful for hot-reload).
         /// Limpia todos los modelos registrados (útil para recarga en caliente).
+        /// <para>Clears all registered models (useful for hot-reload).</para>
         /// </summary>
         public static void Clear()
         {

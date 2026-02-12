@@ -14,7 +14,11 @@
 		<DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)' == 'YTB'">
-		<DefineConstants>YOTSUBA</DefineConstants>
+		<DefineConstants>DEBUG;YOTSUBA</DefineConstants>
+		<DebugType>portable</DebugType>
+		<DebugSymbols>true</DebugSymbols>
+		<Optimize>false</Optimize>
+		<HotReloadEnabled>true</HotReloadEnabled>
 	</PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\SandBoxGame.Core\SandBoxGame.Core.csproj" />

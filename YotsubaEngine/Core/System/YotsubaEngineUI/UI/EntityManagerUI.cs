@@ -150,16 +150,20 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 				case "InputComponent": return "Componente de Entrada" + $" ({component})";
 				case "CameraComponent3D": return "Componente de Cámara 3D" + $" ({component})";
 				case "ScriptComponent": return "Componente de Script" + $" ({component})";
-				case "TileMapComponent2D": return "Componente de TileMap 2D" + $" ({component})";
+				case "TileMapComponent2D": return "Componente de mapa de tiles 2D" + $" ({component})";
 				case "FontComponent2D": return "Componente de Texto 2D" + $" ({component})";
-				case "ShaderComponent": return "Componente de Shader" + $" ({component})";
+				case "ShaderComponent": return "Componente de sombreador" + $" ({component})";
 				case "ModelComponent3D": return "Componente de Modelo 3D" + $" ({component})";
 				default: return component;
             }
 		}
+		/// <summary>
+		/// Renderiza la interfaz del administrador de entidades.
+		/// <para>Renders the entity manager UI.</para>
+		/// </summary>
 		public void Render()
 		{
-			ImGui.Begin("Entity Manager");
+			ImGui.Begin("Administrador de Entidades");
 
 			List<string> componentes = new List<string> {
 				"TransformComponent", "SpriteComponent2D", "AnimationComponent2D",
@@ -516,14 +520,14 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 		{
 			string tilemapPath = component.Propiedades[0].Item2;
 
-			ImGui.TextDisabled(component.Propiedades[0].Item1);
+			ImGui.TextDisabled(GetPropertyLabel(component.Propiedades[0].Item1));
 			ImGui.SameLine();
 			RenderEnumCombo(component, component.Propiedades[0], TiledManager.GetAllTMXFiles());
 
 			// Botón para aplicar dimensiones del tilemap al transform
 			if (!string.IsNullOrWhiteSpace(tilemapPath))
 			{
-				if (ImGui.Button("Aplicar dimensiones al transform component"))
+				if (ImGui.Button("Aplicar dimensiones al componente de transformación"))
 				{
 					ApplyTileMapDimensionsToTransform(component, tilemapPath);
 				}
@@ -539,7 +543,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 
 				if (prop.Item1 is "Position" or "Size")
 				{
-					ImGui.TextDisabled(prop.Item1);
+					ImGui.TextDisabled(GetPropertyLabel(prop.Item1));
 					ImGui.SameLine();
 					ImGui.PushID(prop.Item1);
 
@@ -603,7 +607,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 				}
 
 				ImGui.PushItemWidth(250);
-				if (ImGui.InputText(prop.Item1, ref value, 100))
+				if (ImGui.InputText($"{GetPropertyLabel(prop.Item1)}##{prop.Item1}", ref value, 100))
 				{
 					UpdateProperty(component, prop.Item1, value);
 				}
@@ -629,7 +633,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 
 				if (prop.Item1 == "TextureAtlasPath")
 				{
-					ImGui.TextDisabled("Texture Atlas");
+					ImGui.TextDisabled("Atlas de texturas");
 					ImGui.SameLine();
 
 					int selectedIndex = _textureAtlasFiles.IndexOf(value);
@@ -724,7 +728,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
                 }
 
                 ImGui.PushItemWidth(250);
-				if (ImGui.InputText(prop.Item1, ref value, 100))
+				if (ImGui.InputText($"{GetPropertyLabel(prop.Item1)}##{prop.Item1}", ref value, 100))
 				{
 					UpdateProperty(component, prop.Item1, value);
 				}
@@ -752,7 +756,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 
 				if (prop.Item1 == "TextureAtlasPath")
 				{
-					ImGui.TextDisabled("Texture Atlas");
+					ImGui.TextDisabled("Atlas de texturas");
 					ImGui.SameLine();
 
 					int selectedIndex = _textureAtlasFiles.IndexOf(value);
@@ -873,7 +877,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 
 					if (!availableAnimations.Any())
 					{
-						ImGui.TextDisabled("(Selecciona un Texture Atlas con animaciones)");
+						ImGui.TextDisabled("(Selecciona un atlas de texturas con animaciones)");
 					}
 
 					continue;
@@ -886,7 +890,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 				}
 
 				ImGui.PushItemWidth(250);
-				if (ImGui.InputText(prop.Item1, ref value, 100))
+				if (ImGui.InputText($"{GetPropertyLabel(prop.Item1)}##{prop.Item1}", ref value, 100))
 				{
 					UpdateProperty(component, prop.Item1, value);
 				}
@@ -923,7 +927,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 				}
 
 				ImGui.PushItemWidth(250);
-				if (ImGui.InputText(prop.Item1, ref value, 100))
+				if (ImGui.InputText($"{GetPropertyLabel(prop.Item1)}##{prop.Item1}", ref value, 100))
 				{
 					UpdateProperty(component, prop.Item1, value);
 				}
@@ -972,7 +976,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 				}
 
 				ImGui.PushItemWidth(250);
-				if (ImGui.InputText(prop.Item1, ref value, 100))
+				if (ImGui.InputText($"{GetPropertyLabel(prop.Item1)}##{prop.Item1}", ref value, 100))
 				{
 					UpdateProperty(component, prop.Item1, value);
 				}
@@ -990,7 +994,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 
 				if (prop.Item1 == "InputsInUse")
 				{
-					ImGui.TextDisabled("Inputs en Uso");
+					ImGui.TextDisabled("Entradas en uso");
 					var inputs = value.Split(',', StringSplitOptions.RemoveEmptyEntries)
 									 .Select(s => s.Trim()).ToList();
 
@@ -998,7 +1002,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 					bool hasKeyboard = inputs.Contains("HasKeyboard");
 					bool hasGamepad = inputs.Contains("HasGamepad");
 
-					if (ImGui.Checkbox("Mouse", ref hasMouse))
+					if (ImGui.Checkbox("Ratón", ref hasMouse))
 					{
 						if (hasMouse && !inputs.Contains("HasMouse")) inputs.Add("HasMouse");
 						else inputs.Remove("HasMouse");
@@ -1012,7 +1016,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 						UpdateProperty(component, prop.Item1, string.Join(",", inputs));
 					}
 
-					if (ImGui.Checkbox("Gamepad", ref hasGamepad))
+					if (ImGui.Checkbox("Mando", ref hasGamepad))
 					{
 						if (hasGamepad && !inputs.Contains("HasGamepad")) inputs.Add("HasGamepad");
 						else inputs.Remove("HasGamepad");
@@ -1023,18 +1027,18 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 
 				if (prop.Item1 == "GamePadIndex")
 				{
-					RenderEnumCombo(component, prop, new[] { " ", "One", "Two", "Three", "Four" });
+					RenderEnumCombo(component, prop, new[] { "One", "Two", "Three", "Four" });
 					continue;
 				}
 
                 if (prop.Item1 == "KeyboardMappings")
                 {
-                    ImGui.TextDisabled(prop.Item1 == "KeyboardMappings" ? "Mapeo de Teclado" : "Mapeo de Mouse");
+                    ImGui.TextDisabled(prop.Item1 == "KeyboardMappings" ? "Mapeo de teclado" : "Mapeo de ratón");
 
                     // 1. PREPARACIÓN DE DATOS (Simulación de tus opciones disponibles)
                     // En tu código real, estas deberían venir de una clase estática o configuración global.
-                    string[] todasLasAcciones = { "MoveUp", "MoveDown", "MoveLeft", "MoveRight", "Jump", "Attack" };
-                    string[] todasLasTeclas = { "W", "A", "S", "D", "Space", "Enter", "Esc", "Shift", "Ctrl" };
+                    string[] todasLasAcciones = { " ", "MoveUp", "MoveDown", "MoveLeft", "MoveRight", "Jump", "Attack" };
+                    string[] todasLasTeclas = { " ", "W", "A", "S", "D", "Space", "Enter", "Esc", "Shift", "Ctrl" };
 
                     // 2. PARSEO DEL STRING ACTUAL (Deserialización)
                     // Separamos por comas y luego por dos puntos para obtener pares [Acción, Tecla]
@@ -1186,7 +1190,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 
 				if (prop.Item1 == "OffsetCamera")
 				{
-					ImGui.TextDisabled("Offset de Cámara");
+					ImGui.TextDisabled("Desplazamiento de cámara");
 					ImGui.SameLine();
 					ImGui.PushID("OffsetCamera");
 
@@ -1227,7 +1231,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 						? parsed
 						: 0f;
 					ImGui.PushItemWidth(100);
-					if (ImGui.InputFloat(prop.Item1, ref floatValue))
+					if (ImGui.InputFloat($"{GetPropertyLabel(prop.Item1)}##{prop.Item1}", ref floatValue))
 					{
 						UpdateProperty(component, prop.Item1, floatValue.ToString(CultureInfo.InvariantCulture));
 					}
@@ -1236,7 +1240,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 				}
 
 				ImGui.PushItemWidth(250);
-				if (ImGui.InputText(prop.Item1, ref value, 100))
+				if (ImGui.InputText($"{GetPropertyLabel(prop.Item1)}##{prop.Item1}", ref value, 100))
 				{
 					UpdateProperty(component, prop.Item1, value);
 				}
@@ -1272,7 +1276,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 							indexOfPredet = Array.IndexOf(scripts, scriptPath);
 						}
 
-						ImGui.Combo("Scripts", ref indexOfPredet, scripts, scripts.Length);
+						ImGui.Combo("Guiones##Scripts", ref indexOfPredet, scripts, scripts.Length);
 
 						component.Propiedades[0] = new Tuple<string, string>("Scripts", scriptType + "&:&" + scripts[indexOfPredet] + "&;&");
 
@@ -1294,6 +1298,49 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 		#endregion
 
 		#region Helper Methods
+		private static readonly Dictionary<string, string> PropertyLabels = new(StringComparer.OrdinalIgnoreCase)
+		{
+			{ "Position", "Posición" },
+			{ "Size", "Tamaño" },
+			{ "Color", "Color" },
+			{ "SpriteEffects", "Efectos del sprite" },
+			{ "Scale", "Escala" },
+			{ "TextureAtlasPath", "Atlas de texturas" },
+			{ "SpriteName", "Sprite" },
+			{ "SourceRectangle", "Rectángulo de origen" },
+			{ "IsVisible", "Visible" },
+			{ "AnimationBindings", "Animaciones vinculadas" },
+			{ "CurrentAnimationType", "Tipo de animación actual" },
+			{ "OffSetCollision", "Desfase de colisión" },
+			{ "Velocity", "Velocidad" },
+			{ "GameType", "Tipo de juego" },
+			{ "Mass", "Masa" },
+			{ "IsActive", "Activo" },
+			{ "EffectiveArea", "Área efectiva" },
+			{ "Description", "Descripción" },
+			{ "InputsInUse", "Entradas en uso" },
+			{ "GamePadIndex", "Índice de mando" },
+			{ "KeyboardMappings", "Mapeo de teclado" },
+			{ "MouseMappings", "Mapeo de ratón" },
+			{ "EntityName", "Entidad a seguir" },
+			{ "InitialPosition", "Posición inicial" },
+			{ "OffsetCamera", "Desplazamiento de cámara" },
+			{ "AngleView", "Ángulo de visión" },
+			{ "NearRender", "Plano cercano" },
+			{ "FarRender", "Plano lejano" },
+			{ "Scripts", "Guiones" },
+			{ "TileMapPath", "Ruta del mapa de tiles" },
+			{ "Font", "Fuente" },
+			{ "ShaderPath", "Ruta del sombreador" },
+			{ "params", "Parámetros" },
+			{ "ModelPath", "Ruta del modelo 3D" }
+		};
+
+		private static string GetPropertyLabel(string propertyName)
+		{
+			return PropertyLabels.TryGetValue(propertyName, out var label) ? label : propertyName;
+		}
+
 		private string GetPropertyValue(YTBComponents component, string propertyName)
 		{
 			var prop = component.Propiedades.FirstOrDefault(p => p.Item1 == propertyName);
@@ -1302,7 +1349,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 
 		private void RenderVector2(YTBComponents component, Tuple<string, string> prop, string[] labels)
 		{
-			ImGui.TextDisabled(prop.Item1);
+			ImGui.TextDisabled(GetPropertyLabel(prop.Item1));
 			ImGui.SameLine();
 			ImGui.PushID(prop.Item1);
 
@@ -1328,7 +1375,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 
 		private void RenderVector3(YTBComponents component, Tuple<string, string> prop, string[] labels)
 		{
-			ImGui.TextDisabled(prop.Item1);
+			ImGui.TextDisabled(GetPropertyLabel(prop.Item1));
 			ImGui.SameLine();
 			ImGui.PushID(prop.Item1);
 
@@ -1354,7 +1401,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 
 		private void RenderRectangle(YTBComponents component, Tuple<string, string> prop, string[] labels)
 		{
-			ImGui.TextDisabled(prop.Item1);
+			ImGui.TextDisabled(GetPropertyLabel(prop.Item1));
 			ImGui.SameLine();
 			ImGui.PushID(prop.Item1);
 
@@ -1380,8 +1427,14 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 
 		private void RenderEnumCombo(YTBComponents component, Tuple<string, string> prop, string[] options)
 		{
-			ImGui.TextDisabled(prop.Item1);
+			ImGui.TextDisabled(GetPropertyLabel(prop.Item1));
 			ImGui.SameLine();
+
+			// Prepend empty option if not already present
+			if (options.Length == 0 || options[0] != " ")
+			{
+				options = new[] { " " }.Concat(options).ToArray();
+			}
 
 			int selectedIndex = Array.IndexOf(options, prop.Item2);
 			if (selectedIndex < 0) selectedIndex = 0;
@@ -1396,7 +1449,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 					ImGui.PushID("model_" + i);
 					if (ImGui.Selectable(options[i], isSelected))
 					{
-						UpdateProperty(component, prop.Item1, options[i]);
+						UpdateProperty(component, prop.Item1, options[i] == " " ? "" : options[i]);
 					}
 					ImGui.PopID();
 					if (isSelected)
@@ -1640,7 +1693,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 
 				// Fallback para propiedades no manejadas
 				ImGui.PushItemWidth(250);
-				if (ImGui.InputText(prop.Item1, ref value, 100))
+				if (ImGui.InputText($"{GetPropertyLabel(prop.Item1)}##{prop.Item1}", ref value, 100))
 				{
 					UpdateProperty(component, prop.Item1, value);
 				}
@@ -1657,7 +1710,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 			if (shaderPathProp != null)
 			{
 				string shaderPath = shaderPathProp.Item2;
-				ImGui.TextDisabled("Ruta del Shader");
+				ImGui.TextDisabled("Ruta del sombreador");
 				ImGui.SameLine();
 				ImGui.PushItemWidth(300);
 				if (ImGui.InputText("##ShaderPath", ref shaderPath, 200))
@@ -1670,7 +1723,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 			if (isActiveProp != null)
 			{
 				bool isActive = isActiveProp.Item2.Equals("true", StringComparison.OrdinalIgnoreCase);
-				if (ImGui.Checkbox("Shader Activo", ref isActive))
+				if (ImGui.Checkbox("Sombreador activo", ref isActive))
 				{
 					UpdateProperty(component, isActiveProp.Item1, isActive ? "true" : "false");
 				}

@@ -19,8 +19,8 @@ using Num = System.Numerics;
 namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 {
     /// <summary>
-    /// Renders the editor menu bar for engine tooling.
     /// Renderiza la barra de menú del editor para herramientas del motor.
+    /// <para>Renders the editor menu bar for engine tooling.</para>
     /// </summary>
     public class MenuBarUI
     {
@@ -49,9 +49,12 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
         private (int, int, int) filtroFecha = (0, 0, 0);
 
         /// <summary>
-        /// Creates a menu bar UI with background handlers.
         /// Crea una barra de menú con controladores de fondo.
+        /// <para>Creates a menu bar UI with background handlers.</para>
         /// </summary>
+        /// <param name="getBackground">Función para obtener el color de fondo. <para>Function to get the background color.</para></param>
+        /// <param name="applyBackground">Acción para aplicar el color de fondo. <para>Action to apply the background color.</para></param>
+        /// <param name="onSaveBackgroundName">Acción para guardar el nombre del fondo. <para>Action to save the background name.</para></param>
         public MenuBarUI(Func<Color> getBackground, Action<Color> applyBackground, Action<string> onSaveBackgroundName)
         {
             _getBackground = getBackground;
@@ -60,8 +63,8 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 		}
 
         /// <summary>
-        /// Renders the menu bar and handles user actions.
         /// Renderiza la barra de menú y maneja acciones del usuario.
+        /// <para>Renders the menu bar and handles user actions.</para>
         /// </summary>
         public async Task RenderMenuBarAsync()
         {
@@ -81,7 +84,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
                 }
 				
 
-                if (ImGui.MenuItem("WEB - SpriteSheet Generator"))
+                if (ImGui.MenuItem("WEB - Generador de hojas de sprites"))
                 {
                     Process.Start(new ProcessStartInfo
                     {
@@ -111,7 +114,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
             }
 
 
-            if (ImGui.BeginMenu("Background"))
+            if (ImGui.BeginMenu("Fondo"))
             {
                 ImGui.PushItemWidth(140);
                 Color c = _getBackground();
@@ -131,7 +134,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
             //    ImGui.EndMenu();
             //}
 
-            if (ImGui.Button("Assets HotReload"))
+            if (ImGui.Button("Recompilar Assets"))
             {
                 YTBContentBuilder.Rebuild(async () =>
                 {
@@ -139,7 +142,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
                 });
             }
 
-            if (ImGui.Button("HotReload and Run"))
+            if (ImGui.Button("Recompilar y Ejecutar"))
             {
 #if YTB
                 YTBContentBuilder.Rebuild(async () =>
@@ -153,7 +156,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 #endif
             }
             ImGui.Separator();
-            if (ImGui.Button("Play"))
+            if (ImGui.Button("Reproducir"))
             {
 #if YTB
                 AudioSystem.ResumeAll();
@@ -161,7 +164,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 #endif
             }
             ImGui.SameLine();
-            if (ImGui.Button("Pause")) 
+            if (ImGui.Button("Pausar")) 
             {
 #if YTB
 

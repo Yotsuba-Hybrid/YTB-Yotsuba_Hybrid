@@ -11,13 +11,33 @@ using YotsubaEngine.Events.YTBEvents;
 namespace SandBoxGame.Core.Scripts
 {
     [Script]
+    /// <summary>
+    /// Script del murciélago que rebota en los límites y recolecta slimes.
+    /// <para>Bat script that bounces within bounds and collects slimes.</para>
+    /// </summary>
     public class Bat : BaseScript, ICollisionListener
     {
 
+        /// <summary>
+        /// Ancho actual de la pantalla en píxeles.
+        /// <para>Current screen width in pixels.</para>
+        /// </summary>
         public float ScreenWidth = YTBGlobalState.GraphicsDevice.Viewport.Width;
+        /// <summary>
+        /// Alto actual de la pantalla en píxeles.
+        /// <para>Current screen height in pixels.</para>
+        /// </summary>
         public float ScreenHeight = YTBGlobalState.GraphicsDevice.Viewport.Height;
 
+        /// <summary>
+        /// Límite máximo en X del mundo para el rebote.
+        /// <para>Maximum world X bound used for bouncing.</para>
+        /// </summary>
         public static float MaxWorldXPoint = (int)(YTBGlobalState.GraphicsDevice.Viewport.Width * 0.5f) - 180;
+        /// <summary>
+        /// Límite máximo en Y del mundo para el rebote.
+        /// <para>Maximum world Y bound used for bouncing.</para>
+        /// </summary>
         public static float MaxWorldYPoint = (int)(YTBGlobalState.GraphicsDevice.Viewport.Height * 0.5f) - 180;
 
         const int MAX_VEL_X = 10;
@@ -25,6 +45,11 @@ namespace SandBoxGame.Core.Scripts
 
         private Yotsuba Font;
         private int Eated = 0;
+
+        /// <summary>
+        /// Inicializa el script, sonidos y posición inicial.
+        /// <para>Initializes the script, sounds, and initial position.</para>
+        /// </summary>
         public override void Initialize()
         {
             CreateSoundInstance("bounce");
@@ -41,6 +66,14 @@ namespace SandBoxGame.Core.Scripts
             
         }
 
+        /// <summary>
+        /// Actualiza el movimiento del murciélago cada cuadro.
+        /// <para>Updates the bat movement each frame.</para>
+        /// </summary>
+        /// <param name="gametime">
+        /// Tiempo de juego actual.
+        /// <para>Current game time.</para>
+        /// </param>
         public override void Update(GameTime gametime)
         {
             ref var transform = ref GetTransformComponent();
@@ -55,6 +88,10 @@ namespace SandBoxGame.Core.Scripts
             }
         }
 
+        /// <summary>
+        /// Refleja la velocidad del murciélago al tocar los límites.
+        /// <para>Reflects the bat velocity when hitting the bounds.</para>
+        /// </summary>
         public void ReflectVelocity()
         {
             PlaySound("bounce");
@@ -79,6 +116,10 @@ namespace SandBoxGame.Core.Scripts
 
 
 
+        /// <summary>
+        /// Aplica una posición y velocidad aleatorias al murciélago.
+        /// <para>Applies a random position and velocity to the bat.</para>
+        /// </summary>
         public void ApplyRandomMovement()
         {
             ref var transform = ref GetTransformComponent();
@@ -102,6 +143,14 @@ namespace SandBoxGame.Core.Scripts
             GetRigidBody2D().Velocity = movement;
         }
 
+        /// <summary>
+        /// Maneja las colisiones y actualiza el puntaje.
+        /// <para>Handles collisions and updates the score.</para>
+        /// </summary>
+        /// <param name="@event">
+        /// Evento de colisión recibido.
+        /// <para>Collision event received.</para>
+        /// </param>
         public void OnCollision(OnCollitionEvent @event)
         {
             if (@event.EntityImpediment.Name == "Slime" || @event.EntityTryMove.Name == "Slime")
@@ -113,12 +162,28 @@ namespace SandBoxGame.Core.Scripts
 
         }
 
+        /// <summary>
+        /// Dibuja el script en 2D durante el renderizado.
+        /// <para>Draws the script in 2D during rendering.</para>
+        /// </summary>
+        /// <param name="spriteBatch">
+        /// SpriteBatch usado para dibujar.
+        /// <para>SpriteBatch used for drawing.</para>
+        /// </param>
+        /// <param name="gameTime">
+        /// Tiempo de juego actual.
+        /// <para>Current game time.</para>
+        /// </param>
         public override void Draw2D(SpriteBatch spriteBatch, GameTime gameTime)
         {
            
             base.Draw2D(spriteBatch, gameTime);
         }
 
+        /// <summary>
+        /// Limpia recursos del script y detiene la música.
+        /// <para>Cleans up script resources and stops music.</para>
+        /// </summary>
         public override void Cleanup()
         {
             StopMusic();

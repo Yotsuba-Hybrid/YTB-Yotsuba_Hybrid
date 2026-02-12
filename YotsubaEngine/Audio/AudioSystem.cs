@@ -7,8 +7,8 @@ using YotsubaEngine.Core.System.YotsubaEngineCore;
 namespace YotsubaEngine.Audio
 {
     /// <summary>
-    /// Main audio system for managing sound effects and music playback.
     /// Sistema principal de audio para gestionar efectos de sonido y reproducción de música.
+    /// <para>Main audio system for managing sound effects and music playback.</para>
     /// </summary>
     public static class AudioSystem
     {
@@ -26,8 +26,8 @@ namespace YotsubaEngine.Audio
         #region Properties
 
         /// <summary>
-        /// Master volume for all audio (0.0 to 1.0).
         /// Volumen maestro para todo el audio (0.0 a 1.0).
+        /// <para>Master volume for all audio (0.0 to 1.0).</para>
         /// </summary>
         public static float MasterVolume
         {
@@ -40,8 +40,8 @@ namespace YotsubaEngine.Audio
         }
 
         /// <summary>
-        /// Volume for music playback (0.0 to 1.0).
         /// Volumen para reproducción de música (0.0 a 1.0).
+        /// <para>Volume for music playback (0.0 to 1.0).</para>
         /// </summary>
         public static float MusicVolume
         {
@@ -54,8 +54,8 @@ namespace YotsubaEngine.Audio
         }
 
         /// <summary>
-        /// Volume for sound effects (0.0 to 1.0).
         /// Volumen para efectos de sonido (0.0 a 1.0).
+        /// <para>Volume for sound effects (0.0 to 1.0).</para>
         /// </summary>
         public static float SfxVolume
         {
@@ -64,8 +64,8 @@ namespace YotsubaEngine.Audio
         }
 
         /// <summary>
-        /// Indicates if all audio is muted.
         /// Indica si todo el audio está silenciado.
+        /// <para>Indicates if all audio is muted.</para>
         /// </summary>
         public static bool IsMuted
         {
@@ -78,20 +78,20 @@ namespace YotsubaEngine.Audio
         }
 
         /// <summary>
-        /// Indicates if music is currently playing.
         /// Indica si la música está reproduciéndose actualmente.
+        /// <para>Indicates if music is currently playing.</para>
         /// </summary>
         public static bool IsMusicPlaying => MediaPlayer.State == MediaState.Playing;
 
         /// <summary>
-        /// Indicates if music is paused.
         /// Indica si la música está pausada.
+        /// <para>Indicates if music is paused.</para>
         /// </summary>
         public static bool IsMusicPaused => MediaPlayer.State == MediaState.Paused;
 
         /// <summary>
-        /// Gets or sets whether music should loop.
         /// Obtiene o establece si la música debe repetirse.
+        /// <para>Gets or sets whether music should loop.</para>
         /// </summary>
         public static bool IsRepeating
         {
@@ -104,17 +104,18 @@ namespace YotsubaEngine.Audio
         #region Initialization
 
         /// <summary>
-        /// Sets the audio registry to use for loading audio assets.
         /// Establece el registro de audio a usar para cargar activos de audio.
+        /// <para>Sets the audio registry to use for loading audio assets.</para>
         /// </summary>
+        /// <param name="registry">Registro de audio a usar. <para>Audio registry to use.</para></param>
         public static void SetAudioRegistry(IAudioRegistry registry)
         {
             _audioRegistry = registry;
         }
 
         /// <summary>
-        /// Initializes the audio system.
         /// Inicializa el sistema de audio.
+        /// <para>Initializes the audio system.</para>
         /// </summary>
         public static void Initialize()
         {
@@ -127,37 +128,37 @@ namespace YotsubaEngine.Audio
         #region Sound Effects
 
         /// <summary>
-        /// Plays a sound effect by name with default settings.
         /// Reproduce un efecto de sonido por nombre con configuración predeterminada.
+        /// <para>Plays a sound effect by name with default settings.</para>
         /// </summary>
-        /// <param name="name">The name of the sound effect asset.</param>
-        /// <returns>True if the sound was played successfully.</returns>
+        /// <param name="name">Nombre del efecto de sonido. <para>Sound effect name.</para></param>
+        /// <returns>True si el sonido se reprodujo correctamente. <para>True if the sound was played successfully.</para></returns>
         public static bool PlaySound(string name)
         {
             return PlaySound(name, 1.0f, 0.0f, 0.0f);
         }
 
         /// <summary>
-        /// Plays a sound effect by name with specified volume.
         /// Reproduce un efecto de sonido por nombre con volumen especificado.
+        /// <para>Plays a sound effect by name with specified volume.</para>
         /// </summary>
-        /// <param name="name">The name of the sound effect asset.</param>
-        /// <param name="volume">Volume (0.0 to 1.0).</param>
-        /// <returns>True if the sound was played successfully.</returns>
+        /// <param name="name">Nombre del efecto de sonido. <para>Sound effect name.</para></param>
+        /// <param name="volume">Volumen (0.0 a 1.0). <para>Volume (0.0 to 1.0).</para></param>
+        /// <returns>True si el sonido se reprodujo correctamente. <para>True if the sound was played successfully.</para></returns>
         public static bool PlaySound(string name, float volume)
         {
             return PlaySound(name, volume, 0.0f, 0.0f);
         }
 
         /// <summary>
-        /// Plays a sound effect by name with full control.
         /// Reproduce un efecto de sonido por nombre con control total.
+        /// <para>Plays a sound effect by name with full control.</para>
         /// </summary>
-        /// <param name="name">The name of the sound effect asset.</param>
-        /// <param name="volume">Volume (0.0 to 1.0).</param>
-        /// <param name="pitch">Pitch adjustment (-1.0 to 1.0).</param>
-        /// <param name="pan">Pan position (-1.0 left to 1.0 right).</param>
-        /// <returns>True if the sound was played successfully.</returns>
+        /// <param name="name">Nombre del efecto de sonido. <para>Sound effect name.</para></param>
+        /// <param name="volume">Volumen (0.0 a 1.0). <para>Volume (0.0 to 1.0).</para></param>
+        /// <param name="pitch">Ajuste de tono (-1.0 a 1.0). <para>Pitch adjustment (-1.0 to 1.0).</para></param>
+        /// <param name="pan">Posición de paneo (-1.0 izquierda a 1.0 derecha). <para>Pan position (-1.0 left to 1.0 right).</para></param>
+        /// <returns>True si el sonido se reprodujo correctamente. <para>True if the sound was played successfully.</para></returns>
         public static bool PlaySound(string name, float volume, float pitch, float pan)
         {
             if (_isMuted) return false;
@@ -182,11 +183,11 @@ namespace YotsubaEngine.Audio
         }
 
         /// <summary>
-        /// Creates a sound effect instance for advanced control (loop, pause, etc.).
         /// Crea una instancia de efecto de sonido para control avanzado (loop, pausa, etc.).
+        /// <para>Creates a sound effect instance for advanced control (loop, pause, etc.).</para>
         /// </summary>
-        /// <param name="name">The name of the sound effect asset.</param>
-        /// <returns>A SoundEffectInstance or null if not found.</returns>
+        /// <param name="name">Nombre del efecto de sonido. <para>Sound effect name.</para></param>
+        /// <returns>Instancia de SoundEffect o null si no se encuentra. <para>SoundEffect instance or null if not found.</para></returns>
         public static SoundEffectInstance CreateSoundInstance(string name)
         {
             var soundEffect = GetSoundEffect(name);
@@ -251,12 +252,12 @@ namespace YotsubaEngine.Audio
         #region Music
 
         /// <summary>
-        /// Plays a song by name.
         /// Reproduce una canción por nombre.
+        /// <para>Plays a song by name.</para>
         /// </summary>
-        /// <param name="name">The name of the song asset.</param>
-        /// <param name="loop">Whether to loop the song.</param>
-        /// <returns>True if the song started playing successfully.</returns>
+        /// <param name="name">Nombre de la canción. <para>Song name.</para></param>
+        /// <param name="loop">Indica si la canción debe repetirse. <para>Whether to loop the song.</para></param>
+        /// <returns>True si la canción comenzó a reproducirse. <para>True if the song started playing successfully.</para></returns>
         public static bool PlayMusic(string name, bool loop = true)
         {
             var song = GetSong(name);
@@ -269,8 +270,8 @@ namespace YotsubaEngine.Audio
         }
 
         /// <summary>
-        /// Stops the currently playing music.
         /// Detiene la música que se está reproduciendo actualmente.
+        /// <para>Stops the currently playing music.</para>
         /// </summary>
         public static void StopMusic()
         {
@@ -278,8 +279,8 @@ namespace YotsubaEngine.Audio
         }
 
         /// <summary>
-        /// Pauses the currently playing music.
         /// Pausa la música que se está reproduciendo actualmente.
+        /// <para>Pauses the currently playing music.</para>
         /// </summary>
         public static void PauseMusic()
         {
@@ -287,8 +288,8 @@ namespace YotsubaEngine.Audio
         }
 
         /// <summary>
-        /// Resumes paused music.
         /// Reanuda la música pausada.
+        /// <para>Resumes paused music.</para>
         /// </summary>
         public static void ResumeMusic()
         {
@@ -349,8 +350,8 @@ namespace YotsubaEngine.Audio
         #region Global Control
 
         /// <summary>
-        /// Pauses all active sound instances and music.
         /// Pausa todas las instancias de sonido activas y la música.
+        /// <para>Pauses all active sound instances and music.</para>
         /// </summary>
         public static void PauseAll()
         {
@@ -368,8 +369,8 @@ namespace YotsubaEngine.Audio
         }
 
         /// <summary>
-        /// Resumes all paused sound instances and music.
         /// Reanuda todas las instancias de sonido pausadas y la música.
+        /// <para>Resumes all paused sound instances and music.</para>
         /// </summary>
         public static void ResumeAll()
         {
@@ -387,8 +388,8 @@ namespace YotsubaEngine.Audio
         }
 
         /// <summary>
-        /// Stops all active sound instances and music.
         /// Detiene todas las instancias de sonido activas y la música.
+        /// <para>Stops all active sound instances and music.</para>
         /// </summary>
         public static void StopAll()
         {
@@ -400,8 +401,8 @@ namespace YotsubaEngine.Audio
         }
 
         /// <summary>
-        /// Cleans up stopped sound instances.
         /// Limpia las instancias de sonido detenidas.
+        /// <para>Cleans up stopped sound instances.</para>
         /// </summary>
         public static void CleanupStoppedInstances()
         {
@@ -416,8 +417,8 @@ namespace YotsubaEngine.Audio
         }
 
         /// <summary>
-        /// Disposes all cached audio resources.
         /// Libera todos los recursos de audio cacheados.
+        /// <para>Disposes all cached audio resources.</para>
         /// </summary>
         public static void Dispose()
         {

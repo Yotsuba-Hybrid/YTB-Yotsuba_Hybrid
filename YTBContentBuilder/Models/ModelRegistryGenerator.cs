@@ -26,7 +26,7 @@ namespace YotsubaEngine.YTBContentBuilder.Models
         /// <param name="outputPath">Path where the generated file will be written (without extension).</param>
         public static void GenerateRegistry(string sourcePath, string outputPath)
         {
-            Console.WriteLine($"[ModelRegistry] Scanning for 3D model files in: {sourcePath}");
+            //Console.WriteLine($"[ModelRegistry] Scanning for 3D model files in: {sourcePath}");
 
             var models = new List<(string Name, string RelativePath)>();
 
@@ -42,7 +42,7 @@ namespace YotsubaEngine.YTBContentBuilder.Models
                 }
                 catch (DirectoryNotFoundException)
                 {
-                    Console.WriteLine($"[ModelRegistry] Directory not found: {sourcePath}");
+                    //Console.WriteLine($"[ModelRegistry] Directory not found: {sourcePath}");
                     continue;
                 }
 
@@ -66,7 +66,7 @@ namespace YotsubaEngine.YTBContentBuilder.Models
                     if (seenPaths.Add(relativePath))
                     {
                         models.Add((fileName, relativePath));
-                        Console.WriteLine($"[ModelRegistry] Model found: {fileName} ({relativePath})");
+                        //Console.WriteLine($"[ModelRegistry] Model found: {fileName} ({relativePath})");
                     }
                 }
             }
@@ -202,8 +202,8 @@ namespace YotsubaEngine.YTBContentBuilder.Models
 
             string fullOutputPath = outputPath + ".cs";
             File.WriteAllText(fullOutputPath, sb.ToString());
-            Console.WriteLine($"[ModelRegistry] Registry generated at: {fullOutputPath}");
-            Console.WriteLine($"[ModelRegistry] Found {models.Count} 3D models.");
+            //Console.WriteLine($"[ModelRegistry] Registry generated at: {fullOutputPath}");
+            //Console.WriteLine($"[ModelRegistry] Found {models.Count} 3D models.");
         }
     }
 }

@@ -8,8 +8,8 @@ using YotsubaEngine.Core.YotsubaGame;
 namespace YotsubaEngine.Core.System.S_2D
 {
     /// <summary>
-    /// System responsible for managing and rendering GumUI user interface components.
     /// Sistema responsable de gestionar y renderizar componentes de interfaz GumUI.
+    /// <para>System responsible for managing and rendering GumUI user interface components.</para>
     /// </summary>
     /// <remarks>
     /// This system integrates with YTBGum to provide a lightweight UI framework.
@@ -21,30 +21,30 @@ namespace YotsubaEngine.Core.System.S_2D
     public class GumUISystem2D : ISystem
     {
         /// <summary>
-        /// Initializes the GumUI system by clearing all existing UI elements.
         /// Inicializa el sistema GumUI limpiando todos los elementos de UI existentes.
+        /// <para>Initializes the GumUI system by clearing all existing UI elements.</para>
         /// </summary>
-        /// <param name="entities">The entity manager instance. Instancia del gestor de entidades.</param>
+        /// <param name="entities">Instancia del gestor de entidades. <para>The entity manager instance.</para></param>
         public void InitializeSystem(EntityManager entities)
         {
             YTBGum.Clear();
         }
 
         /// <summary>
-        /// Updates the GumUI system logic each frame.
         /// Actualiza la lógica del sistema GumUI en cada frame.
+        /// <para>Updates the GumUI system logic each frame.</para>
         /// </summary>
-        /// <param name="gameTime">Snapshot of timing values. Instantánea de valores de tiempo.</param>
+        /// <param name="gameTime">Instantánea de valores de tiempo. <para>Snapshot of timing values.</para></param>
         public void UpdateSystem(GameTime gameTime)
         {
             YTBGum.Update(gameTime);
         }
 
         /// <summary>
-        /// Renders all GumUI components to the screen.
         /// Renderiza todos los componentes GumUI en la pantalla.
+        /// <para>Renders all GumUI components to the screen.</para>
         /// </summary>
-        /// <param name="gameTime">Snapshot of timing values. Instantánea de valores de tiempo.</param>
+        /// <param name="gameTime">Instantánea de valores de tiempo. <para>Snapshot of timing values.</para></param>
         /// <remarks>
         /// In DEBUG builds on Windows, skips rendering if the game window is not active.
         /// En builds DEBUG en Windows, omite el renderizado si la ventana del juego no está activa.
@@ -59,20 +59,20 @@ namespace YotsubaEngine.Core.System.S_2D
         }
 
         /// <summary>
-        /// Per-entity update callback (not used by GumUI system).
         /// Callback de actualización por entidad (no usado por el sistema GumUI).
+        /// <para>Per-entity update callback (not used by GumUI system).</para>
         /// </summary>
-        /// <param name="Entidad">The entity to update. Entidad a actualizar.</param>
-        /// <param name="time">Game timing information. Información de tiempo del juego.</param>
+        /// <param name="Entidad">Entidad a actualizar. <para>The entity to update.</para></param>
+        /// <param name="time">Información de tiempo del juego. <para>Game timing information.</para></param>
         public void SharedEntityForEachUpdate(Yotsuba Entidad, GameTime time)
         {
         }
 
         /// <summary>
-        /// Per-entity initialization callback (not used by GumUI system).
         /// Callback de inicialización por entidad (no usado por el sistema GumUI).
+        /// <para>Per-entity initialization callback (not used by GumUI system).</para>
         /// </summary>
-        /// <param name="Entidad">The entity to initialize. Entidad a inicializar.</param>
+        /// <param name="Entidad">Entidad a inicializar. <para>The entity to initialize.</para></param>
         public void SharedEntityInitialize(Yotsuba Entidad)
         {
         }

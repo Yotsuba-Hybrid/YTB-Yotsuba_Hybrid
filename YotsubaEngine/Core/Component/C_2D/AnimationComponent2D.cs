@@ -6,28 +6,28 @@ using YotsubaEngine.Graphics;
 namespace YotsubaEngine.Core.Component.C_2D
 {
     /// <summary>
-    /// Component that stores sprite animations for movement.
-    /// Componente que añade la funcionalidad de mostrar varios sprites para representar movimiento
+    /// Componente que almacena animaciones de sprites para representar movimiento.
+    /// <para>Component that stores sprite animations for movement.</para>
     /// </summary>
     public struct AnimationComponent2D
     {
         /// <summary>
-        /// Dictionary storing all animations for the component.
-        /// Diccionario donde se almacenan todas las animaciones del componente
+        /// Diccionario donde se almacenan todas las animaciones del componente.
+        /// <para>Dictionary storing all animations for the component.</para>
         /// </summary>
         private readonly Dictionary<AnimationType, Animation> Animations = new Dictionary<AnimationType, Animation>();
 
         /// <summary>
-        /// Stores the currently active animation.
-        /// Se actualiza con el cambio de animacion, aqui se guarda la animacion que esta corriendo actualmente;
+        /// Almacena la animación actualmente activa.
+        /// <para>Stores the currently active animation.</para>
         /// </summary>
         public ValueTuple<AnimationType, Animation> CurrentAnimationType { get; set; }
 
         /// <summary>
-        /// Creates the component with the provided animations.
-        /// Constructor principal, recibe un arreglo de animaciones.
+        /// Crea el componente con las animaciones proporcionadas.
+        /// <para>Creates the component with the provided animations.</para>
         /// </summary>
-        /// <param name="tuples">Animation pairs to register. Pares de animación a registrar.</param>
+        /// <param name="tuples">Pares de animación a registrar.<para>Animation pairs to register.</para></param>
         public AnimationComponent2D(params Tuple<AnimationType, Animation>[] tuples)
         {
             foreach(var tup in tuples)
@@ -35,11 +35,11 @@ namespace YotsubaEngine.Core.Component.C_2D
         }
 
         /// <summary>
-        /// Adds or replaces an animation entry.
-        /// Metodo para agregar una nueva animacion.
+        /// Agrega o reemplaza una animación.
+        /// <para>Adds or replaces an animation entry.</para>
         /// </summary>
-        /// <param name="animationType">Animation type key. Tipo de animación.</param>
-        /// <param name="animation">Animation instance. Instancia de animación.</param>
+        /// <param name="animationType">Tipo de animación.<para>Animation type key.</para></param>
+        /// <param name="animation">Instancia de animación.<para>Animation instance.</para></param>
         public void AddAnimation(AnimationType animationType, Animation animation)
         {
             // Inicializa solo si está nulo (lazy initialization)
@@ -56,37 +56,39 @@ namespace YotsubaEngine.Core.Component.C_2D
 		}
 
         /// <summary>
-        /// Removes an animation entry.
-        /// Metodo para eliminar una animacion.
+        /// Elimina una animación.
+        /// <para>Removes an animation entry.</para>
         /// </summary>
-        /// <param name="animationType">Animation type key. Tipo de animación.</param>
+        /// <param name="animationType">Tipo de animación.<para>Animation type key.</para></param>
         public void RemoveAnimation(AnimationType animationType)
         {
             Animations.Remove(animationType);
         }
 
         /// <summary>
-        /// Retrieves an animation by type.
-        /// Metodo para obtener una animacion facilmente.
+        /// Obtiene una animación por su tipo.
+        /// <para>Retrieves an animation by type.</para>
         /// </summary>
-        /// <param name="animationType">Animation type key. Tipo de animación.</param>
-        /// <returns>The requested animation. La animación solicitada.</returns>
+        /// <param name="animationType">Tipo de animación.<para>Animation type key.</para></param>
+        /// <returns>La animación solicitada.<para>The requested animation.</para></returns>
         public readonly Animation GetAnimation(AnimationType animationType)
         {
             return Animations[animationType];
         }
 
         /// <summary>
-        /// Checks whether an animation exists for the given type.
         /// Comprueba si existe una animación para el tipo indicado.
+        /// <para>Checks whether an animation exists for the given type.</para>
         /// </summary>
+        /// <param name="type">Tipo de animación a comprobar.<para>Animation type to check.</para></param>
+        /// <returns>True si existe la animación.<para>True if the animation exists.</para></returns>
         public bool ContainsAnimation(AnimationType type) => Animations.ContainsKey(type);
 
         /// <summary>
-        /// Activates the requested animation.
-        /// Metodo para activar una animacion
+        /// Activa la animación solicitada.
+        /// <para>Activates the requested animation.</para>
         /// </summary>
-        /// <param name="type">Animation type to activate. Tipo de animación a activar.</param>
+        /// <param name="type">Tipo de animación a activar.<para>Animation type to activate.</para></param>
         public void ActivateAnimation(AnimationType type)
         {
             CurrentAnimationType = (AnimationType.walk, GetAnimation(type));
@@ -94,54 +96,54 @@ namespace YotsubaEngine.Core.Component.C_2D
     }
 
     /// <summary>
-    /// Defines the available animation types.
     /// Define los tipos de animación disponibles.
+    /// <para>Defines the available animation types.</para>
     /// </summary>
     public enum AnimationType
     {
         /// <summary>
-        /// No animation.
         /// Sin animación.
+        /// <para>No animation.</para>
         /// </summary>
         none,
         /// <summary>
-        /// Idle animation.
         /// Animación de reposo.
+        /// <para>Idle animation.</para>
         /// </summary>
         idle,
         /// <summary>
-        /// Walking animation.
         /// Animación de caminar.
+        /// <para>Walking animation.</para>
         /// </summary>
         walk,
         /// <summary>
-        /// Running animation.
         /// Animación de correr.
+        /// <para>Running animation.</para>
         /// </summary>
         run,
         /// <summary>
-        /// Jumping animation.
         /// Animación de salto.
+        /// <para>Jumping animation.</para>
         /// </summary>
         jump,
         /// <summary>
-        /// Crouching animation.
         /// Animación de agacharse.
+        /// <para>Crouching animation.</para>
         /// </summary>
         crouch,
         /// <summary>
-        /// Attack animation.
         /// Animación de ataque.
+        /// <para>Attack animation.</para>
         /// </summary>
         attack,
         /// <summary>
-        /// Hurt animation.
         /// Animación de daño.
+        /// <para>Hurt animation.</para>
         /// </summary>
         hurt,
         /// <summary>
-        /// Death animation.
         /// Animación de muerte.
+        /// <para>Death animation.</para>
         /// </summary>
         die
     }

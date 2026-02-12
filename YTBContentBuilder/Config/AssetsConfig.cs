@@ -12,31 +12,10 @@ namespace YotsubaEngine.YTBContentBuilder
         public static void Apply(ContentCollection contentCollection)
         {
 
-            
 
-            /// Models
-            contentCollection.Include<RegexRule>(".fbx");
-            contentCollection.Include<RegexRule>(".obj");
-            contentCollection.Include<RegexRule>(".x");
 
-            /// Images
-            contentCollection.Include<RegexRule>(".png");
-            contentCollection.Include<RegexRule>(".jpg");
-            contentCollection.Include<RegexRule>(".jpeg");
-            contentCollection.Include<RegexRule>(".bmp");
-
-            /// Audio
-            contentCollection.Include<RegexRule>(".wav");
-            contentCollection.Include<RegexRule>(".mp3");
-            contentCollection.Include<RegexRule>(".ogg");
-
-            ///Video
-            contentCollection.Include<RegexRule>(".mp4");
-
-            /// Text
-            contentCollection.Include<RegexRule>(".spritefont");
-            contentCollection.IncludeCopy<RegexRule>(".ttf");
-            contentCollection.IncludeCopy<RegexRule>(".xml");
+            contentCollection.Include<WildcardRule>("*");
+                
 
             /// Copy
             //contentCollection.IncludeCopy<RegexRule>(".txt");
@@ -44,9 +23,9 @@ namespace YotsubaEngine.YTBContentBuilder
             contentCollection.IncludeCopy<RegexRule>(".ttf");
             contentCollection.IncludeCopy<RegexRule>(".cs");   // Scripts del juego
             contentCollection.IncludeCopy<RegexRule>(".tmx");  // Mapas de Tiled
+            contentCollection.IncludeCopy<RegexRule>(".xml");  // Mapas de Tiled
 
-            /// Effects
-            contentCollection.Include<RegexRule>(".fx");
+
 
             // exclude bin / obj paths
             contentCollection.Exclude<RegexRule>("bin/");

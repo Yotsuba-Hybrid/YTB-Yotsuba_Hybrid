@@ -11,12 +11,16 @@ using System.Runtime.InteropServices;
 namespace YotsubaEngine.Graphics.ImGuiNet
 {
     /// <summary>
+    /// Renderizador de ImGui para MonoGame.
+    /// <para>ImGui renderer for MonoGame.</para>
+    /// </summary>
+    /// <remarks>
+    /// Autores originales del paquete MonoGame.ImGuiNet.
+    /// <para>Original authors of the MonoGame.ImGuiNet package.</para>
     /// Author("Package MonoGame.ImGuiNet", "09/2025"),
     /// Author("https://contrib.rocks/image?repo=Mezo-hx/MonoGame.ImGuiNet", "09/2025"),
     /// Author("https://github.com/Mezo-hx/MonoGame.ImGuiNet/graphs/contributors", "09/2025")
-    /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
+    /// </remarks>
     public class ImGuiRenderer
     {
         private Game _game;
@@ -47,6 +51,11 @@ namespace YotsubaEngine.Graphics.ImGuiNet
         private readonly float WHEEL_DELTA = 120;
         private Keys[] _allKeys = Enum.GetValues<Keys>();
 
+        /// <summary>
+        /// Inicializa el renderizador de ImGui.
+        /// <para>Initializes the ImGui renderer.</para>
+        /// </summary>
+        /// <param name="game">Instancia del juego. <para>Game instance.</para></param>
         public ImGuiRenderer(Game game)
         {
             var context = ImGui.CreateContext();
@@ -73,7 +82,8 @@ namespace YotsubaEngine.Graphics.ImGuiNet
         #region ImGuiRenderer
 
         /// <summary>
-        /// Creates a texture and loads the font data from ImGui. Should be called when the <see cref="GraphicsDevice" /> is initialized but before any rendering is done
+        /// Crea una textura y carga los datos de fuentes de ImGui; debe llamarse antes de renderizar.
+        /// <para>Creates a texture and loads ImGui font data; call before rendering.</para>
         /// </summary>
         public virtual unsafe void RebuildFontAtlas()
         {
@@ -101,8 +111,11 @@ namespace YotsubaEngine.Graphics.ImGuiNet
         }
 
         /// <summary>
-        /// Creates a pointer to a texture, which can be passed through ImGui calls such as <see cref="ImGui.Image" />. That pointer is then used by ImGui to let us know what texture to draw
+        /// Crea un puntero a una textura para usarlo con ImGui (por ejemplo, <see cref="ImGui.Image" />).
+        /// <para>Creates a texture pointer for ImGui calls (for example, <see cref="ImGui.Image" />).</para>
         /// </summary>
+        /// <param name="texture">Textura a registrar. <para>Texture to register.</para></param>
+        /// <returns>Identificador de textura para ImGui. <para>Texture identifier for ImGui.</para></returns>
         public virtual IntPtr BindTexture(Texture2D texture)
         {
             var id = new IntPtr(_textureId++);
@@ -113,16 +126,20 @@ namespace YotsubaEngine.Graphics.ImGuiNet
         }
 
         /// <summary>
-        /// Removes a previously created texture pointer, releasing its reference and allowing it to be deallocated
+        /// Elimina un puntero de textura creado previamente y libera la referencia.
+        /// <para>Removes a previously created texture pointer and releases its reference.</para>
         /// </summary>
+        /// <param name="textureId">Identificador de textura a liberar. <para>Texture identifier to unbind.</para></param>
         public virtual void UnbindTexture(IntPtr textureId)
         {
             _loadedTextures.Remove(textureId);
         }
 
         /// <summary>
-        /// Sets up ImGui for a new frame, should be called at frame start
+        /// Configura ImGui para un nuevo frame; debe llamarse al inicio del frame.
+        /// <para>Sets up ImGui for a new frame; call at frame start.</para>
         /// </summary>
+        /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
         public virtual void BeginLayout(GameTime gameTime)
         {
             ImGui.GetIO().DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -133,7 +150,8 @@ namespace YotsubaEngine.Graphics.ImGuiNet
         }
 
         /// <summary>
-        /// Asks ImGui for the generated geometry data and sends it to the graphics pipeline, should be called after the UI is drawn using ImGui.** calls
+        /// Envía la geometría generada por ImGui al pipeline gráfico; llamar tras dibujar la UI.
+        /// <para>Sends ImGui generated geometry to the graphics pipeline; call after drawing the UI.</para>
         /// </summary>
         public virtual void EndLayout()
         {

@@ -17,7 +17,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
 #if YTB
     /// <summary>
     /// Sistema para arrastrar entidades de texto (FontComponent2D) en modo DEBUG.
-    /// Usa Ctrl + Shift + Click Izquierdo para mover texto.
+    /// <para>System for dragging text entities (FontComponent2D) in DEBUG mode.</para>
     /// </summary>
     internal class FontDragSystem : ISystem
     {
@@ -29,6 +29,11 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
         private int? _draggedFontEntityId = null;
         private Vector2 _dragOffset = Vector2.Zero;
 
+        /// <summary>
+        /// Inicializa el sistema de arrastre de fuentes con el administrador de entidades.
+        /// <para>Initializes the font drag system with the entity manager.</para>
+        /// </summary>
+        /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
         public void InitializeSystem(EntityManager entities)
         {
             EntityManager = entities;
@@ -36,13 +41,21 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
         }
 
         /// <summary>
-        /// Establece la referencia al FontSystem2D para poder acceder a las fuentes
+        /// Establece la referencia al FontSystem2D para poder acceder a las fuentes.
+        /// <para>Sets the FontSystem2D reference to access fonts.</para>
         /// </summary>
+        /// <param name="fontSystem">Sistema de fuentes. <para>Font system.</para></param>
         public void SetFontSystem(FontSystem2D fontSystem)
         {
             FontSystem = fontSystem;
         }
 
+        /// <summary>
+        /// Actualiza el arrastre por entidad en cada frame.
+        /// <para>Updates per-entity dragging each frame.</para>
+        /// </summary>
+        /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
+        /// <param name="time">Tiempo de juego. <para>Game time.</para></param>
         public void SharedEntityForEachUpdate(Yotsuba Entidad, GameTime time)
         {
             // Solo procesar entidades con FontComponent2D
@@ -51,11 +64,21 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
             FontEntityDrag(Entidad);
         }
 
+        /// <summary>
+        /// Inicializa el estado por entidad (sin configuración adicional).
+        /// <para>Initializes per-entity state (no additional setup).</para>
+        /// </summary>
+        /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
         public void SharedEntityInitialize(Yotsuba Entidad)
         {
             // No se requiere inicialización especial
         }
 
+        /// <summary>
+        /// Ejecuta la actualización global del sistema (sin lógica adicional).
+        /// <para>Runs the global system update (no additional logic).</para>
+        /// </summary>
+        /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
         public void UpdateSystem(GameTime gameTime)
         {
             // No se requiere lógica global por frame
@@ -154,8 +177,9 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
             );
 
             // -----------------------------------------------------------------------
-            // LÓGICA DE ARRASTRE
+            // LÓGICA DE ARRASTRE (solo en modo Engine)
             // -----------------------------------------------------------------------
+            if (!YTBGlobalState.EngineShortcutsMode) return;
             bool isCtrlShiftHeld = keyboard.IsKeyDown(Keys.LeftControl) && keyboard.IsKeyDown(Keys.LeftShift);
 
             // 1. INICIO DEL ARRASTRE

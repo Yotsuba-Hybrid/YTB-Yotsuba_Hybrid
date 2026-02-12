@@ -15,17 +15,16 @@ using YotsubaEngine.Exceptions;
 namespace YotsubaEngine.Core.System.S_2D
 {
     /// <summary>
-    /// 2D rendering system executed after game state updates.
-    /// Sistema de renderizado de la UI. Ultimo sistema en ejecutarse.
-    /// Renderiza la UI despues de que el estado del juego se actualizo por completo en los demas sistemas.
+    /// Sistema de renderizado 2D ejecutado después de actualizar el estado del juego.
+    /// <para>2D rendering system executed after game state updates.</para>
     /// </summary>
     public class RenderSystem2D
     {
 
 #if YTB
         /// <summary>
-        /// Indicates whether the game view is active in debug mode.
         /// Indica si la vista de juego está activa en modo depuración.
+        /// <para>Indicates whether the game view is active in debug mode.</para>
         /// </summary>
         public static bool IsGameActive = false;
         /// <summary>
@@ -36,17 +35,20 @@ namespace YotsubaEngine.Core.System.S_2D
 
 
         /// <summary>
-        /// Specifies the offset applied to the camera in the editor view.
+        /// Especifica el desplazamiento horizontal aplicado a la cámara en la vista del editor.
+        /// <para>Specifies the horizontal offset applied to the camera in the editor view.</para>
         /// </summary>
         public /*const*/static float EDITOR_OFFSET_CAMERA_X = 270;
 
         /// <summary>
-        /// Specifies the vertical offset, in units, applied to the camera in the editor view.
+        /// Especifica el desplazamiento vertical aplicado a la cámara en la vista del editor.
+        /// <para>Specifies the vertical offset, in units, applied to the camera in the editor view.</para>
         /// </summary>
-        public /*const*/ static float EDITOR_OFFSET_CAMERA_Y = 150;
+        public /*const*/ static float EDITOR_OFFSET_CAMERA_Y = 120;
 
         /// <summary>
-        /// Gets or sets the scale factor applied to the camera in the editor environment.
+        /// Obtiene o establece la escala aplicada a la cámara en el entorno del editor.
+        /// <para>Gets or sets the scale factor applied to the camera in the editor environment.</para>
         /// </summary>
         public /*const*/ static float EDITOR_SCALE_CAMERA = 0.535f;
 #endif
@@ -66,10 +68,10 @@ namespace YotsubaEngine.Core.System.S_2D
         //Effect exampleEffect;
 
         /// <summary>
-        /// Initializes the render system and subscriptions.
         /// Inicializa el sistema de render y sus suscripciones.
+        /// <para>Initializes the render system and subscriptions.</para>
         /// </summary>
-        /// <param name="entities">Entity manager. Administrador de entidades.</param>
+        /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
         public void InitializeSystem(EntityManager entities)
         {
             //exampleEffect = YTBGlobalState.ContentManager.Load<Effect>("grayscaleEffect");
@@ -113,11 +115,11 @@ namespace YotsubaEngine.Core.System.S_2D
 #endif
 
         /// <summary>
-        /// Draws all 2D entities for the current frame.
         /// Dibuja todas las entidades 2D del frame actual.
+        /// <para>Draws all 2D entities for the current frame.</para>
         /// </summary>
-        /// <param name="brocha">Sprite batch. Sprite batch.</param>
-        /// <param name="gameTime">Game time. Tiempo de juego.</param>
+        /// <param name="brocha">Sprite batch. <para>Sprite batch.</para></param>
+        /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
         public void UpdateSystem(SpriteBatch @brocha, GameTime @gameTime)
         {
 #if YTB
@@ -133,6 +135,11 @@ namespace YotsubaEngine.Core.System.S_2D
 #endif
 
             EntityManager entityManager = EntityManager;
+
+#if YTB
+            if (entityManager is null) return;
+#endif
+
             var cameraEntity = EntityManager.Camera;
             Matrix viewMatrix = Matrix.Identity;
 

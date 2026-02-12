@@ -1,14 +1,10 @@
-using FuelCell;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using SandBoxGame.Core.Localization;
-using SandBoxGame.Core.Scripts.ModelScreen;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Reflection;
 using YotsubaEngine;
 using YotsubaEngine.Audio;
 using YotsubaEngine.Core.System.YotsubaEngineCore;
@@ -18,157 +14,83 @@ using YotsubaEngine.Scripting;
 namespace SandBoxGame.Core
 {
     /// <summary>
-    /// The main class for the game, responsible for managing game components, settings, 
-    /// and platform-specific configurations.
+    /// Clase principal del juego, responsable de gestionar componentes, ajustes y configuración específica de la plataforma.
+    /// <para>The main class for the game, responsible for managing components, settings, and platform-specific configuration.</para>
     /// </summary>
     public class YTBProgram : YTBGame
     {
-        // Resources for drawing.
-        private GraphicsDeviceManager graphicsDeviceManager;
 
         /// <summary>
-        /// Indicates if the game is running on a mobile platform.
+        /// Ancho de la ventana del juego. En desarrollo, se establece en 1920x1080 para facilitar la depuración en monitores de escritorio.
+        /// <para>Game window width. In development it is set to 1920x1080 for easier debugging on desktop monitors.</para>
         /// </summary>
-        public readonly static bool IsMobile = OperatingSystem.IsAndroid() || OperatingSystem.IsIOS();
+        public const int WINDOW_WIDTH = 1920;
 
         /// <summary>
-        /// Indicates if the game is running on a desktop platform.
+        /// Alto de la ventana del juego. En desarrollo, se establece en 1920x1080 para facilitar la depuración en monitores de escritorio.
+        /// <para>Game window height. In development it is set to 1920x1080 for easier debugging on desktop monitors.</para>
         /// </summary>
-        public readonly static bool IsDesktop = OperatingSystem.IsMacOS() || OperatingSystem.IsLinux() || OperatingSystem.IsWindows();
+        public const int WINDOW_HEIGHT = 1080;
 
-
-        //private Graphics3D pincel3d;
         /// <summary>
-        /// Initializes a new instance of the game. Configures platform-specific settings, 
-        /// initializes services like settings and leaderboard managers, and sets up the 
-        /// screen manager for screen transitions.
+        /// Indica si el juego se inicia en pantalla completa.
+        /// <para>Indicates whether the game starts in fullscreen.</para>
         /// </summary>
-        public YTBProgram()
+        public const bool IS_FULLSCREEN =
+#if YTB
+            // Para el editor visual
+            true
+#else
+            // Para el juego
+            true
+#endif
+;
+
+
+#if YTB
+        /// <summary>
+        /// Indica si el cursor del ratón es visible.
+        /// <para>Indicates whether the mouse cursor is visible.</para>
+        /// </summary>
+        public const bool IS_MOUSE_VISIBLE = true;
+#else
+        /// <summary>
+        /// Indica si el cursor del ratón es visible.
+        /// <para>Indicates whether the mouse cursor is visible.</para>
+        /// </summary>
+        public const bool IS_MOUSE_VISIBLE = true;
+#endif
+
+        /// <summary>
+        /// Inicializa una nueva instancia del juego y configura los servicios y el renderizado.
+        /// <para>Initializes a new game instance and configures services and rendering.</para>
+        /// </summary>
+        public YTBProgram() : base(IS_MOUSE_VISIBLE)
         {
+            Console.WriteLine("[SandBoxGameGame] Constructor start");
 
-
-            //Model modelo3d = Content.Load<Model>("Models/Car");
-            //Vector3 PosicionPlayer = new Vector3(0, 0, 0);
-
-
-            ///// Camara por defecto
-            ///// El primer parametro es la posici�n de la c�mara en el mundo 3D (0, 0, 10)
-            ///// El segundo parametro es el punto al que la c�mara est� mirando (Vector3.Zero)
-            ///// El tercer parametro es el vector "up" de la c�mara (Vector3.Up). Es decir, la direcci�n que se considera "arriba" para la c�mara.
-            //Matrix puntoExactoDeRenderizado = Matrix.CreateLookAt(new Vector3(0, 0, 10), PosicionPlayer, Vector3.Up);
-
-            //// Proyeccion: Perspective FOV
-            /////Esto es elcampo de vision, mientras mas alto, mas abierto el campo de vision, como un modquito en 180 si es ToRadians(180) ve todo a su alrededor.
-            /////El metodo ToRadians convierte grados a radianes, ya que la funcion CreatePerspectiveFieldOfView trabaja con radianes.
-            //float fov = MathHelper.ToRadians(45f); // float (radianes)
-
-            ///// Definir el aspect ratio (relacion de aspecto) de la pantalla
-            //float aspect = GraphicsDevice.Viewport.AspectRatio; // float
-
-            //// el tercer parametro es la distancia minima de renderizado, y el cuarto parametro es la distancia maxima de renderizado
-            //Matrix projection = Matrix.CreatePerspectiveFieldOfView(fov, aspect, 0.1f, 1000f); // returns Matrix
-
-
-            //// Se crea la camara
-            //Camera camera = new Camera();
-
-            ////Se le pasan las matrices a la camara
-            //camera.ProjectionMatrix = projection;
-            //camera.ViewMatrix = puntoExactoDeRenderizado;
-
-            //foreach (ModelMesh mesh in modelo3d.Meshes)
-            //{
-            //    foreach (BasicEffect e in mesh.Effects)
-            //    {
-            //        /// Se le pasan los parametros de la camara al modelo 3D
-            //        /// Esto es como si tuvieramos un spritebash y le pasamos la matriz de transformacion, pero en este caso, se lo pasamos siempre a cada uno de los modelos.
-
-            //        /// Esto convierte las coordenadas del modelo 3D a las coordenadas del mundo 3D
-            //        Matrix world = Matrix.CreateTranslation(PosicionPlayer);
-
-            //        /// Se le pasa la coordenada donde se renderizara el modelo 3D (convertido a coordenadas de mundo 3d)
-            //        e.World = world;
-
-            //        /// Se le pasa la vista de la camara
-            //        e.View = camera.ViewMatrix;
-
-            //        /// Se le pasa la proyeccion de la camara
-            //        e.Projection = camera.ProjectionMatrix;
-            //        e.EnableDefaultLighting();
-            //        e.PreferPerPixelLighting = true;
-            //    }
-            //    mesh.Draw();
-            //}
-
-            ///// Esta es la derecha relativa tomando la rotacion de la camara en cuenta
-            //var derecha = camera.ViewMatrix.Right;
-
-            //var izquierda = camera.ViewMatrix.Left;
-
-            //var atras = camera.ViewMatrix.Backward;
-
-            //var adelante = camera.ViewMatrix.Forward;
-
-            //var arriba = camera.ViewMatrix.Up;
-
-            //var abajo = camera.ViewMatrix.Down;
-
-
-
-            //// para mover alpersonaje
-
-            //var velocidad = 0.1f;
-
-            ////Mover hacia delante, (segun la camara, siempre miraremos a la misma direccion)
-            //PosicionPlayer += adelante * velocidad;
-
-
-            //puntoExactoDeRenderizado = Matrix.CreateLookAt(new Vector3(0, 0, 10), PosicionPlayer, Vector3.Up);
-
-            _graphics.PreferMultiSampling = true;
-            graphicsDeviceManager.PreferMultiSampling = true;
-            System.Console.WriteLine("[SandBoxGameGame] Constructor start");
-            YTBGlobalState.EngineBackground = Color.White;
-            YTBGlobalState.CameraZoom = 1f;
-            int width = 1920;
-            int height = 1080;
-            // Disable fullscreen by default during debugging so the window is easier to see
-            bool fullScreen = true;
-            // Configurar las rutas del engine
-            // En desarrollo, los assets f�sicos (.ytb, .cs, etc) est�n en Assets dentro de Platforms.Core
-            YTBGlobalState.DevelopmentAssetsPath = Path.Combine(
-                Directory.GetCurrentDirectory(),
-                "..", "..", "..", "../", "SandBoxGame.Core",
-                "Assets"
-            );
-            YTBGlobalState.ContentProjectPath = Path.Combine(
-                Directory.GetCurrentDirectory(),
-                "..", "..", "..", "../", "SandBoxGame.Content",
-                "SandBoxGame.Content.csproj"
-                );
+            _graphics = new(this);
 
             SetScriptManager(new ScriptRegistry());
             SetModelRegistry(new ModelRegistry());
 
             AudioSystem.Initialize();
             AudioAssets.InitializeAudioAssets();
+
             // Los assets compilados (.xnb) est�n en Content (por defecto)
             // Esta ruta se calcula autom�ticamente: DirectorioSalida + "Content"
             YTBGlobalState.CompiledAssetsFolderName = "Content";
 
-            System.Console.WriteLine("[SandBoxGameGame] GraphicsDeviceManager created");
+            Console.WriteLine("[SandBoxGameGame] _graphics created");
             
-            // Share GraphicsDeviceManager as a service.
-            Window.Title = "SandBoxGame - Yotsuba Engine";
-            // Configurar la ruta ra�z del Content Manager para que apunte a los assets compilados
             Content.RootDirectory = YTBGlobalState.CompiledAssetsFolderName;
 
             // Configure screen orientations.
-            //graphicsDeviceManager.SupportedOrientations = DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight;
+            _graphics.SupportedOrientations = DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight;
 
-            //pincel3d = new();
+            Console.WriteLine("[SandBoxGameGame] InitializeGraphicsDevice called from ctor");
 
-            System.Console.WriteLine("[SandBoxGameGame] InitializeGraphicsDevice called from ctor");
+            SetConfig();
         }
 
        
@@ -196,23 +118,31 @@ namespace SandBoxGame.Core
 
         protected override void SetConfig()
         {
+
+#if YTB || DEBUG
             System.Console.WriteLine("[SandBoxGameGame] Constructor start");
-            YTBGlobalState.EngineBackground = Color.White;
+#endif
+            ///Coloca un background por defecto al juego y al engine.
+            YTBGlobalState.EngineBackground = new Color(32, 40, 78, 255);
+
+            ///Zoom de camara por defecto.
             YTBGlobalState.CameraZoom = 1f;
-            int width = 1920;
-            int height = 1080;
 
-            bool fullScreen = false;
-
-            // Configurar las rutas del engine
-            // En desarrollo, los assets f�sicos (.ytb, .cs, etc) est�n en Assets dentro de Platforms.Core
+            #region Engine Config
+            /// En desarrollo, los assets fisicos (.ytb, .cs, etc) est�n en Assets dentro de Platforms.Core
+            ///NO TOCAR, A MENOS QUE HAYA CAMBIADO LA RUTA
             YTBGlobalState.DevelopmentAssetsPath = Path.Combine(
                 Directory.GetCurrentDirectory(),
-                "..", "..", "..", "../", "SandBoxGame.Core",
+                "..", "..", "..", "..", "SandBoxGame.Core",
                 "Assets"
             );
 
-            //YTBGlobalState.ContentProjectPath = @"C:\\EnumaElish-A-Ciegas----Official.my\\YotsubaEngine\\SandBoxGame\\SandBoxGame.Content\\SandBoxGame.Content.csproj";
+            ///NO TOCAR, A MENOS QUE HAYA CAMBIADO LA RUTA
+            YTBGlobalState.ContentProjectPath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "..", "..", "..", "..", "SandBoxGame.Content",
+                "SandBoxGame.Content.csproj"
+                );
 
             SetScriptManager(new ScriptRegistry());
             SetModelRegistry(new ModelRegistry());
@@ -224,28 +154,34 @@ namespace SandBoxGame.Core
             // Esta ruta se calcula autom�ticamente: DirectorioSalida + "Content"
             YTBGlobalState.CompiledAssetsFolderName = "Content";
 
-            graphicsDeviceManager = new GraphicsDeviceManager(this);
+            #endregion
 
-            System.Console.WriteLine("[SandBoxGameGame] GraphicsDeviceManager created");
 
-            // Share GraphicsDeviceManager as a service.
-            Services.AddService(typeof(GraphicsDeviceManager), graphicsDeviceManager);
+#if YTB || DEBUG
+            System.Console.WriteLine("[SandBoxGameGame] _graphics created");
+#endif
+            // Share _graphics as a service.
+            Services.AddService(typeof(GraphicsDeviceManager), _graphics);
 
             //Window.Title = "SandBoxGame - Yotsuba Engine";
             // Configurar la ruta ra�z del Content Manager para que apunte a los assets compilados
             Content.RootDirectory = YTBGlobalState.CompiledAssetsFolderName;
 
+            _graphics.PreferMultiSampling = true;
+
 
             // Configure screen orientations.
-            graphicsDeviceManager.SupportedOrientations = DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight;
-            InitializeGraphicsDevice(graphicsDeviceManager, GraphicsDevice, width, height, fullScreen);
+            _graphics.SupportedOrientations = DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight;
+            InitializeGraphicsDevice(_graphics, GraphicsDevice, WINDOW_WIDTH, WINDOW_HEIGHT, IS_FULLSCREEN);
 
             // Precarga de texturas y fuentes generadas por el builder
             YotsubaGraphicsManager.InitializeAssets(AssetRegister.TextureAssets, AssetRegister.FontAssets);
 
-            base.SetConfig("Yotsuba Engine");
+            base.SetConfig();
 
+#if YTB || DEBUG
             System.Console.WriteLine("[SandBoxGameGame] InitializeGraphicsDevice called from ctor");
+#endif
         }
         /// <summary>
         /// Loads game content, such as textures and particle systems.
@@ -254,6 +190,8 @@ namespace SandBoxGame.Core
         {
             base.LoadContent();
         }
+
+        
 
         /// <summary>
         /// Updates the game's logic, called once per frame.
@@ -277,6 +215,7 @@ namespace SandBoxGame.Core
         /// </param>
         protected override void Draw(GameTime gameTime)
         {
+
             // Clears the screen with the MonoGame orange color before drawing.
             //GraphicsDevice.Clear(Color.MonoGameOrange);
             // TODO: Add your drawing code here

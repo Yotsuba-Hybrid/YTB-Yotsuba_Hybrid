@@ -21,6 +21,10 @@ using static YotsubaEngine.Audio.AudioAssets;
 namespace SandBoxGame.Core.Scripts.Screens
 {
     [Script]
+    /// <summary>
+    /// Script de la pantalla de inicio que gestiona la UI y la navegación.
+    /// <para>Home screen script that manages UI and navigation.</para>
+    /// </summary>
     public class HomeScreen : BaseScript, IKeyboardListener
     {
 
@@ -28,7 +32,15 @@ namespace SandBoxGame.Core.Scripts.Screens
         private Panel _optionsPanel;
         private Button _optionsButton;
         private Button _optionsBackButton;
+        /// <summary>
+        /// Indica si la configuración de Gum ya fue realizada.
+        /// <para>Indicates whether Gum configuration has already been performed.</para>
+        /// </summary>
         public static bool WasConfigurated = false;
+        /// <summary>
+        /// Inicializa la pantalla de inicio, la UI y los eventos de entrada.
+        /// <para>Initializes the home screen, UI, and input events.</para>
+        /// </summary>
         public override void Initialize()
         {
 
@@ -224,6 +236,14 @@ namespace SandBoxGame.Core.Scripts.Screens
         }
 
 
+        /// <summary>
+        /// Maneja la entrada del gamepad en la pantalla de inicio.
+        /// <para>Handles gamepad input on the home screen.</para>
+        /// </summary>
+        /// <param name="@event">
+        /// Evento de gamepad recibido.
+        /// <para>Gamepad event received.</para>
+        /// </param>
         public void GamePadPressed(OnGamePadEvent @event)
         {
             if (@event.Button == Microsoft.Xna.Framework.Input.Buttons.A)
@@ -235,6 +255,14 @@ namespace SandBoxGame.Core.Scripts.Screens
 
         bool Ascending = false;
         float alfa = 0f; // normalized alpha in range [0,1]
+        /// <summary>
+        /// Actualiza el estado de la pantalla de inicio cada cuadro.
+        /// <para>Updates the home screen state each frame.</para>
+        /// </summary>
+        /// <param name="gametime">
+        /// Tiempo de juego actual.
+        /// <para>Current game time.</para>
+        /// </param>
         public override void Update(GameTime gametime)
         {
             TextoParpadeante();
@@ -268,6 +296,14 @@ namespace SandBoxGame.Core.Scripts.Screens
             }
         }
 
+        /// <summary>
+        /// Maneja la entrada de teclado en la pantalla de inicio.
+        /// <para>Handles keyboard input on the home screen.</para>
+        /// </summary>
+        /// <param name="@event">
+        /// Evento de teclado recibido.
+        /// <para>Keyboard event received.</para>
+        /// </param>
         public void OnKeyboardInput(OnKeyBoardEvent @event)
         {
             ChangeScene("Game");

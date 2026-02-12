@@ -10,39 +10,39 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 #if YTB
     /// <summary>
     /// UI para controlar el debug overlay del juego (solo disponible en DEBUG).
-    /// Permite mostrar/ocultar colisiones, grid cartesiano y lista de colisiones activas.
+    /// <para>UI to control the game's debug overlay (only available in DEBUG).</para>
     /// </summary>
     public class DebugOverlayUI
     {
         // Flags de estado para cada overlay
         /// <summary>
-        /// Shows entity collision overlays.
         /// Muestra overlays de colisiones de entidades.
+        /// <para>Shows entity collision overlays.</para>
         /// </summary>
         public static bool ShowEntityCollisions { get; set; } = false;
         /// <summary>
-        /// Shows tilemap collision overlays.
         /// Muestra overlays de colisiones de tilemaps.
+        /// <para>Shows tilemap collision overlays.</para>
         /// </summary>
         public static bool ShowTilemapCollisions { get; set; } = false;
         /// <summary>
-        /// Shows the debug grid overlay.
         /// Muestra el overlay de grilla de depuración.
+        /// <para>Shows the debug grid overlay.</para>
         /// </summary>
         public static bool ShowGrid { get; set; } = false;
         /// <summary>
-        /// Shows the collision list panel.
         /// Muestra el panel de lista de colisiones.
+        /// <para>Shows the collision list panel.</para>
         /// </summary>
         public static bool ShowCollisionList { get; set; } = false;
         /// <summary>
-        /// Shows button interaction logs.
         /// Muestra los logs de interacción de botones.
+        /// <para>Shows button interaction logs.</para>
         /// </summary>
         public static bool ShowButtonLogs { get; set; } = false;
         /// <summary>
-        /// Shows font drag handles by default.
         /// Muestra los handles de texto por defecto.
+        /// <para>Shows font drag handles by default.</para>
         /// </summary>
         public static bool ShowFontHandles { get; set; } = false; // Mostrar handles de texto por defecto en debug
 
@@ -50,30 +50,35 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
         private static readonly List<CollisionPair> _activeCollisions = new();
 
         /// <summary>
-        /// Clase para representar un par de entidades que están colisionando
+        /// Clase para representar un par de entidades que están colisionando.
+        /// <para>Class to represent a pair of colliding entities.</para>
         /// </summary>
         public class CollisionPair
         {
             /// <summary>
-            /// Name of the entity attempting to move.
             /// Nombre de la entidad que intenta moverse.
+            /// <para>Name of the entity attempting to move.</para>
             /// </summary>
             public string EntityTryingToMove { get; set; }
             /// <summary>
-            /// Name of the entity blocking movement.
             /// Nombre de la entidad que bloquea el movimiento.
+            /// <para>Name of the entity blocking movement.</para>
             /// </summary>
             public string EntityImpediment { get; set; }
             /// <summary>
-            /// Timestamp of the last collision update.
             /// Marca de tiempo de la última actualización de colisión.
+            /// <para>Timestamp of the last collision update.</para>
             /// </summary>
             public double TimeStamp { get; set; }
         }
 
         /// <summary>
-        /// Agrega una colisión a la lista activa
+        /// Agrega una colisión a la lista activa.
+        /// <para>Adds a collision to the active list.</para>
         /// </summary>
+        /// <param name="entityTryingToMove">Entidad que intenta moverse. <para>Entity attempting to move.</para></param>
+        /// <param name="entityImpediment">Entidad que bloquea el movimiento. <para>Entity blocking movement.</para></param>
+        /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
         public static void AddCollision(string entityTryingToMove, string entityImpediment, GameTime gameTime)
         {
             // Remover colisiones antiguas (más de 0.1 segundos)
@@ -107,7 +112,8 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
         }
 
         /// <summary>
-        /// Limpia todas las colisiones activas
+        /// Limpia todas las colisiones activas.
+        /// <para>Clears all active collisions.</para>
         /// </summary>
         public static void ClearCollisions()
         {
@@ -115,7 +121,8 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
         }
 
         /// <summary>
-        /// Renderiza los controles del Debug Overlay
+        /// Renderiza los controles del Debug Overlay.
+        /// <para>Renders the Debug Overlay controls.</para>
         /// </summary>
         public void Render()
         {
@@ -126,9 +133,9 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
             ImGui.SetNextWindowSize(new Num.Vector2(300, 200), ImGuiCond.FirstUseEver);
             ImGui.SetNextWindowPos(new Num.Vector2(10, 10), ImGuiCond.FirstUseEver);
 
-            if (ImGui.Begin("Debug Overlay"))
+            if (ImGui.Begin("Superposición de depuración"))
             {
-                ImGui.SeparatorText("Visualización Debug");
+                ImGui.SeparatorText("Visualización de depuración");
 
                 // Checkboxes para cada overlay (usar variables locales temporales)
                 bool showEntityColl = ShowEntityCollisions;

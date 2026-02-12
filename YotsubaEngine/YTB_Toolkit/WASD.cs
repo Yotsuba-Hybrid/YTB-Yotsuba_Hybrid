@@ -15,15 +15,14 @@ using static YotsubaEngine.Exceptions.GameWontRun;
 namespace YotsubaEngine.YTB_Toolkit
 {
 	/// <summary>
-	/// Provides automatic directional controls (WASD, arrow keys, gamepad).
-	/// Provee controles direccionales automáticos (WASD, flechas, gamepad).
-	/// Fully integrated with PhysicsSystem2D for Platform and TopDown modes.
+	/// Provee controles direccionales automáticos (WASD, flechas, gamepad) y está integrado con PhysicsSystem2D para modos Platform y TopDown.
+	/// <para>Provides automatic directional controls (WASD, arrow keys, gamepad) and is fully integrated with PhysicsSystem2D for Platform and TopDown modes.</para>
 	/// </summary>
 	public class WASDControl
 	{
 		/// <summary>
-		/// Singleton instance of WASDControl.
 		/// Instancia única del WASD Control.
+		/// <para>Singleton instance of WASDControl.</para>
 		/// </summary>
 		public static WASDControl Instance { get; set; }
 
@@ -42,6 +41,11 @@ namespace YotsubaEngine.YTB_Toolkit
 		/// </summary>
 		private readonly YTB<Yotsuba> _entities = new();
 
+		/// <summary>
+		/// Inicializa una nueva instancia de WASDControl.
+		/// <para>Initializes a new WASDControl instance.</para>
+		/// </summary>
+		/// <param name="entityManager">Administrador de entidades. <para>Entity manager.</para></param>
 		public WASDControl(EntityManager entityManager)
 		{
 			_entityManager = entityManager;
@@ -49,11 +53,11 @@ namespace YotsubaEngine.YTB_Toolkit
 		}
 
 		/// <summary>
-		/// Adds an entity to this movement toolkit.
 		/// Añade una entidad a este toolkit de movimiento.
+		/// <para>Adds an entity to this movement toolkit.</para>
 		/// </summary>
-		/// <param name="entity">Entity to add. Entidad a añadir.</param>
-		/// <exception cref="GameWontRun">If entity lacks InputComponent or already exists.</exception>
+		/// <param name="entity">Entidad a añadir. <para>Entity to add.</para></param>
+		/// <exception cref="GameWontRun">Si la entidad no tiene InputComponent o ya existe. <para>If the entity lacks InputComponent or already exists.</para></exception>
 		public void AddEntity(Yotsuba entity)
 		{
 			if (_entities.Contains(entity))
@@ -81,11 +85,11 @@ namespace YotsubaEngine.YTB_Toolkit
 		}
 
 		/// <summary>
-		/// Removes an entity from this toolkit.
 		/// Remueve una entidad de este toolkit.
+		/// <para>Removes an entity from this toolkit.</para>
 		/// </summary>
-		/// <param name="entity">Entity to remove. Entidad a remover.</param>
-		/// <exception cref="GameWontRun">If entity doesn't exist.</exception>
+		/// <param name="entity">Entidad a remover. <para>Entity to remove.</para></param>
+		/// <exception cref="GameWontRun">Si la entidad no existe. <para>If the entity doesn't exist.</para></exception>
 		public void RemoveEntity(Yotsuba entity)
 		{
 			if (!_entities.Contains(entity))
@@ -98,8 +102,8 @@ namespace YotsubaEngine.YTB_Toolkit
 		}
 
 		/// <summary>
-		/// Initializes the WASD control system and subscribes to events.
 		/// Inicializa el sistema de control WASD y se suscribe a eventos.
+		/// <para>Initializes the WASD control system and subscribes to events.</para>
 		/// </summary>
 		public void Initialize()
 		{
@@ -446,9 +450,10 @@ namespace YotsubaEngine.YTB_Toolkit
 		#region Event Handlers
 
 		/// <summary>
-		/// Handles keyboard input events.
-		/// Maneja eventos de input de teclado.
+		/// Maneja eventos de entrada de teclado.
+		/// <para>Handles keyboard input events.</para>
 		/// </summary>
+		/// <param name="evt">Evento de teclado a procesar. <para>Keyboard event to process.</para></param>
 		public void HandleKeyboardInput(OnKeyBoardEvent evt)
 		{
 			var entity = _entities.FirstOrDefault(e => e.Id == evt.EntityId);
@@ -480,9 +485,10 @@ namespace YotsubaEngine.YTB_Toolkit
 		}
 
 		/// <summary>
-		/// Handles gamepad input events.
-		/// Maneja eventos de input de gamepad.
+		/// Maneja eventos de entrada de gamepad.
+		/// <para>Handles gamepad input events.</para>
 		/// </summary>
+		/// <param name="evt">Evento de gamepad a procesar. <para>Gamepad event to process.</para></param>
 		public void HandleGamePadInput(OnGamePadEvent evt)
 		{
 			var entity = _entities.FirstOrDefault(e => e.Id == evt.EntityId);
@@ -513,9 +519,10 @@ namespace YotsubaEngine.YTB_Toolkit
 		}
 
 		/// <summary>
-		/// Handles thumbstick input events for analog movement.
 		/// Maneja eventos de thumbstick para movimiento analógico.
+		/// <para>Handles thumbstick input events for analog movement.</para>
 		/// </summary>
+		/// <param name="evt">Evento de thumbstick a procesar. <para>Thumbstick event to process.</para></param>
 		public void HandleThumbstickInput(OnThumbstickEvent evt)
 		{
 			var entity = _entities.FirstOrDefault(e => e.Id == evt.EntityId);
@@ -704,9 +711,10 @@ namespace YotsubaEngine.YTB_Toolkit
 		}
 
 		/// <summary>
-		/// Handles animation end events to return to idle.
 		/// Maneja eventos de fin de animación para volver a idle.
+		/// <para>Handles animation end events to return to idle.</para>
 		/// </summary>
+		/// <param name="evt">Evento de fin de animación a procesar. <para>Animation end event to process.</para></param>
 		public void HandleAnimationEnd(OnAnimationDontLoopReleaseEvent evt)
 		{
 			var entity = _entities.FirstOrDefault(e => e.Id == evt.EntityId);
@@ -729,9 +737,10 @@ namespace YotsubaEngine.YTB_Toolkit
 		}
 
 		/// <summary>
-		/// Handles entity grounded events.
 		/// Maneja eventos de entidad en el suelo.
+		/// <para>Handles entity grounded events.</para>
 		/// </summary>
+		/// <param name="evt">Evento de entidad en el suelo a procesar. <para>Grounded entity event to process.</para></param>
 		public void HandleEntityGrounded(OnEntityGroundedEvent evt)
 		{
 			var entity = _entities.FirstOrDefault(e => e.Id == evt.EntityId);
@@ -758,9 +767,10 @@ namespace YotsubaEngine.YTB_Toolkit
 		}
 
 		/// <summary>
-		/// Handles entity airborne events.
 		/// Maneja eventos de entidad en el aire.
+		/// <para>Handles entity airborne events.</para>
 		/// </summary>
+		/// <param name="evt">Evento de entidad en el aire a procesar. <para>Airborne entity event to process.</para></param>
 		public void HandleEntityAirborne(OnEntityAirborneEvent evt)
 		{
 			var entity = _entities.FirstOrDefault(e => e.Id == evt.EntityId);

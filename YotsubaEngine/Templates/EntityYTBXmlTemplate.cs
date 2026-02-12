@@ -6,8 +6,8 @@ using YotsubaEngine.Core.Component.C_AGNOSTIC;
 namespace YotsubaEngine.Templates
 {
     /// <summary>
-    /// Provides template builders for YTB entity and component XML data.
     /// Proporciona constructores de plantillas para datos XML de entidades y componentes YTB.
+    /// <para>Provides template builders for YTB entity and component XML data.</para>
     /// </summary>
     public static class EntityYTBXmlTemplate
     {
@@ -165,9 +165,10 @@ namespace YotsubaEngine.Templates
         }
 
         /// <summary>
-        /// Creates a template for script components.
         /// Crea una plantilla para componentes de script.
+        /// <para>Creates a template for script components.</para>
         /// </summary>
+        /// <returns>Plantilla de componente de script. <para>Script component template.</para></returns>
         public static YTBComponents ScriptTemplate()
         {
             return new YTBComponents
@@ -181,9 +182,10 @@ namespace YotsubaEngine.Templates
         }
 
         /// <summary>
-        /// Creates a template for transform components.
         /// Crea una plantilla para componentes de transformación.
+        /// <para>Creates a template for transform components.</para>
         /// </summary>
+        /// <returns>Plantilla de componente de transformación. <para>Transform component template.</para></returns>
         public static YTBComponents TransformTemplate()
         {
             return new YTBComponents
@@ -201,9 +203,10 @@ namespace YotsubaEngine.Templates
         }
 
         /// <summary>
-        /// Creates a template for 2D sprite components.
         /// Crea una plantilla para componentes de sprite 2D.
+        /// <para>Creates a template for 2D sprite components.</para>
         /// </summary>
+        /// <returns>Plantilla de componente de sprite 2D. <para>2D sprite component template.</para></returns>
         public static YTBComponents Sprite2DTemplate()
         {
             return new YTBComponents
@@ -221,9 +224,10 @@ namespace YotsubaEngine.Templates
         }
 
         /// <summary>
-        /// Creates a template for 2D animation components.
         /// Crea una plantilla para componentes de animación 2D.
+        /// <para>Creates a template for 2D animation components.</para>
         /// </summary>
+        /// <returns>Plantilla de componente de animación 2D. <para>2D animation component template.</para></returns>
         public static YTBComponents Animation2DTemplate()
         {
             return new YTBComponents
@@ -239,9 +243,10 @@ namespace YotsubaEngine.Templates
         }
 
         /// <summary>
-        /// Creates a template for 2D rigid body components.
         /// Crea una plantilla para componentes de cuerpo rígido 2D.
+        /// <para>Creates a template for 2D rigid body components.</para>
         /// </summary>
+        /// <returns>Plantilla de componente de cuerpo rígido 2D. <para>2D rigid body component template.</para></returns>
         public static YTBComponents Rigibody2DTemplate()
         {
             return new YTBComponents
@@ -258,9 +263,10 @@ namespace YotsubaEngine.Templates
         }
 
         /// <summary>
-        /// Creates a template for 2D button components.
         /// Crea una plantilla para componentes de botón 2D.
+        /// <para>Creates a template for 2D button components.</para>
         /// </summary>
+        /// <returns>Plantilla de componente de botón 2D. <para>2D button component template.</para></returns>
         public static YTBComponents Button2DTemplate()
         {
             return new YTBComponents
@@ -276,9 +282,10 @@ namespace YotsubaEngine.Templates
         }
 
         /// <summary>
-        /// Creates a template for input components.
         /// Crea una plantilla para componentes de entrada.
+        /// <para>Creates a template for input components.</para>
         /// </summary>
+        /// <returns>Plantilla de componente de entrada. <para>Input component template.</para></returns>
         public static YTBComponents InputTemplate()
         {
             return new YTBComponents
@@ -296,9 +303,10 @@ namespace YotsubaEngine.Templates
         }
 
         /// <summary>
-        /// Creates a template for camera components.
         /// Crea una plantilla para componentes de cámara.
+        /// <para>Creates a template for camera components.</para>
         /// </summary>
+        /// <returns>Plantilla de componente de cámara. <para>Camera component template.</para></returns>
         public static YTBComponents CameraTemplate()
         {
            return new YTBComponents
@@ -317,9 +325,10 @@ namespace YotsubaEngine.Templates
         }
 
         /// <summary>
-        /// Creates a template for 2D tile map components.
         /// Crea una plantilla para componentes de tile map 2D.
+        /// <para>Creates a template for 2D tile map components.</para>
         /// </summary>
+        /// <returns>Plantilla de componente de tile map 2D. <para>2D tile map component template.</para></returns>
         public static YTBComponents TileMap2DTemplate()
         {
             return new YTBComponents
@@ -333,9 +342,10 @@ namespace YotsubaEngine.Templates
         }
 
         /// <summary>
-        /// Creates a template for 2D font components.
         /// Crea una plantilla para componentes de fuente 2D.
+        /// <para>Creates a template for 2D font components.</para>
         /// </summary>
+        /// <returns>Plantilla de componente de fuente 2D. <para>2D font component template.</para></returns>
         public static YTBComponents Font2DTemplate()
         {
             return new YTBComponents
@@ -350,9 +360,10 @@ namespace YotsubaEngine.Templates
         }
 
         /// <summary>
-        /// Creates a template for 2D shader components.
         /// Crea una plantilla para componentes de shader 2D.
+        /// <para>Creates a template for 2D shader components.</para>
         /// </summary>
+        /// <returns>Plantilla de componente de shader 2D. <para>2D shader component template.</para></returns>
         public static YTBComponents ShaderTemplate()
         {
             return new YTBComponents
@@ -368,9 +379,10 @@ namespace YotsubaEngine.Templates
         }
 
         /// <summary>
-        /// Creates a template for 3D model components.
         /// Crea una plantilla para componentes de modelo 3D.
+        /// <para>Creates a template for 3D model components.</para>
         /// </summary>
+        /// <returns>Plantilla de componente de modelo 3D. <para>3D model component template.</para></returns>
         public static YTBComponents Model3DTemplate()
         {
             return new YTBComponents

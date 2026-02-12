@@ -13,7 +13,7 @@ namespace YotsubaEngine.Core.System.S_2D
 #if YTB
     /// <summary>
     /// Sistema que dibuja overlays de debug para visualizar colisiones, grids y otros elementos de ayuda.
-    /// Solo se compila y ejecuta en modo DEBUG.
+    /// <para>System that draws debug overlays to visualize collisions, grids, and helper elements.</para>
     /// </summary>
     public class DebugDrawSystem
     {
@@ -24,8 +24,11 @@ namespace YotsubaEngine.Core.System.S_2D
         private const int FONT_HANDLE_SIZE = 24; // Tamaño del recuadro de arrastre para texto
 
         /// <summary>
-        /// Inicializa el sistema de debug draw
+        /// Inicializa el sistema de debug draw.
+        /// <para>Initializes the debug draw system.</para>
         /// </summary>
+        /// <param name="entityManager">Administrador de entidades. <para>Entity manager.</para></param>
+        /// <param name="graphicsDevice">Dispositivo gráfico. <para>Graphics device.</para></param>
         public void InitializeSystem(EntityManager entityManager, GraphicsDevice graphicsDevice)
         {
             _entityManager = entityManager;
@@ -38,16 +41,22 @@ namespace YotsubaEngine.Core.System.S_2D
         }
 
         /// <summary>
-        /// Establece la referencia al FontSystem2D para medir texto
+        /// Establece la referencia al FontSystem2D para medir texto.
+        /// <para>Sets the FontSystem2D reference for measuring text.</para>
         /// </summary>
+        /// <param name="fontSystem">Sistema de fuentes. <para>Font system.</para></param>
         public void SetFontSystem(FontSystem2D fontSystem)
         {
             _fontSystem = fontSystem;
         }
 
         /// <summary>
-        /// Dibuja los overlays de debug activos
+        /// Dibuja los overlays de debug activos.
+        /// <para>Draws active debug overlays.</para>
         /// </summary>
+        /// <param name="spriteBatch">Sprite batch para dibujar. <para>Sprite batch for drawing.</para></param>
+        /// <param name="viewMatrix">Matriz de vista. <para>View matrix.</para></param>
+        /// <param name="cameraWorldBounds">Límites visibles del mundo. <para>Visible world bounds.</para></param>
         public void DrawDebugOverlays(SpriteBatch spriteBatch, Matrix viewMatrix, Rectangle cameraWorldBounds)
         {
             Matrix effectiveViewMatrix = viewMatrix;

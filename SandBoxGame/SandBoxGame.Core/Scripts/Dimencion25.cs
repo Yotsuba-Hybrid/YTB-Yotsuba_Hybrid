@@ -10,10 +10,18 @@ using YotsubaEngine.Events.YTBEvents;
 namespace SandBoxGame.Core.Scripts
 {
     [Script]
+    /// <summary>
+    /// Script que permite controlar la cámara y el movimiento en modo 2.5D.
+    /// <para>Script that controls camera and movement in 2.5D mode.</para>
+    /// </summary>
     public class Dimencion25 : BaseScript, IKeyboardListener
     {
 
         private CameraComponent3D CameraComponent3D;
+        /// <summary>
+        /// Inicializa los controles de entrada y la cámara.
+        /// <para>Initializes input bindings and the camera.</para>
+        /// </summary>
         public override void Initialize()
         {
             base.Initialize();
@@ -24,6 +32,14 @@ namespace SandBoxGame.Core.Scripts
             CameraComponent3D = EntityManager.Camera;
         }
 
+        /// <summary>
+        /// Maneja la entrada de teclado para mover la cámara.
+        /// <para>Handles keyboard input to move the camera.</para>
+        /// </summary>
+        /// <param name="@event">
+        /// Evento de teclado recibido.
+        /// <para>Keyboard event received.</para>
+        /// </param>
         public void OnKeyboardInput(OnKeyBoardEvent @event)
         {
             ref TransformComponent transformComponent = ref GetTransformComponent();
@@ -58,6 +74,14 @@ namespace SandBoxGame.Core.Scripts
             }
         }
 
+        /// <summary>
+        /// Actualiza el script cada cuadro.
+        /// <para>Updates the script each frame.</para>
+        /// </summary>
+        /// <param name="gametime">
+        /// Tiempo de juego actual.
+        /// <para>Current game time.</para>
+        /// </param>
         public override void Update(GameTime gametime)
         {
             base.Update(gametime);
