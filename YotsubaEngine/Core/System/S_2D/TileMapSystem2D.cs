@@ -13,26 +13,37 @@ using YotsubaEngine.Exceptions;
 namespace YotsubaEngine.Core.System.S_2D
 {
     /// <summary>
-    /// System that manages tile map rendering and updates.
     /// Sistema que gestiona el renderizado y la actualización de tilemaps.
+    /// <para>System that manages tile map rendering and updates.</para>
     /// </summary>
     public class TileMapSystem2D
     {
 
 #if YTB
+        /// <summary>
+        /// Indica si la vista de juego está activa en modo editor.
+        /// <para>Indicates whether the game view is active in editor mode.</para>
+        /// </summary>
         public static bool IsGameActive = false;
 #endif
 
         /// <summary>
         /// Referencia al EventManager para manejar eventos.
+        /// <para>Event manager reference for handling events.</para>
         /// </summary>
         private EventManager EventManager { get; set; }
 
         /// <summary>
         /// Referencia al EntityManager para manejar entidades y componentes.
+        /// <para>Entity manager reference for entities and components.</para>
         /// </summary>
         private EntityManager EntityManager { get; set; }
 
+        /// <summary>
+        /// Inicializa el sistema de tilemaps.
+        /// <para>Initializes the tile map system.</para>
+        /// </summary>
+        /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
         public void InitializeSystem(EntityManager entities)
         {
 
@@ -61,14 +72,31 @@ namespace YotsubaEngine.Core.System.S_2D
         }
 #endif
 
+        /// <summary>
+        /// Hook de actualización compartida por entidad (sin uso).
+        /// <para>Shared per-entity update hook (unused).</para>
+        /// </summary>
+        /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
+        /// <param name="time">Tiempo de juego. <para>Game time.</para></param>
         public void SharedEntityForEachUpdate(Yotsuba Entidad, GameTime time)
         {
         }
 
+        /// <summary>
+        /// Hook de inicialización compartida por entidad (sin uso).
+        /// <para>Shared per-entity initialization hook (unused).</para>
+        /// </summary>
+        /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
         public void SharedEntityInitialize(Yotsuba Entidad)
         {
         }
 
+        /// <summary>
+        /// Actualiza y dibuja los tilemaps del frame actual.
+        /// <para>Updates and draws tilemaps for the current frame.</para>
+        /// </summary>
+        /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
+        /// <param name="spriteBatch">Sprite batch para dibujar. <para>Sprite batch for drawing.</para></param>
         public void UpdateSystem(GameTime gameTime, SpriteBatch spriteBatch)
         {
 
@@ -140,6 +168,13 @@ namespace YotsubaEngine.Core.System.S_2D
             spriteBatch.End();
         }
 
+        /// <summary>
+        /// Dibuja un tilemap usando la configuración actual.
+        /// <para>Draws a tilemap using the current configuration.</para>
+        /// </summary>
+        /// <param name="spriteBatch">Sprite batch para dibujar. <para>Sprite batch for drawing.</para></param>
+        /// <param name="map">Tilemap a renderizar. <para>Tilemap to render.</para></param>
+        /// <param name="transform">Transformación del tilemap. <para>Tilemap transform.</para></param>
         public void DrawTileMap(SpriteBatch spriteBatch, ref TileMapComponent2D map, ref TransformComponent transform)
         {
             // 1. Recorremos las capas en orden (primero el suelo, luego objetos, etc.)

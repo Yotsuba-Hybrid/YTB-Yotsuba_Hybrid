@@ -29,8 +29,8 @@ using static YotsubaEngine.Exceptions.GameWontRun;
 namespace YotsubaEngine.ActionFiles.YTB_Files
 {
     /// <summary>
-    /// Contains methods to transform JSON files into runtime scenes and entities.
-    /// Contiene los métodos necesarios para transformar el json file en Escenas y entidades en memoria en tiempo de ejecución.
+    /// Contiene los métodos necesarios para transformar el archivo json en escenas y entidades en memoria en tiempo de ejecución.
+    /// <para>Contains methods to transform JSON files into runtime scenes and entities.</para>
     /// </summary>
     public class YTBFileToGameData
     {
@@ -185,31 +185,32 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
         };
 
         /// <summary>
-        /// Dictionary mapping texture atlas names to their loaded TextureAtlas instances.
         /// Diccionario que mapea nombres de atlas de texturas a sus instancias TextureAtlas cargadas.
+        /// <para>Dictionary mapping texture atlas names to their loaded TextureAtlas instances.</para>
         /// </summary>
         /// <remarks>
-        /// This is populated during scene loading and used for sprite rendering.
         /// Se llena durante la carga de escenas y se usa para renderizado de sprites.
+        /// <para>This is populated during scene loading and used for sprite rendering.</para>
         /// </remarks>
         public static Dictionary<string, TextureAtlas> TextureAtlasDictionary = new Dictionary<string, TextureAtlas>();
 
         /// <summary>
-        /// Gets the current graphics device manager.
         /// Obtiene el administrador del dispositivo gráfico actual.
+        /// <para>Gets the current graphics device manager.</para>
         /// </summary>
         public static GraphicsDeviceManager GraphicsDeviceManager { get; private set; }
 
         /// <summary>
-        /// Gets the shared content manager.
         /// Obtiene el content manager compartido.
+        /// <para>Gets the shared content manager.</para>
         /// </summary>
         public static ContentManager ContentManager => YTBGlobalState.ContentManager;
 
         /// <summary>
-        /// Updates the current scene manager state from YTB files.
         /// Actualiza el estado del administrador de escenas desde archivos YTB.
+        /// <para>Updates the current scene manager state from YTB files.</para>
         /// </summary>
+        /// <returns>Tarea de la operación. <para>Task for the operation.</para></returns>
         public async static Task UpdateStateOfSceneManager()
         {
             try
@@ -380,11 +381,11 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 
 
         /// <summary>
-        /// Generates a scene manager from the current YTB data.
         /// Genera un administrador de escenas desde los datos YTB actuales.
+        /// <para>Generates a scene manager from the current YTB data.</para>
         /// </summary>
-        /// <param name="graphicsDeviceManager">Graphics device manager. Administrador de dispositivo gráfico.</param>
-        /// <returns>The generated scene manager. El administrador de escenas generado.</returns>
+        /// <param name="graphicsDeviceManager">Administrador de dispositivo gráfico. <para>Graphics device manager.</para></param>
+        /// <returns>El administrador de escenas generado. <para>The generated scene manager.</para></returns>
         public static SceneManager GenerateSceneManager(GraphicsDeviceManager graphicsDeviceManager)
         {
             SceneManager sceneManager;

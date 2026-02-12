@@ -9,16 +9,19 @@ using Num = System.Numerics;
 namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 {
     /// <summary>
-    /// Provides color picker helpers for ImGui.
     /// Proporciona ayudas de selector de color para ImGui.
+    /// <para>Provides color picker helpers for ImGui.</para>
     /// </summary>
     public static class ColorPicker
     {
         // Renderiza un combo con todos los colores estáticos de Microsoft.Xna.Framework.Color
         /// <summary>
-        /// Renders a combo box with all static XNA colors.
         /// Renderiza un combo con todos los colores estáticos de XNA.
+        /// <para>Renders a combo box with all static XNA colors.</para>
         /// </summary>
+        /// <param name="label">Etiqueta del combo. <para>Combo label.</para></param>
+        /// <param name="selectedColor">Color seleccionado actual. <para>Current selected color.</para></param>
+        /// <param name="onColorChanged">Callback al cambiar el color. <para>Callback when the color changes.</para></param>
         public static void RenderColorCombo(string label, ref Color selectedColor, Action<string> onColorChanged)
         {
             Color color = selectedColor;
@@ -59,9 +62,11 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
         }
 
         /// <summary>
-        /// Finds a Color property by name when available.
         /// Busca una propiedad Color por nombre cuando está disponible.
+        /// <para>Finds a Color property by name when available.</para>
         /// </summary>
+        /// <param name="colorNameOrValue">Nombre del color o valor. <para>Color name or value.</para></param>
+        /// <returns>Propiedad encontrada o null. <para>Found property or null.</para></returns>
         public static PropertyInfo? ParseColorPropertyInfo(string colorNameOrValue)
         {
             if (string.IsNullOrWhiteSpace(colorNameOrValue)) return null;
@@ -70,9 +75,11 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
         }
 
         /// <summary>
-        /// Converts a Color to its nearest static name.
         /// Convierte un Color a su nombre estático más cercano.
+        /// <para>Converts a Color to its nearest static name.</para>
         /// </summary>
+        /// <param name="color">Color a convertir. <para>Color to convert.</para></param>
+        /// <returns>Nombre del color o "White". <para>Color name or "White".</para></returns>
         public static string ColorToName(Color color)
         {
             var prop = typeof(Color).GetProperties(BindingFlags.Public | BindingFlags.Static)
@@ -83,82 +90,82 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 
 
     /// <summary>
-    /// Defines the color palette and theme settings for ImGui.
     /// Define la paleta de colores y la configuración de tema para ImGui.
+    /// <para>Defines the color palette and theme settings for ImGui.</para>
     /// </summary>
     public static class ImGuiThemeColors
     {
         // 🎨 Paleta derivada del color base #F46A22 (naranja Yotsuba)
         /// <summary>
-        /// Base primary color for the theme.
         /// Color primario base para el tema.
+        /// <para>Base primary color for the theme.</para>
         /// </summary>
         public static readonly Num.Vector4 PRIMARY_BASE = HexToVec4("F46A22"); // Naranja principal
 
         /// <summary>
-        /// Lighter variant of the primary color.
         /// Variante más clara del color primario.
+        /// <para>Lighter variant of the primary color.</para>
         /// </summary>
         public static readonly Num.Vector4 PRIMARY_LIGHT = HexToVec4("FFA15C"); // Hover / resalte suave
 
         /// <summary>
-        /// Darker variant of the primary color.
         /// Variante más oscura del color primario.
+        /// <para>Darker variant of the primary color.</para>
         /// </summary>
         public static readonly Num.Vector4 PRIMARY_DARK = HexToVec4("C6520F"); // Active / tono fuerte
 
         /// <summary>
-        /// Warm accent color.
         /// Color de acento cálido.
+        /// <para>Warm accent color.</para>
         /// </summary>
         public static readonly Num.Vector4 ACCENT_WARM = HexToVec4("FF7E33"); // Variación cálida
 
         /// <summary>
-        /// Cool accent color.
         /// Color de acento frío.
+        /// <para>Cool accent color.</para>
         /// </summary>
         public static readonly Num.Vector4 ACCENT_COOL = HexToVec4("1F6FFF"); // Azul contraste
 
         /// <summary>
-        /// Success state color.
         /// Color de estado de éxito.
+        /// <para>Success state color.</para>
         /// </summary>
         public static readonly Num.Vector4 SUCCESS = HexToVec4("58C451"); // Verde éxito
 
         /// <summary>
-        /// Warning state color.
         /// Color de estado de advertencia.
+        /// <para>Warning state color.</para>
         /// </summary>
         public static readonly Num.Vector4 WARNING = HexToVec4("FFD166"); // Amarillo advertencia
 
         /// <summary>
-        /// Error state color.
         /// Color de estado de error.
+        /// <para>Error state color.</para>
         /// </summary>
         public static readonly Num.Vector4 ERROR = HexToVec4("E63946"); // Rojo error
 
         // Tonos neutros
         /// <summary>
-        /// Dark gray theme color.
         /// Color gris oscuro del tema.
+        /// <para>Dark gray theme color.</para>
         /// </summary>
         public static readonly Num.Vector4 GRIS_OSCURO = new(0.10f, 0.10f, 0.10f, 1.0f);
 
         /// <summary>
-        /// Medium gray theme color.
         /// Color gris medio del tema.
+        /// <para>Medium gray theme color.</para>
         /// </summary>
         public static readonly Num.Vector4 GRIS_MEDIO = new(0.18f, 0.18f, 0.18f, 1.0f);
 
         /// <summary>
-        /// Light gray theme color.
         /// Color gris claro del tema.
+        /// <para>Light gray theme color.</para>
         /// </summary>
         public static readonly Num.Vector4 GRIS_CLARO = new(0.35f, 0.35f, 0.35f, 1.0f);
 
         /// <summary>
-        /// White theme color.
         /// Color blanco del tema.
+        /// <para>White theme color.</para>
         /// </summary>
         public static readonly Num.Vector4 BLANCO = new(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -179,8 +186,8 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 
         // 🧩 Aplicación completa del tema
         /// <summary>
-        /// Applies the complete ImGui theme palette.
         /// Aplica la paleta completa del tema ImGui.
+        /// <para>Applies the complete ImGui theme palette.</para>
         /// </summary>
         public static void AplicarTemaCompleto()
         {

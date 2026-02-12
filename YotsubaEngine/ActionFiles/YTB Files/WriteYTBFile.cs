@@ -12,26 +12,26 @@ using YotsubaEngine.Templates;
 namespace YotsubaEngine.ActionFiles.YTB_Files
 {
     /// <summary>
-    /// Provides helpers to write YTB game data files.
     /// Proporciona ayudas para escribir archivos de datos YTB.
+    /// <para>Provides helpers to write YTB game data files.</para>
     /// </summary>
     public static class WriteYTBFile
     {
         /// <summary>
-        /// Name of the game data file.
-        /// Nombre del archivo donde se guardan las escenas y entidades del juego
+        /// Nombre del archivo donde se guardan las escenas y entidades del juego.
+        /// <para>Name of the game data file.</para>
         /// </summary>
         public static string JSONGameName => ReadYTBFile.JSONGameName;
 
         /// <summary>
-        /// Name of the configuration file.
-        /// Nombre del archivo en donde se guardan los datos del autor, nombre del juego, etc...
+        /// Nombre del archivo en donde se guardan los datos del autor, nombre del juego, etc.
+        /// <para>Name of the configuration file.</para>
         /// </summary>
         public static string JSONGameConfigName => ReadYTBFile.JSONGameConfigName;
 
         /// <summary>
-        /// Name of the engine history file.
-        /// Nombre del archivo en donde se guarda el historial de los cambios del engine
+        /// Nombre del archivo en donde se guarda el historial de los cambios del engine.
+        /// <para>Name of the engine history file.</para>
         /// </summary>
         public static string JSONHistoryGameXMLName => ReadYTBFile.JSONGameSaveName;
 
@@ -48,9 +48,8 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
         private static string DevelopmentConfigPath => Path.Combine(YTBGlobalState.DevelopmentAssetsPath, GameConfigFolder);
 
         /// <summary>
-        /// Creates default game files when missing.
         /// Método para crear (si no existen) los archivos necesarios del juego.
-        /// Cubre casos donde no existe la carpeta GameConfig o los archivos .ytb.
+        /// <para>Creates default game files when missing.</para>
         /// </summary>
         public static void CreateYTBGameFile()
         {
@@ -197,10 +196,10 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
         }
 
         /// <summary>
-        /// Updates the game configuration file.
-        /// Método para editar la configuración del juego
+        /// Método para editar la configuración del juego.
+        /// <para>Updates the game configuration file.</para>
         /// </summary>
-        /// <param name="GameConfigEdit">Updated configuration. Configuración actualizada.</param>
+        /// <param name="GameConfigEdit">Configuración actualizada. <para>Updated configuration.</para></param>
         public static void EditYTBGameConfigFile(YTBConfig GameConfigEdit)
         {
             var configFilePath = Path.Combine(DevelopmentConfigPath, JSONGameConfigName);
@@ -213,12 +212,12 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
         }
 
         /// <summary>
-        /// Adds a new entity to the game file.
-        /// Método para agregar una entidad al juego desde el archivo del juego
+        /// Método para agregar una entidad al juego desde el archivo del juego.
+        /// <para>Adds a new entity to the game file.</para>
         /// </summary>
-        /// <param name="name">Entity name. Nombre de la entidad.</param>
-        /// <param name="sceneName">Scene name. Nombre de la escena.</param>
-        /// <returns>Task for the operation. Tarea de la operación.</returns>
+        /// <param name="name">Nombre de la entidad. <para>Entity name.</para></param>
+        /// <param name="sceneName">Nombre de la escena. <para>Scene name.</para></param>
+        /// <returns>Tarea de la operación. <para>Task for the operation.</para></returns>
         public static async Task AddEntityAsync(string name, string sceneName)
         {
             var GameFile = await ReadYTBFile.ReadYTBGameFile();
@@ -250,11 +249,11 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
         }
 
         /// <summary>
-        /// Adds a new scene to the game file.
-        /// Método para agregar una nueva escena al juego desde el archivo del juego
+        /// Método para agregar una nueva escena al juego desde el archivo del juego.
+        /// <para>Adds a new scene to the game file.</para>
         /// </summary>
-        /// <param name="name">Scene name. Nombre de la escena.</param>
-        /// <returns>Task for the operation. Tarea de la operación.</returns>
+        /// <param name="name">Nombre de la escena. <para>Scene name.</para></param>
+        /// <returns>Tarea de la operación. <para>Task for the operation.</para></returns>
         public static async Task AddSceneAsync(string name)
         {
             var GameFile = await ReadYTBFile.ReadYTBGameFile();
@@ -271,12 +270,13 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
         }
 
         /// <summary>
-        /// Adds a component to an entity in the game file.
-        /// Método para agregar un componente a una entidad des juego desde el archivo del juego
+        /// Método para agregar un componente a una entidad del juego desde el archivo del juego.
+        /// <para>Adds a component to an entity in the game file.</para>
         /// </summary>
-        /// <param name="ComponentTypeString">Component type name. Nombre del tipo de componente.</param>
-        /// <param name="sceneName">Scene name. Nombre de la escena.</param>
-        /// <param name="entityName">Entity name. Nombre de la entidad.</param>
+        /// <param name="ComponentTypeString">Nombre del tipo de componente. <para>Component type name.</para></param>
+        /// <param name="sceneName">Nombre de la escena. <para>Scene name.</para></param>
+        /// <param name="entityName">Nombre de la entidad. <para>Entity name.</para></param>
+        /// <returns>Tarea de la operación. <para>Task for the operation.</para></returns>
         public static async Task AddComponentAsync(string ComponentTypeString, string sceneName , string entityName)
         {
             var GameFile = await ReadYTBFile.ReadYTBGameFile();
@@ -309,15 +309,14 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
         }
 
         /// <summary>
-        /// Adds or updates properties on a component within the game file.
-        /// Método para agregar una propiedad a un componente de una entidad especifica dentro de una escena del juego 
-        /// desde el archivo del juego
+        /// Método para agregar una propiedad a un componente de una entidad específica dentro de una escena del juego.
+        /// <para>Adds or updates properties on a component within the game file.</para>
         /// </summary>
-        /// <param name="componentType">Component type name. Nombre del tipo de componente.</param>
-        /// <param name="sceneName">Scene name. Nombre de la escena.</param>
-        /// <param name="entityName">Entity name. Nombre de la entidad.</param>
-        /// <param name="properties">Properties to add/update. Propiedades a agregar/actualizar.</param>
-        /// <returns>Task for the operation. Tarea de la operación.</returns>
+        /// <param name="componentType">Nombre del tipo de componente. <para>Component type name.</para></param>
+        /// <param name="sceneName">Nombre de la escena. <para>Scene name.</para></param>
+        /// <param name="entityName">Nombre de la entidad. <para>Entity name.</para></param>
+        /// <param name="properties">Propiedades a agregar o actualizar. <para>Properties to add/update.</para></param>
+        /// <returns>Tarea de la operación. <para>Task for the operation.</para></returns>
         public static async Task AddComponentPropertyAsync(
                              string componentType,
                              string sceneName,

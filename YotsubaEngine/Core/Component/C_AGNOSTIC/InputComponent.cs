@@ -7,68 +7,68 @@ using static YotsubaEngine.Core.System.S_AGNOSTIC.InputSystem;
 namespace YotsubaEngine.Core.Component.C_AGNOSTIC
 {
     /// <summary>
-    /// Component that enables input-driven interaction for an entity.
-    /// Componente que añade la funcionalidad de que el jugador interaccione mediante el input con la entidad
+    /// Componente que permite la interacción mediante input con la entidad.
+    /// <para>Component that enables input-driven interaction for an entity.</para>
     /// </summary>
     public struct InputComponent()
     {
 
         /// <summary>
-        /// Bitmask storing which input types are used.
-        /// Bandera que almacena si un tipo de input se esta usando por la entidad
+        /// Bandera que almacena si un tipo de input se está usando por la entidad.
+        /// <para>Bitmask storing which input types are used.</para>
         /// </summary>
         private int InputsInUse { get; set; } = 0;
 
         /// <summary>
-        /// Keyboard mappings for entity actions.
-        /// Listado de las teclas 
+        /// Asignaciones de teclado para acciones de la entidad.
+        /// <para>Keyboard mappings for entity actions.</para>
         /// </summary>
         public Dictionary<ActionEntityInput, Keys> KeyBoard { get; set; } = new();
 
         /// <summary>
-        /// Gamepad button mappings for entity actions.
-        /// Listado de los botones del gamepad
+        /// Asignaciones de botones del gamepad para acciones de la entidad.
+        /// <para>Gamepad button mappings for entity actions.</para>
         /// </summary>
         public Dictionary<ActionEntityInput, Buttons> GamePad { get; set; } = new();
 
         /// <summary>
-        /// Player index for the assigned gamepad.
-        /// Almacena el index del mando que usara el jugador
+        /// Índice del jugador para el gamepad asignado.
+        /// <para>Player index for the assigned gamepad.</para>
         /// </summary>
         public PlayerIndex GamePadIndex { get; set; } = new();
 
         /// <summary>
-        /// Mouse button mappings for entity actions.
-        /// Listado de los botones del mouse
+        /// Asignaciones de botones del mouse para acciones de la entidad.
+        /// <para>Mouse button mappings for entity actions.</para>
         /// </summary>
         public Dictionary<ActionEntityInput, MouseButton> Mouse { get; set; } = new();
 
         /// <summary>
-        /// Checks whether a specific input type is enabled.
-        /// Método para comprobar el si un tipo de input es usado por la entidad
+        /// Comprueba si un tipo de input está habilitado.
+        /// <para>Checks whether a specific input type is enabled.</para>
         /// </summary>
-        /// <param name="input">Input flag to check. Bandera de entrada a comprobar.</param>
-        /// <returns>True if the input type is enabled. True si el tipo está habilitado.</returns>
+        /// <param name="input">Bandera de entrada a comprobar.<para>Input flag to check.</para></param>
+        /// <returns>True si el tipo está habilitado.<para>True if the input type is enabled.</para></returns>
         public bool HasInput(InputInUse input)
         {
             return (InputsInUse & (int)input) != 0;
         }
 
         /// <summary>
-        /// Adds an input type flag to the component.
-        /// Método para añadir un tipo de input al componente
+        /// Añade un tipo de input al componente.
+        /// <para>Adds an input type flag to the component.</para>
         /// </summary>
-        /// <param name="input">Input flag to add. Bandera de entrada a añadir.</param>
+        /// <param name="input">Bandera de entrada a añadir.<para>Input flag to add.</para></param>
         public void AddInput(InputInUse input)
         {
             InputsInUse |= (int)input;
         }
 
         /// <summary>
-        /// Removes an input type flag from the component.
-        /// Método para remover un tipo de input al componente
+        /// Elimina un tipo de input del componente.
+        /// <para>Removes an input type flag from the component.</para>
         /// </summary>
-        /// <param name="input">Input flag to remove. Bandera de entrada a remover.</param>
+        /// <param name="input">Bandera de entrada a remover.<para>Input flag to remove.</para></param>
         public void RemoveInput(InputInUse input)
         {
             InputsInUse &= ~(int)input;
@@ -76,30 +76,30 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
     }
 
     /// <summary>
-    /// Flags indicating which input types are supported.
-    /// Flags para comprobar que tipo de input soporta la entidad
+    /// Indicadores de tipos de input soportados.
+    /// <para>Flags indicating which input types are supported.</para>
     /// </summary>
     [Flags]
     public enum InputInUse : byte
     {
         /// <summary>
-        /// No input enabled.
         /// Sin entrada habilitada.
+        /// <para>No input enabled.</para>
         /// </summary>
         None = 0,
         /// <summary>
-        /// Mouse input enabled.
         /// Entrada de mouse habilitada.
+        /// <para>Mouse input enabled.</para>
         /// </summary>
         HasMouse = 1 << 0,
         /// <summary>
-        /// Gamepad input enabled.
         /// Entrada de gamepad habilitada.
+        /// <para>Gamepad input enabled.</para>
         /// </summary>
         HasGamepad = 1 << 1,
         /// <summary>
-        /// Keyboard input enabled.
         /// Entrada de teclado habilitada.
+        /// <para>Keyboard input enabled.</para>
         /// </summary>
         HasKeyboard = 1 << 2,
     }

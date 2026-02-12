@@ -11,16 +11,18 @@ using YotsubaEngine.Core.System.YotsubaEngineCore;
 namespace YotsubaEngine.ActionFiles.XML_SpriteSheet_Files
 {
     /// <summary>
-    /// Builds and updates sprite sheet atlases and XML metadata (Windows-only due to System.Drawing).
     /// Construye y actualiza atlas de sprite sheets y metadatos XML (solo Windows por System.Drawing).
+    /// <para>Builds and updates sprite sheet atlases and XML metadata (Windows-only due to System.Drawing).</para>
     /// </summary>
     [SupportedOSPlatform("windows")]
     public class TexturePacker
     {
         /// <summary>
-        /// Loads image metadata for the provided file paths.
         /// Carga metadatos de imagen para las rutas proporcionadas.
+        /// <para>Loads image metadata for the provided file paths.</para>
         /// </summary>
+        /// <param name="images">Rutas de imagen a cargar. <para>Image paths to load.</para></param>
+        /// <returns>Metadatos de sprites. <para>Sprite metadata.</para></returns>
         public static IEnumerable<SpriteInfo> GetImages(params string[] images)
         {
             EnsureWindowsSupport();
@@ -41,9 +43,13 @@ namespace YotsubaEngine.ActionFiles.XML_SpriteSheet_Files
         }
 
         /// <summary>
-        /// Calculates packed sprite positions and atlas size.
         /// Calcula posiciones de sprites y tamaño del atlas.
+        /// <para>Calculates packed sprite positions and atlas size.</para>
         /// </summary>
+        /// <param name="sprites">Lista de sprites a empaquetar. <para>Sprites to pack.</para></param>
+        /// <param name="maxAtlasWidth">Ancho máximo del atlas. <para>Maximum atlas width.</para></param>
+        /// <param name="finalAtlasWidth">Ancho final calculado. <para>Calculated final width.</para></param>
+        /// <param name="finalAtlasHeight">Alto final calculado. <para>Calculated final height.</para></param>
         public static void CalculatePositions(List<SpriteInfo> sprites, int maxAtlasWidth, out int finalAtlasWidth, out int finalAtlasHeight)
         {
             EnsureWindowsSupport();
@@ -78,9 +84,13 @@ namespace YotsubaEngine.ActionFiles.XML_SpriteSheet_Files
         }
 
         /// <summary>
-        /// Generates an atlas image from packed sprites.
         /// Genera una imagen de atlas a partir de sprites empaquetados.
+        /// <para>Generates an atlas image from packed sprites.</para>
         /// </summary>
+        /// <param name="sprites">Sprites ya posicionados. <para>Positioned sprites.</para></param>
+        /// <param name="width">Ancho del atlas. <para>Atlas width.</para></param>
+        /// <param name="height">Alto del atlas. <para>Atlas height.</para></param>
+        /// <param name="outputPath">Ruta de salida del atlas. <para>Atlas output path.</para></param>
         public static void GenerateAtlas(List<SpriteInfo> sprites, int width, int height, string outputPath)
         {
             EnsureWindowsSupport();
@@ -108,9 +118,13 @@ namespace YotsubaEngine.ActionFiles.XML_SpriteSheet_Files
         }
 
         /// <summary>
-        /// Exports sprite data to the expected XML format.
         /// Exporta datos de sprites al formato XML esperado.
+        /// <para>Exports sprite data to the expected XML format.</para>
         /// </summary>
+        /// <param name="sprites">Sprites a exportar. <para>Sprites to export.</para></param>
+        /// <param name="atlasFileName">Nombre del atlas. <para>Atlas file name.</para></param>
+        /// <param name="xmlOutputPath">Ruta de salida del XML. <para>XML output path.</para></param>
+        /// <param name="imageName">Nombre de la imagen. <para>Image name.</para></param>
         public static void ExportXML(List<SpriteInfo> sprites, string atlasFileName, string xmlOutputPath, string imageName)
         {
             EnsureWindowsSupport();
@@ -153,9 +167,12 @@ namespace YotsubaEngine.ActionFiles.XML_SpriteSheet_Files
         }
 
         /// <summary>
-        /// Splits an atlas into individual sprite images.
         /// Separa un atlas en imágenes de sprites individuales.
+        /// <para>Splits an atlas into individual sprite images.</para>
         /// </summary>
+        /// <param name="xmlPath">Ruta del XML del atlas. <para>Atlas XML path.</para></param>
+        /// <param name="atlasImagePath">Ruta de la imagen del atlas. <para>Atlas image path.</para></param>
+        /// <param name="outputFolder">Carpeta de salida. <para>Output folder.</para></param>
         public static void UnpackAtlas(string xmlPath, string atlasImagePath, string outputFolder)
         {
             EnsureWindowsSupport();
@@ -190,9 +207,12 @@ namespace YotsubaEngine.ActionFiles.XML_SpriteSheet_Files
 
 
         /// <summary>
-        /// Updates an existing atlas by merging new images.
         /// Actualiza un atlas existente fusionando nuevas imágenes.
+        /// <para>Updates an existing atlas by merging new images.</para>
         /// </summary>
+        /// <param name="existingXmlPath">Ruta del XML existente. <para>Existing XML path.</para></param>
+        /// <param name="newImagesPaths">Rutas de nuevas imágenes. <para>New image paths.</para></param>
+        /// <param name="maxAtlasWidth">Ancho máximo del atlas. <para>Maximum atlas width.</para></param>
         public static void UpdateAtlas(string existingXmlPath, string[] newImagesPaths, int maxAtlasWidth = 2048)
         {
             EnsureWindowsSupport();

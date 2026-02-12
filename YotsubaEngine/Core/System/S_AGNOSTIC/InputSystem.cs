@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Threading.Tasks;
@@ -18,8 +18,8 @@ using YotsubaEngine.Input;
 namespace YotsubaEngine.Core.System.S_AGNOSTIC
 {
     /// <summary>
-    /// System that handles user input (keyboard, mouse, gamepad).
-    /// Sistema que se encarga de manejar la entrada del usuario (teclado, raton, gamepad).
+    /// Sistema que se encarga de manejar la entrada del usuario (teclado, ratón, gamepad).
+    /// <para>System that handles user input (keyboard, mouse, gamepad).</para>
     /// </summary>
     public class InputSystem : ISystem
     {
@@ -42,11 +42,19 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         /// </summary>
         private InputManager InputManager { get; set; }
 
+#if YTB
         /// <summary>
-        /// Initializes the input system.
-        /// Implementacion de la interfaz ISystem
+        /// Estado previo de CapsLock para detectar cambios de modo.
+        /// <para>Previous CapsLock state for detecting mode changes.</para>
         /// </summary>
-        /// <param name="entities">Entity manager. Administrador de entidades.</param>
+        private bool _previousCapsLockState = false;
+#endif
+
+        /// <summary>
+        /// Inicializa el sistema de entrada.
+        /// <para>Initializes the input system.</para>
+        /// </summary>
+        /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
         public void InitializeSystem(EntityManager entities)
         {
 
@@ -62,10 +70,10 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         }
 
         /// <summary>
-        /// Updates input state and publishes input events.
         /// Actualiza el estado de entrada y publica eventos de input.
+        /// <para>Updates input state and publishes input events.</para>
         /// </summary>
-        /// <param name="gameTime">Game time. Tiempo de juego.</param>
+        /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
         public void UpdateSystem(GameTime gameTime)
         {
 
@@ -74,33 +82,42 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
                 InputManager.Update(gameTime);
 
             KeyboardInfo KeyboardState = InputManager.Instance.Keyboard;
-            bool IsKeyShiftDown = KeyboardState.IsKeyDown(Keys.LeftShift) || KeyboardState.IsKeyDown(Keys.RightShift);
-            bool IsKeyCtrlDown = KeyboardState.IsKeyDown(Keys.LeftControl);
-            bool IsKeyVJustPressed = KeyboardState.WasKeyJustPressed(Keys.V);
-            bool isKeyGJustPressed = KeyboardState.WasKeyJustPressed(Keys.G);
-            bool IsKeySJustPressed = KeyboardState.WasKeyJustPressed(Keys.S);
 
-            if (IsKeyCtrlDown && IsKeySJustPressed)
+            // Detectar cambio de modo via CapsLock
+            bool capsLockOn = KeyboardState.IsCapsLockEnabled();
+            if (capsLockOn != _previousCapsLockState)
             {
-                EngineUISystem.SaveChanges();
-                YTBGame game = (YTBGame)YTBGlobalState.Game;
-                YTBGlobalState.LastSceneNameBeforeUpdate = game.SceneManager.CurrentScene.SceneName;
-                Task.Run(async () => await YTBFileToGameData.UpdateStateOfSceneManager());
+                _previousCapsLockState = capsLockOn;
+                YTBGlobalState.EngineShortcutsMode = capsLockOn;
+
+                string modeMsg = capsLockOn
+                    ? "⚙ Modo Engine — Atajos del engine activos"
+                    : "🎮 Modo Game — Inputs del juego activos";
+
+                EngineUISystem._instance?.ShowModeSwitchAlert(modeMsg);
+                EngineUISystem.SendLog(modeMsg, capsLockOn ? Color.Yellow : Color.Green);
             }
 
-            if (IsKeyCtrlDown && IsKeyVJustPressed && IsKeyShiftDown)
-                EventManager.Publish(new OnHiddeORShowUIEngineEditor());
+            // Atajos del engine: solo si CapsLock está activado
+            if (YTBGlobalState.EngineShortcutsMode)
+            {
+                bool IsKeySJustPressed = KeyboardState.WasKeyJustPressed(Keys.S);
+                bool IsKeyVJustPressed = KeyboardState.WasKeyJustPressed(Keys.V);
+                bool isKeyGJustPressed = KeyboardState.WasKeyJustPressed(Keys.G);
 
+                if (IsKeySJustPressed)
+                {
+                    EngineUISystem.SaveChanges();
+                    YTBGame game = (YTBGame)YTBGlobalState.Game;
+                    YTBGlobalState.LastSceneNameBeforeUpdate = game.SceneManager.CurrentScene.SceneName;
+                    Task.Run(async () => await YTBFileToGameData.UpdateStateOfSceneManager());
+                }
 
-            if (IsKeyCtrlDown && isKeyGJustPressed && IsKeyShiftDown)
-                EventManager.Publish(new OnHiddeORShowGameUI());
+                if (IsKeyVJustPressed)
+                    EventManager.Publish(new OnHiddeORShowUIEngineEditor());
 
-            
-
-
-
-            //if (IsKeyCtrlDown && IsKeyShiftDown)
-            //{
+                if (isKeyGJustPressed)
+                    EventManager.Publish(new OnHiddeORShowGameUI());
 
                 if (KeyboardState.IsKeyDown(Keys.Space))
                 {
@@ -112,7 +129,6 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
                     YTBGlobalState.OffsetCamera += new Vector2(10f, 0f);
                     if (KeyboardState.IsKeyDown(Keys.RightShift))
                         YTBGlobalState.OffsetCamera += new Vector2(10f, 0f);
-
                 }
                 if (KeyboardState.IsKeyDown(Keys.Left))
                 {
@@ -152,12 +168,9 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
                 {
                     YTBGlobalState.CameraZoom -= 0.01f;
                 }
-            //}
+            }
 
-                //if (!RenderSystem2D.IsGameActive) return;
-                /*if (GameWontRun.GameWontRunByException)*/
-            
-                return;
+            return;
 #endif
 
 
@@ -333,55 +346,55 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         }
 
         /// <summary>
-        /// Shared entity update hook (unused in this system).
         /// Hook de actualización compartida (no usado en este sistema).
+        /// <para>Shared entity update hook (unused in this system).</para>
         /// </summary>
-        /// <param name="Entidad">Entity instance. Instancia de entidad.</param>
-        /// <param name="time">Game time. Tiempo de juego.</param>
+        /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
+        /// <param name="time">Tiempo de juego. <para>Game time.</para></param>
         public void SharedEntityForEachUpdate(Yotsuba Entidad, GameTime time)
         {
             //throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Shared entity initialization hook (unused in this system).
         /// Hook de inicialización compartida (no usado en este sistema).
+        /// <para>Shared entity initialization hook (unused in this system).</para>
         /// </summary>
-        /// <param name="Entidad">Entity instance. Instancia de entidad.</param>
+        /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
         public void SharedEntityInitialize(Yotsuba Entidad)
         {
             //throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Enum representing mouse buttons.
-        /// Enum que representa los diferentes botones del mouse
+        /// Enum que representa los diferentes botones del mouse.
+        /// <para>Enum representing mouse buttons.</para>
         /// </summary>
         public enum MouseButton
         {
             /// <summary>
-            /// Left mouse button.
             /// Botón izquierdo del mouse.
+            /// <para>Left mouse button.</para>
             /// </summary>
             Left,
             /// <summary>
-            /// Middle mouse button.
             /// Botón medio del mouse.
+            /// <para>Middle mouse button.</para>
             /// </summary>
             Middle,
             /// <summary>
-            /// Right mouse button.
             /// Botón derecho del mouse.
+            /// <para>Right mouse button.</para>
             /// </summary>
             Right,
             /// <summary>
-            /// Extra mouse button 1.
             /// Botón extra 1 del mouse.
+            /// <para>Extra mouse button 1.</para>
             /// </summary>
             XButton1,
             /// <summary>
-            /// Extra mouse button 2.
             /// Botón extra 2 del mouse.
+            /// <para>Extra mouse button 2.</para>
             /// </summary>
             XButton2
         }

@@ -6,10 +6,18 @@ using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.System.YotsubaEngineCore;
 
 namespace YotsubaEngine.Graphics;
+/// <summary>
+/// Utilidades para dibujar primitivas 3D básicas.
+/// <para>Utilities for drawing basic 3D primitives.</para>
+/// </summary>
 public class Graphics3D
 {
     private BasicEffect _basicEffect;
 
+    /// <summary>
+    /// Inicializa el renderizador 3D básico.
+    /// <para>Initializes the basic 3D renderer.</para>
+    /// </summary>
     public Graphics3D()
     {
         _basicEffect = new BasicEffect(YTBGlobalState.GraphicsDevice);
@@ -21,13 +29,14 @@ public class Graphics3D
     }
 
     /// <summary>
-    /// Metodo para dibujar un cubo 3D en el espacio con colores sólidos.
+    /// Dibuja un cubo 3D en el espacio con colores sólidos.
+    /// <para>Draws a 3D box in space with solid colors.</para>
     /// </summary>
-    /// <param name="center"></param>
-    /// <param name="size"></param>
-    /// <param name="color"></param>
-    /// <param name="view"></param>
-    /// <param name="projection"></param>
+    /// <param name="center">Centro del cubo. <para>Box center.</para></param>
+    /// <param name="size">Tamaño del cubo. <para>Box size.</para></param>
+    /// <param name="color">Color base. <para>Base color.</para></param>
+    /// <param name="view">Matriz de vista. <para>View matrix.</para></param>
+    /// <param name="projection">Matriz de proyección. <para>Projection matrix.</para></param>
     public void DrawBox(Vector3 center, Vector3 size, Color color, Matrix view, Matrix projection)
     {
         // 1. Calcular las dimensiones medias para encontrar las esquinas
@@ -127,14 +136,16 @@ public class Graphics3D
     }
 
     /// <summary>
-    /// Dibuja un Rectangulo en 3D con colores sólidos en el suelo (plano XZ).
+    /// Dibuja un rectángulo en 3D con colores sólidos en el suelo (plano XZ).
+    /// <para>Draws a 3D rectangle with solid colors on the ground (XZ plane).</para>
     /// </summary>
-    /// <param name="center"></param>
-    /// <param name="width"></param>
-    /// <param name="height"></param>
-    /// <param name="color"></param>
-    /// <param name="view"></param>
-    /// <param name="projection"></param>
+    /// <param name="center">Centro del rectángulo. <para>Rectangle center.</para></param>
+    /// <param name="width">Ancho del rectángulo. <para>Rectangle width.</para></param>
+    /// <param name="height">Alto del rectángulo. <para>Rectangle height.</para></param>
+    /// <param name="color">Color base. <para>Base color.</para></param>
+    /// <param name="view">Matriz de vista. <para>View matrix.</para></param>
+    /// <param name="projection">Matriz de proyección. <para>Projection matrix.</para></param>
+    /// <param name="rotation">Rotación en grados. <para>Rotation in degrees.</para></param>
     public void Draw3DRectangle(Vector3 center, float width, float height, Color color, Matrix view, Matrix projection, float rotation = 0f)
     {
         
@@ -168,26 +179,31 @@ public class Graphics3D
 
     /// <summary>
     /// Dibuja un cuadrado en 3D con colores sólidos en el suelo (plano XZ).
+    /// <para>Draws a 3D square with solid colors on the ground (XZ plane).</para>
     /// </summary>
-    /// <param name="center"></param>
-    /// <param name="size"></param>
-    /// <param name="color"></param>
-    /// <param name="view"></param>
-    /// <param name="projection"></param>
+    /// <param name="center">Centro del cuadrado. <para>Square center.</para></param>
+    /// <param name="size">Tamaño del cuadrado. <para>Square size.</para></param>
+    /// <param name="color">Color base. <para>Base color.</para></param>
+    /// <param name="view">Matriz de vista. <para>View matrix.</para></param>
+    /// <param name="projection">Matriz de proyección. <para>Projection matrix.</para></param>
+    /// <param name="rotation">Rotación en grados. <para>Rotation in degrees.</para></param>
     public void DrawSquare(Vector3 center, float size, Color color, Matrix view, Matrix projection, float rotation = 0f) 
         => Draw3DRectangle(center, size, size, color, view, projection, rotation);
 
 
 
     /// <summary>
-    /// Dibuja un sprite en dimencion 2.5D
+    /// Dibuja un sprite en dimensión 2.5D.
+    /// <para>Draws a sprite in 2.5D space.</para>
     /// </summary>
-    /// <param name="center"></param>
-    /// <param name="width"></param>
-    /// <param name="height"></param>
-    /// <param name="color"></param>
-    /// <param name="view"></param>
-    /// <param name="projection"></param>
+    /// <param name="texture2D">Textura del sprite. <para>Sprite texture.</para></param>
+    /// <param name="center">Centro del sprite. <para>Sprite center.</para></param>
+    /// <param name="width">Ancho del sprite. <para>Sprite width.</para></param>
+    /// <param name="height">Alto del sprite. <para>Sprite height.</para></param>
+    /// <param name="color">Color del sprite. <para>Sprite color.</para></param>
+    /// <param name="view">Matriz de vista. <para>View matrix.</para></param>
+    /// <param name="projection">Matriz de proyección. <para>Projection matrix.</para></param>
+    /// <param name="rotation">Rotación en grados. <para>Rotation in degrees.</para></param>
     public void DrawSprite2_5D(Texture2D texture2D, Vector3 center, float width, float height, Color color, Matrix view, Matrix projection, float rotation = 0f)
     {
 
@@ -246,14 +262,15 @@ public class Graphics3D
     }
 
     /// <summary>
-    /// Dibuja un sprite en dimencion 2.5D
+    /// Dibuja un sprite en dimensión 2.5D.
+    /// <para>Draws a sprite in 2.5D space.</para>
     /// </summary>
-    /// <param name="center"></param>
-    /// <param name="width"></param>
-    /// <param name="height"></param>
-    /// <param name="color"></param>
-    /// <param name="view"></param>
-    /// <param name="projection"></param>
+    /// <param name="texture2D">Componente de sprite. <para>Sprite component.</para></param>
+    /// <param name="center">Centro del sprite. <para>Sprite center.</para></param>
+    /// <param name="color">Color del sprite. <para>Sprite color.</para></param>
+    /// <param name="view">Matriz de vista. <para>View matrix.</para></param>
+    /// <param name="projection">Matriz de proyección. <para>Projection matrix.</para></param>
+    /// <param name="rotation">Rotación en grados. <para>Rotation in degrees.</para></param>
     public void DrawSprite2_5D(SpriteComponent2D texture2D, Vector3 center, Color color, Matrix view, Matrix projection, float rotation = 0f)
     {
 

@@ -20,10 +20,13 @@ namespace SandBoxGame.iOS
         }
 
         /// <summary>
-        /// Called when the application has finished launching. 
-        /// This method starts the game by calling RunGame.
+        /// Se llama cuando la aplicación ha finalizado el lanzamiento y arranca el juego.
+        /// <para>Called when the application has finished launching and starts the game.</para>
         /// </summary>
-        /// <param name="app">The UIApplication instance representing the application.</param>
+        /// <param name="app">
+        /// Instancia de UIApplication que representa la aplicación.
+        /// <para>The UIApplication instance representing the application.</para>
+        /// </param>
         public override void FinishedLaunching(UIApplication app)
         {
             RunGame();

@@ -12,35 +12,35 @@ using YotsubaEngine.Exceptions;
 namespace YotsubaEngine.Core.System.S_AGNOSTIC
 {
     /// <summary>
-    /// System responsible for applying cameras to the scene.
-    /// Sistema encargado de colocar aplicar las camaras a la escena
+    /// Sistema encargado de aplicar las cámaras a la escena.
+    /// <para>System responsible for applying cameras to the scene.</para>
     /// </summary>
-    /// <param name="graphicsDevice">Graphics device manager. Administrador de dispositivo gráfico.</param>
+    /// <param name="graphicsDevice">Administrador de dispositivo gráfico. <para>Graphics device manager.</para></param>
     public class CameraSystem(GraphicsDeviceManager graphicsDevice) : ISystem
     {
         /// <summary>
-        /// Gets the current entity manager.
         /// Obtiene el administrador de entidades actual.
+        /// <para>Gets the current entity manager.</para>
         /// </summary>
         public EntityManager EntityManager { get; private set; }
 
         /// <summary>
-        /// Gets the event manager instance.
         /// Obtiene la instancia del administrador de eventos.
+        /// <para>Gets the event manager instance.</para>
         /// </summary>
         public EventManager EventManager { get; private set; }
 
         /// <summary>
-        /// Gets the graphics device manager used for camera updates.
         /// Obtiene el administrador de gráficos usado para actualizar la cámara.
+        /// <para>Gets the graphics device manager used for camera updates.</para>
         /// </summary>
         public GraphicsDeviceManager GraphicsDeviceManager { get; private set; } = graphicsDevice;
 
         /// <summary>
-        /// Initializes the camera system.
         /// Inicializa el sistema de cámara.
+        /// <para>Initializes the camera system.</para>
         /// </summary>
-        /// <param name="entities">Entity manager. Administrador de entidades.</param>
+        /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
         public void InitializeSystem(EntityManager entities)
         {
 #if YTB
@@ -64,10 +64,10 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         }
 
         /// <summary>
-        /// Updates the active camera each frame.
         /// Actualiza la cámara activa en cada frame.
+        /// <para>Updates the active camera each frame.</para>
         /// </summary>
-        /// <param name="gameTime">Game time. Tiempo de juego.</param>
+        /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
         public void UpdateSystem(GameTime gameTime)
         {
 #if YTB
@@ -84,21 +84,21 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
 
 
         /// <summary>
-        /// Shared entity update hook (unused in this system).
         /// Hook de actualización compartida (no usado en este sistema).
+        /// <para>Shared entity update hook (unused in this system).</para>
         /// </summary>
-        /// <param name="Entidad">Entity instance. Instancia de entidad.</param>
-        /// <param name="time">Game time. Tiempo de juego.</param>
+        /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
+        /// <param name="time">Tiempo de juego. <para>Game time.</para></param>
         public void SharedEntityForEachUpdate(Yotsuba Entidad, GameTime time)
         {
             //throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Shared entity initialization hook (unused in this system).
         /// Hook de inicialización compartida (no usado en este sistema).
+        /// <para>Shared entity initialization hook (unused in this system).</para>
         /// </summary>
-        /// <param name="Entidad">Entity instance. Instancia de entidad.</param>
+        /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
         public void SharedEntityInitialize(Yotsuba Entidad)
         {
             //throw new NotImplementedException();

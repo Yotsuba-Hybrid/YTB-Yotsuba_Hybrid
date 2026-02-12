@@ -4,8 +4,8 @@ using YotsubaEngine.Input;
 namespace YotsubaEngine.Core.YotsubaGame
 {
     /// <summary>
-    /// Central manager for keyboard, mouse, gamepad, and touch input.
     /// Administrador central de entrada para teclado, mouse, gamepad y touch.
+    /// <para>Central manager for keyboard, mouse, gamepad, and touch input.</para>
     /// </summary>
     public class InputManager
     {
@@ -16,31 +16,37 @@ namespace YotsubaEngine.Core.YotsubaGame
         private static InputManager instance;
 
         /// <summary>
-        /// Instanciar el input manager como instancia unica
+        /// Instancia única del administrador de entrada.
+        /// <para>Singleton instance of the input manager.</para>
         /// </summary>
         public static InputManager Instance { get => instance == null ? instance = new InputManager() : instance; }
 
         /// <summary>
-        /// Gets the state information of keyboard input.
+        /// Obtiene el estado de entrada del teclado.
+        /// <para>Gets the state information of keyboard input.</para>
         /// </summary>
         public KeyboardInfo Keyboard { get; private set; }
 
         /// <summary>
-        /// Gets the state information of mouse input.
+        /// Obtiene el estado de entrada del mouse.
+        /// <para>Gets the state information of mouse input.</para>
         /// </summary>
         public MouseInfo Mouse { get; private set; }
 
         /// <summary>
-        /// Gets the state information of a gamepad.
+        /// Obtiene el estado de entrada del gamepad.
+        /// <para>Gets the state information of a gamepad.</para>
         /// </summary>
         public GamePadInfo[] GamePads { get; private set; }
 
         /// <summary>
-        /// Gets the state information of touchs
+        /// Obtiene el estado de entrada táctil.
+        /// <para>Gets the state information of touch input.</para>
         /// </summary>
         public TouchInfo Touch { get; private set; }
         /// <summary>
-        /// Creates a new InputManager.
+        /// Crea una nueva instancia del administrador de entrada.
+        /// <para>Creates a new InputManager.</para>
         /// </summary>
         public InputManager()
         {
@@ -55,9 +61,10 @@ namespace YotsubaEngine.Core.YotsubaGame
         }
 
         /// <summary>
-        /// Updates the state information for the keyboard, mouse, and gamepad inputs.
+        /// Actualiza el estado de entrada del teclado, mouse, gamepad y touch.
+        /// <para>Updates the state information for the keyboard, mouse, and gamepad inputs.</para>
         /// </summary>
-        /// <param name="gameTime">A snapshot of the timing values for the current frame.</param>
+        /// <param name="gameTime">Instantánea de tiempo del frame actual. <para>A snapshot of the timing values for the current frame.</para></param>
         public void Update(GameTime gameTime)
         {
             Keyboard.Update();

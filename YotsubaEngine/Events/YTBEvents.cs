@@ -11,361 +11,362 @@ namespace YotsubaEngine.Events.YTBEvents
 {
 
     /// <summary>
-    /// Event published to change an entity animation.
-    /// Evento que se publica para cambiar la animacion de una entidad.
+    /// Evento que se publica para cambiar la animación de una entidad.
+    /// <para>Event published to change an entity animation.</para>
     /// </summary>
-    /// <param name="entityId">Entity identifier. Identificador de la entidad.</param>
-    /// <param name="animation">Animation type. Tipo de animación.</param>
+    /// <param name="entityId">Identificador de la entidad. <para>Entity identifier.</para></param>
+    /// <param name="animation">Tipo de animación. <para>Animation type.</para></param>
     public class AnimationChangeEvent(int entityId, AnimationType animation)
     {
         /// <summary>
-        /// Gets the target entity identifier.
-        /// Obtiene el identificador de la entidad objetivo.
+        /// Identificador de la entidad objetivo.
+        /// <para>Target entity identifier.</para>
         /// </summary>
         public int EntityId = entityId;
 
         /// <summary>
-        /// Gets the animation name to apply.
-        /// Obtiene el nombre de la animación a aplicar.
+        /// Nombre de la animación a aplicar.
+        /// <para>Animation name to apply.</para>
         /// </summary>
         public AnimationType AnimationName = animation;
     }
 
     /// <summary>
-    /// Event published after each frame render.
     /// Evento que se publica al final del renderizado de cada frame.
+    /// <para>Event published after each frame render.</para>
     /// </summary>
     public class OnFrameRenderEvent
     {
         /// <summary>
-        /// Game time for the rendered frame.
         /// Tiempo de juego para el frame renderizado.
+        /// <para>Game time for the rendered frame.</para>
         /// </summary>
         public GameTime gameTime;
     }
 
 	/// <summary>
-	/// Event published when a non-looping animation finishes.
-	/// Evento que se publica cuando una animacion que no es en loop termina de reproducirse
+	/// Evento que se publica cuando una animación sin loop termina de reproducirse.
+	/// <para>Event published when a non-looping animation finishes.</para>
 	/// </summary>
 	public class OnAnimationDontLoopReleaseEvent
 	{
         /// <summary>
-        /// Entity that finished the animation.
         /// Entidad que terminó la animación.
+        /// <para>Entity that finished the animation.</para>
         /// </summary>
         public int EntityId;
 
         /// <summary>
-        /// Animation name that finished.
         /// Nombre de la animación que terminó.
+        /// <para>Animation name that finished.</para>
         /// </summary>
         public AnimationType AnimationName;
 	}
 
 	/// <summary>
-	/// Event published when two entities collide.
-	/// Evento que se publica si dos entidades colisionaron
+	/// Evento que se publica si dos entidades colisionaron.
+	/// <para>Event published when two entities collide.</para>
 	/// </summary>
 	public class OnCollitionEvent
     {
         /// <summary>
-        /// Game time for the collision.
         /// Tiempo de juego para la colisión.
+        /// <para>Game time for the collision.</para>
         /// </summary>
         public GameTime GameTime;
 
         /// <summary>
-        /// Entity attempting to move.
         /// Entidad que intenta moverse.
+        /// <para>Entity attempting to move.</para>
         /// </summary>
         public Yotsuba EntityTryMove;
 
         /// <summary>
-        /// Entity acting as obstacle.
         /// Entidad que actúa como obstáculo.
+        /// <para>Entity acting as obstacle.</para>
         /// </summary>
         public Yotsuba EntityImpediment;
 
     }
 
     /// <summary>
-    /// Collision direction for physics events.
     /// Dirección de colisión para eventos de física.
+    /// <para>Collision direction for physics events.</para>
     /// </summary>
     public enum CollisionDirection
     {
         /// <summary>
-        /// Collision from above (landing on ground).
         /// Colisión desde arriba (aterrizaje en el suelo).
+        /// <para>Collision from above (landing on ground).</para>
         /// </summary>
         Bottom,
         /// <summary>
-        /// Collision from below (hitting ceiling).
         /// Colisión desde abajo (golpeando el techo).
+        /// <para>Collision from below (hitting ceiling).</para>
         /// </summary>
         Top,
         /// <summary>
-        /// Collision from the left side.
         /// Colisión desde el lado izquierdo.
+        /// <para>Collision from the left side.</para>
         /// </summary>
         Left,
         /// <summary>
-        /// Collision from the right side.
         /// Colisión desde el lado derecho.
+        /// <para>Collision from the right side.</para>
         /// </summary>
         Right
     }
 
     /// <summary>
-    /// Event published when an entity lands on the ground (Platform mode).
     /// Evento que se publica cuando una entidad aterriza en el suelo (modo Platform).
+    /// <para>Event published when an entity lands on the ground (Platform mode).</para>
     /// </summary>
     public class OnEntityGroundedEvent
     {
         /// <summary>
-        /// Entity that landed.
         /// Entidad que aterrizó.
+        /// <para>Entity that landed.</para>
         /// </summary>
         public int EntityId;
 
         /// <summary>
-        /// Game time for the event.
         /// Tiempo de juego del evento.
+        /// <para>Game time for the event.</para>
         /// </summary>
         public GameTime GameTime;
     }
 
     /// <summary>
-    /// Event published when an entity leaves the ground (Platform mode).
     /// Evento que se publica cuando una entidad deja el suelo (modo Platform).
+    /// <para>Event published when an entity leaves the ground (Platform mode).</para>
     /// </summary>
     public class OnEntityAirborneEvent
     {
         /// <summary>
-        /// Entity that left the ground.
         /// Entidad que dejó el suelo.
+        /// <para>Entity that left the ground.</para>
         /// </summary>
         public int EntityId;
 
         /// <summary>
-        /// Game time for the event.
         /// Tiempo de juego del evento.
+        /// <para>Game time for the event.</para>
         /// </summary>
         public GameTime GameTime;
     }
 
     /// <summary>
-    /// Event published when an entity jumps (Platform mode).
     /// Evento que se publica cuando una entidad salta (modo Platform).
+    /// <para>Event published when an entity jumps (Platform mode).</para>
     /// </summary>
     public class OnEntityJumpEvent
     {
         /// <summary>
-        /// Entity that jumped.
         /// Entidad que saltó.
+        /// <para>Entity that jumped.</para>
         /// </summary>
         public int EntityId;
 
         /// <summary>
-        /// Game time for the event.
         /// Tiempo de juego del evento.
+        /// <para>Game time for the event.</para>
         /// </summary>
         public GameTime GameTime;
     }
 
     /// <summary>
-    /// Event published when keyboard state changes.
-    /// Evento que se publica cuando se cambia el estado del teclado
+    /// Evento que se publica cuando se cambia el estado del teclado.
+    /// <para>Event published when keyboard state changes.</para>
     /// </summary>
-    /// <param name="entityId">Entity identifier. Identificador de la entidad.</param>
-    /// <param name="key">Keyboard key. Tecla del teclado.</param>
-    /// <param name="gameTime">Game time. Tiempo de juego.</param>
-    /// <param name="actionEntityInput">Action mapping. Acción mapeada.</param>
-    /// <param name="typeEvent">Input event type. Tipo de evento de entrada.</param>
+    /// <param name="entityId">Identificador de la entidad. <para>Entity identifier.</para></param>
+    /// <param name="key">Tecla del teclado. <para>Keyboard key.</para></param>
+    /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
+    /// <param name="actionEntityInput">Acción mapeada. <para>Action mapping.</para></param>
+    /// <param name="typeEvent">Tipo de evento de entrada. <para>Input event type.</para></param>
     public class OnKeyBoardEvent(int entityId, Keys key, GameTime gameTime, ActionEntityInput actionEntityInput, InputEventType typeEvent) : OnInputEvent(entityId, gameTime, actionEntityInput, typeEvent)
     {
         /// <summary>
-        /// Key associated with the event.
         /// Tecla asociada al evento.
+        /// <para>Key associated with the event.</para>
         /// </summary>
         public Keys Key = key;
     }
 
     /// <summary>
-    /// Defines the kind of input event.
     /// Define el tipo de evento de entrada.
+    /// <para>Defines the kind of input event.</para>
     /// </summary>
     public enum InputEventType
     {
         /// <summary>
-        /// Input was just released.
         /// La entrada se soltó recientemente.
+        /// <para>Input was just released.</para>
         /// </summary>
         JustReleased,
         /// <summary>
-        /// Input was just pressed.
         /// La entrada se presionó recientemente.
+        /// <para>Input was just pressed.</para>
         /// </summary>
         JustPressed,
         /// <summary>
-        /// Input is held down.
         /// La entrada se mantiene presionada.
+        /// <para>Input is held down.</para>
         /// </summary>
         HoldDown
     }
 
     /// <summary>
-    /// Event published when mouse state changes.
-    /// Evento que se dispara al cambiar el estado del Mouse
+    /// Evento que se dispara al cambiar el estado del mouse.
+    /// <para>Event published when mouse state changes.</para>
     /// </summary>
-    /// <param name="entityId">Entity identifier. Identificador de la entidad.</param>
-    /// <param name="mouseButton">Mouse button. Botón del mouse.</param>
-    /// <param name="gameTime">Game time. Tiempo de juego.</param>
-    /// <param name="actionEntityInput">Action mapping. Acción mapeada.</param>
-    /// <param name="typeEvent">Input event type. Tipo de evento de entrada.</param>
+    /// <param name="entityId">Identificador de la entidad. <para>Entity identifier.</para></param>
+    /// <param name="mouseButton">Botón del mouse. <para>Mouse button.</para></param>
+    /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
+    /// <param name="actionEntityInput">Acción mapeada. <para>Action mapping.</para></param>
+    /// <param name="typeEvent">Tipo de evento de entrada. <para>Input event type.</para></param>
     public class OnMouseEvent(int entityId, MouseButton mouseButton, GameTime gameTime, ActionEntityInput actionEntityInput, InputEventType typeEvent) : OnInputEvent(entityId, gameTime, actionEntityInput, typeEvent)
     {
         /// <summary>
-        /// Mouse button associated with the event.
         /// Botón del mouse asociado al evento.
+        /// <para>Mouse button associated with the event.</para>
         /// </summary>
         public MouseButton MouseButton = mouseButton;
     }
 
     /// <summary>
-    /// Event published when gamepad state changes.
-    /// Evento que se dispara al cambiar el estado del Mando
+    /// Evento que se dispara al cambiar el estado del mando.
+    /// <para>Event published when gamepad state changes.</para>
     /// </summary>
-    /// <param name="entityId">Entity identifier. Identificador de la entidad.</param>
-    /// <param name="gamePadButton">Gamepad button. Botón del gamepad.</param>
-    /// <param name="gameTime">Game time. Tiempo de juego.</param>
-    /// <param name="actionEntityInput">Action mapping. Acción mapeada.</param>
-    /// <param name="typeEvent">Input event type. Tipo de evento de entrada.</param>
+    /// <param name="entityId">Identificador de la entidad. <para>Entity identifier.</para></param>
+    /// <param name="gamePadButton">Botón del gamepad. <para>Gamepad button.</para></param>
+    /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
+    /// <param name="actionEntityInput">Acción mapeada. <para>Action mapping.</para></param>
+    /// <param name="typeEvent">Tipo de evento de entrada. <para>Input event type.</para></param>
     public class OnGamePadEvent(int entityId, Buttons gamePadButton, GameTime gameTime, ActionEntityInput actionEntityInput, InputEventType typeEvent) : OnInputEvent(entityId, gameTime, actionEntityInput, typeEvent)
     {
         /// <summary>
-        /// Gamepad button associated with the event.
         /// Botón del gamepad asociado al evento.
+        /// <para>Gamepad button associated with the event.</para>
         /// </summary>
         public Buttons Button = gamePadButton;
     }
 
     /// <summary>
-    /// Event published when gamepad thumbstick position changes.
     /// Evento que se dispara al mover el thumbstick del gamepad.
+    /// <para>Event published when gamepad thumbstick position changes.</para>
     /// </summary>
-    /// <param name="entityId">Entity identifier. Identificador de la entidad.</param>
-    /// <param name="gameTime">Game time. Tiempo de juego.</param>
-    /// <param name="leftThumbstick">Left thumbstick position. Posición del stick izquierdo.</param>
-    /// <param name="rightThumbstick">Right thumbstick position. Posición del stick derecho.</param>
-    /// <param name="playerIndex">Player index for the gamepad. Índice del jugador del gamepad.</param>
+    /// <param name="entityId">Identificador de la entidad. <para>Entity identifier.</para></param>
+    /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
+    /// <param name="leftThumbstick">Posición del stick izquierdo. <para>Left thumbstick position.</para></param>
+    /// <param name="rightThumbstick">Posición del stick derecho. <para>Right thumbstick position.</para></param>
+    /// <param name="playerIndex">Índice del jugador del gamepad. <para>Player index for the gamepad.</para></param>
     public class OnThumbstickEvent(int entityId, GameTime gameTime, Vector2 leftThumbstick, Vector2 rightThumbstick, PlayerIndex playerIndex)
     {
         /// <summary>
-        /// Entity identifier associated with the event.
         /// Identificador de entidad asociado al evento.
+        /// <para>Entity identifier associated with the event.</para>
         /// </summary>
         public int EntityId = entityId;
 
         /// <summary>
-        /// Game time for the input event.
         /// Tiempo de juego para el evento de entrada.
+        /// <para>Game time for the input event.</para>
         /// </summary>
         public GameTime GameTime = gameTime;
 
         /// <summary>
-        /// Left thumbstick position (-1 to 1 on each axis).
         /// Posición del stick izquierdo (-1 a 1 en cada eje).
+        /// <para>Left thumbstick position (-1 to 1 on each axis).</para>
         /// </summary>
         public Vector2 LeftThumbstick = leftThumbstick;
 
         /// <summary>
-        /// Right thumbstick position (-1 to 1 on each axis).
         /// Posición del stick derecho (-1 a 1 en cada eje).
+        /// <para>Right thumbstick position (-1 to 1 on each axis).</para>
         /// </summary>
         public Vector2 RightThumbstick = rightThumbstick;
 
         /// <summary>
-        /// Player index for the gamepad.
         /// Índice del jugador del gamepad.
+        /// <para>Player index for the gamepad.</para>
         /// </summary>
         public PlayerIndex PlayerIndex = playerIndex;
     }
 
 
     /// <summary>
-    /// Base event for OS input interactions.
-    /// Evento que se dispara al usuario interactual con el input del OS
+    /// Evento que se dispara al usuario interactuar con el input del OS.
+    /// <para>Base event for OS input interactions.</para>
     /// </summary>
-    /// <param name="entityId">Entity identifier. Identificador de la entidad.</param>
-    /// <param name="gameTime">Game time. Tiempo de juego.</param>
-    /// <param name="actionEntityInput">Action mapping. Acción mapeada.</param>
-    /// <param name="typeEvent">Input event type. Tipo de evento de entrada.</param>
+    /// <param name="entityId">Identificador de la entidad. <para>Entity identifier.</para></param>
+    /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
+    /// <param name="actionEntityInput">Acción mapeada. <para>Action mapping.</para></param>
+    /// <param name="typeEvent">Tipo de evento de entrada. <para>Input event type.</para></param>
     public abstract class OnInputEvent(int entityId, GameTime gameTime, ActionEntityInput actionEntityInput, InputEventType typeEvent)
     {
         /// <summary>
-        /// Game time for the input event.
         /// Tiempo de juego para el evento de entrada.
+        /// <para>Game time for the input event.</para>
         /// </summary>
         public GameTime GameTime = gameTime;
 
         /// <summary>
-        /// Input event type.
         /// Tipo de evento de entrada.
+        /// <para>Input event type.</para>
         /// </summary>
         public InputEventType Type = typeEvent;
 
         /// <summary>
-        /// Entity identifier associated with the event.
         /// Identificador de entidad asociado al evento.
+        /// <para>Entity identifier associated with the event.</para>
         /// </summary>
         public int EntityId = entityId;
 
         /// <summary>
-        /// Action mapping for the input.
         /// Mapeo de acción para la entrada.
+        /// <para>Action mapping for the input.</para>
         /// </summary>
         public ActionEntityInput ActionEntityInput = actionEntityInput;
     }
 
     /// <summary>
-    /// Event published when a world camera is set.
-    /// Evento que se dispara al solicitar cambiar la camara del mundo
+    /// Evento que se dispara al solicitar cambiar la cámara del mundo.
+    /// <para>Event published when a world camera is set.</para>
     /// </summary>
-    /// <param name="cameraComponent">Camera component. Componente de cámara.</param>
+    /// <param name="cameraComponent">Componente de cámara. <para>Camera component.</para></param>
     public class OnCameraSet(CameraComponent3D cameraComponent)
     {
         /// <summary>
-        /// Camera component instance.
         /// Instancia del componente de cámara.
+        /// <para>Camera component instance.</para>
         /// </summary>
         public CameraComponent3D camera = cameraComponent;
     }
     
     /// <summary>
-    /// Event published when a button is hovered with the mouse.
-    /// Evento que se dispara si se le hace hover con el mouse a un boton
+    /// Evento que se dispara si se le hace hover con el mouse a un botón.
+    /// <para>Event published when a button is hovered with the mouse.</para>
     /// </summary>
-    /// <param name="entityId">Entity identifier. Identificador de la entidad.</param>
+    /// <param name="entityId">Identificador de la entidad. <para>Entity identifier.</para></param>
     public class OnHoverButton(int entityId)
     {
         /// <summary>
-        /// Hovered entity identifier.
         /// Identificador de la entidad en hover.
+        /// <para>Hovered entity identifier.</para>
         /// </summary>
         public int entityId = entityId;
     }
 
     /// <summary>
-    /// Event published to pause event processing temporarily.
-    /// Evento que se dispara para pausar momentaneamente la resolucion de eventos del EventManager
+    /// Evento que se dispara para pausar momentáneamente la resolución de eventos del EventManager.
+    /// <para>Event published to pause event processing temporarily.</para>
     /// </summary>
+    /// <param name="ignoreEventsInProccess">Indica si se deben ignorar eventos durante el procesamiento. <para>Whether to ignore events during processing.</para></param>
     public class StopEvents(bool ignoreEventsInProccess = true) 
     { 
         /// <summary>
-        /// Indicates whether events should be ignored during processing.
         /// Indica si los eventos deben ignorarse durante el procesamiento.
+        /// <para>Indicates whether events should be ignored during processing.</para>
         /// </summary>
         public bool ignoreEventsInProccess { get; set; }
     }
@@ -373,15 +374,15 @@ namespace YotsubaEngine.Events.YTBEvents
     namespace EngineEvents
     {
         /// <summary>
-        /// Engine event published when a history version is restored.
-        /// Evento propio del motor que se dispara al cambiar de version del historial del gamefile
+        /// Evento propio del motor que se dispara al cambiar de versión del historial del gamefile.
+        /// <para>Engine event published when a history version is restored.</para>
         /// </summary>
-        /// <param name="nameVersion">Version name. Nombre de versión.</param>
+        /// <param name="nameVersion">Nombre de versión. <para>Version name.</para></param>
         public class OnGameFileWasReplaceByHistory(string nameVersion)
         {
             /// <summary>
-            /// Version name restored.
             /// Nombre de la versión restaurada.
+            /// <para>Version name restored.</para>
             /// </summary>
             public string NameVersion = nameVersion;
         }
@@ -389,45 +390,48 @@ namespace YotsubaEngine.Events.YTBEvents
 
 #if YTB
         /// <summary>
-        /// Event toggling the engine editor UI visibility.
         /// Evento que alterna la visibilidad de la UI del editor.
+        /// <para>Event toggling the engine editor UI visibility.</para>
         /// </summary>
         public class OnHiddeORShowUIEngineEditor() { }
 
         /// <summary>
-        /// Event toggling the game UI visibility.
         /// Evento que alterna la visibilidad de la UI del juego.
+        /// <para>Event toggling the game UI visibility.</para>
         /// </summary>
         public class OnHiddeORShowGameUI() { }
 
         /// <summary>
-        /// Event specifying visibility for game UI and engine editor UI.
         /// Evento que especifica la visibilidad de la UI del juego y del editor.
+        /// <para>Event specifying visibility for game UI and engine editor UI.</para>
         /// </summary>
+        /// <param name="showGameUI">Si se muestra la UI del juego. <para>Whether to show the game UI.</para></param>
+        /// <param name="showEngineEditor">Si se muestra la UI del editor del motor. <para>Whether to show the engine editor UI.</para></param>
         public class OnShowGameUIHiddeEngineEditor(bool showGameUI, bool showEngineEditor)
         {
             /// <summary>
-            /// Whether to show the game UI.
             /// Si se muestra la UI del juego.
+            /// <para>Whether to show the game UI.</para>
             /// </summary>
             public bool ShowGameUI = showGameUI;
 
             /// <summary>
-            /// Whether to show the engine editor UI.
             /// Si se muestra la UI del editor del motor.
+            /// <para>Whether to show the engine editor UI.</para>
             /// </summary>
             public bool ShowEngineEditor = showEngineEditor;
         }
 
         /// <summary>
-        /// Event published when the scene manager changes.
         /// Evento publicado cuando cambia el gestor de escenas.
+        /// <para>Event published when the scene manager changes.</para>
         /// </summary>
+        /// <param name="sceneManager">Instancia del gestor de escenas. <para>Scene manager instance.</para></param>
         public class OnChangeEsceneManager(SceneManager sceneManager)
         {
             /// <summary>
-            /// Scene manager instance.
             /// Instancia del gestor de escenas.
+            /// <para>Scene manager instance.</para>
             /// </summary>
             public SceneManager SceneManager = sceneManager;
         }

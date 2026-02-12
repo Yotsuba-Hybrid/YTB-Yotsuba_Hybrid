@@ -19,20 +19,20 @@ using static YotsubaEngine.Core.System.S_AGNOSTIC.InputSystem;
 namespace YotsubaEngine.Core.System.YotsubaEngineCore
 {
     /// <summary>
-    /// Handles drag-and-drop and entity dragging behaviors in the editor.
     /// Gestiona el arrastrar y soltar y el arrastre de entidades en el editor.
+    /// <para>Handles drag-and-drop and entity dragging behaviors in the editor.</para>
     /// </summary>
     internal class DragAndDropSystem : ISystem
     {
         /// <summary>
-        /// Stores files dropped into the window.
         /// Almacena los archivos soltados en la ventana.
+        /// <para>Stores files dropped into the window.</para>
         /// </summary>
         public static readonly YTB<FileDropped> Files = new YTB<FileDropped>();
 
         /// <summary>
-        /// Gets the last drop position in window coordinates.
         /// Obtiene la última posición de soltado en coordenadas de ventana.
+        /// <para>Gets the last drop position in window coordinates.</para>
         /// </summary>
         public static Point DropPosition { get; private set; }
 
@@ -49,9 +49,10 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
         EventManager EventManager;
 
         /// <summary>
-        /// Initializes the drag-and-drop system with entity context.
         /// Inicializa el sistema de arrastrar y soltar con el contexto de entidades.
+        /// <para>Initializes the drag-and-drop system with entity context.</para>
         /// </summary>
+        /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
         public void InitializeSystem(EntityManager entities)
         {
             EntityManager = entities;
@@ -59,27 +60,31 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
         }
 
         /// <summary>
-        /// Updates drag behavior for each entity during the shared update pass.
         /// Actualiza el comportamiento de arrastre para cada entidad durante el pase compartido.
+        /// <para>Updates drag behavior for each entity during the shared update pass.</para>
         /// </summary>
+        /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
+        /// <param name="time">Tiempo de juego. <para>Game time.</para></param>
         public void SharedEntityForEachUpdate(Yotsuba Entidad, GameTime time)
         { 
             EntityDrag(Entidad);
         }
 
         /// <summary>
-        /// Initializes per-entity state when needed.
         /// Inicializa el estado por entidad cuando sea necesario.
+        /// <para>Initializes per-entity state when needed.</para>
         /// </summary>
+        /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
         public void SharedEntityInitialize(Yotsuba Entidad)
         {
             // Drag-and-drop initialization is handled in InitializeSystem
         }
 
         /// <summary>
-        /// Updates the system each frame.
         /// Actualiza el sistema en cada frame.
+        /// <para>Updates the system each frame.</para>
         /// </summary>
+        /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
         public void UpdateSystem(GameTime gameTime)
         {
             // Per-entity update logic is handled in SharedEntityForEachUpdate
@@ -101,9 +106,10 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
         private Vector2 _dragOffset = Vector2.Zero;
 
         /// <summary>
-        /// Applies drag logic to the specified entity.
         /// Aplica la lógica de arrastre a la entidad especificada.
+        /// <para>Applies drag logic to the specified entity.</para>
         /// </summary>
+        /// <param name="entity">Entidad objetivo. <para>Target entity.</para></param>
         public void EntityDrag(Yotsuba entity)
         {
 
@@ -287,9 +293,11 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
         }
 
         /// <summary>
-        /// Handles window file drop events and queues supported files.
         /// Maneja los eventos de soltado de archivos y encola archivos soportados.
+        /// <para>Handles window file drop events and queues supported files.</para>
         /// </summary>
+        /// <param name="sender">Origen del evento. <para>Event source.</para></param>
+        /// <param name="e">Argumentos del evento de soltado. <para>File drop event arguments.</para></param>
         public static void Window_FileDrop(object sender, FileDropEventArgs e)
         {
             MouseState mouseState = Mouse.GetState();
@@ -393,6 +401,10 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
 
     }
 
+    /// <summary>
+    /// Tipos de archivos aceptados al soltar en la ventana.
+    /// <para>Types of files accepted when dropped onto the window.</para>
+    /// </summary>
     public enum DroppedFileKind
     {
         Image,
@@ -408,26 +420,28 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
     }
 
     /// <summary>
-    /// Represents metadata for a dropped file.
     /// Representa los metadatos de un archivo soltado.
+    /// <para>Represents metadata for a dropped file.</para>
     /// </summary>
+    /// <param name="name">Nombre del archivo. <para>File name.</para></param>
+    /// <param name="kind">Tipo de archivo. <para>File kind.</para></param>
     public class FileDropped(string name, DroppedFileKind kind)
     {
         /// <summary>
-        /// Indicates whether the file is selected in the UI.
         /// Indica si el archivo está seleccionado en la UI.
+        /// <para>Indicates whether the file is selected in the UI.</para>
         /// </summary>
         public bool selected = false;
 
         /// <summary>
-        /// Gets or sets the file path or name.
         /// Obtiene o establece la ruta o nombre del archivo.
+        /// <para>Gets or sets the file path or name.</para>
         /// </summary>
         public string Name { get; set; } = name;
 
         /// <summary>
-        /// Gets the type of the dropped file.
         /// Obtiene el tipo del archivo soltado.
+        /// <para>Gets the type of the dropped file.</para>
         /// </summary>
         public DroppedFileKind Kind { get; } = kind;
     }

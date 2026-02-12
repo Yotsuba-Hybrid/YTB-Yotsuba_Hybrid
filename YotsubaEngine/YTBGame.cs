@@ -19,20 +19,20 @@ using YotsubaEngine.Scripting;
 namespace YotsubaEngine
 {
     /// <summary>
-    /// Main game host for the Yotsuba engine runtime.
     /// Anfitrión principal del juego para el runtime del motor Yotsuba.
+    /// <para>Main game host for the Yotsuba engine runtime.</para>
     /// </summary>
     public class YTBGame : Game
     {
         /// <summary>
-        /// Indicates whether the game is running on a mobile platform.
         /// Indica si el juego se está ejecutando en una plataforma móvil.
+        /// <para>Indicates whether the game is running on a mobile platform.</para>
         /// </summary>
         public readonly static bool IsMobile = OperatingSystem.IsAndroid() || OperatingSystem.IsIOS();
 
         /// <summary>
-        /// Indicates if the game is running on a desktop platform.
         /// Indica si el juego se está ejecutando en una plataforma de escritorio.
+        /// <para>Indicates if the game is running on a desktop platform.</para>
         /// </summary>
         public readonly static bool IsDesktop = OperatingSystem.IsMacOS() || OperatingSystem.IsLinux() || OperatingSystem.IsWindows();
 
@@ -43,57 +43,58 @@ namespace YotsubaEngine
         private static Game instance;
 
         /// <summary>
-        /// Gets the global game instance.
         /// Obtiene la instancia global del juego.
+        /// <para>Gets the global game instance.</para>
         /// </summary>
         public static Game Instance { get => instance; private set => instance = value; }
 
         /// <summary>
-        /// Provides access to the graphics device manager.
         /// Proporciona acceso al administrador del dispositivo gráfico.
+        /// <para>Provides access to the graphics device manager.</para>
         /// </summary>
         public GraphicsDeviceManager _graphics;
 
         /// <summary>
-        /// Provides the shared sprite batch for rendering.
         /// Proporciona el sprite batch compartido para el renderizado.
+        /// <para>Provides the shared sprite batch for rendering.</para>
         /// </summary>
         public SpriteBatch _spriteBatch;
 
         /// <summary>
-        /// Manages engine events for the game session.
         /// Gestiona los eventos del motor para la sesión de juego.
+        /// <para>Manages engine events for the game session.</para>
         /// </summary>
         public EventManager EventManager;
 
         /// <summary>
-        /// Tracks the active scene manager instance.
         /// Mantiene la instancia del administrador de escenas activo.
+        /// <para>Tracks the active scene manager instance.</para>
         /// </summary>
         public SceneManager SceneManager;
 
         /// <summary>
-        /// Gets or sets the active script registry.
         /// Obtiene o establece el registro de scripts activo.
+        /// <para>Gets or sets the active script registry.</para>
         /// </summary>
         public static IScriptRegistry ScriptRegistry { get; set; }
 
         /// <summary>
-        /// Gets or sets the active model registry.
         /// Obtiene o establece el registro de modelos activo.
+        /// <para>Gets or sets the active model registry.</para>
         /// </summary>
         public static IModelRegistry ModelRegistry { get; set; }
 
         /// <summary>
-        /// Gets or sets the ImGui renderer instance.
         /// Obtiene o establece la instancia del renderizador ImGui.
+        /// <para>Gets or sets the ImGui renderer instance.</para>
         /// </summary>
         public static ImGuiRenderer GuiRenderer { get; set; }
 
         /// <summary>
-        /// Creates a new Yotsuba game host instance.
         /// Crea una nueva instancia anfitriona del juego Yotsuba.
+        /// <para>Creates a new Yotsuba game host instance.</para>
         /// </summary>
+        /// <param name="isMouseVisible">Indica si el cursor del mouse es visible. <para>Whether the mouse cursor is visible.</para></param>
         public YTBGame(bool isMouseVisible = true) : base()
         {
             Instance = this;
@@ -105,7 +106,7 @@ namespace YotsubaEngine
 
             Window.Title = "Yotsuba Engine";
             Window.AllowUserResizing = true;
-
+            Window.IsBorderless = false;
             YTBGlobalState.ContentManager = Content;
 
             if (IsDesktop)
@@ -113,7 +114,6 @@ namespace YotsubaEngine
                 Window.FileDrop += DragAndDropSystem.Window_FileDrop;
             }
 
-            SetConfig();
         }
 
         protected virtual void SetConfig()
@@ -121,33 +121,37 @@ namespace YotsubaEngine
 
         }
 
-        protected virtual void SetConfig(string Title)
-        {
-            Window.Title = Title;
-        }
+
 
         /// <summary>
-        /// Assigns the script registry used by the engine.
         /// Asigna el registro de scripts usado por el motor.
+        /// <para>Assigns the script registry used by the engine.</para>
         /// </summary>
+        /// <param name="scriptRegistry">Registro de scripts a asignar. <para>Script registry to assign.</para></param>
         public void SetScriptManager(IScriptRegistry scriptRegistry)
         {
             YTBGame.ScriptRegistry = scriptRegistry;
         }
 
         /// <summary>
-        /// Assigns the model registry used by the engine.
         /// Asigna el registro de modelos usado por el motor.
+        /// <para>Assigns the model registry used by the engine.</para>
         /// </summary>
+        /// <param name="modelRegistry">Registro de modelos a asignar. <para>Model registry to assign.</para></param>
         public void SetModelRegistry(IModelRegistry modelRegistry)
         {
             YTBGame.ModelRegistry = modelRegistry;
         }
 
         /// <summary>
-        /// Initializes the graphics device and window settings.
         /// Inicializa el dispositivo gráfico y la configuración de la ventana.
+        /// <para>Initializes the graphics device and window settings.</para>
         /// </summary>
+        /// <param name="graphicsDeviceManager">Administrador del dispositivo gráfico. <para>Graphics device manager.</para></param>
+        /// <param name="GraphicsDevice">Dispositivo gráfico activo. <para>Active graphics device.</para></param>
+        /// <param name="width">Ancho del buffer preferido. <para>Preferred back buffer width.</para></param>
+        /// <param name="height">Alto del buffer preferido. <para>Preferred back buffer height.</para></param>
+        /// <param name="fullScreen">Indica si la pantalla es completa. <para>Whether to use full screen.</para></param>
         public virtual void InitializeGraphicsDevice(GraphicsDeviceManager graphicsDeviceManager, GraphicsDevice GraphicsDevice, int width = 1920, int height = 1080, bool fullScreen = false)
         {
             _graphics = graphicsDeviceManager;
@@ -312,8 +316,8 @@ namespace YotsubaEngine
         }
 
         /// <summary>
-        /// Starts the game loop.
         /// Inicia el bucle principal del juego.
+        /// <para>Starts the game loop.</para>
         /// </summary>
         public virtual void GameRun()
         {

@@ -10,15 +10,15 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
 {
     /// <summary>
     /// Sistema de compilación de assets en caliente (HotReload) para YotsubaEngine.
-    /// Compila los assets del juego en tiempo de ejecución usando el proyecto SandBoxGame.Content.
+    /// <para>Hot-reload asset build system for YotsubaEngine.</para>
     /// </summary>
     public class YTBContentBuilder
     {
         /// <summary>
         /// Obtiene el nombre del juego desde YotsubaGameConfig.
-        /// Útil para configurar títulos de ventana o nombres de ejecutables.
+        /// <para>Gets the game name from YotsubaGameConfig.</para>
         /// </summary>
-        /// <returns>El nombre del juego configurado, o "YotsubaGame" por defecto</returns>
+        /// <returns>El nombre configurado o "YotsubaGame" por defecto. <para>The configured game name, or "YotsubaGame" by default.</para></returns>
         public static string GetGameName()
         {
             try
@@ -55,7 +55,8 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
         }
 
         /// <summary>
-        /// Reconstruye los assets del juego en un hilo separado (Fire-and-forget).
+        /// Reconstruye los assets del juego en un hilo separado (fire-and-forget).
+        /// <para>Rebuilds game assets on a separate thread (fire-and-forget).</para>
         /// </summary>
         public static void Rebuild()
         {
@@ -64,8 +65,9 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
 
         /// <summary>
         /// Reconstruye los assets del juego en un hilo separado y ejecuta un callback al finalizar.
+        /// <para>Rebuilds game assets on a separate thread and runs a callback when finished.</para>
         /// </summary>
-        /// <param name="fn">Callback a ejecutar cuando la compilación termine exitosamente.</param>
+        /// <param name="fn">Callback al finalizar. <para>Callback to run when compilation finishes.</para></param>
         public static void Rebuild(Action fn)
         {
             Task.Run(async () => await RebuildAsync(fn));

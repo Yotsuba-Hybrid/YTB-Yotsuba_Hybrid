@@ -18,8 +18,8 @@ using static YotsubaEngine.Core.Component.C_AGNOSTIC.RigidBody;
 namespace YotsubaEngine.Core.System.S_2D
 {
     /// <summary>
-    /// System responsible for 2D physics updates and movement.
-    /// Sistema que se encarga de toda la física del mundo (mover a las entidades)
+    /// Sistema que se encarga de toda la física del mundo (mover a las entidades).
+    /// <para>System responsible for 2D physics updates and movement.</para>
     /// </summary>
     public class PhysicsSystem2D : ISystem
     {
@@ -37,10 +37,10 @@ namespace YotsubaEngine.Core.System.S_2D
         private EntityManager EntityManager { get; set; }
 
         /// <summary>
-        /// Initializes the physics system.
-        /// Implementacion de la interfaz ISystem
+        /// Inicializa el sistema de física.
+        /// <para>Initializes the physics system.</para>
         /// </summary>
-        /// <param name="entities">Entity manager. Administrador de entidades.</param>
+        /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
         public void InitializeSystem(EntityManager @entities)
         {
 #if YTB
@@ -52,10 +52,10 @@ namespace YotsubaEngine.Core.System.S_2D
         }
 
         /// <summary>
-        /// Updates physics and moves entities.
-        /// Implementacion de la interfaz ISystem
+        /// Actualiza la física y mueve las entidades.
+        /// <para>Updates physics and moves entities.</para>
         /// </summary>
-        /// <param name="gameTime">Game time. Tiempo de juego.</param>
+        /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
         public void UpdateSystem(GameTime gameTime)
         {
 #if YTB
@@ -390,21 +390,21 @@ namespace YotsubaEngine.Core.System.S_2D
         }
 
         /// <summary>
-        /// Shared entity update hook (unused in this system).
         /// Hook de actualización compartida (no usado en este sistema).
+        /// <para>Shared entity update hook (unused in this system).</para>
         /// </summary>
-        /// <param name="Entidad">Entity instance. Instancia de entidad.</param>
-        /// <param name="time">Game time. Tiempo de juego.</param>
+        /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
+        /// <param name="time">Tiempo de juego. <para>Game time.</para></param>
         public void SharedEntityForEachUpdate(Yotsuba Entidad, GameTime time)
         {
             //throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Shared entity initialization hook (unused in this system).
         /// Hook de inicialización compartida (no usado en este sistema).
+        /// <para>Shared entity initialization hook (unused in this system).</para>
         /// </summary>
-        /// <param name="Entidad">Entity instance. Instancia de entidad.</param>
+        /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
         public void SharedEntityInitialize(Yotsuba Entidad)
         {
             //throw new NotImplementedException();

@@ -14,26 +14,26 @@ using static YotsubaEngine.Exceptions.GameWontRun;
 namespace YotsubaEngine.ActionFiles.YTB_Files
 {
 	/// <summary>
-	/// Provides helpers to read YTB game data files.
 	/// Proporciona ayudas para leer archivos de datos YTB.
+	/// <para>Provides helpers to read YTB game data files.</para>
 	/// </summary>
 	public static class ReadYTBFile
 	{
 		/// <summary>
-		/// Name of the game data file containing scenes and entities.
-		/// Nombre del archivo donde se guardan las escenas y entidades del juego
+		/// Nombre del archivo donde se guardan las escenas y entidades del juego.
+		/// <para>Name of the game data file containing scenes and entities.</para>
 		/// </summary>
 		public const string JSONGameName = "YotsubaGame.ytb";
 
 		/// <summary>
-		/// Name of the configuration file with author and game metadata.
-		/// Nombre del archivo en donde se guardan los datos del autor, nombre del juego, etc...
+		/// Nombre del archivo en donde se guardan los datos del autor, nombre del juego, etc.
+		/// <para>Name of the configuration file with author and game metadata.</para>
 		/// </summary>
 		public const string JSONGameConfigName = "YotsubaGameConfig.ytb";
 
 		/// <summary>
-		/// Name of the engine history file.
-		/// Nombre del archivo en donde se guarda el historial de los cambios del engine
+		/// Nombre del archivo en donde se guarda el historial de los cambios del engine.
+		/// <para>Name of the engine history file.</para>
 		/// </summary>
 		public const string JSONGameSaveName = "YotsubaEngineHistory.ytb";
 
@@ -325,10 +325,10 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 		}
 
 		/// <summary>
-		/// Reads the engine history file for the game.
-		/// Método para leer solo el archivo de historial del game engine del juego
+		/// Método para leer solo el archivo de historial del game engine del juego.
+		/// <para>Reads the engine history file for the game.</para>
 		/// </summary>
-		/// <returns>History entries. Entradas de historial.</returns>
+		/// <returns>Entradas de historial. <para>History entries.</para></returns>
 		public static List<YTBEngineHistory> ReadYTBGameFileHistory()
 		{
 			var historyFilePath = Path.Combine(DevelopmentConfigPath, JSONGameSaveName);
@@ -346,10 +346,10 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 		}
 
 		/// <summary>
-		/// Reads only the configuration file.
-		/// Método para leer solo el archivo de configuración
+		/// Método para leer solo el archivo de configuración.
+		/// <para>Reads only the configuration file.</para>
 		/// </summary>
-		/// <returns>Game configuration. Configuración del juego.</returns>
+		/// <returns>Configuración del juego. <para>Game configuration.</para></returns>
 		public static async Task<YTBConfig> ReadYTBGameConfigFile()
 		{
 			EngineUISystem.SendLog("Leyendo Configuración del juego...");

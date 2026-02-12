@@ -34,31 +34,48 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
 #if YTB
         bool showEngineEditor = true;
         bool pauseSystem = false;
+        
+        /// <summary>
+        /// Tiempo restante para mostrar la alerta de cambio de modo (en segundos).
+        /// <para>Remaining time to show mode switch alert (in seconds).</para>
+        /// </summary>
+        private float _modeSwitchAlertTimer = 0f;
+
+        /// <summary>
+        /// Mensaje de la alerta de cambio de modo.
+        /// <para>Mode switch alert message.</para>
+        /// </summary>
+        private string _modeSwitchAlertMessage = string.Empty;
 #endif
         /// <summary>
-        /// Almacenamiento de todos los mensajes que aparecen en la consola del Engine al usuario en tiempo real y de manera global en la app.
+        /// Almacena los mensajes que aparecen en la consola del engine durante la sesión.
+        /// <para>Stores the messages that appear in the engine console during the session.</para>
         /// </summary>
         public static YTB<(Color, string)> Messages { get; set; } = new YTB<(Color, string)>();
 
         /// <summary>
-        /// Almacenamiento de todos los errores en la consola del engine.
+        /// Almacena los errores registrados en la consola del engine.
+        /// <para>Stores errors recorded in the engine console.</para>
         /// </summary>
         public static YTB<string> Errors { get; set; } = new YTB<string>();
 
 
 
         /// <summary>
-        /// Aquí se guardan los datos del json con toda la info del juego creada desde la UI del engine.
+        /// Contiene la información del juego cargada desde el archivo .ytb.
+        /// <para>Holds the game information loaded from the .ytb file.</para>
         /// </summary>
         public static YTBGameInfo GameInfo { get; set; }
 
         /// <summary>
-        /// Aquí se almacena la entidad seleccionada para poder compartirla en todo el engine mantener el estado del mismo
+        /// Entidad seleccionada actualmente en el editor.
+        /// <para>Currently selected entity in the editor.</para>
         /// </summary>
         public YTBEntity SelectedEntity { get; private set; }
 
         /// <summary>
-        /// Aquí se almacena la escena seleccionada para poder compartirla en todo el engine mantener el estado del mismo
+        /// Escena seleccionada actualmente en el editor.
+        /// <para>Currently selected scene in the editor.</para>
         /// </summary>
         public YTBScene SelectedScene { get; private set; }
 
@@ -90,10 +107,41 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
         /// </summary>
         private DebugOverlayUI _debugOverlayUI;
 #endif
+        /// <summary>
+        /// Acción utilizada para guardar los cambios del juego desde la UI.
+        /// <para>Action used to save game changes from the UI.</para>
+        /// </summary>
         public static Action SaveChanges = () => { SaveGameInfo(); };
 
+#if YTB
+        /// <summary>
+        /// Instancia singleton interna para acceso desde otros sistemas.
+        /// </summary>
+        internal static EngineUISystem _instance;
+
+        /// <summary>
+        /// Muestra una alerta temporal de cambio de modo Engine/Game por 1.5 segundos.
+        /// <para>Shows a temporary Engine/Game mode switch alert for 1.5 seconds.</para>
+        /// </summary>
+        /// <param name="message">Mensaje a mostrar. <para>Message to display.</para></param>
+        public void ShowModeSwitchAlert(string message)
+        {
+            _modeSwitchAlertTimer = 1.5f;
+            _modeSwitchAlertMessage = message;
+        }
+#endif
+
+        /// <summary>
+        /// Inicializa el sistema de UI del engine y sus paneles.
+        /// <para>Initializes the engine UI system and its panels.</para>
+        /// </summary>
+        /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
+        /// <param name="content">Administrador de contenido. <para>Content manager.</para></param>
         public void InitializeSystem(EntityManager entities, ContentManager content)
         {
+#if YTB
+            _instance = this;
+#endif
 
             // Al inicializar (seguro)
             if (ImGui.GetCurrentContext() == IntPtr.Zero)
@@ -152,7 +200,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
 #endif
         private void GameFileWasReplace(OnGameFileWasReplaceByHistory history)
         {
-            SendLog("Game file updated");
+            SendLog("Archivo del juego actualizado");
             GameInfo = ReadYTBFile.ReadYTBGameFile().GetAwaiter().GetResult();
         }
 
@@ -198,6 +246,12 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
         bool todos = false;
         string spriteSheetName = "SpriteSheet";
         string spriteSheetFolder = "Spritesheets";
+        /// <summary>
+        /// Actualiza el estado de la UI del engine y renderiza sus paneles.
+        /// <para>Updates the engine UI state and renders its panels.</para>
+        /// </summary>
+        /// <param name="spriteBatch">Sprite batch para renderizado. <para>Sprite batch for rendering.</para></param>
+        /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
         public void UpdateSystem(SpriteBatch spriteBatch, GameTime gameTime)
         {
 #if YTB
@@ -231,6 +285,9 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
 
             // Renderizar Debug Overlay (siempre disponible cuando el juego está activo)
             _debugOverlayUI?.Render();
+
+            // Renderizar alerta de cambio de modo Engine/Game
+            RenderModeSwitchAlert(gameTime);
 #endif
 #if YTB
 
@@ -239,6 +296,10 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
 
         }
 
+        /// <summary>
+        /// Procesa y muestra los archivos arrastrados al editor.
+        /// <para>Processes and displays files dragged into the editor.</para>
+        /// </summary>
         public void OnDropFiles()
         {
             if (DragAndDropSystem.Files.Count > 0)
@@ -247,7 +308,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
                 // 2. Dibujamos el primer modal
                 YTBGui.AbrirSeccion("Archivos Soltados", () =>
                 {
-                    YTBGui.Text("Archivos Soltados (Si cierras el Engine, desaparecera)", true);
+                    YTBGui.Text("Archivos soltados (si cierras el motor, desaparecera)", true);
                     YTBGui.Line();
                     bool state = true;
                     GetDropSelectionState(out bool spriteSheetXmlSelected, out bool imageSelected, out bool importSelected);
@@ -272,7 +333,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
                     }
                     ImGui.Spacing();
 
-                    ImGui.SeparatorText("SpriteSheet");
+                    ImGui.SeparatorText("Hoja de sprites");
                     ImGui.TextDisabled("Nombre");
                     ImGui.SameLine();
                     ImGui.PushItemWidth(260);
@@ -287,7 +348,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
 
                     if (spriteSheetXmlSelected)
                     {
-                        YTBGui.Button("Crear SpriteSheet con el xml Seleccionado", () =>
+                        YTBGui.Button("Crear hoja de sprites con el XML seleccionado", () =>
                         {
                             var selectedXml = DragAndDropSystem.Files.FirstOrDefault(x => x.selected && x.Kind == DroppedFileKind.SpriteSheetXml);
                             var selectedImages = DragAndDropSystem.Files.Where(x => x.selected && x.Kind == DroppedFileKind.Image).ToList();
@@ -302,12 +363,12 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
 
                     ImGui.Spacing();
 
-                    YTBGui.Button("Crear SpriteSheet", () =>
+                    YTBGui.Button("Crear hoja de sprites", () =>
                     {
                         var selectedImages = DragAndDropSystem.Files.Where(x => x.selected && x.Kind == DroppedFileKind.Image).ToList();
                         if (selectedImages.Count == 0)
                         {
-                            SendLog("[SpriteSheet] Selecciona al menos una imagen para crear el atlas.", Color.Yellow);
+                            SendLog("[HojaDeSprites] Selecciona al menos una imagen para crear el atlas.", Color.Yellow);
                             return;
                         }
 
@@ -319,17 +380,17 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
                     YTBGui.Continue();
 
                     // --- AQUÍ ESTÁ EL CAMBIO IMPORTANTE ---
-                    YTBGui.Button("Agregar a SpriteSheet existente", () =>
+                    YTBGui.Button("Agregar a hoja de sprites existente", () =>
                     {
                         if (!imageSelected)
                         {
-                            SendLog("[SpriteSheet] Selecciona imágenes para agregar al atlas existente.", Color.Yellow);
+                            SendLog("[HojaDeSprites] Selecciona imágenes para agregar al atlas existente.", Color.Yellow);
                             return;
                         }
 
                         xmlExistente = true;
                         ImGui.CloseCurrentPopup(); // Cierra el modal "Archivos Soltados"
-                        YTBGui.DispararModal("Seleccionar SpriteSheet"); // Abre el siguiente
+                        YTBGui.DispararModal("Seleccionar hoja de sprites"); // Abre el siguiente
                     });
 
                     if (importSelected)
@@ -357,7 +418,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
                 // 3. Manejamos el segundo modal
                 if (xmlExistente)
                 {
-                    YTBGui.AbrirSeccion("Seleccionar SpriteSheet", () =>
+                    YTBGui.AbrirSeccion("Seleccionar hoja de sprites", () =>
                     {
                         foreach (string xml in LoadXmls())
                         {
@@ -368,7 +429,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
 
                                 if (images.Length == 0)
                                 {
-                                    SendLog("[SpriteSheet] Selecciona imágenes para agregar al atlas.", Color.Yellow);
+                                    SendLog("[HojaDeSprites] Selecciona imágenes para agregar al atlas.", Color.Yellow);
                                     return;
                                 }
 
@@ -378,7 +439,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
                                 }
                                 catch (Exception ex)
                                 {
-                                    SendLog($"[SpriteSheet][ERROR] {ex.Message}", Color.Red);
+                                    SendLog($"[HojaDeSprites][ERROR] {ex.Message}", Color.Red);
                                 }
                                 xmlExistente = false;
                                 DragAndDropSystem.Files.Clear();
@@ -429,16 +490,40 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
         }
 
         /// <summary>
-        /// Stores metadata for batched texture previews in the editor UI.
-        /// Almacena metadatos para previews de texturas agrupadas en la UI del editor.
+        /// Almacena metadatos para previsualizaciones de texturas agrupadas en la UI del editor.
+        /// <para>Stores metadata for batched texture previews in the editor UI.</para>
         /// </summary>
         public class TextureBatchInfo
         {
+            /// <summary>
+            /// Entidad asociada a la textura.
+            /// <para>Entity associated with the texture.</para>
+            /// </summary>
             public YTBEntity entidad;
+            /// <summary>
+            /// Nombre de la entidad.
+            /// <para>Entity name.</para>
+            /// </summary>
             public string EntityName;
+            /// <summary>
+            /// Nombre de la escena.
+            /// <para>Scene name.</para>
+            /// </summary>
             public string sceneName;
+            /// <summary>
+            /// Ancho total de la textura en píxeles.
+            /// <para>Total texture width in pixels.</para>
+            /// </summary>
             public float TotalWidth;  // Necesario para calcular UVs
+            /// <summary>
+            /// Alto total de la textura en píxeles.
+            /// <para>Total texture height in pixels.</para>
+            /// </summary>
             public float TotalHeight; // Necesario para calcular UVs
+            /// <summary>
+            /// Regiones de textura incluidas en el lote.
+            /// <para>Texture regions included in the batch.</para>
+            /// </summary>
             public List<Rectangle> Regions = new();
         }
         // Cambiamos el valor del diccionario a nuestra nueva clase
@@ -449,6 +534,10 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
         private IntPtr _draggedTexturePtr = IntPtr.Zero;
         private TextureRegion _draggedRegion;
 
+        /// <summary>
+        /// Inicializa el caché de previsualizaciones de texturas para la UI.
+        /// <para>Initializes the texture preview cache for the UI.</para>
+        /// </summary>
         public void InitializeShowTextureImages()
         {
 #if YTB
@@ -514,10 +603,14 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
         }
 
         string busqueda = "";
+        /// <summary>
+        /// Actualiza la ventana de previsualización de regiones de texturas.
+        /// <para>Updates the texture region preview window.</para>
+        /// </summary>
         public void UpdateShowTextureImages()
         {
 
-            YTBGui.AbrirSeccion("Texture Regions", () =>
+            YTBGui.AbrirSeccion("Regiones de texturas", () =>
             {
 #if YTB
                 foreach (var (regionKey, textureRegion) in YotsubaGraphicsManager.PreloadedTextureRegions)
@@ -701,6 +794,11 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
             */
         }
 
+        /// <summary>
+        /// Carga la lista de archivos XML disponibles en el directorio de contenido.
+        /// <para>Loads the list of XML files available in the content directory.</para>
+        /// </summary>
+        /// <returns>Lista de rutas de archivos XML. <para>List of XML file paths.</para></returns>
         public List<string> LoadXmls()
         {
             List<string> xmls = new List<string>();
@@ -723,27 +821,27 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
             string sanitizedName = SanitizeFileName(spriteSheetName);
             if (string.IsNullOrWhiteSpace(sanitizedName))
             {
-                SendLog("[SpriteSheet] Define un nombre válido para el SpriteSheet.", Color.Yellow);
+                SendLog("[HojaDeSprites] Define un nombre válido para la hoja de sprites.", Color.Yellow);
                 return;
             }
 
             string assetsRoot = YTBGlobalState.DevelopmentAssetsPath;
             if (string.IsNullOrWhiteSpace(assetsRoot))
             {
-                SendLog("[SpriteSheet] Assets path no configurado.", Color.Red);
+                SendLog("[HojaDeSprites] Ruta de Assets no configurada.", Color.Red);
                 return;
             }
 
             string normalizedFolder = NormalizeRelativeAssetPath(spriteSheetFolder);
             if (string.IsNullOrWhiteSpace(normalizedFolder) && !string.IsNullOrWhiteSpace(spriteSheetFolder))
             {
-                SendLog("[SpriteSheet] Carpeta inválida para el SpriteSheet.", Color.Yellow);
+                SendLog("[HojaDeSprites] Carpeta inválida para la hoja de sprites.", Color.Yellow);
                 return;
             }
             string outputDirectory = BuildAssetsDirectory(assetsRoot, normalizedFolder);
             if (string.IsNullOrEmpty(outputDirectory))
             {
-                SendLog("[SpriteSheet] Carpeta inválida para el SpriteSheet.", Color.Yellow);
+                SendLog("[HojaDeSprites] Carpeta inválida para la hoja de sprites.", Color.Yellow);
                 return;
             }
 
@@ -754,7 +852,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
 
             if (File.Exists(pngPath) || File.Exists(xmlPath))
             {
-                SendLog("[SpriteSheet] Ya existe un atlas con ese nombre en la carpeta indicada.", Color.Yellow);
+                SendLog("[HojaDeSprites] Ya existe un atlas con ese nombre en la carpeta indicada.", Color.Yellow);
                 return;
             }
 
@@ -768,16 +866,16 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
                 string relativeImagePath = BuildRelativeAssetPath(normalizedFolder, sanitizedName);
                 TexturePacker.ExportXML(sprites, "", xmlPath, relativeImagePath);
 
-                SendLog($"[SpriteSheet] Atlas creado: {relativeImagePath}", Color.Green);
+                SendLog($"[HojaDeSprites] Atlas creado: {relativeImagePath}", Color.Green);
                 YTBContentBuilder.Rebuild();
             }
             catch (PlatformNotSupportedException ex)
             {
-                SendLog($"[SpriteSheet][ERROR] {ex.Message}", Color.Red);
+                SendLog($"[HojaDeSprites][ERROR] {ex.Message}", Color.Red);
             }
             catch (Exception ex)
             {
-                SendLog($"[SpriteSheet][ERROR] {ex.Message}", Color.Red);
+                SendLog($"[HojaDeSprites][ERROR] {ex.Message}", Color.Red);
             }
         }
 
@@ -785,27 +883,27 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
         {
             if (xmlFile == null || string.IsNullOrWhiteSpace(xmlFile.Name))
             {
-                SendLog("[SpriteSheet] No se encontró el XML seleccionado.", Color.Yellow);
+                SendLog("[HojaDeSprites] No se encontró el XML seleccionado.", Color.Yellow);
                 return;
             }
 
             string assetsRoot = YTBGlobalState.DevelopmentAssetsPath;
             if (string.IsNullOrWhiteSpace(assetsRoot))
             {
-                SendLog("[SpriteSheet] Assets path no configurado.", Color.Red);
+                SendLog("[HojaDeSprites] Ruta de Assets no configurada.", Color.Red);
                 return;
             }
 
             string normalizedFolder = NormalizeRelativeAssetPath(spriteSheetFolder);
             if (string.IsNullOrWhiteSpace(normalizedFolder) && !string.IsNullOrWhiteSpace(spriteSheetFolder))
             {
-                SendLog("[SpriteSheet] Carpeta inválida para importar el XML.", Color.Yellow);
+                SendLog("[HojaDeSprites] Carpeta inválida para importar el XML.", Color.Yellow);
                 return;
             }
             string outputDirectory = BuildAssetsDirectory(assetsRoot, normalizedFolder);
             if (string.IsNullOrEmpty(outputDirectory))
             {
-                SendLog("[SpriteSheet] Carpeta inválida para importar el XML.", Color.Yellow);
+                SendLog("[HojaDeSprites] Carpeta inválida para importar el XML.", Color.Yellow);
                 return;
             }
 
@@ -817,21 +915,21 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
                 XElement root = document.Root;
                 if (root == null)
                 {
-                    SendLog("[SpriteSheet] XML inválido.", Color.Red);
+                    SendLog("[HojaDeSprites] XML inválido.", Color.Red);
                     return;
                 }
 
                 XAttribute imageAttr = root.Attribute("imagepath");
                 if (imageAttr == null || string.IsNullOrWhiteSpace(imageAttr.Value))
                 {
-                    SendLog("[SpriteSheet] El XML no tiene imagepath válido.", Color.Red);
+                    SendLog("[HojaDeSprites] El XML no tiene imagepath válido.", Color.Red);
                     return;
                 }
 
                 string sourceImagePath = ResolveSpriteSheetImage(xmlFile.Name, imageAttr.Value, selectedImages);
                 if (string.IsNullOrWhiteSpace(sourceImagePath))
                 {
-                    SendLog("[SpriteSheet] No se encontró la imagen referenciada por el XML.", Color.Red);
+                    SendLog("[HojaDeSprites] No se encontró la imagen referenciada por el XML.", Color.Red);
                     return;
                 }
 
@@ -839,14 +937,14 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
                 string outputImagePath = Path.Combine(outputDirectory, outputImageName);
                 if (File.Exists(outputImagePath))
                 {
-                    SendLog("[SpriteSheet] La imagen ya existe en la carpeta destino.", Color.Yellow);
+                    SendLog("[HojaDeSprites] La imagen ya existe en la carpeta destino.", Color.Yellow);
                     return;
                 }
                 string outputXmlName = Path.GetFileName(xmlFile.Name);
                 string outputXmlPath = Path.Combine(outputDirectory, outputXmlName);
                 if (File.Exists(outputXmlPath))
                 {
-                    SendLog("[SpriteSheet] El XML ya existe en la carpeta destino.", Color.Yellow);
+                    SendLog("[HojaDeSprites] El XML ya existe en la carpeta destino.", Color.Yellow);
                     return;
                 }
 
@@ -856,12 +954,12 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
                 imageAttr.Value = relativeImagePath;
                 document.Save(outputXmlPath);
 
-                SendLog($"[SpriteSheet] XML importado: {relativeImagePath}", Color.Green);
+                SendLog($"[HojaDeSprites] XML importado: {relativeImagePath}", Color.Green);
                 YTBContentBuilder.Rebuild();
             }
             catch (Exception ex)
             {
-                SendLog($"[SpriteSheet][ERROR] {ex.Message}", Color.Red);
+                SendLog($"[HojaDeSprites][ERROR] {ex.Message}", Color.Red);
             }
         }
 
@@ -876,7 +974,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
             string assetsRoot = YTBGlobalState.DevelopmentAssetsPath;
             if (string.IsNullOrWhiteSpace(assetsRoot))
             {
-                SendLog("[Assets] Assets path no configurado.", Color.Red);
+                SendLog("[Assets] Ruta de Assets no configurada.", Color.Red);
                 return;
             }
 
@@ -1075,6 +1173,12 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
 
 
 
+        /// <summary>
+        /// Convierte un Vector4 RGBA a un color de System.Drawing.
+        /// <para>Converts an RGBA Vector4 to a System.Drawing color.</para>
+        /// </summary>
+        /// <param name="v">Vector RGBA en rango 0-1. <para>RGBA vector in the 0-1 range.</para></param>
+        /// <returns>Color convertido. <para>Converted color.</para></returns>
         public static D.Color Vector4ToColor(Vector4 v)
         {
             return D.Color.FromArgb(
@@ -1085,6 +1189,12 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
             );
         }
 
+        /// <summary>
+        /// Envía un mensaje al log del motor con un color específico.
+        /// <para>Sends a message to the engine log with a specific color.</para>
+        /// </summary>
+        /// <param name="message">Mensaje a registrar. <para>Message to log.</para></param>
+        /// <param name="Color">Color del mensaje. <para>Message color.</para></param>
         public static void SendLog(string message, Color Color)
         {
             if (OperatingSystem.IsWindows() || OperatingSystem.IsLinux() || OperatingSystem.IsMacOS())
@@ -1119,9 +1229,61 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
             }
         }
 
+        /// <summary>
+        /// Envía un mensaje al log del motor con el color predeterminado.
+        /// <para>Sends a message to the engine log with the default color.</para>
+        /// </summary>
+        /// <param name="message">Mensaje a registrar. <para>Message to log.</para></param>
         public static void SendLog(string message)
         {
             SendLog(message, Color.White);
         }
+
+#if YTB
+        /// <summary>
+        /// Renderiza la alerta temporal de cambio de modo Engine/Game como overlay ImGui.
+        /// <para>Renders the temporary Engine/Game mode switch alert as an ImGui overlay.</para>
+        /// </summary>
+        private void RenderModeSwitchAlert(GameTime gameTime)
+        {
+            if (_modeSwitchAlertTimer <= 0f) return;
+
+            _modeSwitchAlertTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            float alpha = Math.Min(_modeSwitchAlertTimer / 0.3f, 1f);
+
+            var io = ImGui.GetIO();
+            var windowPos = new Num.Vector2(io.DisplaySize.X * 0.5f, io.DisplaySize.Y * 0.15f);
+
+            ImGui.SetNextWindowPos(windowPos, ImGuiCond.Always, new Num.Vector2(0.5f, 0.5f));
+            ImGui.SetNextWindowBgAlpha(0.85f * alpha);
+
+            ImGui.PushStyleVar(ImGuiStyleVar.WindowRounding, 12f);
+            ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Num.Vector2(20f, 12f));
+
+            ImGui.Begin("##ModeSwitchAlert",
+                ImGuiWindowFlags.NoTitleBar |
+                ImGuiWindowFlags.NoResize |
+                ImGuiWindowFlags.NoMove |
+                ImGuiWindowFlags.NoScrollbar |
+                ImGuiWindowFlags.NoCollapse |
+                ImGuiWindowFlags.NoSavedSettings |
+                ImGuiWindowFlags.AlwaysAutoResize |
+                ImGuiWindowFlags.NoFocusOnAppearing |
+                ImGuiWindowFlags.NoInputs);
+
+            bool isEngineMode = YTBGlobalState.EngineShortcutsMode;
+            var color = isEngineMode
+                ? new Num.Vector4(1f, 0.85f, 0.2f, alpha)
+                : new Num.Vector4(0.2f, 1f, 0.5f, alpha);
+
+            ImGui.PushStyleColor(ImGuiCol.Text, color);
+            ImGui.Text(_modeSwitchAlertMessage);
+            ImGui.PopStyleColor();
+
+            ImGui.End();
+            ImGui.PopStyleVar(2);
+        }
+#endif
     }
 }

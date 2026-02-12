@@ -16,15 +16,17 @@ using YotsubaEngine.Graphics;
 namespace YotsubaEngine.ActionFiles.XML_SpriteSheet_Files
 {
 	/// <summary>
-	/// Utilities for validating and generating sprite sheet XML data.
 	/// Utilidades para validar y generar datos XML de sprite sheets.
+	/// <para>Utilities for validating and generating sprite sheet XML data.</para>
 	/// </summary>
 	public class SpriteSheetFiles
 	{
 		/// <summary>
-		/// Scans and updates sprite sheet XML files under a root folder.
 		/// Escanea y actualiza archivos XML de sprite sheets bajo una carpeta raíz.
+		/// <para>Scans and updates sprite sheet XML files under a root folder.</para>
 		/// </summary>
+		/// <param name="rootFolder">Carpeta raíz a escanear. <para>Root folder to scan.</para></param>
+		/// <param name="separatorFolder">Separador de carpeta esperado. <para>Expected folder separator.</para></param>
 		public static void CheckSpriteSheetFiles(string rootFolder, string separatorFolder)
 		{
 			rootFolder = rootFolder.Replace('\\', '/');
@@ -90,9 +92,10 @@ namespace YotsubaEngine.ActionFiles.XML_SpriteSheet_Files
 		}
 
 		/// <summary>
-		/// Generates missing animation nodes based on subtexture naming.
 		/// Genera nodos de animación faltantes basados en el nombre de subtexturas.
+		/// <para>Generates missing animation nodes based on subtexture naming.</para>
 		/// </summary>
+		/// <param name="xmlPath">Ruta del XML a procesar. <para>XML path to process.</para></param>
 		public static void GenerateAnimationsFromXml(string xmlPath)
 		{
 			if (!File.Exists(xmlPath)) return;
@@ -194,20 +197,20 @@ namespace YotsubaEngine.ActionFiles.XML_SpriteSheet_Files
 		}
 
 		/// <summary>
-		/// Stores frame data for animation grouping.
 		/// Almacena datos de frame para agrupar animaciones.
+		/// <para>Stores frame data for animation grouping.</para>
 		/// </summary>
 		private class FrameInfo
 		{
 			/// <summary>
-			/// Gets or sets the region name for the frame.
 			/// Obtiene o establece el nombre de región para el frame.
+			/// <para>Gets or sets the region name for the frame.</para>
 			/// </summary>
 			public string RegionName { get; set; }
 
 			/// <summary>
-			/// Gets or sets the frame index for sorting.
 			/// Obtiene o establece el índice del frame para ordenamiento.
+			/// <para>Gets or sets the frame index for sorting.</para>
 			/// </summary>
 			public int Index { get; set; }
 		}

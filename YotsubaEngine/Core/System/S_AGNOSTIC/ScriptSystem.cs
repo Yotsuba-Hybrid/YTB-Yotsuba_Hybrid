@@ -19,8 +19,8 @@ using YotsubaEngine.HighestPerformanceTypes;
 namespace YotsubaEngine.Core.System.S_AGNOSTIC
 {
     /// <summary>
-    /// System that runs script components for entities.
     /// Sistema que ejecuta componentes de script para entidades.
+    /// <para>System that runs script components for entities.</para>
     /// </summary>
     public class ScriptSystem
     {
@@ -38,10 +38,10 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         private EntityManager EntityManager { get; set; }
 
         /// <summary>
-        /// Initializes the script system.
         /// Inicializa el sistema de scripts.
+        /// <para>Initializes the script system.</para>
         /// </summary>
-        /// <param name="entities">Entity manager. Administrador de entidades.</param>
+        /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
         public void InitializeSystem(EntityManager entities)
         {
 #if YTB
@@ -53,11 +53,11 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         }
 
         /// <summary>
-        /// Updates scripts for a single entity.
         /// Actualiza scripts para una entidad.
+        /// <para>Updates scripts for a single entity.</para>
         /// </summary>
-        /// <param name="entity">Entity instance. Instancia de entidad.</param>
-        /// <param name="time">Game time. Tiempo de juego.</param>
+        /// <param name="entity">Instancia de entidad. <para>Entity instance.</para></param>
+        /// <param name="time">Tiempo de juego. <para>Game time.</para></param>
         public void SharedEntityForEachUpdate(Yotsuba entity, GameTime time)
         {
 #if YTB
@@ -73,10 +73,10 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         }
 
         /// <summary>
-        /// Initializes scripts for a single entity.
         /// Inicializa scripts para una entidad.
+        /// <para>Initializes scripts for a single entity.</para>
         /// </summary>
-        /// <param name="entity">Entity instance. Instancia de entidad.</param>
+        /// <param name="entity">Instancia de entidad. <para>Entity instance.</para></param>
         public void SharedEntityInitialize(Yotsuba entity)
         {
 
@@ -114,10 +114,10 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         }
 
         /// <summary>
-        /// Updates the system each frame (required by ISystem interface).
-        /// Actualiza el sistema en cada frame (requerido por interfaz ISystem).
+        /// Actualiza el sistema en cada frame y ejecuta dibujo 3D de scripts.
+        /// <para>Updates the system each frame and runs 3D script drawing.</para>
         /// </summary>
-        /// <param name="gameTime">Game time. Tiempo de juego.</param>
+        /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
         public void DrawSystem3D(GameTime gameTime)
         {
 #if YTB
@@ -136,11 +136,11 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         }
 
         /// <summary>
-        /// Updates the system each frame and draws scripts.
-        /// Actualiza el sistema en cada frame y dibuja scripts.
+        /// Actualiza el sistema en cada frame y dibuja scripts en 2D.
+        /// <para>Updates the system each frame and draws scripts in 2D.</para>
         /// </summary>
-        /// <param name="gameTime">Game time. Tiempo de juego.</param>
-        /// <param name="spriteBatch">Sprite batch for drawing. Sprite batch para dibujar.</param>
+        /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
+        /// <param name="spriteBatch">Sprite batch para dibujar. <para>Sprite batch for drawing.</para></param>
         public void DrawSystem2D(GameTime gameTime, SpriteBatch spriteBatch)
         {
 #if YTB

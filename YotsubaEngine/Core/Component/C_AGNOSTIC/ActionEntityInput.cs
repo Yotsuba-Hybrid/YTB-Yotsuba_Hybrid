@@ -5,44 +5,44 @@ using System.Text;
 namespace YotsubaEngine.Core.Component.C_AGNOSTIC
 {
     /// <summary>
-    /// Entity actions mapped to input bindings.
-    /// Acciones de la entidad, para mapear con uno o varios inputs 
+    /// Acciones de la entidad, para mapear con uno o varios inputs
+    /// <para>Entity actions mapped to input bindings.</para>
     /// </summary>
     public enum ActionEntityInput
     {
         /// <summary>
-        /// Move up action.
         /// Acción de moverse hacia arriba.
+        /// <para>Move up action.</para>
         /// </summary>
         MoveUp,
         /// <summary>
-        /// Move down action.
         /// Acción de moverse hacia abajo.
+        /// <para>Move down action.</para>
         /// </summary>
         MoveDown,
         /// <summary>
-        /// Move left action.
         /// Acción de moverse hacia la izquierda.
+        /// <para>Move left action.</para>
         /// </summary>
         MoveLeft,
         /// <summary>
-        /// Move right action.
         /// Acción de moverse hacia la derecha.
+        /// <para>Move right action.</para>
         /// </summary>
         MoveRight,
         /// <summary>
-        /// Attack action.
         /// Acción de atacar.
+        /// <para>Attack action.</para>
         /// </summary>
         Attack,
         /// <summary>
-        /// Jump action.
         /// Acción de saltar.
+        /// <para>Jump action.</para>
         /// </summary>
         Jump,
         /// <summary>
-        /// Dash action.
         /// Acción de dash.
+        /// <para>Dash action.</para>
         /// </summary>
         Dash,
 
@@ -50,62 +50,62 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         // --- Acciones de Cámara (Completando tu lista) ---
 
         /// <summary>
-        /// Rotate camera left action.
         /// Acción de rotar la cámara a la izquierda.
+        /// <para>Rotate camera left action.</para>
         /// </summary>
         RotateCameraLeft,
 
         /// <summary>
-        /// Rotate camera right action.
         /// Acción de rotar la cámara a la derecha.
+        /// <para>Rotate camera right action.</para>
         /// </summary>
         RotateCameraRight,
 
         /// <summary>
-        /// Rotate camera up action.
         /// Acción de rotar la cámara hacia arriba.
+        /// <para>Rotate camera up action.</para>
         /// </summary>
         RotateCameraUp,
 
         /// <summary>
-        /// Rotate camera down action.
         /// Acción de rotar la cámara hacia abajo.
+        /// <para>Rotate camera down action.</para>
         /// </summary>
         RotateCameraDown,
 
         /// <summary>
-        /// Zoom camera in.
         /// Acción de acercar la cámara (Zoom in).
+        /// <para>Zoom camera in.</para>
         /// </summary>
         CameraZoomIn,
 
         /// <summary>
-        /// Zoom camera out.
         /// Acción de alejar la cámara (Zoom out).
+        /// <para>Zoom camera out.</para>
         /// </summary>
         CameraZoomOut,
 
         /// <summary>
-        /// Reset camera to default position.
         /// Acción de reiniciar la cámara a su posición por defecto.
+        /// <para>Reset camera to default position.</para>
         /// </summary>
         CameraReset,
 
         /// <summary>
-        /// Lock camera on target.
         /// Acción de fijar la cámara en el objetivo.
+        /// <para>Lock camera on target.</para>
         /// </summary>
         CameraLockOn,
 
         /// <summary>
-        /// Toggle between first and third person view.
         /// Alternar entre vista de primera y tercera persona.
+        /// <para>Toggle between first and third person view.</para>
         /// </summary>
         TogglePerspective,
 
         /// <summary>
-        /// Look behind action.
         /// Acción de mirar hacia atrás.
+        /// <para>Look behind action.</para>
         /// </summary>
         LookBehind,
 
@@ -113,80 +113,80 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         // --- Movimiento Avanzado ---
 
         /// <summary>
-        /// Sprint action.
         /// Acción de correr o esprintar.
+        /// <para>Sprint action.</para>
         /// </summary>
         Sprint,
 
         /// <summary>
-        /// Toggle walking mode.
         /// Acción de alternar modo caminar/correr.
+        /// <para>Toggle walking mode.</para>
         /// </summary>
         WalkToggle,
 
         /// <summary>
-        /// Crouch action.
         /// Acción de agacharse.
+        /// <para>Crouch action.</para>
         /// </summary>
         Crouch,
 
         /// <summary>
-        /// Prone action (lie down).
         /// Acción de tumbarse o cuerpo a tierra.
+        /// <para>Prone action (lie down).</para>
         /// </summary>
         Prone,
 
         /// <summary>
-        /// Slide action.
         /// Acción de deslizarse por el suelo.
+        /// <para>Slide action.</para>
         /// </summary>
         Slide,
 
         /// <summary>
-        /// Wall run action.
         /// Acción de correr por la pared.
+        /// <para>Wall run action.</para>
         /// </summary>
         WallRun,
 
         /// <summary>
-        /// Climb up action.
         /// Acción de escalar hacia arriba.
+        /// <para>Climb up action.</para>
         /// </summary>
         ClimbUp,
 
         /// <summary>
-        /// Climb down action.
         /// Acción de descender escalando.
+        /// <para>Climb down action.</para>
         /// </summary>
         ClimbDown,
 
         /// <summary>
-        /// Swim up / Surface.
         /// Acción de nadar hacia arriba o salir a la superficie.
+        /// <para>Swim up / Surface.</para>
         /// </summary>
         SwimUp,
 
         /// <summary>
-        /// Dive / Swim down.
         /// Acción de bucear o nadar hacia abajo.
+        /// <para>Dive / Swim down.</para>
         /// </summary>
         SwimDown,
 
         /// <summary>
-        /// Glide action.
         /// Acción de planear en el aire.
+        /// <para>Glide action.</para>
         /// </summary>
         Glide,
 
         /// <summary>
-        /// Dodge roll action.
         /// Acción de rodar para esquivar.
+        /// <para>Dodge roll action.</para>
         /// </summary>
         DodgeRoll,
 
         /// <summary>
-        /// Grappling hook action.
         /// Acción de usar el gancho de agarre.
+        /// <para>Grappling hook action.</para>
         /// </summary>
         Grapple,
 
@@ -194,116 +194,116 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         // --- Combate y Armas ---
 
         /// <summary>
-        /// Primary fire action.
         /// Disparo principal.
+        /// <para>Primary fire action.</para>
         /// </summary>
         PrimaryFire,
 
         /// <summary>
-        /// Secondary fire action.
         /// Disparo secundario.
+        /// <para>Secondary fire action.</para>
         /// </summary>
         SecondaryFire,
 
         /// <summary>
-        /// Reload weapon.
         /// Recargar arma.
+        /// <para>Reload weapon.</para>
         /// </summary>
         Reload,
 
         /// <summary>
-        /// Heavy attack action.
         /// Ataque pesado.
+        /// <para>Heavy attack action.</para>
         /// </summary>
         HeavyAttack,
 
         /// <summary>
-        /// Block or defend action.
         /// Acción de bloquear o defender.
+        /// <para>Block or defend action.</para>
         /// </summary>
         Block,
 
         /// <summary>
-        /// Parry action.
         /// Acción de parry (desvío).
+        /// <para>Parry action.</para>
         /// </summary>
         Parry,
 
         /// <summary>
-        /// Kick action.
         /// Acción de patear.
+        /// <para>Kick action.</para>
         /// </summary>
         Kick,
 
         /// <summary>
-        /// Aim down sights (ADS).
         /// Acción de apuntar con la mira.
+        /// <para>Aim down sights (ADS).</para>
         /// </summary>
         AimDownSights,
 
         /// <summary>
-        /// Throw grenade.
         /// Lanzar granada.
+        /// <para>Throw grenade.</para>
         /// </summary>
         ThrowGrenade,
 
         /// <summary>
-        /// Switch to next weapon.
         /// Cambiar a la siguiente arma.
+        /// <para>Switch to next weapon.</para>
         /// </summary>
         NextWeapon,
 
         /// <summary>
-        /// Switch to previous weapon.
         /// Cambiar al arma anterior.
+        /// <para>Switch to previous weapon.</para>
         /// </summary>
         PreviousWeapon,
 
         /// <summary>
-        /// Holster or unholster weapon.
         /// Enfundar o desenfundar arma.
+        /// <para>Holster or unholster weapon.</para>
         /// </summary>
         HolsterWeapon,
 
         /// <summary>
-        /// Inspect current weapon.
         /// Inspeccionar el arma actual.
+        /// <para>Inspect current weapon.</para>
         /// </summary>
         InspectWeapon,
 
         /// <summary>
-        /// Change firing mode (Single, Burst, Auto).
         /// Cambiar modo de disparo (Único, Ráfaga, Auto).
+        /// <para>Change firing mode (Single, Burst, Auto).</para>
         /// </summary>
         ChangeFireMode,
 
         /// <summary>
-        /// Equip weapon in slot 1.
         /// Equipar arma de la ranura 1.
+        /// <para>Equip weapon in slot 1.</para>
         /// </summary>
         EquipSlot1,
 
         /// <summary>
-        /// Equip weapon in slot 2.
         /// Equipar arma de la ranura 2.
+        /// <para>Equip weapon in slot 2.</para>
         /// </summary>
         EquipSlot2,
 
         /// <summary>
-        /// Equip weapon in slot 3.
         /// Equipar arma de la ranura 3.
+        /// <para>Equip weapon in slot 3.</para>
         /// </summary>
         EquipSlot3,
 
         /// <summary>
-        /// Equip weapon in slot 4.
         /// Equipar arma de la ranura 4.
+        /// <para>Equip weapon in slot 4.</para>
         /// </summary>
         EquipSlot4,
 
         /// <summary>
-        /// Use melee execution / finisher.
         /// Usar ejecución cuerpo a cuerpo / remate.
+        /// <para>Use melee execution / finisher.</para>
         /// </summary>
         Execution,
 
@@ -311,56 +311,56 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         // --- Interacción y Objetos ---
 
         /// <summary>
-        /// General interaction (Talk, Open, etc.).
         /// Interacción general (Hablar, Abrir, etc.).
+        /// <para>General interaction (Talk, Open, etc.).</para>
         /// </summary>
         Interact,
 
         /// <summary>
-        /// Pick up item.
         /// Recoger objeto.
+        /// <para>Pick up item.</para>
         /// </summary>
         PickUp,
 
         /// <summary>
-        /// Drop current item.
         /// Soltar objeto actual.
+        /// <para>Drop current item.</para>
         /// </summary>
         DropItem,
 
         /// <summary>
-        /// Use currently selected item.
         /// Usar el objeto seleccionado actualmente.
+        /// <para>Use currently selected item.</para>
         /// </summary>
         UseItem,
 
         /// <summary>
-        /// Use health potion / medkit.
         /// Usar poción de salud / botiquín.
+        /// <para>Use health potion / medkit.</para>
         /// </summary>
         Heal,
 
         /// <summary>
-        /// Use mana potion / energy pack.
         /// Usar poción de maná / paquete de energía.
+        /// <para>Use mana potion / energy pack.</para>
         /// </summary>
         RestoreEnergy,
 
         /// <summary>
-        /// Toggle flashlight.
         /// Alternar linterna.
+        /// <para>Toggle flashlight.</para>
         /// </summary>
         Flashlight,
 
         /// <summary>
-        /// Toggle night vision.
         /// Alternar visión nocturna.
+        /// <para>Toggle night vision.</para>
         /// </summary>
         NightVision,
 
         /// <summary>
-        /// Scan environment.
         /// Escanear el entorno.
+        /// <para>Scan environment.</para>
         /// </summary>
         Scan,
 
@@ -368,50 +368,50 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         // --- Habilidades y Magia ---
 
         /// <summary>
-        /// Activate Skill 1.
         /// Activar Habilidad 1.
+        /// <para>Activate Skill 1.</para>
         /// </summary>
         Skill1,
 
         /// <summary>
-        /// Activate Skill 2.
         /// Activar Habilidad 2.
+        /// <para>Activate Skill 2.</para>
         /// </summary>
         Skill2,
 
         /// <summary>
-        /// Activate Skill 3.
         /// Activar Habilidad 3.
+        /// <para>Activate Skill 3.</para>
         /// </summary>
         Skill3,
 
         /// <summary>
-        /// Activate Skill 4.
         /// Activar Habilidad 4.
+        /// <para>Activate Skill 4.</para>
         /// </summary>
         Skill4,
 
         /// <summary>
-        /// Activate Ultimate Ability.
         /// Activar Habilidad Definitiva (Ultimate).
+        /// <para>Activate Ultimate Ability.</para>
         /// </summary>
         UltimateAbility,
 
         /// <summary>
-        /// Cast selected spell.
         /// Lanzar hechizo seleccionado.
+        /// <para>Cast selected spell.</para>
         /// </summary>
         CastSpell,
 
         /// <summary>
-        /// Cancel current casting.
         /// Cancelar lanzamiento actual.
+        /// <para>Cancel current casting.</para>
         /// </summary>
         CancelCast,
 
         /// <summary>
-        /// Summon mount or vehicle.
         /// Invocar montura o vehículo.
+        /// <para>Summon mount or vehicle.</para>
         /// </summary>
         SummonMount,
 
@@ -419,74 +419,74 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         // --- Interfaz y Sistema ---
 
         /// <summary>
-        /// Toggle Pause Menu.
         /// Alternar Menú de Pausa.
+        /// <para>Toggle Pause Menu.</para>
         /// </summary>
         PauseMenu,
 
         /// <summary>
-        /// Open Inventory.
         /// Abrir Inventario.
+        /// <para>Open Inventory.</para>
         /// </summary>
         OpenInventory,
 
         /// <summary>
-        /// Open Map.
         /// Abrir Mapa.
+        /// <para>Open Map.</para>
         /// </summary>
         OpenMap,
 
         /// <summary>
-        /// Open Quest Log / Journal.
         /// Abrir Diario de Misiones.
+        /// <para>Open Quest Log / Journal.</para>
         /// </summary>
         OpenJournal,
 
         /// <summary>
-        /// Open Skill Tree.
         /// Abrir Árbol de Habilidades.
+        /// <para>Open Skill Tree.</para>
         /// </summary>
         OpenSkillTree,
 
         /// <summary>
-        /// Open Character Sheet / Stats.
         /// Abrir Ficha de Personaje / Estadísticas.
+        /// <para>Open Character Sheet / Stats.</para>
         /// </summary>
         OpenCharacterSheet,
 
         /// <summary>
-        /// UI Submit / Accept.
         /// UI Aceptar / Confirmar.
+        /// <para>UI Submit / Accept.</para>
         /// </summary>
         UISubmit,
 
         /// <summary>
-        /// UI Cancel / Back.
         /// UI Cancelar / Atrás.
+        /// <para>UI Cancel / Back.</para>
         /// </summary>
         UICancel,
 
         /// <summary>
-        /// Quick Save game.
         /// Guardado Rápido.
+        /// <para>Quick Save game.</para>
         /// </summary>
         QuickSave,
 
         /// <summary>
-        /// Quick Load game.
         /// Carga Rápida.
+        /// <para>Quick Load game.</para>
         /// </summary>
         QuickLoad,
 
         /// <summary>
-        /// Take screenshot.
         /// Tomar captura de pantalla.
+        /// <para>Take screenshot.</para>
         /// </summary>
         Screenshot,
 
         /// <summary>
-        /// Toggle HUD visibility.
         /// Alternar visibilidad del HUD.
+        /// <para>Toggle HUD visibility.</para>
         /// </summary>
         ToggleHUD,
 
@@ -494,68 +494,68 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         // --- Controles de Vehículos ---
 
         /// <summary>
-        /// Vehicle Accelerate / Throttle.
         /// Acelerar vehículo.
+        /// <para>Vehicle Accelerate / Throttle.</para>
         /// </summary>
         VehicleAccelerate,
 
         /// <summary>
-        /// Vehicle Brake / Reverse.
         /// Frenar vehículo / Marcha atrás.
+        /// <para>Vehicle Brake / Reverse.</para>
         /// </summary>
         VehicleBrake,
 
         /// <summary>
-        /// Vehicle Turn Left.
         /// Girar vehículo a la izquierda.
+        /// <para>Vehicle Turn Left.</para>
         /// </summary>
         VehicleTurnLeft,
 
         /// <summary>
-        /// Vehicle Turn Right.
         /// Girar vehículo a la derecha.
+        /// <para>Vehicle Turn Right.</para>
         /// </summary>
         VehicleTurnRight,
 
         /// <summary>
-        /// Vehicle Handbrake / Drift.
         /// Freno de mano / Derrape.
+        /// <para>Vehicle Handbrake / Drift.</para>
         /// </summary>
         VehicleHandbrake,
 
         /// <summary>
-        /// Vehicle Boost / Nitro.
         /// Turbo / Nitro del vehículo.
+        /// <para>Vehicle Boost / Nitro.</para>
         /// </summary>
         VehicleBoost,
 
         /// <summary>
-        /// Use Vehicle Horn.
         /// Usar bocina (claxon).
+        /// <para>Use Vehicle Horn.</para>
         /// </summary>
         VehicleHorn,
 
         /// <summary>
-        /// Toggle Vehicle Lights.
         /// Alternar luces del vehículo.
+        /// <para>Toggle Vehicle Lights.</para>
         /// </summary>
         VehicleLights,
 
         /// <summary>
-        /// Exit Vehicle.
         /// Salir del vehículo.
+        /// <para>Exit Vehicle.</para>
         /// </summary>
         VehicleExit,
 
         /// <summary>
-        /// Pitch vehicle nose up (Air/Water).
         /// Inclinar morro arriba (Aire/Agua).
+        /// <para>Pitch vehicle nose up (Air/Water).</para>
         /// </summary>
         VehiclePitchUp,
 
         /// <summary>
-        /// Pitch vehicle nose down (Air/Water).
         /// Inclinar morro abajo (Aire/Agua).
+        /// <para>Pitch vehicle nose down (Air/Water).</para>
         /// </summary>
         VehiclePitchDown,
 
@@ -563,62 +563,62 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         // --- Multijugador y Social ---
 
         /// <summary>
-        /// Push to talk.
         /// Pulsar para hablar.
+        /// <para>Push to talk.</para>
         /// </summary>
         PushToTalk,
 
         /// <summary>
-        /// Open Text Chat.
         /// Abrir chat de texto.
+        /// <para>Open Text Chat.</para>
         /// </summary>
         OpenChat,
 
         /// <summary>
-        /// Show Scoreboard.
         /// Mostrar tabla de puntuaciones.
+        /// <para>Show Scoreboard.</para>
         /// </summary>
         ShowScoreboard,
 
         /// <summary>
-        /// Mark/Ping location contextually.
         /// Marcar ubicación contextualmente (Ping).
+        /// <para>Mark/Ping location contextually.</para>
         /// </summary>
         PingLocation,
 
         /// <summary>
-        /// Mark/Ping enemy.
         /// Marcar enemigo.
+        /// <para>Mark/Ping enemy.</para>
         /// </summary>
         PingEnemy,
 
         /// <summary>
-        /// Emote: Wave.
         /// Emote: Saludar.
+        /// <para>Emote: Wave.</para>
         /// </summary>
         EmoteWave,
 
         /// <summary>
-        /// Emote: Dance.
         /// Emote: Bailar.
+        /// <para>Emote: Dance.</para>
         /// </summary>
         EmoteDance,
 
         /// <summary>
-        /// Emote: Taunt.
         /// Emote: Burlarse.
+        /// <para>Emote: Taunt.</para>
         /// </summary>
         EmoteTaunt,
 
         /// <summary>
-        /// Vote Yes / Agree.
         /// Votar Sí / Estar de acuerdo.
+        /// <para>Vote Yes / Agree.</para>
         /// </summary>
         VoteYes,
 
         /// <summary>
-        /// Vote No / Disagree.
         /// Votar No / No estar de acuerdo.
+        /// <para>Vote No / Disagree.</para>
         /// </summary>
         VoteNo,
 
@@ -626,50 +626,50 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         // --- Construcción y Estrategia ---
 
         /// <summary>
-        /// Rotate placement object left.
         /// Rotar objeto a colocar a la izquierda.
+        /// <para>Rotate placement object left.</para>
         /// </summary>
         RotateObjectLeft,
 
         /// <summary>
-        /// Rotate placement object right.
         /// Rotar objeto a colocar a la derecha.
+        /// <para>Rotate placement object right.</para>
         /// </summary>
         RotateObjectRight,
 
         /// <summary>
-        /// Confirm placement / build.
         /// Confirmar colocación / construir.
+        /// <para>Confirm placement / build.</para>
         /// </summary>
         BuildConfirm,
 
         /// <summary>
-        /// Cancel placement.
         /// Cancelar colocación.
+        /// <para>Cancel placement.</para>
         /// </summary>
         BuildCancel,
 
         /// <summary>
-        /// Select all units.
         /// Seleccionar todas las unidades.
+        /// <para>Select all units.</para>
         /// </summary>
         SelectAllUnits,
 
         /// <summary>
-        /// Command: Move to.
         /// Orden: Mover a.
+        /// <para>Command: Move to.</para>
         /// </summary>
         CommandMove,
 
         /// <summary>
-        /// Command: Attack target.
         /// Orden: Atacar objetivo.
+        /// <para>Command: Attack target.</para>
         /// </summary>
         CommandAttack,
 
         /// <summary>
-        /// Command: Hold position.
         /// Orden: Mantener posición.
+        /// <para>Command: Hold position.</para>
         /// </summary>
         CommandHold,
 
@@ -677,100 +677,100 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         // --- Depuración y Desarrollador ---
 
         /// <summary>
-        /// Toggle Debug Console.
         /// Alternar consola de depuración.
+        /// <para>Toggle Debug Console.</para>
         /// </summary>
         ToggleConsole,
 
         /// <summary>
-        /// Toggle God Mode.
         /// Alternar Modo Dios.
+        /// <para>Toggle God Mode.</para>
         /// </summary>
         ToggleGodMode,
 
         /// <summary>
-        /// Toggle NoClip mode.
         /// Alternar modo NoClip (atravesar paredes).
+        /// <para>Toggle NoClip mode.</para>
         /// </summary>
         ToggleNoClip,
 
         /// <summary>
-        /// Slow down game time.
         /// Ralentizar tiempo de juego.
+        /// <para>Slow down game time.</para>
         /// </summary>
         TimeSlow,
 
         /// <summary>
-        /// Speed up game time.
         /// Acelerar tiempo de juego.
+        /// <para>Speed up game time.</para>
         /// </summary>
         TimeSpeedUp,
         // --- Advanced Interaction / Puzzle ---
         // --- Interacción Avanzada / Puzles ---
 
         /// <summary>
-        /// Examine detailed view of an object.
         /// Examinar vista detallada de un objeto.
+        /// <para>Examine detailed view of an object.</para>
         /// </summary>
         ExamineDetail,
 
         /// <summary>
-        /// Push object forward.
         /// Empujar objeto hacia adelante.
+        /// <para>Push object forward.</para>
         /// </summary>
         PushObject,
 
         /// <summary>
-        /// Pull object backward.
         /// Tirar del objeto hacia atrás.
+        /// <para>Pull object backward.</para>
         /// </summary>
         PullObject,
 
         /// <summary>
-        /// Ignite torch or light source.
         /// Encender antorcha o fuente de luz.
+        /// <para>Ignite torch or light source.</para>
         /// </summary>
         Ignite,
 
         /// <summary>
-        /// Extinguish fire or light source.
         /// Apagar fuego o fuente de luz.
+        /// <para>Extinguish fire or light source.</para>
         /// </summary>
         Extinguish,
 
         /// <summary>
-        /// Hack terminal or computer.
         /// Hackear terminal o computadora.
+        /// <para>Hack terminal or computer.</para>
         /// </summary>
         Hack,
 
         /// <summary>
-        /// Pick lock.
         /// Ganzuar cerradura.
+        /// <para>Pick lock.</para>
         /// </summary>
         PickLock,
 
         /// <summary>
-        /// Combine items in crafting menu.
         /// Combinar objetos en el menú de crafteo.
+        /// <para>Combine items in crafting menu.</para>
         /// </summary>
         CombineItems,
 
         /// <summary>
-        /// Disassemble item for parts.
         /// Desmontar objeto para piezas.
+        /// <para>Disassemble item for parts.</para>
         /// </summary>
         Disassemble,
 
         /// <summary>
-        /// Rotate puzzle piece clockwise.
         /// Rotar pieza de puzle en sentido horario.
+        /// <para>Rotate puzzle piece clockwise.</para>
         /// </summary>
         PuzzleRotateCW,
 
         /// <summary>
-        /// Rotate puzzle piece counter-clockwise.
         /// Rotar pieza de puzle en sentido antihorario.
+        /// <para>Rotate puzzle piece counter-clockwise.</para>
         /// </summary>
         PuzzleRotateCCW,
 
@@ -778,68 +778,68 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         // --- Gestión Avanzada de Inventario e UI ---
 
         /// <summary>
-        /// Move item to stash/chest.
         /// Mover objeto al alijo/cofre.
+        /// <para>Move item to stash/chest.</para>
         /// </summary>
         MoveToStash,
 
         /// <summary>
-        /// Take all items from container.
         /// Tomar todos los objetos del contenedor.
+        /// <para>Take all items from container.</para>
         /// </summary>
         TakeAll,
 
         /// <summary>
-        /// Split item stack.
         /// Dividir pila de objetos.
+        /// <para>Split item stack.</para>
         /// </summary>
         SplitStack,
 
         /// <summary>
-        /// Mark item as junk/favorite.
         /// Marcar objeto como basura/favorito.
+        /// <para>Mark item as junk/favorite.</para>
         /// </summary>
         MarkItem,
 
         /// <summary>
-        /// Compare item with equipped.
         /// Comparar objeto con el equipado.
+        /// <para>Compare item with equipped.</para>
         /// </summary>
         CompareItem,
 
         /// <summary>
-        /// Sort inventory by name.
         /// Ordenar inventario por nombre.
+        /// <para>Sort inventory by name.</para>
         /// </summary>
         SortByName,
 
         /// <summary>
-        /// Sort inventory by weight/value.
         /// Ordenar inventario por peso/valor.
+        /// <para>Sort inventory by weight/value.</para>
         /// </summary>
         SortByValue,
 
         /// <summary>
-        /// Toggle mini-map size (small/large).
         /// Alternar tamaño del mini-mapa.
+        /// <para>Toggle mini-map size (small/large).</para>
         /// </summary>
         ToggleMiniMapSize,
 
         /// <summary>
-        /// Pin quest to HUD.
         /// Fijar misión en el HUD.
+        /// <para>Pin quest to HUD.</para>
         /// </summary>
         PinQuest,
 
         /// <summary>
-        /// Read next page (book/note).
         /// Leer página siguiente.
+        /// <para>Read next page (book/note).</para>
         /// </summary>
         ReadNextPage,
 
         /// <summary>
-        /// Read previous page (book/note).
         /// Leer página anterior.
+        /// <para>Read previous page (book/note).</para>
         /// </summary>
         ReadPrevPage,
 
@@ -847,98 +847,98 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         // --- Simulación de Vuelo y Espacio (6DOF) ---
 
         /// <summary>
-        /// Yaw left (Flight).
         /// Guiñada a la izquierda (Vuelo).
+        /// <para>Yaw left (Flight).</para>
         /// </summary>
         FlightYawLeft,
 
         /// <summary>
-        /// Yaw right (Flight).
         /// Guiñada a la derecha (Vuelo).
+        /// <para>Yaw right (Flight).</para>
         /// </summary>
         FlightYawRight,
 
         /// <summary>
-        /// Roll left (Flight).
         /// Alabeo a la izquierda (Vuelo).
+        /// <para>Roll left (Flight).</para>
         /// </summary>
         FlightRollLeft,
 
         /// <summary>
-        /// Roll right (Flight).
         /// Alabeo a la derecha (Vuelo).
+        /// <para>Roll right (Flight).</para>
         /// </summary>
         FlightRollRight,
 
         /// <summary>
-        /// Pitch up (Flight).
         /// Cabeceo arriba (Vuelo).
+        /// <para>Pitch up (Flight).</para>
         /// </summary>
         FlightPitchUp,
 
         /// <summary>
-        /// Pitch down (Flight).
         /// Cabeceo abajo (Vuelo).
+        /// <para>Pitch down (Flight).</para>
         /// </summary>
         FlightPitchDown,
 
         /// <summary>
-        /// Vertical thrust up (VTOL/Space).
         /// Empuje vertical arriba.
+        /// <para>Vertical thrust up (VTOL/Space).</para>
         /// </summary>
         ThrustUp,
 
         /// <summary>
-        /// Vertical thrust down (VTOL/Space).
         /// Empuje vertical abajo.
+        /// <para>Vertical thrust down (VTOL/Space).</para>
         /// </summary>
         ThrustDown,
 
         /// <summary>
-        /// Lateral thrust left (Space).
         /// Empuje lateral izquierdo.
+        /// <para>Lateral thrust left (Space).</para>
         /// </summary>
         ThrustLeft,
 
         /// <summary>
-        /// Lateral thrust right (Space).
         /// Empuje lateral derecho.
+        /// <para>Lateral thrust right (Space).</para>
         /// </summary>
         ThrustRight,
 
         /// <summary>
-        /// Toggle landing gear.
         /// Alternar tren de aterrizaje.
+        /// <para>Toggle landing gear.</para>
         /// </summary>
         ToggleLandingGear,
 
         /// <summary>
-        /// Engage warp drive / hyperdrive.
         /// Activar motor de curvatura / hiperimpulsor.
+        /// <para>Engage warp drive / hyperdrive.</para>
         /// </summary>
         EngageWarp,
 
         /// <summary>
-        /// Deploy countermeasures (flares/chaff).
         /// Desplegar contramedidas (bengalas).
+        /// <para>Deploy countermeasures (flares/chaff).</para>
         /// </summary>
         DeployCountermeasures,
 
         /// <summary>
-        /// Target nearest enemy.
         /// Fijar enemigo más cercano.
+        /// <para>Target nearest enemy.</para>
         /// </summary>
         TargetNearestEnemy,
 
         /// <summary>
-        /// Cycle hostile targets.
         /// Ciclar objetivos hostiles.
+        /// <para>Cycle hostile targets.</para>
         /// </summary>
         CycleTargets,
 
         /// <summary>
-        /// Cycle sub-systems targeting (engines, weapons).
         /// Ciclar subsistemas del objetivo (motores, armas).
+        /// <para>Cycle sub-systems targeting (engines, weapons).</para>
         /// </summary>
         CycleSubsystems,
 
@@ -946,68 +946,68 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         // --- Comandos de Escuadrón y Compañeros ---
 
         /// <summary>
-        /// Command squad: Follow me.
         /// Orden: Síganme.
+        /// <para>Command squad: Follow me.</para>
         /// </summary>
         SquadFollow,
 
         /// <summary>
-        /// Command squad: Hold fire.
         /// Orden: Alto el fuego.
+        /// <para>Command squad: Hold fire.</para>
         /// </summary>
         SquadHoldFire,
 
         /// <summary>
-        /// Command squad: Open fire.
         /// Orden: Fuego a discreción.
+        /// <para>Command squad: Open fire.</para>
         /// </summary>
         SquadOpenFire,
 
         /// <summary>
-        /// Command squad: Go to point.
         /// Orden: Ir al punto.
+        /// <para>Command squad: Go to point.</para>
         /// </summary>
         SquadGoTo,
 
         /// <summary>
-        /// Command squad: Regroup.
         /// Orden: Reagruparse.
+        /// <para>Command squad: Regroup.</para>
         /// </summary>
         SquadRegroup,
 
         /// <summary>
-        /// Command squad: Flank left.
         /// Orden: Flanquear izquierda.
+        /// <para>Command squad: Flank left.</para>
         /// </summary>
         SquadFlankLeft,
 
         /// <summary>
-        /// Command squad: Flank right.
         /// Orden: Flanquear derecha.
+        /// <para>Command squad: Flank right.</para>
         /// </summary>
         SquadFlankRight,
 
         /// <summary>
-        /// Command squad: Take cover.
         /// Orden: Cubrirse.
+        /// <para>Command squad: Take cover.</para>
         /// </summary>
         SquadCover,
 
         /// <summary>
-        /// Command companion: Use special ability.
         /// Orden compañero: Usar habilidad especial.
+        /// <para>Command companion: Use special ability.</para>
         /// </summary>
         CompanionSpecial,
 
         /// <summary>
-        /// Swap control to next character.
         /// Cambiar control al siguiente personaje.
+        /// <para>Swap control to next character.</para>
         /// </summary>
         SwapCharacterNext,
 
         /// <summary>
-        /// Swap control to previous character.
         /// Cambiar control al personaje anterior.
+        /// <para>Swap control to previous character.</para>
         /// </summary>
         SwapCharacterPrev,
 
@@ -1015,74 +1015,74 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         // --- Modo Editor / Foto / Creativo ---
 
         /// <summary>
-        /// Toggle Photo Mode.
         /// Alternar Modo Foto.
+        /// <para>Toggle Photo Mode.</para>
         /// </summary>
         TogglePhotoMode,
 
         /// <summary>
-        /// Increase Field of View (FOV).
         /// Aumentar campo de visión (FOV).
+        /// <para>Increase Field of View (FOV).</para>
         /// </summary>
         IncreaseFOV,
 
         /// <summary>
-        /// Decrease Field of View (FOV).
         /// Disminuir campo de visión (FOV).
+        /// <para>Decrease Field of View (FOV).</para>
         /// </summary>
         DecreaseFOV,
 
         /// <summary>
-        /// Increase Depth of Field (DOF).
         /// Aumentar profundidad de campo.
+        /// <para>Increase Depth of Field (DOF).</para>
         /// </summary>
         IncreaseDOF,
 
         /// <summary>
-        /// Decrease Depth of Field (DOF).
         /// Disminuir profundidad de campo.
+        /// <para>Decrease Depth of Field (DOF).</para>
         /// </summary>
         DecreaseDOF,
 
         /// <summary>
-        /// Toggle Grid Snapping.
         /// Alternar ajuste a la rejilla.
+        /// <para>Toggle Grid Snapping.</para>
         /// </summary>
         ToggleGridSnap,
 
         /// <summary>
-        /// Duplicate selected object.
         /// Duplicar objeto seleccionado.
+        /// <para>Duplicate selected object.</para>
         /// </summary>
         DuplicateObject,
 
         /// <summary>
-        /// Delete selected object.
         /// Borrar objeto seleccionado.
+        /// <para>Delete selected object.</para>
         /// </summary>
         DeleteObject,
 
         /// <summary>
-        /// Undo last action (Editor).
         /// Deshacer última acción.
+        /// <para>Undo last action (Editor).</para>
         /// </summary>
         UndoAction,
 
         /// <summary>
-        /// Redo last action (Editor).
         /// Rehacer última acción.
+        /// <para>Redo last action (Editor).</para>
         /// </summary>
         RedoAction,
 
         /// <summary>
-        /// Save schematic/blueprint.
         /// Guardar esquema/plano.
+        /// <para>Save schematic/blueprint.</para>
         /// </summary>
         SaveBlueprint,
 
         /// <summary>
-        /// Load schematic/blueprint.
         /// Cargar esquema/plano.
+        /// <para>Load schematic/blueprint.</para>
         /// </summary>
         LoadBlueprint,
 
@@ -1090,50 +1090,50 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         // --- Específicas de VR ---
 
         /// <summary>
-        /// Recenter VR View.
         /// Recentrar vista VR.
+        /// <para>Recenter VR View.</para>
         /// </summary>
         VRRecenter,
 
         /// <summary>
-        /// Teleport (VR Locomotion).
         /// Teletransportarse (Locomoción VR).
+        /// <para>Teleport (VR Locomotion).</para>
         /// </summary>
         VRTeleport,
 
         /// <summary>
-        /// Grip Left Hand.
         /// Agarrar con mano izquierda.
+        /// <para>Grip Left Hand.</para>
         /// </summary>
         VRGripLeft,
 
         /// <summary>
-        /// Grip Right Hand.
         /// Agarrar con mano derecha.
+        /// <para>Grip Right Hand.</para>
         /// </summary>
         VRGripRight,
 
         /// <summary>
-        /// Trigger Left Hand.
         /// Gatillo mano izquierda.
+        /// <para>Trigger Left Hand.</para>
         /// </summary>
         VRTriggerLeft,
 
         /// <summary>
-        /// Trigger Right Hand.
         /// Gatillo mano derecha.
+        /// <para>Trigger Right Hand.</para>
         /// </summary>
         VRTriggerRight,
 
         /// <summary>
-        /// Snap Turn Left (VR).
         /// Giro rápido izquierda (VR).
+        /// <para>Snap Turn Left (VR).</para>
         /// </summary>
         VRSnapTurnLeft,
 
         /// <summary>
-        /// Snap Turn Right (VR).
         /// Giro rápido derecha (VR).
+        /// <para>Snap Turn Right (VR).</para>
         /// </summary>
         VRSnapTurnRight,
 
@@ -1141,44 +1141,44 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         // --- Social / Chat / Emoticonos ---
 
         /// <summary>
-        /// Mute all players.
         /// Silenciar a todos los jugadores.
+        /// <para>Mute all players.</para>
         /// </summary>
         MuteAll,
 
         /// <summary>
-        /// Unmute all players.
         /// Reactivar audio de todos.
+        /// <para>Unmute all players.</para>
         /// </summary>
         UnmuteAll,
 
         /// <summary>
-        /// Send friend request to target.
         /// Enviar solicitud de amistad al objetivo.
+        /// <para>Send friend request to target.</para>
         /// </summary>
         FriendRequest,
 
         /// <summary>
-        /// Block target player.
         /// Bloquear jugador objetivo.
+        /// <para>Block target player.</para>
         /// </summary>
         BlockPlayer,
 
         /// <summary>
-        /// Report player behavior.
         /// Reportar comportamiento del jugador.
+        /// <para>Report player behavior.</para>
         /// </summary>
         ReportPlayer,
 
         /// <summary>
-        /// Toggle Streamer Mode (Hide names).
         /// Alternar Modo Streamer (Ocultar nombres).
+        /// <para>Toggle Streamer Mode (Hide names).</para>
         /// </summary>
         ToggleStreamerMode,
 
         /// <summary>
-        /// Open Guild/Clan menu.
         /// Abrir menú de Clan/Gremio.
+        /// <para>Open Guild/Clan menu.</para>
         /// </summary>
         OpenGuildMenu,
 
@@ -1186,490 +1186,1078 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         // --- Varios / Minijuegos ---
 
         /// <summary>
-        /// Cast fishing line.
         /// Lanzar caña de pescar.
+        /// <para>Cast fishing line.</para>
         /// </summary>
         FishCast,
 
         /// <summary>
-        /// Reel in fishing line.
         /// Recoger sedal de pesca.
+        /// <para>Reel in fishing line.</para>
         /// </summary>
         FishReel,
 
         /// <summary>
-        /// Play instrument note 1.
         /// Tocar nota de instrumento 1.
+        /// <para>Play instrument note 1.</para>
         /// </summary>
         PlayNote1,
 
         /// <summary>
-        /// Play instrument note 2.
         /// Tocar nota de instrumento 2.
+        /// <para>Play instrument note 2.</para>
         /// </summary>
         PlayNote2,
 
         /// <summary>
-        /// Play instrument note 3.
         /// Tocar nota de instrumento 3.
+        /// <para>Play instrument note 3.</para>
         /// </summary>
         PlayNote3,
 
         /// <summary>
-        /// Place marker on map.
         /// Colocar marcador en el mapa.
+        /// <para>Place marker on map.</para>
         /// </summary>
         MapPlaceMarker,
 
         /// <summary>
-        /// Remove marker from map.
         /// Quitar marcador del mapa.
+        /// <para>Remove marker from map.</para>
         /// </summary>
         MapRemoveMarker,
 
         /// <summary>
-        /// Change radio station next.
         /// Siguiente emisora de radio.
+        /// <para>Change radio station next.</para>
         /// </summary>
         RadioNext,
 
         /// <summary>
-        /// Change radio station previous.
         /// Emisora de radio anterior.
+        /// <para>Change radio station previous.</para>
         /// </summary>
         RadioPrev,
 
         /// <summary>
-        /// Turn radio on/off.
         /// Encender/Apagar radio.
+        /// <para>Turn radio on/off.</para>
         /// </summary>
         RadioToggle,
         // --- Movimiento Básico ---
-        /// <summary>Acción de moverse hacia arriba.</summary>
+        /// <summary>
+        /// Acción de moverse hacia arriba.
+        /// <para>Move up action.</para>
+        /// </summary>
         MoverArriba,
-        /// <summary>Acción de moverse hacia abajo.</summary>
+        /// <summary>
+        /// Acción de moverse hacia abajo.
+        /// <para>Move down action.</para>
+        /// </summary>
         MoverAbajo,
-        /// <summary>Acción de moverse hacia la izquierda.</summary>
+        /// <summary>
+        /// Acción de moverse hacia la izquierda.
+        /// <para>Move left action.</para>
+        /// </summary>
         MoverIzquierda,
-        /// <summary>Acción de moverse hacia la derecha.</summary>
+        /// <summary>
+        /// Acción de moverse hacia la derecha.
+        /// <para>Move right action.</para>
+        /// </summary>
         MoverDerecha,
-        /// <summary>Acción de saltar.</summary>
+        /// <summary>
+        /// Acción de saltar.
+        /// <para>Jump action.</para>
+        /// </summary>
         Saltar,
-        /// <summary>Acción de realizar un impulso rápido (Dash).</summary>
+        /// <summary>
+        /// Acción de realizar un impulso rápido (Dash).
+        /// <para>Dash action.</para>
+        /// </summary>
         Impulso,
 
         // --- Control de Cámara ---
-        /// <summary>Rotar la cámara hacia la izquierda.</summary>
+        /// <summary>
+        /// Rotar la cámara hacia la izquierda.
+        /// <para>Rotate camera left action.</para>
+        /// </summary>
         RotarCamaraIzquierda,
-        /// <summary>Rotar la cámara hacia la derecha.</summary>
+        /// <summary>
+        /// Rotar la cámara hacia la derecha.
+        /// <para>Rotate camera right action.</para>
+        /// </summary>
         RotarCamaraDerecha,
-        /// <summary>Rotar la cámara hacia arriba.</summary>
+        /// <summary>
+        /// Rotar la cámara hacia arriba.
+        /// <para>Rotate camera up action.</para>
+        /// </summary>
         RotarCamaraArriba,
-        /// <summary>Rotar la cámara hacia abajo.</summary>
+        /// <summary>
+        /// Rotar la cámara hacia abajo.
+        /// <para>Rotate camera down action.</para>
+        /// </summary>
         RotarCamaraAbajo,
-        /// <summary>Acercar la cámara (Zoom In).</summary>
+        /// <summary>
+        /// Acercar la cámara (Zoom In).
+        /// <para>Zoom camera in.</para>
+        /// </summary>
         AcercarCamara,
-        /// <summary>Alejar la cámara (Zoom Out).</summary>
+        /// <summary>
+        /// Alejar la cámara (Zoom Out).
+        /// <para>Zoom camera out.</para>
+        /// </summary>
         AlejarCamara,
-        /// <summary>Reiniciar la cámara a su posición por defecto.</summary>
+        /// <summary>
+        /// Reiniciar la cámara a su posición por defecto.
+        /// <para>Reset camera to default position.</para>
+        /// </summary>
         ReiniciarCamara,
-        /// <summary>Fijar la cámara en el objetivo.</summary>
+        /// <summary>
+        /// Fijar la cámara en el objetivo.
+        /// <para>Lock camera on target.</para>
+        /// </summary>
         FijarObjetivo,
-        /// <summary>Alternar entre vista de primera y tercera persona.</summary>
+        /// <summary>
+        /// Alternar entre vista de primera y tercera persona.
+        /// <para>Toggle between first and third person view.</para>
+        /// </summary>
         AlternarPerspectiva,
-        /// <summary>Mirar hacia atrás rápidamente.</summary>
+        /// <summary>
+        /// Mirar hacia atrás rápidamente.
+        /// <para>Look behind action.</para>
+        /// </summary>
         MirarAtras,
 
         // --- Movimiento Avanzado ---
-        /// <summary>Acción de esprintar o correr rápido.</summary>
+        /// <summary>
+        /// Acción de esprintar o correr rápido.
+        /// <para>Sprint action.</para>
+        /// </summary>
         Esprintar,
-        /// <summary>Alternar entre caminar y correr.</summary>
+        /// <summary>
+        /// Alternar entre caminar y correr.
+        /// <para>Toggle walking mode.</para>
+        /// </summary>
         AlternarCaminar,
-        /// <summary>Acción de agacharse.</summary>
+        /// <summary>
+        /// Acción de agacharse.
+        /// <para>Crouch action.</para>
+        /// </summary>
         Agacharse,
-        /// <summary>Acción de tumbarse o cuerpo a tierra.</summary>
+        /// <summary>
+        /// Acción de tumbarse o cuerpo a tierra.
+        /// <para>Prone action (lie down).</para>
+        /// </summary>
         Tumbarse,
-        /// <summary>Deslizarse por el suelo.</summary>
+        /// <summary>
+        /// Deslizarse por el suelo.
+        /// <para>Slide action.</para>
+        /// </summary>
         Deslizarse,
-        /// <summary>Correr por la pared.</summary>
+        /// <summary>
+        /// Correr por la pared.
+        /// <para>Wall run action.</para>
+        /// </summary>
         CorrerPorPared,
-        /// <summary>Escalar hacia arriba.</summary>
+        /// <summary>
+        /// Escalar hacia arriba.
+        /// <para>Climb up action.</para>
+        /// </summary>
         EscalarArriba,
-        /// <summary>Descender escalando.</summary>
+        /// <summary>
+        /// Descender escalando.
+        /// <para>Climb down action.</para>
+        /// </summary>
         EscalarAbajo,
-        /// <summary>Nadar hacia arriba o salir a la superficie.</summary>
+        /// <summary>
+        /// Nadar hacia arriba o salir a la superficie.
+        /// <para>Swim up / Surface.</para>
+        /// </summary>
         NadarArriba,
-        /// <summary>Bucear o nadar hacia el fondo.</summary>
+        /// <summary>
+        /// Bucear o nadar hacia el fondo.
+        /// <para>Dive / Swim down.</para>
+        /// </summary>
         NadarAbajo,
-        /// <summary>Planear en el aire.</summary>
+        /// <summary>
+        /// Planear en el aire.
+        /// <para>Glide action.</para>
+        /// </summary>
         Planear,
-        /// <summary>Rodar para esquivar.</summary>
+        /// <summary>
+        /// Rodar para esquivar.
+        /// <para>Dodge roll action.</para>
+        /// </summary>
         RodarEsquivar,
-        /// <summary>Usar el gancho de agarre.</summary>
+        /// <summary>
+        /// Usar el gancho de agarre.
+        /// <para>Grappling hook action.</para>
+        /// </summary>
         UsarGancho,
 
         // --- Combate y Armas ---
-        /// <summary>Disparo o ataque principal.</summary>
+        /// <summary>
+        /// Disparo o ataque principal.
+        /// <para>Primary fire action.</para>
+        /// </summary>
         DisparoPrincipal,
-        /// <summary>Disparo o ataque secundario.</summary>
+        /// <summary>
+        /// Disparo o ataque secundario.
+        /// <para>Secondary fire action.</para>
+        /// </summary>
         DisparoSecundario,
-        /// <summary>Acción de atacar (Genérico).</summary>
+        /// <summary>
+        /// Acción de atacar (Genérico).
+        /// <para>Attack action.</para>
+        /// </summary>
         Atacar,
-        /// <summary>Recargar el arma.</summary>
+        /// <summary>
+        /// Recargar el arma.
+        /// <para>Reload weapon.</para>
+        /// </summary>
         Recargar,
-        /// <summary>Realizar un ataque pesado.</summary>
+        /// <summary>
+        /// Realizar un ataque pesado.
+        /// <para>Heavy attack action.</para>
+        /// </summary>
         AtaquePesado,
-        /// <summary>Bloquear o defenderse.</summary>
+        /// <summary>
+        /// Bloquear o defenderse.
+        /// <para>Block or defend action.</para>
+        /// </summary>
         Bloquear,
-        /// <summary>Realizar un desvío (Parry).</summary>
+        /// <summary>
+        /// Realizar un desvío (Parry).
+        /// <para>Parry action.</para>
+        /// </summary>
         Desvio,
-        /// <summary>Dar una patada.</summary>
+        /// <summary>
+        /// Dar una patada.
+        /// <para>Kick action.</para>
+        /// </summary>
         Patear,
-        /// <summary>Apuntar con la mira.</summary>
+        /// <summary>
+        /// Apuntar con la mira.
+        /// <para>Aim down sights (ADS).</para>
+        /// </summary>
         ApuntarConMira,
-        /// <summary>Lanzar una granada.</summary>
+        /// <summary>
+        /// Lanzar una granada.
+        /// <para>Throw grenade.</para>
+        /// </summary>
         LanzarGranada,
-        /// <summary>Cambiar a la siguiente arma.</summary>
+        /// <summary>
+        /// Cambiar a la siguiente arma.
+        /// <para>Switch to next weapon.</para>
+        /// </summary>
         ArmaSiguiente,
-        /// <summary>Cambiar al arma anterior.</summary>
+        /// <summary>
+        /// Cambiar al arma anterior.
+        /// <para>Switch to previous weapon.</para>
+        /// </summary>
         ArmaAnterior,
-        /// <summary>Enfundar o desenfundar el arma.</summary>
+        /// <summary>
+        /// Enfundar o desenfundar el arma.
+        /// <para>Holster or unholster weapon.</para>
+        /// </summary>
         EnfundarArma,
-        /// <summary>Inspeccionar el arma actual.</summary>
+        /// <summary>
+        /// Inspeccionar el arma actual.
+        /// <para>Inspect current weapon.</para>
+        /// </summary>
         InspeccionarArma,
-        /// <summary>Cambiar modo de disparo.</summary>
+        /// <summary>
+        /// Cambiar modo de disparo.
+        /// <para>Change firing mode (Single, Burst, Auto).</para>
+        /// </summary>
         CambiarModoDisparo,
-        /// <summary>Equipar arma de la ranura 1.</summary>
+        /// <summary>
+        /// Equipar arma de la ranura 1.
+        /// <para>Equip weapon in slot 1.</para>
+        /// </summary>
         EquiparRanura1,
-        /// <summary>Equipar arma de la ranura 2.</summary>
+        /// <summary>
+        /// Equipar arma de la ranura 2.
+        /// <para>Equip weapon in slot 2.</para>
+        /// </summary>
         EquiparRanura2,
-        /// <summary>Equipar arma de la ranura 3.</summary>
+        /// <summary>
+        /// Equipar arma de la ranura 3.
+        /// <para>Equip weapon in slot 3.</para>
+        /// </summary>
         EquiparRanura3,
-        /// <summary>Equipar arma de la ranura 4.</summary>
+        /// <summary>
+        /// Equipar arma de la ranura 4.
+        /// <para>Equip weapon in slot 4.</para>
+        /// </summary>
         EquiparRanura4,
-        /// <summary>Ejecutar un remate o ejecución.</summary>
+        /// <summary>
+        /// Ejecutar un remate o ejecución.
+        /// <para>Use melee execution / finisher.</para>
+        /// </summary>
         Ejecucion,
 
         // --- Interacción y Objetos ---
-        /// <summary>Interacción general.</summary>
+        /// <summary>
+        /// Interacción general.
+        /// <para>General interaction (Talk, Open, etc.).</para>
+        /// </summary>
         Interactuar,
-        /// <summary>Recoger un objeto.</summary>
+        /// <summary>
+        /// Recoger un objeto.
+        /// <para>Pick up item.</para>
+        /// </summary>
         Recoger,
-        /// <summary>Soltar el objeto actual.</summary>
+        /// <summary>
+        /// Soltar el objeto actual.
+        /// <para>Drop current item.</para>
+        /// </summary>
         SoltarObjeto,
-        /// <summary>Usar el objeto seleccionado.</summary>
+        /// <summary>
+        /// Usar el objeto seleccionado.
+        /// <para>Use currently selected item.</para>
+        /// </summary>
         UsarObjeto,
-        /// <summary>Usar curación.</summary>
+        /// <summary>
+        /// Usar curación.
+        /// <para>Use health potion / medkit.</para>
+        /// </summary>
         Curarse,
-        /// <summary>Restaurar energía o maná.</summary>
+        /// <summary>
+        /// Restaurar energía o maná.
+        /// <para>Use mana potion / energy pack.</para>
+        /// </summary>
         RestaurarEnergia,
-        /// <summary>Encender o apagar linterna.</summary>
+        /// <summary>
+        /// Encender o apagar linterna.
+        /// <para>Toggle flashlight.</para>
+        /// </summary>
         Linterna,
-        /// <summary>Alternar visión nocturna.</summary>
+        /// <summary>
+        /// Alternar visión nocturna.
+        /// <para>Toggle night vision.</para>
+        /// </summary>
         VisionNocturna,
-        /// <summary>Escanear el entorno.</summary>
+        /// <summary>
+        /// Escanear el entorno.
+        /// <para>Scan environment.</para>
+        /// </summary>
         Escanear,
 
         // --- Interacción Avanzada y Puzles ---
-        /// <summary>Examinar detalle.</summary>
+        /// <summary>
+        /// Examinar detalle.
+        /// <para>Examine detailed view of an object.</para>
+        /// </summary>
         ExaminarDetalle,
-        /// <summary>Empujar objeto.</summary>
+        /// <summary>
+        /// Empujar objeto.
+        /// <para>Push object forward.</para>
+        /// </summary>
         EmpujarObjeto,
-        /// <summary>Tirar de objeto.</summary>
+        /// <summary>
+        /// Tirar de objeto.
+        /// <para>Pull object backward.</para>
+        /// </summary>
         TirarObjeto,
-        /// <summary>Encender fuego.</summary>
+        /// <summary>
+        /// Encender fuego.
+        /// <para>Ignite torch or light source.</para>
+        /// </summary>
         Encender,
-        /// <summary>Apagar fuego.</summary>
+        /// <summary>
+        /// Apagar fuego.
+        /// <para>Extinguish fire or light source.</para>
+        /// </summary>
         Extinguir,
-        /// <summary>Hackear terminal.</summary>
+        /// <summary>
+        /// Hackear terminal.
+        /// <para>Hack terminal or computer.</para>
+        /// </summary>
         Hackear,
-        /// <summary>Ganzuar cerradura.</summary>
+        /// <summary>
+        /// Ganzuar cerradura.
+        /// <para>Pick lock.</para>
+        /// </summary>
         Ganzuar,
-        /// <summary>Combinar objetos.</summary>
+        /// <summary>
+        /// Combinar objetos.
+        /// <para>Combine items in crafting menu.</para>
+        /// </summary>
         CombinarObjetos,
-        /// <summary>Desmontar objeto.</summary>
+        /// <summary>
+        /// Desmontar objeto.
+        /// <para>Disassemble item for parts.</para>
+        /// </summary>
         Desmontar,
-        /// <summary>Rotar puzle horario.</summary>
+        /// <summary>
+        /// Rotar puzle horario.
+        /// <para>Rotate puzzle piece clockwise.</para>
+        /// </summary>
         PuzleRotarHorario,
-        /// <summary>Rotar puzle antihorario.</summary>
+        /// <summary>
+        /// Rotar puzle antihorario.
+        /// <para>Rotate puzzle piece counter-clockwise.</para>
+        /// </summary>
         PuzleRotarAntihorario,
 
         // --- Gestión de Inventario e UI ---
-        /// <summary>Mover al alijo.</summary>
+        /// <summary>
+        /// Mover al alijo.
+        /// <para>Move item to stash/chest.</para>
+        /// </summary>
         MoverAlAlijo,
-        /// <summary>Tomar todo.</summary>
+        /// <summary>
+        /// Tomar todo.
+        /// <para>Take all items from container.</para>
+        /// </summary>
         TomarTodo,
-        /// <summary>Dividir pila.</summary>
+        /// <summary>
+        /// Dividir pila.
+        /// <para>Split item stack.</para>
+        /// </summary>
         DividirPila,
-        /// <summary>Marcar objeto.</summary>
+        /// <summary>
+        /// Marcar objeto.
+        /// <para>Mark item as junk/favorite.</para>
+        /// </summary>
         MarcarObjeto,
-        /// <summary>Comparar objeto.</summary>
+        /// <summary>
+        /// Comparar objeto.
+        /// <para>Compare item with equipped.</para>
+        /// </summary>
         CompararObjeto,
-        /// <summary>Ordenar por nombre.</summary>
+        /// <summary>
+        /// Ordenar por nombre.
+        /// <para>Sort inventory by name.</para>
+        /// </summary>
         OrdenarPorNombre,
-        /// <summary>Ordenar por valor.</summary>
+        /// <summary>
+        /// Ordenar por valor.
+        /// <para>Sort inventory by weight/value.</para>
+        /// </summary>
         OrdenarPorValor,
-        /// <summary>Leer página siguiente.</summary>
+        /// <summary>
+        /// Leer página siguiente.
+        /// <para>Read next page (book/note).</para>
+        /// </summary>
         LeerPaginaSiguiente,
-        /// <summary>Leer página anterior.</summary>
+        /// <summary>
+        /// Leer página anterior.
+        /// <para>Read previous page (book/note).</para>
+        /// </summary>
         LeerPaginaAnterior,
 
         // --- Habilidades y Magia ---
-        /// <summary>Habilidad 1.</summary>
+        /// <summary>
+        /// Habilidad 1.
+        /// <para>Activate Skill 1.</para>
+        /// </summary>
         Habilidad1,
-        /// <summary>Habilidad 2.</summary>
+        /// <summary>
+        /// Habilidad 2.
+        /// <para>Activate Skill 2.</para>
+        /// </summary>
         Habilidad2,
-        /// <summary>Habilidad 3.</summary>
+        /// <summary>
+        /// Habilidad 3.
+        /// <para>Activate Skill 3.</para>
+        /// </summary>
         Habilidad3,
-        /// <summary>Habilidad 4.</summary>
+        /// <summary>
+        /// Habilidad 4.
+        /// <para>Activate Skill 4.</para>
+        /// </summary>
         Habilidad4,
-        /// <summary>Habilidad Definitiva.</summary>
+        /// <summary>
+        /// Habilidad Definitiva.
+        /// <para>Activate Ultimate Ability.</para>
+        /// </summary>
         HabilidadDefinitiva,
-        /// <summary>Lanzar hechizo.</summary>
+        /// <summary>
+        /// Lanzar hechizo.
+        /// <para>Cast selected spell.</para>
+        /// </summary>
         LanzarHechizo,
-        /// <summary>Cancelar lanzamiento.</summary>
+        /// <summary>
+        /// Cancelar lanzamiento.
+        /// <para>Cancel current casting.</para>
+        /// </summary>
         CancelarLanzamiento,
-        /// <summary>Invocar montura.</summary>
+        /// <summary>
+        /// Invocar montura.
+        /// <para>Summon mount or vehicle.</para>
+        /// </summary>
         InvocarMontura,
 
         // --- Interfaz de Usuario (UI) ---
-        /// <summary>Menú de pausa.</summary>
+        /// <summary>
+        /// Menú de pausa.
+        /// <para>Toggle Pause Menu.</para>
+        /// </summary>
         MenuPausa,
-        /// <summary>Abrir inventario.</summary>
+        /// <summary>
+        /// Abrir inventario.
+        /// <para>Open Inventory.</para>
+        /// </summary>
         AbrirInventario,
-        /// <summary>Abrir mapa.</summary>
+        /// <summary>
+        /// Abrir mapa.
+        /// <para>Open Map.</para>
+        /// </summary>
         AbrirMapa,
-        /// <summary>Alternar tamaño minimapa.</summary>
+        /// <summary>
+        /// Alternar tamaño minimapa.
+        /// <para>Toggle mini-map size (small/large).</para>
+        /// </summary>
         AlternarTamanoMinimapa,
-        /// <summary>Abrir diario.</summary>
+        /// <summary>
+        /// Abrir diario.
+        /// <para>Open Quest Log / Journal.</para>
+        /// </summary>
         AbrirDiario,
-        /// <summary>Fijar misión.</summary>
+        /// <summary>
+        /// Fijar misión.
+        /// <para>Pin quest to HUD.</para>
+        /// </summary>
         FijarMision,
-        /// <summary>Abrir árbol de habilidades.</summary>
+        /// <summary>
+        /// Abrir árbol de habilidades.
+        /// <para>Open Skill Tree.</para>
+        /// </summary>
         AbrirArbolHabilidades,
-        /// <summary>Abrir ficha de personaje.</summary>
+        /// <summary>
+        /// Abrir ficha de personaje.
+        /// <para>Open Character Sheet / Stats.</para>
+        /// </summary>
         AbrirFichaPersonaje,
-        /// <summary>UI Aceptar.</summary>
+        /// <summary>
+        /// UI Aceptar.
+        /// <para>UI Submit / Accept.</para>
+        /// </summary>
         UIAceptar,
-        /// <summary>UI Cancelar.</summary>
+        /// <summary>
+        /// UI Cancelar.
+        /// <para>UI Cancel / Back.</para>
+        /// </summary>
         UICancelar,
-        /// <summary>Guardado rápido.</summary>
+        /// <summary>
+        /// Guardado rápido.
+        /// <para>Quick Save game.</para>
+        /// </summary>
         GuardadoRapido,
-        /// <summary>Carga rápida.</summary>
+        /// <summary>
+        /// Carga rápida.
+        /// <para>Quick Load game.</para>
+        /// </summary>
         CargaRapida,
-        /// <summary>Captura de pantalla.</summary>
+        /// <summary>
+        /// Captura de pantalla.
+        /// <para>Take screenshot.</para>
+        /// </summary>
         CapturaPantalla,
-        /// <summary>Alternar HUD.</summary>
+        /// <summary>
+        /// Alternar HUD.
+        /// <para>Toggle HUD visibility.</para>
+        /// </summary>
         AlternarHUD,
-        /// <summary>Consola de depuración.</summary>
+        /// <summary>
+        /// Consola de depuración.
+        /// <para>Toggle Debug Console.</para>
+        /// </summary>
         ConsolaDepuracion,
 
         // --- Vehículos Terrestres ---
-        /// <summary>Acelerar vehículo.</summary>
+        /// <summary>
+        /// Acelerar vehículo.
+        /// <para>Vehicle Accelerate / Throttle.</para>
+        /// </summary>
         VehiculoAcelerar,
-        /// <summary>Frenar vehículo.</summary>
+        /// <summary>
+        /// Frenar vehículo.
+        /// <para>Vehicle Brake / Reverse.</para>
+        /// </summary>
         VehiculoFrenar,
-        /// <summary>Girar vehículo izquierda.</summary>
+        /// <summary>
+        /// Girar vehículo izquierda.
+        /// <para>Vehicle Turn Left.</para>
+        /// </summary>
         VehiculoGirarIzquierda,
-        /// <summary>Girar vehículo derecha.</summary>
+        /// <summary>
+        /// Girar vehículo derecha.
+        /// <para>Vehicle Turn Right.</para>
+        /// </summary>
         VehiculoGirarDerecha,
-        /// <summary>Freno de mano vehículo.</summary>
+        /// <summary>
+        /// Freno de mano vehículo.
+        /// <para>Vehicle Handbrake / Drift.</para>
+        /// </summary>
         VehiculoFrenoMano,
-        /// <summary>Turbo vehículo.</summary>
+        /// <summary>
+        /// Turbo vehículo.
+        /// <para>Vehicle Boost / Nitro.</para>
+        /// </summary>
         VehiculoTurbo,
-        /// <summary>Bocina vehículo.</summary>
+        /// <summary>
+        /// Bocina vehículo.
+        /// <para>Use Vehicle Horn.</para>
+        /// </summary>
         VehiculoBocina,
-        /// <summary>Luces vehículo.</summary>
+        /// <summary>
+        /// Luces vehículo.
+        /// <para>Toggle Vehicle Lights.</para>
+        /// </summary>
         VehiculoLuces,
-        /// <summary>Salir vehículo.</summary>
+        /// <summary>
+        /// Salir vehículo.
+        /// <para>Exit Vehicle.</para>
+        /// </summary>
         VehiculoSalir,
 
         // --- Vuelo y Espacio (6DOF) ---
-        /// <summary>Guiñada izquierda (Vuelo).</summary>
+        /// <summary>
+        /// Guiñada izquierda (Vuelo).
+        /// <para>Yaw left (Flight).</para>
+        /// </summary>
         VueloGuinadaIzquierda,
-        /// <summary>Guiñada derecha (Vuelo).</summary>
+        /// <summary>
+        /// Guiñada derecha (Vuelo).
+        /// <para>Yaw right (Flight).</para>
+        /// </summary>
         VueloGuinadaDerecha,
-        /// <summary>Alabeo izquierda (Vuelo).</summary>
+        /// <summary>
+        /// Alabeo izquierda (Vuelo).
+        /// <para>Roll left (Flight).</para>
+        /// </summary>
         VueloAlabeoIzquierda,
-        /// <summary>Alabeo derecha (Vuelo).</summary>
+        /// <summary>
+        /// Alabeo derecha (Vuelo).
+        /// <para>Roll right (Flight).</para>
+        /// </summary>
         VueloAlabeoDerecha,
-        /// <summary>Cabeceo arriba (Vuelo).</summary>
+        /// <summary>
+        /// Cabeceo arriba (Vuelo).
+        /// <para>Pitch up (Flight).</para>
+        /// </summary>
         VueloCabeceoArriba,
-        /// <summary>Cabeceo abajo (Vuelo).</summary>
+        /// <summary>
+        /// Cabeceo abajo (Vuelo).
+        /// <para>Pitch down (Flight).</para>
+        /// </summary>
         VueloCabeceoAbajo,
-        /// <summary>Empuje vertical arriba.</summary>
+        /// <summary>
+        /// Empuje vertical arriba.
+        /// <para>Vertical thrust up (VTOL/Space).</para>
+        /// </summary>
         EmpujeVerticalArriba,
-        /// <summary>Empuje vertical abajo.</summary>
+        /// <summary>
+        /// Empuje vertical abajo.
+        /// <para>Vertical thrust down (VTOL/Space).</para>
+        /// </summary>
         EmpujeVerticalAbajo,
-        /// <summary>Empuje lateral izquierda.</summary>
+        /// <summary>
+        /// Empuje lateral izquierda.
+        /// <para>Lateral thrust left (Space).</para>
+        /// </summary>
         EmpujeLateralIzquierda,
-        /// <summary>Empuje lateral derecha.</summary>
+        /// <summary>
+        /// Empuje lateral derecha.
+        /// <para>Lateral thrust right (Space).</para>
+        /// </summary>
         EmpujeLateralDerecha,
-        /// <summary>Alternar tren de aterrizaje.</summary>
+        /// <summary>
+        /// Alternar tren de aterrizaje.
+        /// <para>Toggle landing gear.</para>
+        /// </summary>
         TrenAterrizaje,
-        /// <summary>Activar hipervelocidad.</summary>
+        /// <summary>
+        /// Activar hipervelocidad.
+        /// <para>Engage warp drive / hyperdrive.</para>
+        /// </summary>
         ActivarHipervelocidad,
-        /// <summary>Desplegar contramedidas.</summary>
+        /// <summary>
+        /// Desplegar contramedidas.
+        /// <para>Deploy countermeasures (flares/chaff).</para>
+        /// </summary>
         DesplegarContramedidas,
-        /// <summary>Objetivo enemigo más cercano.</summary>
+        /// <summary>
+        /// Objetivo enemigo más cercano.
+        /// <para>Target nearest enemy.</para>
+        /// </summary>
         ObjetivoEnemigoCercano,
-        /// <summary>Ciclar objetivos.</summary>
+        /// <summary>
+        /// Ciclar objetivos.
+        /// <para>Cycle hostile targets.</para>
+        /// </summary>
         CiclarObjetivos,
-        /// <summary>Ciclar subsistemas.</summary>
+        /// <summary>
+        /// Ciclar subsistemas.
+        /// <para>Cycle sub-systems targeting (engines, weapons).</para>
+        /// </summary>
         CiclarSubsistemas,
 
         // --- Multijugador y Social ---
-        /// <summary>Pulsar para hablar.</summary>
+        /// <summary>
+        /// Pulsar para hablar.
+        /// <para>Push to talk.</para>
+        /// </summary>
         PulsarParaHablar,
-        /// <summary>Abrir chat.</summary>
+        /// <summary>
+        /// Abrir chat.
+        /// <para>Open Text Chat.</para>
+        /// </summary>
         AbrirChat,
-        /// <summary>Mostrar puntuaciones.</summary>
+        /// <summary>
+        /// Mostrar puntuaciones.
+        /// <para>Show Scoreboard.</para>
+        /// </summary>
         MostrarPuntuaciones,
-        /// <summary>Marcar ubicación (Ping).</summary>
+        /// <summary>
+        /// Marcar ubicación (Ping).
+        /// <para>Mark/Ping location contextually.</para>
+        /// </summary>
         MarcarUbicacion,
-        /// <summary>Marcar enemigo.</summary>
+        /// <summary>
+        /// Marcar enemigo.
+        /// <para>Mark/Ping enemy.</para>
+        /// </summary>
         MarcarEnemigo,
-        /// <summary>Emote: Saludar.</summary>
+        /// <summary>
+        /// Emote: Saludar.
+        /// <para>Emote: Wave.</para>
+        /// </summary>
         GestoSaludar,
-        /// <summary>Emote: Bailar.</summary>
+        /// <summary>
+        /// Emote: Bailar.
+        /// <para>Emote: Dance.</para>
+        /// </summary>
         GestoBailar,
-        /// <summary>Emote: Burlarse.</summary>
+        /// <summary>
+        /// Emote: Burlarse.
+        /// <para>Emote: Taunt.</para>
+        /// </summary>
         GestoBurlarse,
-        /// <summary>Votar Sí.</summary>
+        /// <summary>
+        /// Votar Sí.
+        /// <para>Vote Yes / Agree.</para>
+        /// </summary>
         VotarSi,
-        /// <summary>Votar No.</summary>
+        /// <summary>
+        /// Votar No.
+        /// <para>Vote No / Disagree.</para>
+        /// </summary>
         VotarNo,
-        /// <summary>Silenciar todos.</summary>
+        /// <summary>
+        /// Silenciar todos.
+        /// <para>Mute all players.</para>
+        /// </summary>
         SilenciarTodos,
-        /// <summary>Reactivar audio todos.</summary>
+        /// <summary>
+        /// Reactivar audio todos.
+        /// <para>Unmute all players.</para>
+        /// </summary>
         ReactivarAudioTodos,
-        /// <summary>Solicitud de amistad.</summary>
+        /// <summary>
+        /// Solicitud de amistad.
+        /// <para>Send friend request to target.</para>
+        /// </summary>
         SolicitudAmistad,
-        /// <summary>Bloquear jugador.</summary>
+        /// <summary>
+        /// Bloquear jugador.
+        /// <para>Block target player.</para>
+        /// </summary>
         BloquearJugador,
-        /// <summary>Reportar jugador.</summary>
+        /// <summary>
+        /// Reportar jugador.
+        /// <para>Report player behavior.</para>
+        /// </summary>
         ReportarJugador,
-        /// <summary>Modo Streamer.</summary>
+        /// <summary>
+        /// Modo Streamer.
+        /// <para>Toggle Streamer Mode (Hide names).</para>
+        /// </summary>
         ModoStreamer,
-        /// <summary>Menú de clan.</summary>
+        /// <summary>
+        /// Menú de clan.
+        /// <para>Open Guild/Clan menu.</para>
+        /// </summary>
         MenuClan,
 
         // --- Comandos de Escuadrón ---
-        /// <summary>Escuadrón: Seguir.</summary>
+        /// <summary>
+        /// Escuadrón: Seguir.
+        /// <para>Command squad: Follow me.</para>
+        /// </summary>
         EscuadronSeguir,
-        /// <summary>Escuadrón: Alto el fuego.</summary>
+        /// <summary>
+        /// Escuadrón: Alto el fuego.
+        /// <para>Command squad: Hold fire.</para>
+        /// </summary>
         EscuadronAltoElFuego,
-        /// <summary>Escuadrón: Fuego a discreción.</summary>
+        /// <summary>
+        /// Escuadrón: Fuego a discreción.
+        /// <para>Command squad: Open fire.</para>
+        /// </summary>
         EscuadronFuegoLibre,
-        /// <summary>Escuadrón: Ir a posición.</summary>
+        /// <summary>
+        /// Escuadrón: Ir a posición.
+        /// <para>Command squad: Go to point.</para>
+        /// </summary>
         EscuadronIrA,
-        /// <summary>Escuadrón: Reagruparse.</summary>
+        /// <summary>
+        /// Escuadrón: Reagruparse.
+        /// <para>Command squad: Regroup.</para>
+        /// </summary>
         EscuadronReagruparse,
-        /// <summary>Escuadrón: Flanquear izquierda.</summary>
+        /// <summary>
+        /// Escuadrón: Flanquear izquierda.
+        /// <para>Command squad: Flank left.</para>
+        /// </summary>
         EscuadronFlanquearIzq,
-        /// <summary>Escuadrón: Flanquear derecha.</summary>
+        /// <summary>
+        /// Escuadrón: Flanquear derecha.
+        /// <para>Command squad: Flank right.</para>
+        /// </summary>
         EscuadronFlanquearDer,
-        /// <summary>Escuadrón: Cubrirse.</summary>
+        /// <summary>
+        /// Escuadrón: Cubrirse.
+        /// <para>Command squad: Take cover.</para>
+        /// </summary>
         EscuadronCubrirse,
-        /// <summary>Compañero: Habilidad especial.</summary>
+        /// <summary>
+        /// Compañero: Habilidad especial.
+        /// <para>Command companion: Use special ability.</para>
+        /// </summary>
         CompaneroHabilidadEspecial,
-        /// <summary>Cambiar personaje siguiente.</summary>
+        /// <summary>
+        /// Cambiar personaje siguiente.
+        /// <para>Swap control to next character.</para>
+        /// </summary>
         CambiarPersonajeSiguiente,
-        /// <summary>Cambiar personaje anterior.</summary>
+        /// <summary>
+        /// Cambiar personaje anterior.
+        /// <para>Swap control to previous character.</para>
+        /// </summary>
         CambiarPersonajeAnterior,
 
         // --- Estrategia y Construcción ---
-        /// <summary>Rotar objeto izquierda.</summary>
+        /// <summary>
+        /// Rotar objeto izquierda.
+        /// <para>Rotate placement object left.</para>
+        /// </summary>
         RotarObjetoIzquierda,
-        /// <summary>Rotar objeto derecha.</summary>
+        /// <summary>
+        /// Rotar objeto derecha.
+        /// <para>Rotate placement object right.</para>
+        /// </summary>
         RotarObjetoDerecha,
-        /// <summary>Confirmar construcción.</summary>
+        /// <summary>
+        /// Confirmar construcción.
+        /// <para>Confirm placement / build.</para>
+        /// </summary>
         ConfirmarConstruccion,
-        /// <summary>Cancelar construcción.</summary>
+        /// <summary>
+        /// Cancelar construcción.
+        /// <para>Cancel placement.</para>
+        /// </summary>
         CancelarConstruccion,
-        /// <summary>Seleccionar todas las unidades.</summary>
+        /// <summary>
+        /// Seleccionar todas las unidades.
+        /// <para>Select all units.</para>
+        /// </summary>
         SeleccionarTodo,
-        /// <summary>Comando: Mover.</summary>
+        /// <summary>
+        /// Comando: Mover.
+        /// <para>Command: Move to.</para>
+        /// </summary>
         ComandoMover,
-        /// <summary>Comando: Atacar.</summary>
+        /// <summary>
+        /// Comando: Atacar.
+        /// <para>Command: Attack target.</para>
+        /// </summary>
         ComandoAtacar,
-        /// <summary>Comando: Mantener posición.</summary>
+        /// <summary>
+        /// Comando: Mantener posición.
+        /// <para>Command: Hold position.</para>
+        /// </summary>
         ComandoMantener,
 
         // --- Modo Editor / Creativo ---
-        /// <summary>Alternar Modo Foto.</summary>
+        /// <summary>
+        /// Alternar Modo Foto.
+        /// <para>Toggle Photo Mode.</para>
+        /// </summary>
         ModoFoto,
-        /// <summary>Aumentar campo de visión.</summary>
+        /// <summary>
+        /// Aumentar campo de visión.
+        /// <para>Increase Field of View (FOV).</para>
+        /// </summary>
         AumentarFOV,
-        /// <summary>Disminuir campo de visión.</summary>
+        /// <summary>
+        /// Disminuir campo de visión.
+        /// <para>Decrease Field of View (FOV).</para>
+        /// </summary>
         DisminuirFOV,
-        /// <summary>Aumentar profundidad de campo.</summary>
+        /// <summary>
+        /// Aumentar profundidad de campo.
+        /// <para>Increase Depth of Field (DOF).</para>
+        /// </summary>
         AumentarDOF,
-        /// <summary>Disminuir profundidad de campo.</summary>
+        /// <summary>
+        /// Disminuir profundidad de campo.
+        /// <para>Decrease Depth of Field (DOF).</para>
+        /// </summary>
         DisminuirDOF,
-        /// <summary>Alternar ajuste a rejilla.</summary>
+        /// <summary>
+        /// Alternar ajuste a rejilla.
+        /// <para>Toggle Grid Snapping.</para>
+        /// </summary>
         AjusteRejilla,
-        /// <summary>Duplicar objeto.</summary>
+        /// <summary>
+        /// Duplicar objeto.
+        /// <para>Duplicate selected object.</para>
+        /// </summary>
         DuplicarObjeto,
-        /// <summary>Eliminar objeto.</summary>
+        /// <summary>
+        /// Eliminar objeto.
+        /// <para>Delete selected object.</para>
+        /// </summary>
         EliminarObjeto,
-        /// <summary>Deshacer acción.</summary>
+        /// <summary>
+        /// Deshacer acción.
+        /// <para>Undo last action (Editor).</para>
+        /// </summary>
         Deshacer,
-        /// <summary>Rehacer acción.</summary>
+        /// <summary>
+        /// Rehacer acción.
+        /// <para>Redo last action (Editor).</para>
+        /// </summary>
         Rehacer,
-        /// <summary>Guardar plano.</summary>
+        /// <summary>
+        /// Guardar plano.
+        /// <para>Save schematic/blueprint.</para>
+        /// </summary>
         GuardarPlano,
-        /// <summary>Cargar plano.</summary>
+        /// <summary>
+        /// Cargar plano.
+        /// <para>Load schematic/blueprint.</para>
+        /// </summary>
         CargarPlano,
 
         // --- Realidad Virtual (VR) ---
-        /// <summary>Recentrar VR.</summary>
+        /// <summary>
+        /// Recentrar VR.
+        /// <para>Recenter VR View.</para>
+        /// </summary>
         VRRecentrar,
-        /// <summary>Teletransporte VR.</summary>
+        /// <summary>
+        /// Teletransporte VR.
+        /// <para>Teleport (VR Locomotion).</para>
+        /// </summary>
         VRTeletransporte,
-        /// <summary>Agarre mano izquierda.</summary>
+        /// <summary>
+        /// Agarre mano izquierda.
+        /// <para>Grip Left Hand.</para>
+        /// </summary>
         VRAgarreIzquierda,
-        /// <summary>Agarre mano derecha.</summary>
+        /// <summary>
+        /// Agarre mano derecha.
+        /// <para>Grip Right Hand.</para>
+        /// </summary>
         VRAgarreDerecha,
-        /// <summary>Gatillo mano izquierda.</summary>
+        /// <summary>
+        /// Gatillo mano izquierda.
+        /// <para>Trigger Left Hand.</para>
+        /// </summary>
         VRGatilloIzquierda,
-        /// <summary>Gatillo mano derecha.</summary>
+        /// <summary>
+        /// Gatillo mano derecha.
+        /// <para>Trigger Right Hand.</para>
+        /// </summary>
         VRGatilloDerecha,
-        /// <summary>Giro rápido izquierda.</summary>
+        /// <summary>
+        /// Giro rápido izquierda.
+        /// <para>Snap Turn Left (VR).</para>
+        /// </summary>
         VRGiroRapidoIzquierda,
-        /// <summary>Giro rápido derecha.</summary>
+        /// <summary>
+        /// Giro rápido derecha.
+        /// <para>Snap Turn Right (VR).</para>
+        /// </summary>
         VRGiroRapidoDerecha,
 
         // --- Depuración y Desarrollador ---
-        /// <summary>Modo Dios.</summary>
+        /// <summary>
+        /// Modo Dios.
+        /// <para>Toggle God Mode.</para>
+        /// </summary>
         ModoDios,
-        /// <summary>Modo NoClip (Atravesar).</summary>
+        /// <summary>
+        /// Modo NoClip (Atravesar).
+        /// <para>Toggle NoClip mode.</para>
+        /// </summary>
         ModoNoClip,
-        /// <summary>Ralentizar tiempo.</summary>
+        /// <summary>
+        /// Ralentizar tiempo.
+        /// <para>Slow down game time.</para>
+        /// </summary>
         TiempoLento,
-        /// <summary>Acelerar tiempo.</summary>
+        /// <summary>
+        /// Acelerar tiempo.
+        /// <para>Speed up game time.</para>
+        /// </summary>
         TiempoRapido,
 
         // --- Varios ---
-        /// <summary>Lanzar caña de pescar.</summary>
+        /// <summary>
+        /// Lanzar caña de pescar.
+        /// <para>Cast fishing line.</para>
+        /// </summary>
         PescaLanzar,
-        /// <summary>Recoger caña de pescar.</summary>
+        /// <summary>
+        /// Recoger caña de pescar.
+        /// <para>Reel in fishing line.</para>
+        /// </summary>
         PescaRecoger,
-        /// <summary>Tocar nota 1.</summary>
+        /// <summary>
+        /// Tocar nota 1.
+        /// <para>Play instrument note 1.</para>
+        /// </summary>
         TocarNota1,
-        /// <summary>Tocar nota 2.</summary>
+        /// <summary>
+        /// Tocar nota 2.
+        /// <para>Play instrument note 2.</para>
+        /// </summary>
         TocarNota2,
-        /// <summary>Tocar nota 3.</summary>
+        /// <summary>
+        /// Tocar nota 3.
+        /// <para>Play instrument note 3.</para>
+        /// </summary>
         TocarNota3,
-        /// <summary>Poner marcador mapa.</summary>
+        /// <summary>
+        /// Poner marcador mapa.
+        /// <para>Place marker on map.</para>
+        /// </summary>
         MapaPonerMarcador,
-        /// <summary>Quitar marcador mapa.</summary>
+        /// <summary>
+        /// Quitar marcador mapa.
+        /// <para>Remove marker from map.</para>
+        /// </summary>
         MapaQuitarMarcador,
-        /// <summary>Radio siguiente.</summary>
+        /// <summary>
+        /// Radio siguiente.
+        /// <para>Change radio station next.</para>
+        /// </summary>
         RadioSiguiente,
-        /// <summary>Radio anterior.</summary>
+        /// <summary>
+        /// Radio anterior.
+        /// <para>Change radio station previous.</para>
+        /// </summary>
         RadioAnterior,
-        /// <summary>Radio encender/apagar.</summary>
+        /// <summary>
+        /// Radio encender/apagar.
+        /// <para>Turn radio on/off.</para>
+        /// </summary>
         RadioInterruptor
     }
 }

@@ -10,8 +10,8 @@ using SandBoxGame.Core;
 namespace SandBoxGame.Android
 {
     /// <summary>
-    /// The main activity for the Android application. It initializes the game instance,
-    /// sets up the rendering view, and starts the game loop.
+    /// Actividad principal para la aplicación Android. Inicializa el juego, configura la vista y arranca el bucle.
+    /// <para>The main activity for the Android application. It initializes the game, sets up the view, and starts the loop.</para>
     /// </summary>
     /// <remarks>
     /// This class is responsible for managing the Android activity lifecycle and integrating
