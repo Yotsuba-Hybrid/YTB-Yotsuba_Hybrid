@@ -6,41 +6,38 @@ using YotsubaEngine.Core.YotsubaGame;
 namespace YotsubaEngine.Core.System.Contract
 {
     /// <summary>
-    /// Defines a common interface for engine systems.
     /// Define una interfaz común para los sistemas del motor.
+    /// <para>Defines a common interface for engine systems.</para>
     /// </summary>
     public interface ISystem
     {
         /// <summary>
-        /// Initializes the system with required entity references.
-        /// Metodo para inicializar el sistema con referencias al EventManager y EntityManager.
+        /// Inicializa el sistema con las referencias de entidades necesarias.
+        /// <para>Initializes the system with required entity references.</para>
         /// </summary>
-        /// <param name="entities">Entity manager. Administrador de entidades.</param>
+        /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
         void InitializeSystem(EntityManager @entities);
 
         /// <summary>
-        /// Updates the system each frame.
-        /// Implementacion de la interfaz ISystem
+        /// Actualiza el sistema en cada frame.
+        /// <para>Updates the system each frame.</para>
         /// </summary>
-        /// <param name="gameTime">Game time. Tiempo de juego.</param>
+        /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
         void UpdateSystem(GameTime @gameTime);
 
         /// <summary>
-        /// Runs during a shared loop across all entities for performance.
-        /// Metodo que se ejecuta en un bucle compartido que recorre todas las entidades 
-        /// y de los que todos los componentes de benefician para mejorar el performance
+        /// Se ejecuta en un bucle compartido que recorre todas las entidades para mejorar el rendimiento.
+        /// <para>Runs during a shared loop across all entities for performance.</para>
         /// </summary>
-        /// <param name="Entidad">Entity instance. Instancia de entidad.</param>
-        /// <param name="time">Game time. Tiempo de juego.</param>
+        /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
+        /// <param name="time">Tiempo de juego. <para>Game time.</para></param>
         void SharedEntityForEachUpdate(Yotsuba @Entidad, GameTime time);
 
         /// <summary>
-        /// Runs once per entity during initialization.
-        /// Metodo que se ejecuta en un bucle compartido que recorre todas las entidades 
-        /// y de los que todos los componentes de benefician para mejorar el performance.
-        /// Solo se ejecuta 1 vez por entidad, al inicio.
+        /// Se ejecuta una vez por entidad durante la inicialización.
+        /// <para>Runs once per entity during initialization.</para>
         /// </summary>
-        /// <param name="Entidad">Entity instance. Instancia de entidad.</param>
+        /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
         void SharedEntityInitialize(Yotsuba @Entidad);
 
     }

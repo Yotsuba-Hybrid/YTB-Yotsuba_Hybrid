@@ -13,12 +13,20 @@ using static YotsubaEngine.Exceptions.GameWontRun;
 
 namespace YotsubaEngine.Core.Component.C_AGNOSTIC
 {
+    /// <summary>
+    /// Cámara base que define matrices de vista y proyección para renderizado.
+    /// <para>Base camera that defines view and projection matrices for rendering.</para>
+    /// </summary>
     public abstract class Camera
     {
         /// <summary>
         /// Constructor de la cámara. Inicializa posición, ángulo de visión y planos de recorte.
         /// <para>Camera constructor. Initializes position, view angle, and clipping planes.</para>
         /// </summary>
+        /// <param name="cameraPosition">Posición inicial de la cámara.<para>Initial camera position.</para></param>
+        /// <param name="angleView">Ángulo de visión en grados.<para>Field of view angle in degrees.</para></param>
+        /// <param name="near">Plano de recorte cercano.<para>Near clipping plane.</para></param>
+        /// <param name="far">Plano de recorte lejano.<para>Far clipping plane.</para></param>
         public Camera(Vector3 cameraPosition, float angleView, float near, float far)
         {
             SetRenderPoint(cameraPosition, Vector3.One);
@@ -64,7 +72,7 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         /// Establece la matriz de vista de la cámara.
         /// <para>Sets the camera view matrix.</para>
         /// </summary>
-        /// <param name="renderPoint">Matriz de vista / View matrix.</param>
+        /// <param name="renderPoint">Matriz de vista.<para>View matrix.</para></param>
         private void SetRenderPoint(Matrix renderPoint)
         {
             RenderPoint = renderPoint;
@@ -74,8 +82,8 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         /// Establece la posición y el objetivo de la cámara en 3D. El vector "up" es Vector3.Up por defecto.
         /// <para>Sets the camera position and target in 3D. The "up" vector is Vector3.Up by default.</para>
         /// </summary>
-        /// <param name="cameraPosition">Posición de la cámara / Camera position.</param>
-        /// <param name="targetPosition">Punto objetivo / Target position.</param>
+        /// <param name="cameraPosition">Posición de la cámara.<para>Camera position.</para></param>
+        /// <param name="targetPosition">Punto objetivo.<para>Target position.</para></param>
         public void SetRenderPoint(Vector3 cameraPosition, Vector3 targetPosition)
         {
             CameraPosition = cameraPosition;
@@ -86,9 +94,9 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         /// Establece la posición, objetivo y vector "up" de la cámara en 3D.
         /// <para>Sets the camera position, target, and "up" vector in 3D.</para>
         /// </summary>
-        /// <param name="cameraPosition">Posición de la cámara / Camera position.</param>
-        /// <param name="targetPosition">Punto objetivo / Target position.</param>
-        /// <param name="up">Vector "arriba" / Up vector.</param>
+        /// <param name="cameraPosition">Posición de la cámara.<para>Camera position.</para></param>
+        /// <param name="targetPosition">Punto objetivo.<para>Target position.</para></param>
+        /// <param name="up">Vector "arriba".<para>Up vector.</para></param>
         public void SetRenderPoint(Vector3 cameraPosition, Vector3 targetPosition, Vector3 up)
         {
             CameraPosition = cameraPosition;
@@ -100,7 +108,7 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         /// <para>Sets the field of view angle in radians.</para>
         /// </summary>
         /// <remarks>Utiliza este método si ya dispones del valor del ángulo en radianes y deseas aplicarlo directamente a la cámara. / Use this method if you already have the angle in radians and want to apply it directly.</remarks>
-        /// <param name="angleRadians">Ángulo a establecer, en radianes. / Angle to set, in radians.</param>
+        /// <param name="angleRadians">Ángulo a establecer, en radianes.<para>Angle to set, in radians.</para></param>
         public void SetAngleViewRadians(float angleRadians)
         {
             AngleView = angleRadians;
@@ -111,7 +119,7 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         /// <para>Sets the field of view angle in degrees.</para>
         /// </summary>
         /// <remarks>El ángulo especificado se convierte de grados a radianes antes de aplicarse. Utiliza este método para actualizar la orientación de la vista a partir de un valor en grados. / The specified angle is converted from degrees to radians before being applied. Use this method to update the view orientation based on degree input.</remarks>
-        /// <param name="angleGrades">Ángulo a establecer, en grados. Normalmente debe estar entre 0 y 360. / Angle to set, in degrees. Typically must be between 0 and 360.</param>
+        /// <param name="angleGrades">Ángulo a establecer, en grados. Normalmente debe estar entre 0 y 360.<para>Angle to set, in degrees. Typically must be between 0 and 360.</para></param>
         public void SetAngleView(float angleGrades)
         {
             SetAngleViewRadians(MathHelper.ToRadians(angleGrades));
@@ -121,8 +129,8 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         /// Establece los planos de recorte cercano y lejano para el renderizado basado en distancia.
         /// <para>Sets the near and far clipping planes for distance-based rendering.</para>
         /// </summary>
-        /// <param name="near">Distancia al plano de recorte cercano. Debe ser mayor que cero y menor que el valor de <paramref name="far"/>. / The distance to the near clipping plane. Must be greater than zero and less than the value of <paramref name="far"/>.</param>
-        /// <param name="far">Distancia al plano de recorte lejano. Debe ser mayor que el valor de <paramref name="near"/>. / The distance to the far clipping plane. Must be greater than the value of <paramref name="near"/>.</param>
+        /// <param name="near">Distancia al plano de recorte cercano. Debe ser mayor que cero y menor que el valor de <paramref name="far"/>.<para>The distance to the near clipping plane. Must be greater than zero and less than the value of <paramref name="far"/>.</para></param>
+        /// <param name="far">Distancia al plano de recorte lejano. Debe ser mayor que el valor de <paramref name="near"/>.<para>The distance to the far clipping plane. Must be greater than the value of <paramref name="near"/>.</para></param>
         public void SetDistanceRender(float near, float far)
         {
             // Validar que AngleView sea válido antes de crear la proyección
@@ -140,7 +148,7 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         /// Actualiza la posición de la cámara para que mire hacia un nuevo objetivo.
         /// <para>Updates the camera position to look at a new target.</para>
         /// </summary>
-        /// <param name="target">Nuevo objetivo / New target.</param>
+        /// <param name="target">Nuevo objetivo.<para>New target.</para></param>
         public void Update(Vector3 target)
         {
             SetRenderPoint(CameraPosition, target);
@@ -150,8 +158,8 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         /// Invierte una matriz dada.
         /// <para>Inverts a given matrix.</para>
         /// </summary>
-        /// <param name="matrix">Matriz a invertir / Matrix to invert.</param>
-        /// <returns>Matriz invertida / Inverted matrix.</returns>
+        /// <param name="matrix">Matriz a invertir.<para>Matrix to invert.</para></param>
+        /// <returns>Matriz invertida.<para>Inverted matrix.</para></returns>
         protected Matrix Invert(Matrix matrix)
         {
             return Matrix.Invert(matrix);
@@ -206,6 +214,11 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         /// Constructor de CameraComponent3D. Inicializa la cámara y la referencia al EntityManager.
         /// <para>CameraComponent3D constructor. Initializes the camera and the EntityManager reference.</para>
         /// </summary>
+        /// <param name="entityManager">Administrador de entidades a usar.<para>Entity manager to use.</para></param>
+        /// <param name="cameraPosition">Posición inicial de la cámara.<para>Initial camera position.</para></param>
+        /// <param name="angleView">Ángulo de visión en grados.<para>Field of view angle in degrees.</para></param>
+        /// <param name="nearRender">Plano de recorte cercano.<para>Near clipping plane.</para></param>
+        /// <param name="farRender">Plano de recorte lejano.<para>Far clipping plane.</para></param>
         public CameraComponent3D(EntityManager entityManager, Vector3 cameraPosition, float angleView, float nearRender, float farRender) 
             : base(cameraPosition, angleView, nearRender, farRender)
         {
@@ -266,8 +279,8 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         /// Establece los ángulos de órbita de la cámara en radianes.
         /// <para>Sets the camera orbit angles in radians.</para>
         /// </summary>
-        /// <param name="yawRadians">Rotación horizontal en radianes. / Horizontal rotation in radians.</param>
-        /// <param name="pitchRadians">Rotación vertical en radianes. / Vertical rotation in radians.</param>
+        /// <param name="yawRadians">Rotación horizontal en radianes.<para>Horizontal rotation in radians.</para></param>
+        /// <param name="pitchRadians">Rotación vertical en radianes.<para>Vertical rotation in radians.</para></param>
         public void SetOrbitAngles(float yawRadians, float pitchRadians)
         {
             OrbitYaw = yawRadians;
@@ -279,8 +292,8 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         /// Incrementa los ángulos de órbita de la cámara en radianes.
         /// <para>Increments the camera orbit angles in radians.</para>
         /// </summary>
-        /// <param name="yawDeltaRadians">Delta de rotación horizontal. / Horizontal rotation delta.</param>
-        /// <param name="pitchDeltaRadians">Delta de rotación vertical. / Vertical rotation delta.</param>
+        /// <param name="yawDeltaRadians">Delta de rotación horizontal.<para>Horizontal rotation delta.</para></param>
+        /// <param name="pitchDeltaRadians">Delta de rotación vertical.<para>Vertical rotation delta.</para></param>
         public void AddOrbitAngles(float yawDeltaRadians, float pitchDeltaRadians)
         {
             SetOrbitAngles(OrbitYaw + yawDeltaRadians, OrbitPitch + pitchDeltaRadians);
@@ -290,6 +303,7 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         /// Obtiene el offset orbitado según los ángulos actuales.
         /// <para>Gets the orbited offset based on the current angles.</para>
         /// </summary>
+        /// <returns>Offset calculado para la órbita.<para>Calculated orbit offset.</para></returns>
         public Vector3 GetOrbitOffset()
         {
             var rotation = Matrix.CreateFromYawPitchRoll(OrbitYaw, OrbitPitch, 0f);
@@ -300,8 +314,9 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         /// Ayudante para dibujar un modelo 3D con la cámara actual.
         /// <para>Helper to draw a 3D model with the current camera.</para>
         /// </summary>
-        /// <param name="model3D">Modelo 3D a dibujar / 3D model to draw.</param>
-        /// <param name="transformComponent">Componente de transformación / Transform component.</param>
+        /// <param name="model3D">Modelo 3D a dibujar.<para>3D model to draw.</para></param>
+        /// <param name="transformComponent">Componente de transformación.<para>Transform component.</para></param>
+        /// <param name="shaderComponent">Componente de shader opcional.<para>Optional shader component.</para></param>
         public void DrawModel(ModelComponent3D model3D, ref TransformComponent transformComponent, ShaderComponent? shaderComponent = null)
         {
             var transforms = new Matrix[model3D.Model.Bones.Count];
@@ -357,10 +372,10 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         /// Construye una matriz de vista 2D con las transformaciones de la cámara.
         /// <para>Builds a 2D view matrix with camera transforms.</para>
         /// </summary>
-        /// <param name="screenCenter">Centro de la pantalla / Screen center.</param>
-        /// <param name="zoom">Nivel de zoom / Zoom level.</param>
-        /// <param name="rotation">Rotación en radianes / Rotation in radians.</param>
-        /// <returns>La matriz de vista / The view matrix.</returns>
+        /// <param name="screenCenter">Centro de la pantalla.<para>Screen center.</para></param>
+        /// <param name="zoom">Nivel de zoom.<para>Zoom level.</para></param>
+        /// <param name="rotation">Rotación en radianes.<para>Rotation in radians.</para></param>
+        /// <returns>La matriz de vista.<para>The view matrix.</para></returns>
         public Matrix Get2DViewMatrix(Vector2 screenCenter, float zoom = 1f, float rotation = 0f)
         {
             return
@@ -370,6 +385,15 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
           Matrix.CreateTranslation(new Vector3(screenCenter, 0f));
         }
 
+        /// <summary>
+        /// Construye una matriz de vista 2D con posición y transformaciones personalizadas.
+        /// <para>Builds a 2D view matrix with a custom position and transforms.</para>
+        /// </summary>
+        /// <param name="position">Posición de la cámara 2D.<para>2D camera position.</para></param>
+        /// <param name="screenCenter">Centro de la pantalla.<para>Screen center.</para></param>
+        /// <param name="zoom">Nivel de zoom.<para>Zoom level.</para></param>
+        /// <param name="rotation">Rotación en radianes.<para>Rotation in radians.</para></param>
+        /// <returns>La matriz de vista.<para>The view matrix.</para></returns>
         public Matrix Get2DViewMatrix(Vector2 position, Vector2 screenCenter, float zoom = 1f, float rotation = 0f)
         {
             return

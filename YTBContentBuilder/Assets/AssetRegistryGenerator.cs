@@ -13,7 +13,7 @@ namespace YotsubaEngine.YTBContentBuilder.Assets
 
         public static void GenerateRegistry(string sourcePath, string outputPath)
         {
-            Console.WriteLine($"[AssetRegistry] Scanning for assets in: {sourcePath}");
+            //Console.WriteLine($"[AssetRegistry] Scanning for assets in: {sourcePath}");
 
             var images = ScanFiles(sourcePath, ImageExtensions);
             var fonts = ScanFiles(sourcePath, FontExtensions);
@@ -50,7 +50,7 @@ namespace YotsubaEngine.YTBContentBuilder.Assets
                 Directory.CreateDirectory(dir);
 
             File.WriteAllText(outputPath + ".cs", sb.ToString());
-            Console.WriteLine($"[AssetRegistry] Generated {outputPath}.cs");
+            //Console.WriteLine($"[AssetRegistry] Generated {outputPath}.cs");
         }
 
         private static List<string> ScanFiles(string root, string[] extensions)

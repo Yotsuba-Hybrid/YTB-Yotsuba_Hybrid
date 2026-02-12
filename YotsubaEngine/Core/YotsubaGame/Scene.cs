@@ -15,7 +15,8 @@ using YotsubaEngine.YTB_Toolkit;
 namespace YotsubaEngine.Core.YotsubaGame
 {
     /// <summary>
-    /// La representación de una escena del juego
+    /// La representación de una escena del juego.
+    /// <para>The representation of a game scene.</para>
     /// </summary>
     public class Scene
     {
@@ -23,20 +24,24 @@ namespace YotsubaEngine.Core.YotsubaGame
         bool isWindows = OperatingSystem.IsWindows();
 
         /// <summary>
-        /// Nombre de la escena
+        /// Nombre de la escena.
+        /// <para>Scene name.</para>
         /// </summary>
         public string SceneName { get; set; }
         /// <summary>
-        /// Una instancia del administrador de entidades
+        /// Una instancia del administrador de entidades.
+        /// <para>An instance of the entity manager.</para>
         /// </summary>
         public EntityManager EntityManager { get; set; }
 
         /// <summary>
-        /// Instancia global del WASD CONTROL
+        /// Instancia global del control WASD.
+        /// <para>Global instance of the WASD control.</para>
         /// </summary>
         public static WASDControl ToolkitWASDControl { get; private set; }
         /// <summary>
-        /// La instancia Global del administrador de eventos
+        /// La instancia global del administrador de eventos.
+        /// <para>Global instance of the event manager.</para>
         /// </summary>
         public EventManager EventManager { get; set; }
 
@@ -83,7 +88,8 @@ namespace YotsubaEngine.Core.YotsubaGame
         private InputSystem InputSystem;
 
         /// <summary>
-        /// Sistema que se encarga de manejar los scripts de las entidades
+        /// Sistema que se encarga de manejar los scripts de las entidades.
+        /// <para>System responsible for handling entity scripts.</para>
         /// </summary>
         public ScriptSystem ScriptSystem;
 
@@ -110,9 +116,10 @@ namespace YotsubaEngine.Core.YotsubaGame
         #endregion
 
         /// <summary>
-        /// Constructor que recibe los gráficos para pasárselos al sistema de camara
+        /// Constructor que recibe los gráficos para pasárselos al sistema de cámara.
+        /// <para>Constructor that receives graphics to pass to the camera system.</para>
         /// </summary>
-        /// <param name="_graphics"></param>
+        /// <param name="_graphics">Administrador de gráficos. <para>Graphics device manager.</para></param>
         public Scene(GraphicsDeviceManager _graphics)
         {
             EventManager = EventManager.Instance;
@@ -137,8 +144,10 @@ namespace YotsubaEngine.Core.YotsubaGame
 
 
         /// <summary>
-        /// Primer método que se ejecuta, y prepara todos los sistemas
+        /// Primer método que se ejecuta y prepara todos los sistemas.
+        /// <para>First method executed that prepares all systems.</para>
         /// </summary>
+        /// <param name="content">Administrador de contenido. <para>Content manager.</para></param>
         public void Initialize(ContentManager content)
         {
             ToolkitWASDControl = new(EntityManager);
@@ -181,9 +190,10 @@ namespace YotsubaEngine.Core.YotsubaGame
 
 
         /// <summary>
-        /// Método que se ejecuta en cada frame para actualizar el estado del juego
+        /// Método que se ejecuta en cada frame para actualizar el estado del juego.
+        /// <para>Method executed each frame to update the game state.</para>
         /// </summary>
-        /// <param name="gameTime"></param>
+        /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
         public void Update(GameTime gameTime)
         {
 			InputSystem.UpdateSystem(gameTime);
@@ -220,8 +230,11 @@ namespace YotsubaEngine.Core.YotsubaGame
         }
 
         /// <summary>
-        /// Método que se ejecuta en cada frame para dibujar la UI
+        /// Método que se ejecuta en cada frame para dibujar la escena y la UI.
+        /// <para>Method executed each frame to draw the scene and UI.</para>
         /// </summary>
+        /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
+        /// <param name="_spriteBatch">SpriteBatch compartido. <para>Shared sprite batch.</para></param>
         public void Draw(GameTime gameTime, SpriteBatch _spriteBatch)
         {
 

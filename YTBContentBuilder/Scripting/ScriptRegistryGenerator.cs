@@ -12,7 +12,7 @@ namespace YotsubaEngine.YTBContentBuilder.Scripting
     {
         public static void GenerateRegistry(string sourcePath, string outputPath)
         {
-            Console.WriteLine($"[ScriptRegistry] Buscando scripts en: {sourcePath}");
+            //Console.WriteLine($"[ScriptRegistry] Buscando scripts en: {sourcePath}");
             var files = Directory.GetFiles(sourcePath, "*.cs", SearchOption.AllDirectories);
             var scriptsFound = new List<(string ClassName, string FullName)>();
 
@@ -40,7 +40,7 @@ namespace YotsubaEngine.YTBContentBuilder.Scripting
                         string fullName = $"{ns}.{className}";
 
                         scriptsFound.Add((className, fullName));
-                        Console.WriteLine($"[ScriptRegistry] Script encontrado: {className}");
+                        //Console.WriteLine($"[ScriptRegistry] Script encontrado: {className}");
                     }
                 }
             }
@@ -91,7 +91,7 @@ namespace YotsubaEngine.YTBContentBuilder.Scripting
             sb.AppendLine("}");
 
             File.WriteAllText(outputPath + ".cs", sb.ToString());
-            Console.WriteLine($"[ScriptRegistry] Registro generado en: {outputPath}");
+            //Console.WriteLine($"[ScriptRegistry] Registro generado en: {outputPath}");
         }
     }
 }

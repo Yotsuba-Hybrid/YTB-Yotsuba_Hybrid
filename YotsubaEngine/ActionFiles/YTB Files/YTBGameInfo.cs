@@ -5,116 +5,116 @@ using System.Text.Json.Serialization;
 namespace YotsubaEngine.ActionFiles.YTB_Files
 {
     /// <summary>
-    /// Represents the game file model containing scenes and entities.
-    /// Modelo del archivo del juego. Alli guarda el engine las escenas y entidades del juego.
+    /// Modelo del archivo del juego que contiene escenas y entidades.
+    /// <para>Represents the game file model containing scenes and entities.</para>
     /// </summary>
     internal class YTBGameInfo
     {
         [JsonPropertyName("scene")]
         /// <summary>
-        /// Gets or sets the list of scenes.
         /// Obtiene o establece la lista de escenas.
+        /// <para>Gets or sets the list of scenes.</para>
         /// </summary>
         public List<YTBScene> Scene { get; set; }
 
         [JsonIgnore]
         /// <summary>
-        /// Gets the number of scenes.
         /// Obtiene la cantidad de escenas.
+        /// <para>Gets the number of scenes.</para>
         /// </summary>
         public int ScenesCount => Scene.Count;
 
     }
 
     /// <summary>
-    /// Represents a scene entry in the game file.
     /// Representa una escena en el archivo del juego.
+    /// <para>Represents a scene entry in the game file.</para>
     /// </summary>
     internal class YTBScene
     {
         [JsonPropertyName("name")]
         /// <summary>
-        /// Gets or sets the scene name.
         /// Obtiene o establece el nombre de la escena.
+        /// <para>Gets or sets the scene name.</para>
         /// </summary>
         public string Name { get; set; }
 
         [JsonPropertyName("entities")]
         /// <summary>
-        /// Gets or sets the list of entities in the scene.
         /// Obtiene o establece la lista de entidades en la escena.
+        /// <para>Gets or sets the list of entities in the scene.</para>
         /// </summary>
         public List<YTBEntity> Entities { get; set; }
 
         [JsonIgnore]
         /// <summary>
-        /// Gets the number of entities.
         /// Obtiene la cantidad de entidades.
+        /// <para>Gets the number of entities.</para>
         /// </summary>
         public int EntitiesCount => Entities.Count;
     }
 
     /// <summary>
-    /// Represents an entity entry in the game file.
     /// Representa una entidad en el archivo del juego.
+    /// <para>Represents an entity entry in the game file.</para>
     /// </summary>
     internal class YTBEntity
     {
         [JsonPropertyName("name")]
         /// <summary>
-        /// Gets or sets the entity name.
         /// Obtiene o establece el nombre de la entidad.
+        /// <para>Gets or sets the entity name.</para>
         /// </summary>
         public string Name { get; set; }
 
         [JsonPropertyName("components")]
         /// <summary>
-        /// Gets or sets the entity components.
         /// Obtiene o establece los componentes de la entidad.
+        /// <para>Gets or sets the entity components.</para>
         /// </summary>
         public List<YTBComponents> Components { get; set; }
 
         [JsonIgnore]
         /// <summary>
-        /// Gets the number of components.
         /// Obtiene la cantidad de componentes.
+        /// <para>Gets the number of components.</para>
         /// </summary>
         public int ComponentsCount => Components.Count;
     }
 
     /// <summary>
-    /// Represents a component entry within an entity.
     /// Representa un componente dentro de una entidad.
+    /// <para>Represents a component entry within an entity.</para>
     /// </summary>
     public class YTBComponents : IEquatable<YTBComponents>
     {
         [JsonPropertyName("ComponentName")]
         /// <summary>
-        /// Gets or sets the component name.
         /// Obtiene o establece el nombre del componente.
+        /// <para>Gets or sets the component name.</para>
         /// </summary>
         public string ComponentName { get; set; }
 
         [JsonPropertyName("properties")]
         /// <summary>
-        /// Gets or sets the component properties.
         /// Obtiene o establece las propiedades del componente.
+        /// <para>Gets or sets the component properties.</para>
         /// </summary>
         public List<Tuple<string, string>> Propiedades { get; set; }
 
         [JsonIgnore]
         /// <summary>
-        /// Gets the number of properties.
         /// Obtiene la cantidad de propiedades.
+        /// <para>Gets the number of properties.</para>
         /// </summary>
         public int PropiedadesCount => Propiedades.Count;
 
         /// <summary>
-        /// Determines whether another component is equal to this instance.
         /// Determina si otro componente es igual a esta instancia.
+        /// <para>Determines whether another component is equal to this instance.</para>
         /// </summary>
-        /// <param name="other">Other component. Otro componente.</param>
-        /// <returns>True if equal. True si es igual.</returns>
+        /// <param name="other">Otro componente. <para>Other component.</para></param>
+        /// <returns>True si es igual. <para>True if equal.</para></returns>
         public bool Equals(YTBComponents other)
         {
             if (other is null) return false;
@@ -135,18 +135,18 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
         }
 
         /// <summary>
-        /// Determines whether another object is equal to this instance.
         /// Determina si otro objeto es igual a esta instancia.
+        /// <para>Determines whether another object is equal to this instance.</para>
         /// </summary>
-        /// <param name="obj">Object to compare. Objeto a comparar.</param>
-        /// <returns>True if equal. True si es igual.</returns>
+        /// <param name="obj">Objeto a comparar. <para>Object to compare.</para></param>
+        /// <returns>True si es igual. <para>True if equal.</para></returns>
         public override bool Equals(object obj) => Equals(obj as YTBComponents);
 
         /// <summary>
-        /// Returns a hash code for the component.
-        /// Devuelve el código hash del componente.
+        /// Devuelve el codigo hash del componente.
+        /// <para>Returns a hash code for the component.</para>
         /// </summary>
-        /// <returns>Hash code. Código hash.</returns>
+        /// <returns>Codigo hash. <para>Hash code.</para></returns>
         public override int GetHashCode()
         {
             int hash = ComponentName?.GetHashCode() ?? 0;

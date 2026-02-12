@@ -4,20 +4,21 @@
 namespace YotsubaEngine.Core.Component.C_3D
 {
     /// <summary>
-    /// Component that holds a 3D model for rendering.
     /// Componente que contiene un modelo 3D para renderizado.
+    /// <para>Component that holds a 3D model for rendering.</para>
     /// </summary>
+    /// <param name="model">Modelo 3D a renderizar.<para>3D model to render.</para></param>
     public struct ModelComponent3D(Model model)
     {
         /// <summary>
-        /// 3D model asset.
-        /// Modelo 3d
+        /// Modelo 3D.
+        /// <para>3D model asset.</para>
         /// </summary>
         public Model Model { get; set; } = model;
 
         /// <summary>
-        /// Indicates whether the model should be rendered.
-        /// Flag que marca si el modelo se renderizara o no
+        /// Indica si el modelo debe renderizarse.
+        /// <para>Indicates whether the model should be rendered.</para>
         /// </summary>
         public bool IsVisible { get; set; } = true;
 

@@ -9,9 +9,8 @@ using YotsubaEngine.Core.YotsubaGame;
 namespace YotsubaEngine.Core.YTBControls.Buttons
 {
     ///<summary>
-    /// Represents a button control within the YTB user interface framework. Use this class to create interactive button elements that can respond to user input. Inherits common functionality from <see cref="YTBControl"/>.
-    ///
-    /// Representa un control de botón dentro del framework de interfaz de usuario YTB. Utiliza esta clase para crear elementos de botón interactivos que pueden responder a la entrada del usuario. Hereda funcionalidad común de <see cref="YTBControl"/>.
+    /// Representa un control de botón dentro del framework de interfaz de usuario YTB para crear elementos interactivos.
+    /// <para>Represents a button control within the YTB user interface framework to create interactive elements.</para>
     ///</summary>
     public class YTBButton : YTBControl
     {
@@ -36,10 +35,12 @@ namespace YotsubaEngine.Core.YTBControls.Buttons
         ///</summary>
         private Rectangle Pos;
         ///<summary>
-        /// Initializes a new instance of the YTBButton class. Parameters: entityManager - entity manager to handle entities; position - rectangle representing position and size; action - action to execute on button press.
-        ///
-        /// Inicializa una nueva instancia de la clase YTBButton. Parámetros: entityManager - administrador de entidades para manejar entidades; position - rectángulo que representa la posición y el tamaño; action - acción a ejecutar al presionar el botón.
+        /// Inicializa una nueva instancia de la clase YTBButton.
+        /// <para>Initializes a new instance of the YTBButton class.</para>
         ///</summary>
+        /// <param name="entityManager">Administrador de entidades para manejar entidades. <para>Entity manager to handle entities.</para></param>
+        /// <param name="position">Rectángulo que representa la posición y el tamaño. <para>Rectangle representing position and size.</para></param>
+        /// <param name="action">Acción a ejecutar al presionar el botón. <para>Action to execute on button press.</para></param>
         public YTBButton(EntityManager entityManager, Rectangle position, Action action) : base(entityManager)
         {
             PartTransforms = new();
@@ -57,10 +58,12 @@ namespace YotsubaEngine.Core.YTBControls.Buttons
         }
 
         ///<summary>
-        /// Sets the background color, position, and size of the button's background part. Parameters: BackgroundColor - the color to apply; position - the 2D position; Size - the 2D size.
-        ///
-        /// Establece el color de fondo, posición y tamaño de la parte de fondo del botón. Parámetros: BackgroundColor - el color a aplicar; position - la posición 2D; Size - el tamaño 2D.
+        /// Establece el color de fondo, posición y tamaño de la parte de fondo del botón.
+        /// <para>Sets the background color, position, and size of the button's background part.</para>
         ///</summary>
+        /// <param name="BackgroundColor">Color a aplicar. <para>Color to apply.</para></param>
+        /// <param name="position">Posición 2D. <para>2D position.</para></param>
+        /// <param name="Size">Tamaño 2D. <para>2D size.</para></param>
         public void SetButton(Color BackgroundColor, Vector2 position, Vector2 Size)
         {
             ref var transform = ref EntityManager.TransformComponents[PartTransforms[ButtonPart.Background]];
@@ -72,12 +75,12 @@ namespace YotsubaEngine.Core.YTBControls.Buttons
         }
 
         ///<summary>
-        /// Sets the visual state of a specified button part by applying the given color and border thickness. Parameters: part - the button part to update; color - color to apply; thickness - border thickness in pixels (default 1).
-        ///
-        /// Establece el estado visual de una parte específica del botón aplicando el color y grosor de borde dados. Parámetros: part - la parte del botón a actualizar; color - color a aplicar; thickness - grosor del borde en píxeles (por defecto 1).
-        ///
-        /// Throws ArgumentOutOfRangeException if part is ButtonPart.Text or undefined. / Lanza ArgumentOutOfRangeException si part es ButtonPart.Text o un valor indefinido.
+        /// Establece el estado visual de una parte específica del botón aplicando el color y grosor de borde.
+        /// <para>Sets the visual state of a specified button part by applying the given color and border thickness.</para>
         ///</summary>
+        /// <param name="part">Parte del botón a actualizar. <para>Button part to update.</para></param>
+        /// <param name="color">Color a aplicar. <para>Color to apply.</para></param>
+        /// <param name="thickness">Grosor del borde en píxeles (por defecto 1). <para>Border thickness in pixels (default 1).</para></param>
         public void SetButtonState(ButtonPart part, Color color, float thickness = 1)
         {
             TransformComponent transformComponent = new();
@@ -168,9 +171,8 @@ namespace YotsubaEngine.Core.YTBControls.Buttons
         
 
         ///<summary>
-        /// Specifies the set of rectangle regions used in rendering operations, such as background, borders, and text areas. This enumeration supports bitwise combination of its values to indicate multiple regions in use simultaneously. Individual flags correspond to specific visual elements.
-        ///
-        /// Especifica el conjunto de regiones rectangulares utilizadas en operaciones de renderizado, como fondo, bordes y áreas de texto. Esta enumeración soporta la combinación bit a bit de sus valores para indicar múltiples regiones en uso simultáneamente. Las banderas individuales corresponden a elementos visuales específicos.
+        /// Especifica el conjunto de regiones rectangulares utilizadas en renderizado, como fondo, bordes y áreas de texto.
+        /// <para>Specifies the set of rectangle regions used in rendering operations, such as background, borders, and text areas.</para>
         ///</summary>
         [Flags]
         public enum ButtonPart : int
@@ -185,9 +187,8 @@ namespace YotsubaEngine.Core.YTBControls.Buttons
         }
 
         ///<summary>
-        /// Specifies the visual or interactive state of a user interface button. Use this enumeration to represent the current state of a button in UI logic, such as rendering or event handling.
-        ///
-        /// Especifica el estado visual o interactivo de un botón de interfaz de usuario. Utiliza esta enumeración para representar el estado actual de un botón en la lógica de la interfaz de usuario, como renderizado o manejo de eventos.
+        /// Especifica el estado visual o interactivo de un botón de interfaz de usuario.
+        /// <para>Specifies the visual or interactive state of a user interface button.</para>
         ///</summary>
         public enum ButtonState
         {

@@ -14,18 +14,18 @@ using YotsubaEngine.HighestPerformanceTypes;
 namespace YotsubaEngine.ActionFiles.TMX_Files.TiledCS
 {
     /// <summary>
-    /// Manager responsible for reading and converting Tiled (.tmx) maps into engine components.
     /// Gestor encargado de la lectura, parseo y conversión de archivos de mapas de Tiled (.tmx)
     /// a componentes utilizables por el motor (TileMapComponent2D).
+    /// <para>Manager responsible for reading and converting Tiled (.tmx) maps into engine components.</para>
     /// </summary>
     public static class TiledManager
     {
 
         /// <summary>
-        /// Searches for all .tmx files in the content folder.
-        /// Metodo busca todos los archivos tmx de tiled en la carpeta content
+        /// Metodo busca todos los archivos tmx de tiled en la carpeta content.
+        /// <para>Searches for all .tmx files in the content folder.</para>
         /// </summary>
-        /// <returns>Relative .tmx file paths. Rutas relativas de archivos .tmx.</returns>
+        /// <returns>Rutas relativas de archivos .tmx. <para>Relative .tmx file paths.</para></returns>
         public static string[] GetAllTMXFiles()
         {
             string _contentPath = YTBFileToGameData.ContentManager.RootDirectory;
@@ -163,12 +163,11 @@ namespace YotsubaEngine.ActionFiles.TMX_Files.TiledCS
             return (tileSets, tiledLayers, map);
         }
         /// <summary>
-        /// Builds a full ECS component from a .tmx file.
         /// Genera un componente ECS completo a partir de un archivo .tmx.
-        /// Carga las texturas necesarias y mapea los tiles a sus regiones correspondientes.
+        /// <para>Builds a full ECS component from a .tmx file.</para>
         /// </summary>
-        /// <param name="tmxPath">Map file path. Ruta al archivo del mapa.</param>
-        /// <returns>Ready-to-use TileMapComponent2D. El componente TileMapComponent2D listo para usar.</returns>
+        /// <param name="tmxPath">Ruta al archivo del mapa. <para>Map file path.</para></param>
+        /// <returns>El componente TileMapComponent2D listo para usar. <para>Ready-to-use TileMapComponent2D.</para></returns>
         public static TileMapComponent2D GenerateTilemapComponent(string tmxPath)
         {
 
@@ -245,106 +244,157 @@ namespace YotsubaEngine.ActionFiles.TMX_Files.TiledCS
     }
 
     /// <summary>
-    /// Intermediate structure describing map-wide properties.
     /// Estructura intermedia que representa las propiedades globales del mapa leído.
+    /// <para>Intermediate structure describing map-wide properties.</para>
     /// </summary>
     public struct Map
     {
-        /// <summary> Map width in tiles. Ancho del mapa en cantidad de tiles. </summary>
+        /// <summary>
+        /// Ancho del mapa en cantidad de tiles.
+        /// <para>Map width in tiles.</para>
+        /// </summary>
         public int Width { get; set; }
-        /// <summary> Map height in tiles. Alto del mapa en cantidad de tiles. </summary>
+        /// <summary>
+        /// Alto del mapa en cantidad de tiles.
+        /// <para>Map height in tiles.</para>
+        /// </summary>
         public int Height { get; set; }
-        /// <summary> Tile width in pixels. Ancho de un tile individual en píxeles. </summary>
+        /// <summary>
+        /// Ancho de un tile individual en píxeles.
+        /// <para>Tile width in pixels.</para>
+        /// </summary>
         public int TileWidth { get; set; }
-        /// <summary> Tile height in pixels. Alto de un tile individual en píxeles. </summary>
+        /// <summary>
+        /// Alto de un tile individual en píxeles.
+        /// <para>Tile height in pixels.</para>
+        /// </summary>
         public int TileHeight { get; set; }
     }
 
     /// <summary>
-    /// Intermediate representation of a tileset read from XML.
     /// Representación intermedia de un Tileset (conjunto de tiles) leído del XML.
+    /// <para>Intermediate representation of a tileset read from XML.</para>
     /// </summary>
     public struct TiledTileSet
     {
-        /// <summary> First global ID assigned to this tileset. Primer ID Global asignado a este tileset. </summary>
+        /// <summary>
+        /// Primer ID Global asignado a este tileset.
+        /// <para>First global ID assigned to this tileset.</para>
+        /// </summary>
         public int FirstGid { get; set; }
-        /// <summary> Tileset name. Nombre del tileset. </summary>
+        /// <summary>
+        /// Nombre del tileset.
+        /// <para>Tileset name.</para>
+        /// </summary>
         public string Name { get; set; }
-        /// <summary> Tile width in pixels. Ancho de cada tile en píxeles. </summary>
+        /// <summary>
+        /// Ancho de cada tile en píxeles.
+        /// <para>Tile width in pixels.</para>
+        /// </summary>
         public int TileWidth { get; set; }
-        /// <summary> Tile height in pixels. Alto de cada tile en píxeles. </summary>
+        /// <summary>
+        /// Alto de cada tile en píxeles.
+        /// <para>Tile height in pixels.</para>
+        /// </summary>
         public int TileHeight { get; set; }
-        /// <summary> Total tile count. Cantidad total de tiles en este set. </summary>
+        /// <summary>
+        /// Cantidad total de tiles en este set.
+        /// <para>Total tile count.</para>
+        /// </summary>
         public int TileCount { get; set; }
-        /// <summary> Column count in the source image. Cantidad de columnas en la imagen de origen. </summary>
+        /// <summary>
+        /// Cantidad de columnas en la imagen de origen.
+        /// <para>Column count in the source image.</para>
+        /// </summary>
         public int Columns { get; set; }
-        /// <summary> Relative source image path. Ruta relativa de la imagen de origen. </summary>
+        /// <summary>
+        /// Ruta relativa de la imagen de origen.
+        /// <para>Relative source image path.</para>
+        /// </summary>
         public string ImageSource { get; set; }
         /// <summary>
-        /// Source image width.
         /// Ancho de la imagen de origen.
+        /// <para>Source image width.</para>
         /// </summary>
         public int ImageWidth { get; set; }
         /// <summary>
-        /// Source image height.
         /// Alto de la imagen de origen.
+        /// <para>Source image height.</para>
         /// </summary>
         public int ImageHeight { get; set; }
-        /// <summary> Detailed image metadata. Datos detallados de la imagen asociada. </summary>
+        /// <summary>
+        /// Datos detallados de la imagen asociada.
+        /// <para>Detailed image metadata.</para>
+        /// </summary>
         public TiledTileSetImage Image { get; set; }
     }
 
     /// <summary>
-    /// Represents the source image of a tileset.
     /// Representa la imagen fuente de un tileset.
+    /// <para>Represents the source image of a tileset.</para>
     /// </summary>
     public struct TiledTileSetImage
     {
-        /// <summary> Image file path. Ruta del archivo de imagen. </summary>
+        /// <summary>
+        /// Ruta del archivo de imagen.
+        /// <para>Image file path.</para>
+        /// </summary>
         public string Source { get; set; }
-        /// <summary> Total image width. Ancho total de la imagen. </summary>
+        /// <summary>
+        /// Ancho total de la imagen.
+        /// <para>Total image width.</para>
+        /// </summary>
         public int Width { get; set; }
-        /// <summary> Total image height. Alto total de la imagen. </summary>
+        /// <summary>
+        /// Alto total de la imagen.
+        /// <para>Total image height.</para>
+        /// </summary>
         public int Height { get; set; }
     }
 
     /// <summary>
-    /// Intermediate representation of a map layer.
     /// Representación intermedia de una capa del mapa (Layer).
+    /// <para>Intermediate representation of a map layer.</para>
     /// </summary>
     public struct TiledLayer
     {
         /// <summary>
-        /// Layer identifier.
         /// Identificador de la capa.
+        /// <para>Layer identifier.</para>
         /// </summary>
         public int Id { get; set; }
         /// <summary>
-        /// Layer name.
         /// Nombre de la capa.
+        /// <para>Layer name.</para>
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// Layer width in tiles.
         /// Ancho de la capa en tiles.
+        /// <para>Layer width in tiles.</para>
         /// </summary>
         public int Width { get; set; }
         /// <summary>
-        /// Layer height in tiles.
         /// Alto de la capa en tiles.
+        /// <para>Layer height in tiles.</para>
         /// </summary>
         public int Height { get; set; }
-        /// <summary> Container for numeric layer data (GIDs). Contenedor de los datos numéricos (GIDs) de la capa. </summary>
+        /// <summary>
+        /// Contenedor de los datos numéricos (GIDs) de la capa.
+        /// <para>Container for numeric layer data (GIDs).</para>
+        /// </summary>
         public TiledLayerData Data { get; set; }
     }
 
     /// <summary>
-    /// Container for tile ID arrays.
     /// Contenedor para el array de IDs de los tiles.
+    /// <para>Container for tile ID arrays.</para>
     /// </summary>
     public struct TiledLayerData
     {
-        /// <summary> Global ID array for the map. Arreglo de Global IDs que definen el mapa. </summary>
+        /// <summary>
+        /// Arreglo de Global IDs que definen el mapa.
+        /// <para>Global ID array for the map.</para>
+        /// </summary>
         public int[] Guids { get; set; }
     }
 }

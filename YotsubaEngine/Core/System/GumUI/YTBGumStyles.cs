@@ -5,70 +5,70 @@ using System;
 namespace YotsubaEngine.Core.System.GumUI
 {
     /// <summary>
-    /// Styling utilities for GumUI controls.
     /// Utilidades de estilizado para controles GumUI.
+    /// <para>Styling utilities for GumUI controls.</para>
     /// </summary>
     public static class YTBGumStyles
     {
         #region Color Presets
 
         /// <summary>
-        /// Dark theme primary color.
         /// Color primario del tema oscuro.
+        /// <para>Dark theme primary color.</para>
         /// </summary>
         public static Color DarkPrimary => new(45, 45, 48);
 
         /// <summary>
-        /// Dark theme secondary color.
         /// Color secundario del tema oscuro.
+        /// <para>Dark theme secondary color.</para>
         /// </summary>
         public static Color DarkSecondary => new(62, 62, 66);
 
         /// <summary>
-        /// Dark theme accent color.
         /// Color de acento del tema oscuro.
+        /// <para>Dark theme accent color.</para>
         /// </summary>
         public static Color DarkAccent => new(0, 122, 204);
 
         /// <summary>
-        /// Light theme primary color.
         /// Color primario del tema claro.
+        /// <para>Light theme primary color.</para>
         /// </summary>
         public static Color LightPrimary => new(240, 240, 240);
 
         /// <summary>
-        /// Light theme secondary color.
         /// Color secundario del tema claro.
+        /// <para>Light theme secondary color.</para>
         /// </summary>
         public static Color LightSecondary => new(200, 200, 200);
 
         /// <summary>
-        /// Light theme accent color.
         /// Color de acento del tema claro.
+        /// <para>Light theme accent color.</para>
         /// </summary>
         public static Color LightAccent => new(0, 120, 215);
 
         /// <summary>
-        /// Success color (green).
         /// Color de éxito (verde).
+        /// <para>Success color (green).</para>
         /// </summary>
         public static Color Success => new(76, 175, 80);
 
         /// <summary>
-        /// Warning color (yellow/orange).
         /// Color de advertencia (amarillo/naranja).
+        /// <para>Warning color (yellow/orange).</para>
         /// </summary>
         public static Color Warning => new(255, 152, 0);
 
         /// <summary>
-        /// Error color (red).
         /// Color de error (rojo).
+        /// <para>Error color (red).</para>
         /// </summary>
         public static Color Error => new(244, 67, 54);
 
         /// <summary>
-        /// Info color (blue).
         /// Color de información (azul).
+        /// <para>Info color (blue).</para>
         /// </summary>
         public static Color Info => new(33, 150, 243);
 
@@ -77,9 +77,13 @@ namespace YotsubaEngine.Core.System.GumUI
         #region Common Sizing
 
         /// <summary>
-        /// Sets the size of a framework element.
         /// Establece el tamaño de un elemento de framework.
+        /// <para>Sets the size of a framework element.</para>
         /// </summary>
+        /// <param name="element">Elemento a ajustar. <para>Element to size.</para></param>
+        /// <param name="width">Ancho. <para>Width.</para></param>
+        /// <param name="height">Alto. <para>Height.</para></param>
+        /// <returns>Elemento actualizado. <para>Updated element.</para></returns>
         public static T WithSize<T>(this T element, float width, float height) where T : FrameworkElement
         {
             element.Width = width;
@@ -88,9 +92,13 @@ namespace YotsubaEngine.Core.System.GumUI
         }
 
         /// <summary>
-        /// Sets the position of a framework element.
         /// Establece la posición de un elemento de framework.
+        /// <para>Sets the position of a framework element.</para>
         /// </summary>
+        /// <param name="element">Elemento a posicionar. <para>Element to position.</para></param>
+        /// <param name="x">Posición X. <para>X position.</para></param>
+        /// <param name="y">Posición Y. <para>Y position.</para></param>
+        /// <returns>Elemento actualizado. <para>Updated element.</para></returns>
         public static T WithPosition<T>(this T element, float x, float y) where T : FrameworkElement
         {
             element.X = x;
@@ -99,9 +107,12 @@ namespace YotsubaEngine.Core.System.GumUI
         }
 
         /// <summary>
-        /// Sets only the width of a framework element.
         /// Establece solo el ancho de un elemento de framework.
+        /// <para>Sets only the width of a framework element.</para>
         /// </summary>
+        /// <param name="element">Elemento a ajustar. <para>Element to resize.</para></param>
+        /// <param name="width">Ancho. <para>Width.</para></param>
+        /// <returns>Elemento actualizado. <para>Updated element.</para></returns>
         public static T WithWidth<T>(this T element, float width) where T : FrameworkElement
         {
             element.Width = width;
@@ -109,9 +120,12 @@ namespace YotsubaEngine.Core.System.GumUI
         }
 
         /// <summary>
-        /// Sets only the height of a framework element.
         /// Establece solo la altura de un elemento de framework.
+        /// <para>Sets only the height of a framework element.</para>
         /// </summary>
+        /// <param name="element">Elemento a ajustar. <para>Element to resize.</para></param>
+        /// <param name="height">Alto. <para>Height.</para></param>
+        /// <returns>Elemento actualizado. <para>Updated element.</para></returns>
         public static T WithHeight<T>(this T element, float height) where T : FrameworkElement
         {
             element.Height = height;
@@ -123,9 +137,11 @@ namespace YotsubaEngine.Core.System.GumUI
         #region Visibility
 
         /// <summary>
-        /// Shows a framework element.
         /// Muestra un elemento de framework.
+        /// <para>Shows a framework element.</para>
         /// </summary>
+        /// <param name="element">Elemento a mostrar. <para>Element to show.</para></param>
+        /// <returns>Elemento actualizado. <para>Updated element.</para></returns>
         public static T Show<T>(this T element) where T : FrameworkElement
         {
             element.IsVisible = true;
@@ -133,9 +149,11 @@ namespace YotsubaEngine.Core.System.GumUI
         }
 
         /// <summary>
-        /// Hides a framework element.
         /// Oculta un elemento de framework.
+        /// <para>Hides a framework element.</para>
         /// </summary>
+        /// <param name="element">Elemento a ocultar. <para>Element to hide.</para></param>
+        /// <returns>Elemento actualizado. <para>Updated element.</para></returns>
         public static T Hide<T>(this T element) where T : FrameworkElement
         {
             element.IsVisible = false;
@@ -143,9 +161,11 @@ namespace YotsubaEngine.Core.System.GumUI
         }
 
         /// <summary>
-        /// Toggles visibility of a framework element.
         /// Alterna la visibilidad de un elemento de framework.
+        /// <para>Toggles visibility of a framework element.</para>
         /// </summary>
+        /// <param name="element">Elemento a alternar. <para>Element to toggle.</para></param>
+        /// <returns>Elemento actualizado. <para>Updated element.</para></returns>
         public static T ToggleVisibility<T>(this T element) where T : FrameworkElement
         {
             element.IsVisible = !element.IsVisible;
@@ -157,9 +177,11 @@ namespace YotsubaEngine.Core.System.GumUI
         #region Enable/Disable
 
         /// <summary>
-        /// Enables a framework element.
         /// Habilita un elemento de framework.
+        /// <para>Enables a framework element.</para>
         /// </summary>
+        /// <param name="element">Elemento a habilitar. <para>Element to enable.</para></param>
+        /// <returns>Elemento actualizado. <para>Updated element.</para></returns>
         public static T Enable<T>(this T element) where T : FrameworkElement
         {
             element.IsEnabled = true;
@@ -167,9 +189,11 @@ namespace YotsubaEngine.Core.System.GumUI
         }
 
         /// <summary>
-        /// Disables a framework element.
         /// Deshabilita un elemento de framework.
+        /// <para>Disables a framework element.</para>
         /// </summary>
+        /// <param name="element">Elemento a deshabilitar. <para>Element to disable.</para></param>
+        /// <returns>Elemento actualizado. <para>Updated element.</para></returns>
         public static T Disable<T>(this T element) where T : FrameworkElement
         {
             element.IsEnabled = false;

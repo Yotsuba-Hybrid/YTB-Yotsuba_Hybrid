@@ -5,11 +5,16 @@ using YotsubaEngine.Events.YTBEvents;
 namespace YotsubaEngine.Core.YotsubaGame
 {
     /// <summary>
-    /// Clase que maneja todos los eventos del juego tanto producidos por el mismo engine, como por los desarrolladores.
+    /// Clase que maneja todos los eventos del juego tanto producidos por el motor como por los desarrolladores.
+    /// <para>Class that handles all game events produced by the engine and by developers.</para>
     /// </summary>
     public class EventManager
     {
 
+        /// <summary>
+        /// Crea una nueva instancia del administrador de eventos.
+        /// <para>Creates a new event manager instance.</para>
+        /// </summary>
         public EventManager()
         {
             Subscribe<StopEvents>(OnStopEvents);
@@ -27,10 +32,14 @@ namespace YotsubaEngine.Core.YotsubaGame
             EventManagerWasPaused?.Invoke();
         }
 
+        /// <summary>
+        /// Evento que se dispara cuando el administrador de eventos se pausa.
+        /// <para>Event raised when the event manager is paused.</para>
+        /// </summary>
         public event Action EventManagerWasPaused;
         /// <summary>
-        /// Indicates whether event dispatching is currently stopped.
         /// Indica si el envío de eventos está detenido actualmente.
+        /// <para>Indicates whether event dispatching is currently stopped.</para>
         /// </summary>
         public static bool StopEvents { get; set; } = false;
 
@@ -40,7 +49,8 @@ namespace YotsubaEngine.Core.YotsubaGame
         private static EventManager instance;
 
         /// <summary>
-        /// Instancia unica del EventManager
+        /// Instancia única del administrador de eventos.
+        /// <para>Singleton instance of the event manager.</para>
         /// </summary>
         public static EventManager Instance { get => instance == null ? instance = new EventManager() : instance; }
         /// <summary>
@@ -64,10 +74,11 @@ namespace YotsubaEngine.Core.YotsubaGame
         private bool isResolving = false;
 
         /// <summary>
-        /// Metodo publicar un evento.
+        /// Publica un evento en el sistema.
+        /// <para>Publishes an event in the system.</para>
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="action"></param>
+        /// <typeparam name="T">Tipo de evento. <para>Event type.</para></typeparam>
+        /// <param name="eventData">Datos del evento. <para>Event data.</para></param>
         public void Publish<T>(T eventData)
         {
 
@@ -81,10 +92,11 @@ namespace YotsubaEngine.Core.YotsubaGame
 
 
         /// <summary>
-        /// Metodo para suscribirse a un evento.
+        /// Se suscribe a un evento.
+        /// <para>Subscribes to an event.</para>
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="func"></param>
+        /// <typeparam name="T">Tipo de evento. <para>Event type.</para></typeparam>
+        /// <param name="listener">Listener del evento. <para>Event listener.</para></param>
         public void Subscribe<T>(Action<T> listener)
         {
             if (!EventResponses.TryGetValue(typeof(T), out var list))
@@ -95,10 +107,11 @@ namespace YotsubaEngine.Core.YotsubaGame
 
 
         /// <summary>
-        /// Metodo para desuscribirse de un evento.
+        /// Se desuscribe de un evento.
+        /// <para>Unsubscribes from an event.</para>
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="action"></param>
+        /// <typeparam name="T">Tipo de evento. <para>Event type.</para></typeparam>
+        /// <param name="action">Acción a desuscribir. <para>Action to remove.</para></param>
         public void Unsubscribe<T>(Action<T> action)
         {
             if(EventResponses.TryGetValue(typeof(T), out var list))
@@ -111,7 +124,8 @@ namespace YotsubaEngine.Core.YotsubaGame
         }
 
         /// <summary>
-        /// Metodo para resolver los eventos.
+        /// Resuelve los eventos encolados.
+        /// <para>Resolves queued events.</para>
         /// </summary>
         public void ResolveEvents()
         {

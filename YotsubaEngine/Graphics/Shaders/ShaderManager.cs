@@ -6,8 +6,8 @@ using System.Collections.Generic;
 namespace YotsubaEngine.Graphics.Shaders
 {
     /// <summary>
-    /// Gestor centralizado de shaders. Maneja la carga, caché y acceso a efectos.
-    /// Totalmente compatible con AOT y multiplataforma.
+    /// Gestor centralizado de shaders con carga, caché y acceso a efectos, compatible con AOT y multiplataforma.
+    /// <para>Centralized shader manager for loading, caching, and accessing effects, AOT and cross-platform compatible.</para>
     /// </summary>
     public static class ShaderManager
     {
@@ -15,21 +15,21 @@ namespace YotsubaEngine.Graphics.Shaders
         private static ContentManager _contentManager;
 
         /// <summary>
-        /// Inicializa el ShaderManager con el ContentManager.
-        /// Debe llamarse antes de cargar cualquier shader.
+        /// Inicializa el ShaderManager con el ContentManager antes de cargar shaders.
+        /// <para>Initializes the ShaderManager with the ContentManager before loading shaders.</para>
         /// </summary>
-        /// <param name="contentManager">ContentManager del juego</param>
+        /// <param name="contentManager">ContentManager del juego. <para>Game ContentManager.</para></param>
         public static void Initialize(ContentManager contentManager)
         {
             _contentManager = contentManager ?? throw new ArgumentNullException(nameof(contentManager));
         }
 
         /// <summary>
-        /// Carga un shader desde el contenido compilado (.xnb).
-        /// Si ya está cargado, devuelve la instancia en caché.
+        /// Carga un shader desde el contenido compilado (.xnb) y usa caché si ya existe.
+        /// <para>Loads a shader from compiled content (.xnb) and uses cache if it already exists.</para>
         /// </summary>
-        /// <param name="shaderPath">Ruta al shader sin extensión (ej: "Shaders/Grayscale")</param>
-        /// <returns>El efecto cargado</returns>
+        /// <param name="shaderPath">Ruta al shader sin extensión (ej: "Shaders/Grayscale"). <para>Shader path without extension (e.g., "Shaders/Grayscale").</para></param>
+        /// <returns>Efecto cargado. <para>Loaded effect.</para></returns>
         public static Effect LoadShader(string shaderPath)
         {
             if (_contentManager == null)
@@ -57,9 +57,10 @@ namespace YotsubaEngine.Graphics.Shaders
 
         /// <summary>
         /// Obtiene un shader ya cargado desde la caché.
+        /// <para>Gets a shader already loaded from cache.</para>
         /// </summary>
-        /// <param name="shaderPath">Ruta al shader</param>
-        /// <returns>El efecto si está cargado, null si no existe en caché</returns>
+        /// <param name="shaderPath">Ruta al shader. <para>Shader path.</para></param>
+        /// <returns>Efecto si está cargado, null si no existe. <para>Effect if loaded, null if missing.</para></returns>
         public static Effect GetShader(string shaderPath)
         {
             _loadedShaders.TryGetValue(shaderPath, out Effect effect);
@@ -68,16 +69,18 @@ namespace YotsubaEngine.Graphics.Shaders
 
         /// <summary>
         /// Verifica si un shader está cargado en caché.
+        /// <para>Checks whether a shader is loaded in cache.</para>
         /// </summary>
-        /// <param name="shaderPath">Ruta al shader</param>
-        /// <returns>true si está cargado, false si no</returns>
+        /// <param name="shaderPath">Ruta al shader. <para>Shader path.</para></param>
+        /// <returns>True si está cargado. <para>True if loaded.</para></returns>
         public static bool IsShaderLoaded(string shaderPath)
         {
             return _loadedShaders.ContainsKey(shaderPath);
         }
 
         /// <summary>
-        /// Limpia todos los shaders cargados. Útil al cambiar de escena.
+        /// Limpia todos los shaders cargados; útil al cambiar de escena.
+        /// <para>Clears all loaded shaders; useful when changing scenes.</para>
         /// </summary>
         public static void UnloadAll()
         {
@@ -86,8 +89,9 @@ namespace YotsubaEngine.Graphics.Shaders
 
         /// <summary>
         /// Descarga un shader específico de la caché.
+        /// <para>Unloads a specific shader from cache.</para>
         /// </summary>
-        /// <param name="shaderPath">Ruta al shader</param>
+        /// <param name="shaderPath">Ruta al shader. <para>Shader path.</para></param>
         public static void UnloadShader(string shaderPath)
         {
             _loadedShaders.Remove(shaderPath);
@@ -95,12 +99,14 @@ namespace YotsubaEngine.Graphics.Shaders
 
         /// <summary>
         /// Crea un clon independiente de un shader para permitir parámetros únicos por entidad.
-        /// IMPORTANTE: Usar con cuidado, cada clon consume memoria adicional.
-        /// Solo clonar cuando necesites parámetros diferentes del shader base.
-        /// Para la mayoría de casos, compartir el mismo Effect entre entidades es suficiente.
+        /// <para>Creates an independent shader clone to allow per-entity parameters.</para>
         /// </summary>
-        /// <param name="shaderPath">Ruta al shader base</param>
-        /// <returns>Un nuevo efecto clonado</returns>
+        /// <remarks>
+        /// Úsalo con cuidado; cada clon consume memoria adicional.
+        /// <para>Use with care; each clone consumes additional memory.</para>
+        /// </remarks>
+        /// <param name="shaderPath">Ruta al shader base. <para>Base shader path.</para></param>
+        /// <returns>Nuevo efecto clonado. <para>New cloned effect.</para></returns>
         public static Effect CloneShader(string shaderPath)
         {
             Effect originalEffect = LoadShader(shaderPath);

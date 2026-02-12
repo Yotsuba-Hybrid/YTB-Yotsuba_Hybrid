@@ -13,8 +13,8 @@ using Num = System.Numerics;
 namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 {
     /// <summary>
-    /// Ventana mejorada de historial de cambios del archivo .ytb
-    /// Solo disponible en modo DEBUG
+    /// Ventana mejorada de historial de cambios del archivo .ytb (solo disponible en modo DEBUG).
+    /// <para>Enhanced history window for .ytb changes (only available in DEBUG mode).</para>
     /// </summary>
     public static class HistoryUI
     {
@@ -33,7 +33,8 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
         private const float MinWindowHeight = 400f;
 
         /// <summary>
-        /// Renderiza la ventana principal del historial
+        /// Renderiza la ventana principal del historial.
+        /// <para>Renders the main history window.</para>
         /// </summary>
         public static void Render()
         {
@@ -611,8 +612,8 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
         }
 
         /// <summary>
-        /// Abre la ventana de historial
-        /// Debe ser llamado antes de Render()
+        /// Abre la ventana de historial.
+        /// <para>Opens the history window.</para>
         /// </summary>
         public static void Open()
         {
