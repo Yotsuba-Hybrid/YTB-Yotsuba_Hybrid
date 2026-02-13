@@ -18,10 +18,10 @@ namespace YotsubaEngine.Core.Component.C_2D
         public Dictionary<int, TileRegion> Tiles;
 
         /// <summary>
-        /// Diccionario que almacena áreas de colisión asociadas a cada tile, permitiendo gestión independiente del aspecto gráfico.
-        /// <para>Stores collision rectangles associated with each tile, allowing independent management of the visual aspect.</para>
+        /// Diccionario que almacena áreas de colisión nativas de Tiled por GID. Cada tile puede tener múltiples rectángulos de colisión.
+        /// <para>Stores native Tiled collision areas per GID. Each tile can have multiple collision rectangles.</para>
         /// </summary>
-        public Dictionary<int, Rectangle> Collisions;
+        public Dictionary<int, List<Rectangle>> Collisions;
 
         /// <summary>
         /// Ancho total del mapa en cantidad de tiles.

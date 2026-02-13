@@ -1,8 +1,10 @@
 // YTBEditor - Script principal
 // Editor visual para archivos YotsubaGame.ytb
 
-// Nombre del archivo YTB a cargar automáticamente
-const DEFAULT_YTB_FILE = 'YotsubaGame.ytb';
+// Manifiesto que describe los archivos YTB disponibles junto al editor
+const DEFAULT_YTB_MANIFEST = 'ytb-files.json';
+const FALLBACK_YTB_FILES = ['YotsubaGameConfig.ytb', 'YotsubaGame.ytb', 'YotsubaEngineHistory.ytb'];
+let defaultYtbCandidates = [...FALLBACK_YTB_FILES];
 
 const COMPONENT_TEMPLATES = {
     TransformComponent: [
@@ -50,7 +52,7 @@ const COMPONENT_TEMPLATES = {
         { Item1: "Texto", Item2: "" },
         { Item1: "Font", Item2: "" }
     ],
-    // Componente de cámara 3D basado en EntityYTBXmlTemplate.CameraTemplate
+    // Componente de cï¿½mara 3D basado en EntityYTBXmlTemplate.CameraTemplate
     CameraComponent3D: [
         { Item1: "EntityName", Item2: "" },
         { Item1: "InitialPosition", Item2: "0,60,30" },
@@ -71,6 +73,8 @@ let currentSceneIndex = -1;
 
 // Elementos del DOM
 const elements = {
+    loadBtn: document.getElementById('loadBtn'),
+    loadJsonBtn: document.getElementById('loadJsonBtn'),
     sceneList: document.getElementById('sceneList'),
     welcomePanel: document.getElementById('welcomePanel'),
     sceneEditor: document.getElementById('sceneEditor'),
@@ -87,15 +91,15 @@ const elements = {
     fileInput: document.getElementById('fileInput')
 };
 
-// Inicialización
+// Inicializaciï¿½n
 document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
     tryLoadDefaultFile();
 });
 
 function setupEventListeners() {
-    document.getElementById('loadBtn').addEventListener('click', () => elements.fileInput.click());
-    document.getElementById('loadJsonBtn').addEventListener('click', () => elements.fileInput.click());
+    elements.loadBtn?.addEventListener('click', () => elements.fileInput.click());
+    elements.loadJsonBtn?.addEventListener('click', () => elements.fileInput.click());
     document.getElementById('saveBtn').addEventListener('click', saveToFile);
     document.getElementById('exportBtn').addEventListener('click', exportJson);
     document.getElementById('addSceneBtn').addEventListener('click', addScene);
@@ -110,34 +114,86 @@ function setupEventListeners() {
 }
 
 async function tryLoadDefaultFile() {
-    // Intentar cargar el archivo .ytb del mismo directorio
-    const filesToTry = [
-        DEFAULT_YTB_FILE,
-        `./${DEFAULT_YTB_FILE}`,
-        `${window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'))}/${DEFAULT_YTB_FILE}`
-    ];
-    
-    for (const filePath of filesToTry) {
-        try {
-            const response = await fetch(filePath);
-            if (response.ok) {
+    await loadDefaultYtbCandidates();
+    updateLoadJsonButtonLabel(defaultYtbCandidates[0] ?? 'archivo YTB');
+    const baseDirectory = getBaseDirectory();
+
+    for (const fileName of defaultYtbCandidates) {
+        const candidatePaths = buildCandidatePaths(fileName, baseDirectory);
+        for (const candidatePath of candidatePaths) {
+            try {
+                const response = await fetch(candidatePath);
+                if (!response.ok) continue;
                 const text = await response.text();
                 gameData = JSON.parse(text);
                 renderSceneList();
-                showToast(`? ${DEFAULT_YTB_FILE} cargado automáticamente`);
+                showToast(`âœ¨ ${fileName} cargado automÃ¡ticamente`);
                 
-                // Seleccionar la primera escena si existe
                 if (gameData.scene && gameData.scene.length > 0) {
                     selectScene(0);
                 }
-                return; // Salir si se cargó correctamente
+                updateLoadJsonButtonLabel(fileName);
+                return;
+            } catch (error) {
+                console.log(`Intento fallido para ${candidatePath}:`, error);
             }
-        } catch (e) {
-            console.log(`Intento fallido para ${filePath}:`, e);
         }
     }
-    
+
     console.log('No se pudo cargar el archivo YTB por defecto. El usuario puede cargarlo manualmente.');
+}
+
+async function loadDefaultYtbCandidates() {
+    try {
+        const response = await fetch(DEFAULT_YTB_MANIFEST);
+        if (response.ok) {
+            const manifest = await response.json();
+            if (Array.isArray(manifest) && manifest.length > 0) {
+                const normalized = manifest
+                    .map(entry => typeof entry === 'string' ? entry.trim() : '')
+                    .filter(Boolean);
+                if (normalized.length > 0) {
+                    defaultYtbCandidates = normalized;
+                    return;
+                }
+            }
+        }
+    } catch (error) {
+        console.warn(`[YTBEditor] No se pudo leer ${DEFAULT_YTB_MANIFEST}:`, error);
+    }
+
+    defaultYtbCandidates = [...FALLBACK_YTB_FILES];
+}
+
+function updateLoadJsonButtonLabel(label) {
+    const btn = elements.loadJsonBtn;
+    if (!btn) return;
+    const safeLabel = label || 'archivo YTB';
+    btn.textContent = `Cargar ${safeLabel}`;
+}
+
+function getBaseDirectory() {
+    const pathName = window.location.pathname || '';
+    const lastSlashIndex = pathName.lastIndexOf('/');
+    if (lastSlashIndex <= 0) return '';
+    return pathName.substring(0, lastSlashIndex);
+}
+
+function buildCandidatePaths(fileName, baseDirectory) {
+    const candidates = new Set();
+    candidates.add(fileName);
+    candidates.add(`./${fileName}`);
+
+    if (baseDirectory) {
+        const normalizedBase = baseDirectory.endsWith('/') ? baseDirectory.slice(0, -1) : baseDirectory;
+        candidates.add(`${normalizedBase}/${fileName}`);
+        const origin = window.location.origin;
+        if (origin && origin !== 'null') {
+            candidates.add(`${origin}${normalizedBase}/${fileName}`);
+        }
+    }
+
+    return Array.from(candidates);
 }
 
 function handleFileLoad(e) {
@@ -340,8 +396,8 @@ function deleteCurrentScene() {
     if (currentSceneIndex < 0) return;
     
     showConfirmModal(
-        '¿Eliminar escena?',
-        `¿Estás seguro de que deseas eliminar la escena "${gameData.scene[currentSceneIndex].name}"? Esta acción no se puede deshacer.`,
+        'ï¿½Eliminar escena?',
+        `ï¿½Estï¿½s seguro de que deseas eliminar la escena "${gameData.scene[currentSceneIndex].name}"? Esta acciï¿½n no se puede deshacer.`,
         () => {
             gameData.scene.splice(currentSceneIndex, 1);
             currentSceneIndex = -1;
@@ -379,8 +435,8 @@ function addEntity() {
 
 function deleteEntity(entityIndex) {
     showConfirmModal(
-        '¿Eliminar entidad?',
-        `¿Estás seguro de que deseas eliminar esta entidad? Esta acción no se puede deshacer.`,
+        'ï¿½Eliminar entidad?',
+        `ï¿½Estï¿½s seguro de que deseas eliminar esta entidad? Esta acciï¿½n no se puede deshacer.`,
         () => {
             gameData.scene[currentSceneIndex].entities.splice(entityIndex, 1);
             renderEntities();

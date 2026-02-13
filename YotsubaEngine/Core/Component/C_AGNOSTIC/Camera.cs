@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Reflection;
 using YotsubaEngine.Core.Component.C_2D;
 using YotsubaEngine.Core.Component.C_3D;
@@ -265,7 +266,23 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
 #if YTB
             if (EntityToFollow.HasNotComponent(YTBComponent.Transform))
                 _ = new GameWontRun("La entidad a seguir de la camara 3D no tiene un TransformComponent", YTBErrors.EntityFollowCameraIsNotAppropiate);
-            
+
+            // Cámara libre del engine: solo escribe las matrices de render sin tocar CameraPosition
+            if (YTBGlobalState.EngineShortcutsMode && YTBGlobalState.FreeCameraInitialized)
+            {
+                Vector3 pos = YTBGlobalState.FreeCameraPosition;
+                float yaw = YTBGlobalState.FreeCameraYaw;
+                float pitch = YTBGlobalState.FreeCameraPitch;
+
+                Vector3 forward = new Vector3(
+                    (float)(Math.Cos(pitch) * Math.Sin(yaw)),
+                    (float)Math.Sin(pitch),
+                    (float)(Math.Cos(pitch) * Math.Cos(yaw))
+                );
+
+                RenderPoint = Matrix.CreateLookAt(pos, pos + forward, Vector3.Up);
+                return;
+            }
 #endif
             ref TransformComponent positionEntity = ref EntityManager.TransformComponents[EntityToFollow];
 
@@ -317,10 +334,15 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         /// <param name="model3D">Modelo 3D a dibujar.<para>3D model to draw.</para></param>
         /// <param name="transformComponent">Componente de transformación.<para>Transform component.</para></param>
         /// <param name="shaderComponent">Componente de shader opcional.<para>Optional shader component.</para></param>
-        public void DrawModel(ModelComponent3D model3D, ref TransformComponent transformComponent, ShaderComponent? shaderComponent = null)
+        /// <param name="entityId">ID de la entidad para verificar selección en modo engine.<para>Entity ID for engine mode selection check.</para></param>
+        public void DrawModel(ModelComponent3D model3D, ref TransformComponent transformComponent, ShaderComponent? shaderComponent = null, int entityId = -1)
         {
             var transforms = new Matrix[model3D.Model.Bones.Count];
             model3D.Model.CopyAbsoluteBoneTransformsTo(transforms);
+
+#if YTB
+            bool isSelected = YTBGlobalState.EngineShortcutsMode && entityId != -1 && YTBGlobalState.SelectedModel3DEntityIds.Contains(entityId);
+#endif
 
             if (shaderComponent.HasValue && shaderComponent.Value.IsActive)
             {
@@ -351,8 +373,23 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
                         float yaw = MathHelper.ToRadians(transformComponent.Rotation);
                         Matrix world = transforms[mesh.ParentBone.Index]
                             * Matrix.CreateRotationY(yaw)
-                            * Matrix.CreateTranslation(transformComponent.Position); 
+                            * Matrix.CreateTranslation(transformComponent.Position);
+
                         
+#if YTB 
+                        if (isSelected)
+                        {
+                            e.LightingEnabled = true;
+                            e.EmissiveColor = new Vector3(0.5f, 0.0f, 0.0f);
+
+                        }
+                        else
+                        {
+                            e.EmissiveColor = Vector3.Zero;
+                            e.LightingEnabled = false;
+                        }
+#endif
+
                         e.World = world;
                         e.View = RenderPoint;
                         e.Projection = RenderParams;
