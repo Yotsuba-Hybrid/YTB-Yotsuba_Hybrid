@@ -196,9 +196,9 @@ namespace YotsubaEngine
 
                         // Prefer runtime-copied engine font under the output `Fonts` folder
                         string outputFontsDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Fonts");
-                        string fuente = Path.Combine(outputFontsDir, "LibertinusMath-Regular.ttf");
+                        string fuente = Path.Combine(outputFontsDir, "GeistPixel-Square.ttf");
 
-                        io.Fonts.AddFontFromFileTTF(fuente, 19.0f, null, (IntPtr)rangePtr);
+                        io.Fonts.AddFontFromFileTTF(fuente, 20.0f, null, (IntPtr)rangePtr);
                     }
                 }
 
