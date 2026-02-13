@@ -90,9 +90,18 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
                 _previousCapsLockState = capsLockOn;
                 YTBGlobalState.EngineShortcutsMode = capsLockOn;
 
+                // Al salir de modo engine, resetear todo el estado de cámara del engine
+                if (!capsLockOn)
+                {
+                    YTBGlobalState.FreeCameraInitialized = false;
+                    YTBGlobalState.OffsetCamera = Vector2.Zero;
+                    YTBGlobalState.CameraZoom = 1f;
+                    YTBGlobalState.SelectedModel3DEntityIds.Clear();
+                }
+
                 string modeMsg = capsLockOn
-                    ? "⚙ Modo Engine — Atajos del engine activos"
-                    : "🎮 Modo Game — Inputs del juego activos";
+                    ? "Modo Engine - Atajos del engine activos"
+                    : "Modo Game - Inputs del juego activos";
 
                 EngineUISystem._instance?.ShowModeSwitchAlert(modeMsg);
                 EngineUISystem.SendLog(modeMsg, capsLockOn ? Color.Yellow : Color.Green);
@@ -102,10 +111,11 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
             if (YTBGlobalState.EngineShortcutsMode)
             {
                 bool IsKeySJustPressed = KeyboardState.WasKeyJustPressed(Keys.S);
+                bool IsKeyCtrlIsPressed = KeyboardState.IsKeyDown(Keys.LeftControl) || KeyboardState.IsKeyDown(Keys.RightControl);
                 bool IsKeyVJustPressed = KeyboardState.WasKeyJustPressed(Keys.V);
                 bool isKeyGJustPressed = KeyboardState.WasKeyJustPressed(Keys.G);
 
-                if (IsKeySJustPressed)
+                if (IsKeySJustPressed && IsKeyCtrlIsPressed)
                 {
                     EngineUISystem.SaveChanges();
                     YTBGame game = (YTBGame)YTBGlobalState.Game;
@@ -168,16 +178,97 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
                 {
                     YTBGlobalState.CameraZoom -= 0.01f;
                 }
+
+                // ── Cámara libre 3D: WASD para moverse, flechas para rotar ──
+                if (EntityManager?.Camera != null)
+                {
+                    // Inicializar posición de la cámara libre desde la entidad seguida + offset
+                    if (!YTBGlobalState.FreeCameraInitialized)
+                    {
+                        var cam = EntityManager.Camera;
+                        ref TransformComponent entityTransform = ref EntityManager.TransformComponents[cam.EntityToFollow];
+                        Vector3 offset = cam.UseOrbit ? cam.GetOrbitOffset() : cam.OffsetCamera;
+                        YTBGlobalState.FreeCameraPosition = entityTransform.Position + offset;
+                        YTBGlobalState.FreeCameraYaw = cam.OrbitYaw;
+                        YTBGlobalState.FreeCameraPitch = cam.OrbitPitch;
+                        YTBGlobalState.FreeCameraInitialized = true;
+                    }
+
+                    float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    float moveSpeed = 200f * deltaTime;
+                    float rotateSpeed = 2f * deltaTime;
+
+                    if (KeyboardState.IsKeyDown(Keys.LeftShift))
+                        moveSpeed *= 3f;
+
+                    // Calcular vectores de dirección desde yaw/pitch
+                    float yaw = YTBGlobalState.FreeCameraYaw;
+                    float pitch = YTBGlobalState.FreeCameraPitch;
+
+                    Vector3 forward = new Vector3(
+                        (float)(Math.Cos(pitch) * Math.Sin(yaw)),
+                        (float)Math.Sin(pitch),
+                        (float)(Math.Cos(pitch) * Math.Cos(yaw))
+                    );
+                    forward.Normalize();
+
+                    Vector3 right = Vector3.Cross(forward, Vector3.Up);
+                    if (right.LengthSquared() > 0.001f) right.Normalize();
+
+                    Vector3 movement = Vector3.Zero;
+
+                    // WASD: movimiento
+                    if (KeyboardState.IsKeyDown(Keys.W))
+                        movement += forward * moveSpeed;
+                    if (KeyboardState.IsKeyDown(Keys.S) && !IsKeyCtrlIsPressed)
+                        movement -= forward * moveSpeed;
+                    if (KeyboardState.IsKeyDown(Keys.A))
+                        movement -= right * moveSpeed;
+                    if (KeyboardState.IsKeyDown(Keys.D))
+                        movement += right * moveSpeed;
+
+                    // Q/E: subir/bajar
+                    if (KeyboardState.IsKeyDown(Keys.Q))
+                        movement += Vector3.Up * moveSpeed;
+                    if (KeyboardState.IsKeyDown(Keys.E))
+                        movement -= Vector3.Up * moveSpeed;
+
+                    YTBGlobalState.FreeCameraPosition += movement;
+
+                    // Flechas: rotación
+                    if (KeyboardState.IsKeyDown(Keys.Right))
+                        YTBGlobalState.FreeCameraYaw -= rotateSpeed;
+                    if (KeyboardState.IsKeyDown(Keys.Left))
+                        YTBGlobalState.FreeCameraYaw += rotateSpeed;
+                    if (KeyboardState.IsKeyDown(Keys.Up))
+                        YTBGlobalState.FreeCameraPitch += rotateSpeed;
+                    if (KeyboardState.IsKeyDown(Keys.Down))
+                        YTBGlobalState.FreeCameraPitch -= rotateSpeed;
+
+                    // Clamp pitch para evitar gimbal lock
+                    YTBGlobalState.FreeCameraPitch = MathHelper.Clamp(
+                        YTBGlobalState.FreeCameraPitch,
+                        -MathHelper.PiOver2 + 0.01f,
+                        MathHelper.PiOver2 - 0.01f);
+
+                    // Space: resetear cámara libre
+                    if (KeyboardState.IsKeyDown(Keys.Space))
+                    {
+                        YTBGlobalState.FreeCameraInitialized = false;
+                    }
+                }
+
+                return;
             }
 
-            return;
+            //return;
 #endif
 
 
 
-            InputManager.Update(gameTime);
             var entityManager = EntityManager;
             if (entityManager == null) return;
+            InputManager.Update(gameTime);
 
 
             if (entityManager.YotsubaEntities.Count > 1000)

@@ -39,7 +39,7 @@ namespace SandBoxGame.Core
         public const bool IS_FULLSCREEN =
 #if YTB
             // Para el editor visual
-            true
+            false
 #else
             // Para el juego
             true

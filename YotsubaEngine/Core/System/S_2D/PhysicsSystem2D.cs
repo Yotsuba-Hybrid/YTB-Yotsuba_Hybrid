@@ -2,6 +2,7 @@
 
 using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 using YotsubaEngine.Core.Component.C_2D;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;
@@ -197,8 +198,7 @@ namespace YotsubaEngine.Core.System.S_2D
 
             foreach (var layer in tilemap.TileLayers)
             {
-                if (!layer.Name.Contains("Collision", StringComparison.OrdinalIgnoreCase))
-                    continue;
+                bool isCollisionLayer = layer.Name.Contains("Collision", StringComparison.OrdinalIgnoreCase);
 
                 for (int i = 0; i < layer.Data.Length; i++)
                 {
@@ -211,29 +211,65 @@ namespace YotsubaEngine.Core.System.S_2D
                     float worldX = otherTransform.Scale * (tileX * tilemap.TileWidth) + otherTransform.Position.X - originOffsetX;
                     float worldY = otherTransform.Scale * (tileY * tilemap.TileHeight) + otherTransform.Position.Y - originOffsetY;
 
-                    Rectangle tileRect = new Rectangle(
-                        (int)worldX,
-                        (int)worldY,
-                        (int)(tilemap.TileWidth * otherTransform.Scale),
-                        (int)(tilemap.TileHeight * otherTransform.Scale)
-                    );
+                    bool hasNativeCollision = tilemap.Collisions.TryGetValue(gid, out List<Rectangle> nativeRects);
 
-                    if (entityRect.Intersects(tileRect) && !sizeZero)
+                    // Colisión por nombre de layer (comportamiento original): tile completo
+                    if (isCollisionLayer && !hasNativeCollision)
                     {
-                        // Determine collision direction
-                        DetermineCollisionDirection(entityRect, tileRect, ref rigidBody,
-                            ref collisionBottom, ref collisionTop, ref collisionLeft, ref collisionRight);
+                        Rectangle tileRect = new Rectangle(
+                            (int)worldX,
+                            (int)worldY,
+                            (int)(tilemap.TileWidth * otherTransform.Scale),
+                            (int)(tilemap.TileHeight * otherTransform.Scale)
+                        );
 
-                        EventManager.Publish(new OnCollitionEvent()
+                        if (entityRect.Intersects(tileRect) && !sizeZero)
                         {
-                            EntityImpediment = tilemapEntity,
-                            EntityTryMove = entity,
-                            GameTime = gameTime
-                        });
+                            DetermineCollisionDirection(entityRect, tileRect, ref rigidBody,
+                                ref collisionBottom, ref collisionTop, ref collisionLeft, ref collisionRight);
+
+                            EventManager.Publish(new OnCollitionEvent()
+                            {
+                                EntityImpediment = tilemapEntity,
+                                EntityTryMove = entity,
+                                GameTime = gameTime
+                            });
 
 #if YTB
-                        DebugOverlayUI.AddCollision(entity.Name, $"{tilemapEntity.Name} (Tile [{tileX},{tileY}])", gameTime);
+                            DebugOverlayUI.AddCollision(entity.Name, $"{tilemapEntity.Name} (Tile [{tileX},{tileY}])", gameTime);
 #endif
+                        }
+                    }
+
+                    // Colisiones nativas de Tiled: rectángulos personalizados por tile (aplican en cualquier layer)
+                    if (hasNativeCollision)
+                    {
+                        foreach (Rectangle nativeRect in nativeRects)
+                        {
+                            Rectangle collisionRect = new Rectangle(
+                                (int)(worldX + nativeRect.X * otherTransform.Scale),
+                                (int)(worldY + nativeRect.Y * otherTransform.Scale),
+                                (int)(nativeRect.Width * otherTransform.Scale),
+                                (int)(nativeRect.Height * otherTransform.Scale)
+                            );
+
+                            if (entityRect.Intersects(collisionRect) && !sizeZero)
+                            {
+                                DetermineCollisionDirection(entityRect, collisionRect, ref rigidBody,
+                                    ref collisionBottom, ref collisionTop, ref collisionLeft, ref collisionRight);
+
+                                EventManager.Publish(new OnCollitionEvent()
+                                {
+                                    EntityImpediment = tilemapEntity,
+                                    EntityTryMove = entity,
+                                    GameTime = gameTime
+                                });
+
+#if YTB
+                                DebugOverlayUI.AddCollision(entity.Name, $"{tilemapEntity.Name} (Tile [{tileX},{tileY}] native)", gameTime);
+#endif
+                            }
+                        }
                     }
                 }
             }

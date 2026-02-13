@@ -106,6 +106,12 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
         /// Referencia al DebugOverlayUI del GameEngine
         /// </summary>
         private DebugOverlayUI _debugOverlayUI;
+
+        /// <summary>
+        /// Editor de transforms de modelos 3D seleccionados en modo engine.
+        /// <para>Transform editor for selected 3D models in engine mode.</para>
+        /// </summary>
+        private Model3DEditorUI _model3DEditor;
 #endif
         /// <summary>
         /// Acción utilizada para guardar los cambios del juego desde la UI.
@@ -163,6 +169,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
             _consoleUI = new ConsoleUI();
 #if YTB
             _debugOverlayUI = new DebugOverlayUI();
+            _model3DEditor = new Model3DEditorUI();
 #endif
             //EngineUISystem.SendLog("El EngineUiSystem está listo!");
 
@@ -285,6 +292,9 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
 
             // Renderizar Debug Overlay (siempre disponible cuando el juego está activo)
             _debugOverlayUI?.Render();
+
+            // Renderizar editor de modelos 3D seleccionados
+            _model3DEditor?.Render();
 
             // Renderizar alerta de cambio de modo Engine/Game
             RenderModeSwitchAlert(gameTime);
@@ -1246,11 +1256,16 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
         /// </summary>
         private void RenderModeSwitchAlert(GameTime gameTime)
         {
-            if (_modeSwitchAlertTimer <= 0f) return;
+            // Alerta persistente de modelos 3D seleccionados
+            bool hasModel3DSelected = YTBGlobalState.SelectedModel3DEntityIds.Count > 0;
+            bool hasTimedAlert = _modeSwitchAlertTimer > 0f;
 
-            _modeSwitchAlertTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (!hasTimedAlert && !hasModel3DSelected) return;
 
-            float alpha = Math.Min(_modeSwitchAlertTimer / 0.3f, 1f);
+            if (hasTimedAlert)
+                _modeSwitchAlertTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            float alpha = hasTimedAlert ? Math.Min(_modeSwitchAlertTimer / 0.3f, 1f) : 1f;
 
             var io = ImGui.GetIO();
             var windowPos = new Num.Vector2(io.DisplaySize.X * 0.5f, io.DisplaySize.Y * 0.15f);
@@ -1272,14 +1287,26 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
                 ImGuiWindowFlags.NoFocusOnAppearing |
                 ImGuiWindowFlags.NoInputs);
 
-            bool isEngineMode = YTBGlobalState.EngineShortcutsMode;
-            var color = isEngineMode
-                ? new Num.Vector4(1f, 0.85f, 0.2f, alpha)
-                : new Num.Vector4(0.2f, 1f, 0.5f, alpha);
+            // Si hay modelos seleccionados, mostrar alerta persistente de selección
+            if (hasModel3DSelected)
+            {
+                var selColor = new Num.Vector4(1f, 0.4f, 0.3f, 1f);
+                ImGui.PushStyleColor(ImGuiCol.Text, selColor);
+                int count = YTBGlobalState.SelectedModel3DEntityIds.Count;
+                ImGui.Text($"{count} modelo(s) seleccionado(s) — Click en modelo para deseleccionar");
+                ImGui.PopStyleColor();
+            }
+            else
+            {
+                bool isEngineMode = YTBGlobalState.EngineShortcutsMode;
+                var color = isEngineMode
+                    ? new Num.Vector4(1f, 0.85f, 0.2f, alpha)
+                    : new Num.Vector4(0.2f, 1f, 0.5f, alpha);
 
-            ImGui.PushStyleColor(ImGuiCol.Text, color);
-            ImGui.Text(_modeSwitchAlertMessage);
-            ImGui.PopStyleColor();
+                ImGui.PushStyleColor(ImGuiCol.Text, color);
+                ImGui.Text(_modeSwitchAlertMessage);
+                ImGui.PopStyleColor();
+            }
 
             ImGui.End();
             ImGui.PopStyleVar(2);
