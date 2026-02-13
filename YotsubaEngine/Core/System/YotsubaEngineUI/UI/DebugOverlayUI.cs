@@ -127,7 +127,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
         public void Render()
         {
             //// Solo renderizar si estamos en modo juego activo
-            if (RenderSystem2D.IsGameActive)
+            if (!RenderSystem2D.IsGameActive)
                 return;
 
             ImGui.SetNextWindowSize(new Num.Vector2(300, 200), ImGuiCond.FirstUseEver);

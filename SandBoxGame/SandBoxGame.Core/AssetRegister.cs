@@ -29,6 +29,8 @@ namespace SandBoxGame.Core
             "MonoGameTutorial/monogameTutorialSprite",
             "MonoGameTutorial/monogameTutorialSprites",
             "splash",
+            "tiled/localhost_4200_inicio_crm_agregar-prospecto_0_importarIA=true(iPhone 14 Pro Max)",
+            "tiled/localhost_4200_inicio_crm_agregar-prospecto_0_importarIA=true(iPhone 14 Pro Max) (1)",
         };
 
         public static readonly List<string> FontAssets = new List<string>
