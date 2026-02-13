@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -113,6 +114,36 @@ namespace YotsubaEngine.ActionFiles.TMX_Files.TiledCS
                 tileSetImage.Height = Convert.ToInt32(imgNode.Attributes["height"].Value);
                 tileSet.Image = tileSetImage;
 
+                // Parsear colisiones nativas de Tiled (objectgroups dentro de <tile>)
+                tileSet.TileCollisions = new Dictionary<int, YTB<Rectangle>>();
+                XmlNodeList tileNodes = node.SelectNodes("tile");
+                if (tileNodes != null)
+                {
+                    foreach (XmlNode tileNode in tileNodes)
+                    {
+                        int localTileId = Convert.ToInt32(tileNode.Attributes["id"].Value);
+                        XmlNode objGroup = tileNode.SelectSingleNode("objectgroup");
+                        if (objGroup == null) continue;
+
+                        YTB<Rectangle> collisionRects = new YTB<Rectangle>();
+                        XmlNodeList objects = objGroup.SelectNodes("object");
+                        if (objects != null)
+                        {
+                            foreach (XmlNode obj in objects)
+                            {
+                                int ox = obj.Attributes["x"] != null ? (int)Math.Round(Convert.ToDouble(obj.Attributes["x"].Value)) : 0;
+                                int oy = obj.Attributes["y"] != null ? (int)Math.Round(Convert.ToDouble(obj.Attributes["y"].Value)) : 0;
+                                int ow = obj.Attributes["width"] != null ? (int)Math.Round(Convert.ToDouble(obj.Attributes["width"].Value)) : 0;
+                                int oh = obj.Attributes["height"] != null ? (int)Math.Round(Convert.ToDouble(obj.Attributes["height"].Value)) : 0;
+                                collisionRects.Add(new Rectangle(ox, oy, ow, oh));
+                            }
+                        }
+
+                        if (collisionRects.Count > 0)
+                            tileSet.TileCollisions[localTileId] = collisionRects;
+                    }
+                }
+
                 tileSets.Add(tileSet);
             }
 
@@ -215,11 +246,13 @@ namespace YotsubaEngine.ActionFiles.TMX_Files.TiledCS
                     // Almacenamos el tile en el diccionario maestro
                     tilemapComponent.Tiles.Add(currentGid, tileRegion);
 
-                    // Lógica simple de colisiones basada en el nombre del Tileset
-                    if (!tilesetData.Name.Contains("Collision", StringComparison.OrdinalIgnoreCase))
+                    // Colisiones nativas de Tiled: si el tile tiene objectgroup con formas de colisión
+                    if (tilesetData.TileCollisions != null && tilesetData.TileCollisions.TryGetValue(i, out var tileCollisionRects))
                     {
-                        // Si no es una capa de colisión explicita, agregamos colisión por defecto (ajustar según lógica de juego)
-                        tilemapComponent.Collisions.TryAdd(currentGid, sourceRect);
+                        List<Rectangle> rects = new List<Rectangle>(tileCollisionRects.Count);
+                        foreach (var rect in tileCollisionRects)
+                            rects.Add(rect);
+                        tilemapComponent.Collisions[currentGid] = rects;
                     }
                 }
             }
@@ -327,6 +360,13 @@ namespace YotsubaEngine.ActionFiles.TMX_Files.TiledCS
         /// <para>Detailed image metadata.</para>
         /// </summary>
         public TiledTileSetImage Image { get; set; }
+        /// <summary>
+        /// Colisiones nativas de Tiled definidas por tile (objectgroups dentro de tile).
+        /// Clave: ID local del tile. Valor: lista de rectángulos de colisión.
+        /// <para>Native Tiled per-tile collisions (objectgroups inside tile elements).
+        /// Key: local tile ID. Value: list of collision rectangles.</para>
+        /// </summary>
+        public Dictionary<int, YTB<Rectangle>> TileCollisions { get; set; }
     }
 
     /// <summary>

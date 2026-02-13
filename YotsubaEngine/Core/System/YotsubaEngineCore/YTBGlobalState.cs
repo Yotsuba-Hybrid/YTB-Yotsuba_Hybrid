@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using YotsubaEngine.YTB_Toolkit;
 
@@ -202,6 +203,38 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
         /// When true, engine shortcuts work and game inputs are disabled.</para>
         /// </summary>
         public static bool EngineShortcutsMode { get; set; } = false;
+
+#if YTB
+        /// <summary>
+        /// Posición de la cámara libre del engine en el mundo 3D.
+        /// <para>Engine free camera position in 3D world space.</para>
+        /// </summary>
+        internal static Vector3 FreeCameraPosition { get; set; } = Vector3.Zero;
+
+        /// <summary>
+        /// Yaw (rotación horizontal) de la cámara libre del engine en radianes.
+        /// <para>Engine free camera yaw (horizontal rotation) in radians.</para>
+        /// </summary>
+        internal static float FreeCameraYaw { get; set; } = 0f;
+
+        /// <summary>
+        /// Pitch (rotación vertical) de la cámara libre del engine en radianes.
+        /// <para>Engine free camera pitch (vertical rotation) in radians.</para>
+        /// </summary>
+        internal static float FreeCameraPitch { get; set; } = 0f;
+
+        /// <summary>
+        /// Indica si la cámara libre del engine se ha inicializado con la posición actual de la cámara del juego.
+        /// <para>Indicates whether the engine free camera has been initialized from the game camera position.</para>
+        /// </summary>
+        internal static bool FreeCameraInitialized { get; set; } = false;
+
+        /// <summary>
+        /// IDs de las entidades 3D seleccionadas en modo engine. Vacío indica que no hay selección.
+        /// <para>Selected 3D entity IDs in engine mode. Empty means no selection.</para>
+        /// </summary>
+        internal static HashSet<int> SelectedModel3DEntityIds { get; set; } = new();
+#endif
 
     }
 }

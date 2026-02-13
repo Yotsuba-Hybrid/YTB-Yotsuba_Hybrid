@@ -315,10 +315,10 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                                     scene.EntityManager.AddShaderComponent2D(entity, shaderComponent2D);
                                     break;
                                 default:
-                                    throw new NotImplementedException($"El switch entro al default," +
-                                        $" pero no esta contemplada esa posibilidad {component.ComponentName}. Clase YTBFileToGameData, " +
-                                        $"metodo GenerateSceneManager" +
-                                        $"Entidad {entity.Name}");
+                                    _ = new GameWontRun(YTBErrors.ComponentUnknown, element.Name, entity.Name, component.ComponentName, "",
+                                        $"Componente desconocido: '{component.ComponentName}'",
+                                        "Verifique que el nombre del componente sea válido o que esté implementado en el engine");
+                                    break;
                             }
                         }
 
@@ -330,7 +330,8 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 
 					if (scene.EntityManager.Camera == null)
 					{
-						throw new GameWontRun($"El juego necesita que la escena {scene.SceneName} tenga una camara para poder continuar.", YTBErrors.CameraNotFound);
+						_ = new GameWontRun($"El juego necesita que la escena {scene.SceneName} tenga una camara para poder continuar.", YTBErrors.CameraNotFound);
+						continue;
 					}
 
 					Yotsuba ent = scene.EntityManager.YotsubaEntities.FirstOrDefault(x => x.Name == entityFollowCameraName);
@@ -340,8 +341,10 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                     }
                     else
                     {
-						throw new GameWontRun($"El juego necesita que en la escena {scene.SceneName} la camara siga a una entidad. Por favor, selecciona una entidad para que la camara la siga.", YTBErrors.CameraNotFound);
+						_ = new GameWontRun($"El juego necesita que en la escena {scene.SceneName} la camara siga a una entidad. Por favor, selecciona una entidad para que la camara la siga.", YTBErrors.CameraNotFound);
 					}
+
+                    sceneManager.Scenes.Add(scene);
 				}
                 if (!String.IsNullOrEmpty(YTBGlobalState.LastSceneNameBeforeUpdate))
                 {
@@ -410,7 +413,8 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 
                     if(element.Entities == null)
                     {
-                        throw new GameWontRun($"Tu escena {element.Name} no tiene entidades. Si lo dejas asi, tu juego en produccion no funcionara.", YTBErrors.GameSceneWithoutEntities);
+                        _ = new GameWontRun($"Tu escena {element.Name} no tiene entidades. Si lo dejas asi, tu juego en produccion no funcionara.", YTBErrors.GameSceneWithoutEntities);
+                        continue;
                     }
                     //Agrego entidades a la escena
                     foreach (YTBEntity en in element.Entities)
@@ -484,7 +488,14 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                                 case nameof(TileMapComponent2D):
                                     if (String.IsNullOrEmpty(component.Propiedades[0].Item2))
                                         break;
-                                    scene.EntityManager.AddTileMapComponent(entity, TiledManager.GenerateTilemapComponent(component.Propiedades[0].Item2));
+                                    try
+                                    {
+                                        scene.EntityManager.AddTileMapComponent(entity, TiledManager.GenerateTilemapComponent(component.Propiedades[0].Item2));
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        _ = new GameWontRun(YTBErrors.TileMapParseFailed, element.Name, entity.Name, nameof(TileMapComponent2D), "", $"Error al parsear TileMapComponent2D: {ex.Message}", "Revise que el archivo TMX sea válido y que la ruta sea correcta");
+                                    }
                                     break;
                                 case nameof(FontComponent2D):
                                     FontComponent2D fontComponent2D = ConvertToFont(component, entity.Name, element.Name);
@@ -495,10 +506,10 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                                     scene.EntityManager.AddShaderComponent2D(entity, shaderComponent2D);
                                     break;
                                 default:
-                                    throw new NotImplementedException($"El switch entro al default," +
-                                       $" pero no esta contemplada esa posibilidad {component.ComponentName}. Clase YTBFileToGameData, " +
-                                       $"metodo GenerateSceneManager" +
-                                       $"Entidad {entity.Name}");
+                                    _ = new GameWontRun(YTBErrors.ComponentUnknown, element.Name, entity.Name, component.ComponentName, "",
+                                        $"Componente desconocido: '{component.ComponentName}'",
+                                        "Verifique que el nombre del componente sea válido o que esté implementado en el engine");
+                                    break;
                             }
                         }
 
@@ -507,7 +518,8 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 
                     if(scene.EntityManager.Camera == null)
                     {
-						throw new GameWontRun($"El juego necesita que la escena {scene.SceneName} tenga una camara para poder continuar.", YTBErrors.CameraNotFound);
+						_ = new GameWontRun($"El juego necesita que la escena {scene.SceneName} tenga una camara para poder continuar.", YTBErrors.CameraNotFound);
+						continue;
 					}
 
 					//Agrego la escena al arreglo de escenas
@@ -519,7 +531,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                     }
                     else
                     {
-                        throw new GameWontRun($"El juego necesita que en la escena {scene.SceneName} la camara siga a una entidad. Por favor, selecciona una entidad para que la camara la siga.", YTBErrors.CameraFollowNothing);
+                        _ = new GameWontRun($"El juego necesita que en la escena {scene.SceneName} la camara siga a una entidad. Por favor, selecciona una entidad para que la camara la siga.", YTBErrors.CameraFollowNothing);
                     }
                 }
 
@@ -531,7 +543,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                 }
                 else
                 {
-                    throw new GameWontRun($"El juego necesita tener escenas para poder funcionar, por favor, considera crear una.", YTBErrors.GameWithoutScenes);
+                    _ = new GameWontRun($"El juego necesita tener escenas para poder funcionar, por favor, considera crear una.", YTBErrors.GameWithoutScenes);
                 }
                 
                 return sceneManager;
@@ -582,29 +594,34 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
         {
             ScriptComponent scriptComponent = new ScriptComponent();
 
-            
-
-                foreach (var prop in component.Propiedades)
+            try
             {
-                switch (prop.Item1)
+                foreach (var prop in component.Propiedades)
                 {
-                    case "Scripts":
-                        string scripts = prop.Item2;
-                        Dictionary<ScriptComponentType, string> scriptLanguages = new Dictionary<ScriptComponentType, string>(3);
+                    switch (prop.Item1)
+                    {
+                        case "Scripts":
+                            string scripts = prop.Item2;
+                            Dictionary<ScriptComponentType, string> scriptLanguages = new Dictionary<ScriptComponentType, string>(3);
 
-                        var scriptPath = prop.Item2.Split("&;&")[0];
+                            var scriptPath = prop.Item2.Split("&;&")[0];
                         
-                            string type = scriptPath.Split("&:&")[0];
-                            string path = scriptPath.Split("&:&")[1];
-                            if (Enum.TryParse<ScriptComponentType>(type, true, out var result))
-                            {
-                                scriptLanguages.Add(result, path);
-                            }
+                                string type = scriptPath.Split("&:&")[0];
+                                string path = scriptPath.Split("&:&")[1];
+                                if (Enum.TryParse<ScriptComponentType>(type, true, out var result))
+                                {
+                                    scriptLanguages.Add(result, path);
+                                }
                         
 
-                        scriptComponent.ScriptLanguaje = scriptLanguages;
-                        break;
+                            scriptComponent.ScriptLanguaje = scriptLanguages;
+                            break;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                _ = new GameWontRun(YTBErrors.ScriptParseFailed, "", entity.Name, nameof(ScriptComponent), "", $"Error al parsear ScriptComponent: {ex.Message}", "Revise que las propiedades del script tengan el formato correcto (tipo&:&ruta separados por &;&)");
             }
 
             return scriptComponent;
@@ -625,6 +642,8 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
         private static TransformComponent ConvertToTransform(YTBComponents component, string sceneName = "", string entityName = "")
         {
             TransformComponent transform = new();
+            try
+            {
             foreach(var prop in component.Propiedades)
             {
                 switch (prop.Item1)
@@ -687,6 +706,11 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                         }   
                         break;
                 }
+            }
+            }
+            catch (Exception ex)
+            {
+                _ = new GameWontRun(YTBErrors.TransformParseFailed, sceneName, entityName, nameof(TransformComponent), "", $"Error al parsear TransformComponent: {ex.Message}", "Revise que todas las propiedades del TransformComponent sean válidas");
             }
 
             return transform;
@@ -786,6 +810,8 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
         private static RigidBodyComponent2D ConvertTo2DRigibody(YTBComponents component, string name, string sceneName = "")
         {
             RigidBodyComponent2D rigidBodyComponent2D = new RigidBodyComponent2D();
+            try
+            {
             string OffsetCollision = component.Propiedades.FirstOrDefault(x => x.Item1 == "OffSetCollision").Item2;
             string Velocity = component.Propiedades.FirstOrDefault(x => x.Item1 == "Velocity").Item2;
             string GameType = component.Propiedades.FirstOrDefault(x => x.Item1 == "GameType").Item2;
@@ -826,6 +852,11 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
             {
                 _ = new GameWontRun(YTBErrors.RigidBody2DParseFailed, sceneName, name, nameof(RigidBodyComponent2D), "Mass", $"No se pudo parsear Mass: '{Mass}'", "Asegúrese de que Mass sea un valor válido del enum MassLevel");
             }
+            }
+            catch (Exception ex)
+            {
+                _ = new GameWontRun(YTBErrors.RigidBody2DParseFailed, sceneName, name, nameof(RigidBodyComponent2D), "", $"Error al parsear RigidBodyComponent2D: {ex.Message}", "Revise que todas las propiedades del RigidBody (OffSetCollision, Velocity, GameType, Mass) sean válidas");
+            }
             
             return rigidBodyComponent2D;
         }
@@ -848,6 +879,8 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
         {
             ButtonComponent2D buttonComponent2D = new ButtonComponent2D();
 
+            try
+            {
             string EffectiveArea = component.Propiedades.FirstOrDefault(x => x.Item1 == "EffectiveArea").Item2;
             if (int.TryParse(EffectiveArea.Split(",")[0], out int x) && int.TryParse(EffectiveArea.Split(",")[1], out int y) &&
                 int.TryParse(EffectiveArea.Split(",")[2], out int w) && int.TryParse(EffectiveArea.Split(",")[3], out int h))
@@ -862,6 +895,11 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
             bool.TryParse(component.Propiedades.FirstOrDefault(x => x.Item1 == nameof(buttonComponent2D.IsActive)).Item2, out bool IsActive);
 
             buttonComponent2D.IsActive = IsActive;
+            }
+            catch (Exception ex)
+            {
+                _ = new GameWontRun(YTBErrors.ButtonParseFailed, sceneName, name, nameof(ButtonComponent2D), "", $"Error al parsear ButtonComponent2D: {ex.Message}", "Revise que todas las propiedades del botón (EffectiveArea, IsActive) sean válidas");
+            }
 
             return buttonComponent2D;
         }
@@ -882,6 +920,9 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
         /// <returns>Camera component. Componente de cámara.</returns>
         private static CameraComponent3D ConvertToCamera(EntityManager entityManager, YTBComponents component, int entity, out string entityFollowName, string sceneName = "", string entityName = "")
         {
+            entityFollowName = string.Empty;
+            try
+            {
             // Obtener la propiedad como string y dividirla
             string[] initialPositionStrs = component.Propiedades.FirstOrDefault(x => x.Item1 == "InitialPosition").Item2.Split(",");
 
@@ -928,6 +969,12 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 
             entityFollowName = component.Propiedades.FirstOrDefault(x => x.Item1 == "EntityName").Item2;
             return cameraComponent;
+            }
+            catch (Exception ex)
+            {
+                _ = new GameWontRun(YTBErrors.CameraParseFailed, sceneName, entityName, nameof(CameraComponent3D), "", $"Error al parsear CameraComponent3D: {ex.Message}", "Revise que todas las propiedades de la cámara (InitialPosition, AngleView, NearRender, FarRender, EntityName) sean válidas");
+                return new CameraComponent3D(entityManager, Vector3.Zero, 45f, 0.1f, 1000f);
+            }
         }
 
         /// <summary>
@@ -948,6 +995,8 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
         {
             AnimationComponent2D animationComponent2D = new AnimationComponent2D();
 
+            try
+            {
             string TextureAtlasPath = component.Propiedades.FirstOrDefault(x => x.Item1 == "TextureAtlasPath").Item2;
 
             TextureAtlas atlas;
@@ -993,6 +1042,11 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
             {
                 _ = new GameWontRun(YTBErrors.AnimationParseFailed, sceneName, name, nameof(AnimationComponent2D), "CurrentAnimationType", $"CurrentAnimationType no válido: '{CurrentAnimationType}'", "Asegúrese de que CurrentAnimationType sea un valor válido del enum AnimationType");
             }
+            }
+            catch (Exception ex)
+            {
+                _ = new GameWontRun(YTBErrors.AnimationParseFailed, sceneName, name, nameof(AnimationComponent2D), "", $"Error al parsear AnimationComponent2D: {ex.Message}", "Revise que todas las propiedades de la animación (TextureAtlasPath, AnimationBindings, CurrentAnimationType) sean válidas");
+            }
 
             return animationComponent2D;
         }
@@ -1016,6 +1070,8 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
         {
             InputComponent inputComponent = new InputComponent();
 
+            try
+            {
             foreach (var prop in component.Propiedades)
             {
                 switch (prop.Item1)
@@ -1129,6 +1185,11 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                         }
                         break;
                 }
+            }
+            }
+            catch (Exception ex)
+            {
+                _ = new GameWontRun(YTBErrors.InputParseFailed, sceneName, name, nameof(InputComponent), "", $"Error al parsear InputComponent: {ex.Message}", "Revise que todas las propiedades del InputComponent (InputsInUse, GamePadIndex, KeyboardMappings, MouseMappings) sean válidas");
             }
 
             return inputComponent;

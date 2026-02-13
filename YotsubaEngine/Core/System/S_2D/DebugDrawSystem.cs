@@ -236,48 +236,59 @@ namespace YotsubaEngine.Core.System.S_2D
                 ref TransformComponent transform = ref _entityManager.TransformComponents[entity.Id];
 
                 // Calcular el desplazamiento del origen (igual que en TileMapSystem2D.DrawTileMap)
-                // El tilemap usa origin = transform.Size * 0.5, lo que desplaza visualmente el dibujo
-                // Para que las colisiones coincidan, restamos ese mismo offset escalado
                 float originOffsetX = transform.Size.X * 0.5f * transform.Scale;
                 float originOffsetY = transform.Size.Y * 0.5f * transform.Scale;
 
                 // Iterar sobre cada capa del tilemap
                 foreach (var layer in tilemap.TileLayers)
                 {
-                    // Solo procesar capas de colisión (nombre contiene "Collision")
-                    if (!layer.Name.Contains("Collision", StringComparison.OrdinalIgnoreCase))
-                        continue;
+                    bool isCollisionLayer = layer.Name.Contains("Collision", StringComparison.OrdinalIgnoreCase);
 
-                    // Iterar sobre cada tile de la capa de colisión
                     for (int i = 0; i < layer.Data.Length; i++)
                     {
                         int gid = layer.Data[i];
-                        
-                        // GID = 0 significa tile vacío, no hay colisión
                         if (gid == 0)
                             continue;
 
-                        // Calcular la posición del tile en el mapa
                         int tileX = i % tilemap.Width;
                         int tileY = i / tilemap.Width;
 
-                        // Calcular la posición en píxeles (igual que TileMapSystem2D)
-                        // La fórmula es: transform.Scale * x + transform.Position.X - originOffset
                         float worldX = transform.Scale * (tileX * tilemap.TileWidth) + transform.Position.X - originOffsetX;
                         float worldY = transform.Scale * (tileY * tilemap.TileHeight) + transform.Position.Y - originOffsetY;
 
-                        Rectangle tileCollisionRect = new Rectangle(
-                            (int)worldX,
-                            (int)worldY,
-                            (int)(tilemap.TileWidth * transform.Scale),
-                            (int)(tilemap.TileHeight * transform.Scale)
-                        );
+                        bool hasNativeCollisions = tilemap.Collisions != null && tilemap.Collisions.ContainsKey(gid);
 
-                        // Dibujar rectángulo semi-transparente rojo
-                        Color fillColor = new Color(255, 0, 0, 50); // Rojo transparente
-                        Color borderColor = new Color(255, 0, 0, 200); // Rojo más visible para bordes
+                        // Colisiones nativas de Tiled (per-tile custom shapes)
+                        if (hasNativeCollisions)
+                        {
+                            Color nativeFill = new Color(255, 165, 0, 50);   // Naranja transparente
+                            Color nativeBorder = new Color(255, 165, 0, 200); // Naranja visible
 
-                        DrawRectangle(spriteBatch, tileCollisionRect, fillColor, borderColor, 2);
+                            foreach (var collRect in tilemap.Collisions[gid])
+                            {
+                                Rectangle worldRect = new Rectangle(
+                                    (int)(worldX + collRect.X * transform.Scale),
+                                    (int)(worldY + collRect.Y * transform.Scale),
+                                    (int)(collRect.Width * transform.Scale),
+                                    (int)(collRect.Height * transform.Scale)
+                                );
+                                DrawRectangle(spriteBatch, worldRect, nativeFill, nativeBorder, 2);
+                            }
+                        }
+                        // Colisión por nombre de layer (full tile rect), solo si no tiene nativas
+                        else if (isCollisionLayer)
+                        {
+                            Rectangle tileCollisionRect = new Rectangle(
+                                (int)worldX,
+                                (int)worldY,
+                                (int)(tilemap.TileWidth * transform.Scale),
+                                (int)(tilemap.TileHeight * transform.Scale)
+                            );
+
+                            Color fillColor = new Color(255, 0, 0, 50);
+                            Color borderColor = new Color(255, 0, 0, 200);
+                            DrawRectangle(spriteBatch, tileCollisionRect, fillColor, borderColor, 2);
+                        }
                     }
                 }
             }

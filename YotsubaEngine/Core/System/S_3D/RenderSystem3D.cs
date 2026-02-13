@@ -12,7 +12,9 @@ using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Exceptions;
 using YotsubaEngine.Graphics;
 using YotsubaEngine.HighestPerformanceTypes;
+using YotsubaEngine.Input;
 using Num = System.Numerics;
+using static YotsubaEngine.Core.System.S_AGNOSTIC.InputSystem;
 namespace YotsubaEngine.Core.System.S_3D
 {
     /// <summary>
@@ -105,9 +107,6 @@ namespace YotsubaEngine.Core.System.S_3D
 			if (GameWontRun.GameWontRunByException) return;
 #endif
 
-            if (EntityManager == null) return;
-            CreateObjects3DExaples();
-
             ref var entities = ref EntityManager.YotsubaEntities;
             ref var Models = ref EntityManager.ModelComponents3D;
 
@@ -117,16 +116,83 @@ namespace YotsubaEngine.Core.System.S_3D
 
             CameraComponent3D camera = EntityManager.Camera;
             camera.Update();
+
+#if YTB
+            // Selección múltiple de modelos 3D en modo engine via ray picking
+            if (YTBGlobalState.EngineShortcutsMode)
+            {
+                MouseInfo mouse = InputManager.Instance.Mouse;
+                KeyboardInfo keyboard = InputManager.Instance.Keyboard;
+                // Click izquierdo: toggle selección del modelo bajo el cursor
+                if (mouse.WasButtonJustPressed(MouseButton.Left) && keyboard.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftControl))
+                {
+                    Viewport viewport = YTBGlobalState.GraphicsDevice.Viewport;
+                    Vector3 nearPoint = viewport.Unproject(
+                        new Vector3(mouse.X, mouse.Y, 0f),
+                        camera.ProjectionMatrix, camera.ViewMatrix, Matrix.Identity);
+                    Vector3 farPoint = viewport.Unproject(
+                        new Vector3(mouse.X, mouse.Y, 1f),
+                        camera.ProjectionMatrix, camera.ViewMatrix, Matrix.Identity);
+
+                    Vector3 direction = farPoint - nearPoint;
+                    direction.Normalize();
+                    Ray ray = new Ray(nearPoint, direction);
+
+                    float closestDistance = float.MaxValue;
+                    int closestEntityId = -1;
+
+                    foreach (var entity in entities)
+                    {
+                        if (entity.HasNotComponent(YTBComponent.Model3D)) continue;
+                        ref var model = ref Models[entity.Id];
+                        ref TransformComponent transform = ref EntityManager.TransformComponents[entity.Id];
+
+                        foreach (ModelMesh mesh in model.Model.Meshes)
+                        {
+                            BoundingSphere sphere = mesh.BoundingSphere;
+                            sphere = sphere.Transform(
+                                Matrix.CreateTranslation(transform.Position));
+
+                            float? dist = ray.Intersects(sphere);
+                            if (dist.HasValue && dist.Value < closestDistance)
+                            {
+                                closestDistance = dist.Value;
+                                closestEntityId = entity.Id;
+                            }
+                        }
+                    }
+
+                    if (closestEntityId != -1)
+                    {
+                        var selected = YTBGlobalState.SelectedModel3DEntityIds;
+                        if (selected.Contains(closestEntityId))
+                        {
+                            selected.Remove(closestEntityId);
+                            EngineUISystem._instance?.ShowModeSwitchAlert("Modelo deseleccionado");
+                        }
+                        else
+                        {
+                            selected.Add(closestEntityId);
+                            EngineUISystem._instance?.ShowModeSwitchAlert(
+                                $"{selected.Count} modelo(s) seleccionado(s)");
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // Al salir de modo engine, limpiar selección
+                YTBGlobalState.SelectedModel3DEntityIds.Clear();
+            }
+#endif
+
             foreach (var entity in entities)
             {
-                //ref var storageObjects3D = ref EntityManager.StorageObjectS3D[entity];
-                //if(!storageObjects3D.IsVisible) continue;
-                //foreach (var entityObject3D in storageObjects3D.Object3Ds)
-                //{
-
                 if (entity.HasNotComponent(YTBComponent.Model3D)) continue;
                 ref var model = ref Models[entity.Id];
-                camera.DrawModel(model, ref EntityManager.TransformComponents[entity.Id], entity.HasComponent(YTBComponent.Shader) ? EntityManager.ShaderComponents[entity.Id] : null);
+                camera.DrawModel(model, ref EntityManager.TransformComponents[entity.Id],
+                    entity.HasComponent(YTBComponent.Shader) ? EntityManager.ShaderComponents[entity.Id] : null,
+                    entity.Id);
             }
 
             foreach (var entity in entities)

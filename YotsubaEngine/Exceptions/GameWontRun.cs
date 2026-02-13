@@ -346,6 +346,12 @@ namespace YotsubaEngine.Exceptions
 			/// <para>TileMapComponent2D parse failed.</para>
 			/// </summary>
 			TileMapParseFailed = 1 << 20,
+
+			/// <summary>
+			/// Componente desconocido encontrado en el archivo .ytb.
+			/// <para>Unknown component found in .ytb file.</para>
+			/// </summary>
+			ComponentUnknown = 1 << 21,
         }
 	}
 }
