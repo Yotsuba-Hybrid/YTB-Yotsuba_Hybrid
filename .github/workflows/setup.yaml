@@ -31,13 +31,12 @@ jobs:
           echo "Renombrando: $OLD_NAME -> $NEW_NAME"
 
           if [ "$NEW_NAME" == "$OLD_NAME" ]; then
-            echo "El nombre ya es correcto. Borrando script..."
-            rm .github/workflows/setup.yml
+            echo "El nombre ya es correcto. No hay nada que renombrar."
             exit 0
           fi
 
           # 1. Reemplazo de contenido
-          grep -rl "$OLD_NAME" . --exclude-dir=.git --exclude=".github/workflows/setup.yml" | while read -r file ; do
+          grep -rl "$OLD_NAME" . --exclude-dir=.git --exclude=".github/workflows/setup.yml" --exclude=".github/workflows/setup.yaml" | while read -r file ; do
             sed -i "s/$OLD_NAME/$NEW_NAME/g" "$file"
           done
 
@@ -50,9 +49,6 @@ jobs:
             new_filename="${filename//$OLD_NAME/$NEW_NAME}"
             mv "$path" "$dir/$new_filename"
           done
-
-      - name: Eliminar este workflow
-        run: rm -f .github/workflows/setup.yml
 
       - name: Guardar cambios
         uses: stefanzweifel/git-auto-commit-action@v5
