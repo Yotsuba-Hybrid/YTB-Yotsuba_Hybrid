@@ -1,0 +1,95 @@
+name: 🔄 Update Engine & Tools
+
+on: 
+  workflow_dispatch:
+    inputs:
+      target_branch:
+        description: 'Rama oficial a descargar (develop/master)'
+        required: true
+        default: 'develop'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-engine:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout User Repo
+        uses: actions/checkout@v4
+
+      - name: Checkout Official Engine
+        uses: actions/checkout@v4
+        with:
+          # EDITADO: Ahora la fuente de la verdad es tu repositorio oficial
+          repository: 'Yotsuba-Hybrid/YTB-Yotsuba_Hybrid'
+          ref: ${{ inputs.target_branch }}
+          path: 'temp_official_source'
+
+      - name: Sync Components
+        run: |
+          # ---------------- CONFIGURACIÓN ----------------
+          # Lista de archivos y carpetas a sincronizar
+          # Asegúrate de que estas carpetas existan en la raíz de Yotsuba-Hybrid
+          ITEMS_TO_SYNC=(
+            "YotsubaEngine"
+            "YTBContentBuilder"
+            ".github/workflows/update-engine.yml"
+          )
+          # -----------------------------------------------
+
+          echo "🚀 Iniciando actualización inteligente..."
+
+          for item in "${ITEMS_TO_SYNC[@]}"; do
+            echo "------------------------------------------------"
+            echo "📦 Procesando: $item"
+
+            # 1. Verificar existencia en el origen (Oficial)
+            if [ ! -e "temp_official_source/$item" ]; then
+              echo "❌ Error Crítico: No se encontró '$item' en el repositorio oficial (Yotsuba-Hybrid)."
+              exit 1
+            fi
+
+            # 2. Borrar versión antigua local
+            if [ -e "$item" ]; then
+               echo "🗑️  Eliminando versión antigua..."
+               rm -rf "$item"
+            else
+               echo "✨ El elemento es nuevo para este repo."
+            fi
+
+            # 3. Preparar destino y Copiar
+            echo "🔄 Copiando nueva versión..."
+            
+            # Aseguramos que la carpeta contenedora exista
+            mkdir -p "$(dirname "$item")"
+            
+            # Copiamos preservando atributos
+            cp -rp "temp_official_source/$item" "$item"
+            
+            echo "✅ Actualizado correctamente."
+          done
+
+          # Limpieza final
+          rm -rf temp_official_source
+          echo "------------------------------------------------"
+          echo "🎉 Sincronización completa."
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore(engine): Update Core, Tools & Workflows"
+          title: "🔄 Update Engine Core & Updater"
+          body: |
+            Este PR actualiza los componentes del motor y sus herramientas a la última versión de la rama `${{ inputs.target_branch }}` del repositorio oficial **Yotsuba-Hybrid**.
+            
+            **Componentes actualizados:**
+            * `YotsubaEngine` (Core)
+            * `YTBContentBuilder` (Tools)
+            * `.github/workflows/update-engine.yml` (Lógica de actualización)
+            
+            ⚠️ *Se han reemplazado estos elementos con la versión oficial. Revisa los cambios antes de aceptar.*
+          branch: "update/engine-full-sync"
+          base: ${{ github.ref_name }}

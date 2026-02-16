@@ -22,40 +22,9 @@ namespace YotsubaEngine.Audio
         public static partial void InitializeAudioAssets()
         {
             // Register sound effects / Registrar efectos de sonido
-            IAudioRegistry.SoundEffects.TryAdd("bounce", () => YTBGlobalState.ContentManager.Load<SoundEffect>("Audio/bounce"));
-            IAudioRegistry.SoundEffects.TryAdd("collect", () => YTBGlobalState.ContentManager.Load<SoundEffect>("Audio/collect"));
-            IAudioRegistry.SoundEffects.TryAdd("ui", () => YTBGlobalState.ContentManager.Load<SoundEffect>("Audio/ui"));
 
             // Register songs / Registrar canciones
-            IAudioRegistry.Songs.TryAdd("theme", () => YTBGlobalState.ContentManager.Load<Song>("Audio/theme"));
         }
 
-        /// <summary>
-        /// Static accessors for sound effects (cached on first access).
-        /// Accesos estáticos para efectos de sonido (cacheados en primer acceso).
-        /// </summary>
-        public static class SFX
-        {
-            private static SoundEffect _bounce;
-            /// <summary>Sound effect: bounce</summary>
-            public static SoundEffect bounce => _bounce ??= YTBGlobalState.ContentManager.Load<SoundEffect>("Audio/bounce");
-            private static SoundEffect _collect;
-            /// <summary>Sound effect: collect</summary>
-            public static SoundEffect collect => _collect ??= YTBGlobalState.ContentManager.Load<SoundEffect>("Audio/collect");
-            private static SoundEffect _ui;
-            /// <summary>Sound effect: ui</summary>
-            public static SoundEffect ui => _ui ??= YTBGlobalState.ContentManager.Load<SoundEffect>("Audio/ui");
-        }
-
-        /// <summary>
-        /// Static accessors for songs/music (cached on first access).
-        /// Accesos estáticos para canciones/música (cacheados en primer acceso).
-        /// </summary>
-        public static class Music
-        {
-            private static Song _theme;
-            /// <summary>Song: theme</summary>
-            public static Song theme => _theme ??= YTBGlobalState.ContentManager.Load<Song>("Audio/theme");
-        }
     }
 }
