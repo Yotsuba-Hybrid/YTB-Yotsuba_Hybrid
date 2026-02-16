@@ -11,7 +11,7 @@
   </metadata>
 
   <files>
-    <file src="**\*" target="content" exclude="**\bin\**;**\obj\**;**\.git\**;**\.github\**;**\.obsidian\**;**\.vs\**;YTBHybrid.nu;SandBoxGame\SandBoxGame.Core\Assets\*\**;YTBHybrid.nuspec;YTBHybrid.Blank.nuspec;.template-overrides\**;.template.config\template.json" />
+    <file src="**\*" target="contentFiles/any/any" exclude="**\bin\**;**\obj\**;**\.git\**;**\.github\**;**\.obsidian\**;**\.vs\**;YTBHybrid.nu;SandBoxGame\SandBoxGame.Core\Assets\*\**;YTBHybrid.nuspec;YTBHybrid.Blank.nuspec;.template-overrides\**;.template.config\template.json" />
     <file src="SandBoxGame\SandBoxGame.Core\Assets\GameConfig\**\*" target="content\SandBoxGame\SandBoxGame.Core\Assets\GameConfig" exclude="**\YotsubaGame.ytb;**\YotsubaGameConfig.ytb;**\YotsubaEngineHistory.ytb" />
     <file src=".template-overrides\GameConfig\YotsubaGame.ytb" target="content\SandBoxGame\SandBoxGame.Core\Assets\GameConfig\YotsubaGame.ytb" />
     <file src=".template-overrides\GameConfig\YotsubaGameConfig.ytb" target="content\SandBoxGame\SandBoxGame.Core\Assets\GameConfig\YotsubaGameConfig.ytb" />
