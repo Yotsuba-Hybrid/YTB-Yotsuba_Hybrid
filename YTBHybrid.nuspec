@@ -4,7 +4,7 @@
     <id>Yotsuba.Hybrid.Template</id>
     <version>1.0.0</version>
     <authors>Yotsuba Hybrid</authors>
-    <description>Plantilla oficial de Yotsuba Hybrid Multiplatforma</description>
+    <description>Plantilla oficial de Yotsuba Hybrid Multiplatforma con Juego de prueba</description>
     <packageTypes>
       <packageType name="Template" />
     </packageTypes>
