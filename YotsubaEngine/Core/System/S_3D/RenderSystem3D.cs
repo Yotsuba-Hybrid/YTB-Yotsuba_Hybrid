@@ -144,14 +144,22 @@ namespace YotsubaEngine.Core.System.S_3D
                     foreach (var entity in entities)
                     {
                         if (entity.HasNotComponent(YTBComponent.Model3D)) continue;
-                        ref var model = ref Models[entity.Id];
-                        ref TransformComponent transform = ref EntityManager.TransformComponents[entity.Id];
+                        ref ModelComponent3D model = ref Models[entity];
+                        ref TransformComponent transform = ref EntityManager.TransformComponents[entity];
 
+                        float sphereRadius = model.RadiusSphere;
                         foreach (ModelMesh mesh in model.Model.Meshes)
                         {
                             BoundingSphere sphere = mesh.BoundingSphere;
                             sphere = sphere.Transform(
-                                Matrix.CreateTranslation(transform.Position));
+                                Matrix.CreateTranslation(transform.Position))
+                                ;
+                            if(sphereRadius >= 0)
+                            {
+                                sphere.Radius = sphereRadius;
+                            }
+
+                            sphere.Center += model.SphereOffset;
 
                             float? dist = ray.Intersects(sphere);
                             if (dist.HasValue && dist.Value < closestDistance)

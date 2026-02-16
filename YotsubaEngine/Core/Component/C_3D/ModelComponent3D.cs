@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 
 namespace YotsubaEngine.Core.Component.C_3D
@@ -22,5 +23,8 @@ namespace YotsubaEngine.Core.Component.C_3D
         /// </summary>
         public bool IsVisible { get; set; } = true;
 
+        public float RadiusSphere { get; set; }
+
+        public Vector3 SphereOffset { get; set; } = Vector3.Zero;
     }
 }
