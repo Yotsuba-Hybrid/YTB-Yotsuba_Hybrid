@@ -17,8 +17,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup NuGet
-        uses: NuGet/setup-nuget@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
 
       - name: Set package version
         shell: bash
@@ -31,13 +33,13 @@ jobs:
         shell: bash
         run: |
           mkdir -p artifacts
-          nuget pack YTBHybrid.nuspec -Version "$PACKAGE_VERSION" -OutputDirectory artifacts
-          nuget pack YTBHybrid.Blank.nuspec -Version "$PACKAGE_VERSION" -OutputDirectory artifacts
+          dotnet nuget pack YTBHybrid.nuspec -Version "$PACKAGE_VERSION" -OutputDirectory artifacts
+          dotnet nuget pack YTBHybrid.Blank.nuspec -Version "$PACKAGE_VERSION" -OutputDirectory artifacts
 
       - name: Push packages to NuGet.org
         shell: bash
         run: |
-          nuget push "artifacts/*.nupkg" \
-            -Source "https://api.nuget.org/v3/index.json" \
-            -ApiKey "${{ secrets.NUGET_API_KEY }}" \
-            -SkipDuplicate
+          dotnet nuget push "artifacts/*.nupkg" \
+            --source https://api.nuget.org/v3/index.json \
+            --api-key "${{ secrets.NUGET_API_KEY }}" \
+            --skip-duplicate
