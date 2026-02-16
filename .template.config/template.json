@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "Yotsuba Hybrid",
+    "classifications": [
+        "Yotsuba Hybrid",
+        "Game",
+        "Engine",
+        "Multiplatforma",
+        "Framework"
+    ],
+    "identity": "YTB.Hybrid.Multiplatform.Template",
+    "name": "Yotsuba Hybrid - Template Multiplataforma",
+    "shortName": "ytb",
+    "tags": {
+        "language": "C#",
+        "type": "project"
+    },
+    "sourceName": "SandBoxGame",
+    "preferNameDirectory": true
+}
