@@ -204,6 +204,15 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
         /// </summary>
         public static bool EngineShortcutsMode { get; set; } = false;
 
+        public bool DisablePhisicSystem { get; set; } = false;
+        public bool DisableRender2DSystem { get; set; } = false;
+        public bool DisableFontSystem { get; set; } = false;
+        public bool DisableRender3DSystem { get; set; } = false;
+        public bool DisableAnimationSystem { get; set; } = false;
+        public bool DisableTilemapSystem { get; set; } = false;
+        public bool DisableButtonSystem { get; set; } = false;
+        public bool DisableDebugSystem { get; set; } = false;
+
 #if YTB
         /// <summary>
         /// Posición de la cámara libre del engine en el mundo 3D.
@@ -234,6 +243,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
         /// <para>Selected 3D entity IDs in engine mode. Empty means no selection.</para>
         /// </summary>
         internal static HashSet<int> SelectedModel3DEntityIds { get; set; } = new();
+
 #endif
 
     }

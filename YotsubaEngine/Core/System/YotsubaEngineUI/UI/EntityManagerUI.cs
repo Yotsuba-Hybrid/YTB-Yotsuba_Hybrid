@@ -1,5 +1,6 @@
 ﻿using ImGuiNET;
 using Microsoft.Xna.Framework;
+using RenderingLibrary.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -477,6 +478,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 						}
 						else
 						{
+
 							YTBEntity.Components.Add(new()
 							{
 								ComponentName = "ShaderComponent",
@@ -1823,7 +1825,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 
 		private static string SerializeShaderParams(IEnumerable<ShaderParamEntry> entries)
 		{
-			return string.Join(",", entries
+			return string.Join(";", entries
 				.Where(e => !string.IsNullOrWhiteSpace(e.Name))
 				.Select(e => $"{e.Name}={e.Value}"));
 		}
@@ -1921,8 +1923,10 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 		{
 			var modelPathProp = component.Propiedades.FirstOrDefault(p => p.Item1 == "ModelPath");
 			var isVisibleProp = component.Propiedades.FirstOrDefault(p => p.Item1 == "IsVisible");
+			var sphereRadius = component.Propiedades.FirstOrDefault(p => p.Item1 == "SphereRadius");
+			var offsetSphere = component.Propiedades.FirstOrDefault(p => p.Item1 == "OffsetSphere");
 
-			if (modelPathProp != null)
+            if (modelPathProp != null)
 			{
 				// Get available models from IModelRegistry (populated by SetModelRegistry)
 				string[] availableModels = IModelRegistry.AllModels;
@@ -1962,7 +1966,78 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 					UpdateProperty(component, isVisibleProp.Item1, isVisible ? "true" : "false");
 				}
 			}
-		}
-		#endregion
-	}
+
+            if (sphereRadius is not null)
+            {
+
+                YTBGui.Line();
+
+                YTBGui.Text("Sphere Radius", true);
+                float value;
+                bool hasValue = float.TryParse(sphereRadius.Item2, out value) && value >= 0;
+
+                bool useDefault = !hasValue;
+
+                // Checkbox primero (define el modo)
+                if (YTBGui.CheckBox("Default", ref useDefault))
+                {
+                    if (useDefault)
+                    {
+                        UpdateProperty(component, sphereRadius.Item1, "default");
+                    }
+                    else
+                    {
+                        value = Math.Max(value, 0);
+                        UpdateProperty(component, sphereRadius.Item1, value.ToString());
+                    }
+                }
+
+                // Desactivar input si es default
+                if (useDefault)
+                    ImGui.BeginDisabled();
+
+                if (ImGui.InputFloat("Radius", ref value))
+                {
+                    if (value >= 0)
+                        UpdateProperty(component, sphereRadius.Item1, value.ToString());
+                }
+
+                if (useDefault)
+                    ImGui.EndDisabled();
+
+                YTBGui.Line();
+
+            }
+
+
+            if(offsetSphere is not null)
+			{
+
+				string[] dims = offsetSphere.Item2.Split(",");
+
+
+                float x = 0;
+				float y = 0;
+				float z = 0;
+
+				if (dims.Length == 3)
+				{
+					float.TryParse(dims[0], out x);
+					float.TryParse(dims[1], out y);
+					float.TryParse(dims[2], out z);
+				}
+
+				Num.Vector3 finalOffset = new Num.Vector3(x,y,z);
+
+				if(ImGui.InputFloat3("Offset Sphere (X Y Z)", ref finalOffset))
+				{
+					UpdateProperty(component, "OffsetSphere", $"{finalOffset.X},{finalOffset.Y},{finalOffset.Z}");
+
+                }
+
+
+            }
+        }
+        #endregion
+    }
 }

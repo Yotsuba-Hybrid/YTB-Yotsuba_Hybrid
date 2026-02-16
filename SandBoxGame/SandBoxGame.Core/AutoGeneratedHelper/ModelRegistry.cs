@@ -24,6 +24,7 @@ namespace YotsubaEngine.Graphics
         public ModelRegistry()
         {
             // Register all discovered models / Registrar todos los modelos descubiertos
+            RegisterModel("corona/crown");
             RegisterModel("FBX format/corridor-corner");
             RegisterModel("FBX format/corridor-end");
             RegisterModel("FBX format/corridor-intersection");
@@ -111,6 +112,10 @@ namespace YotsubaEngine.Graphics
         /// </summary>
         public static class Models
         {
+            private static Model _crown;
+            /// <summary>3D Model: crown (corona/crown)</summary>
+            public static Model crown => _crown ??= YTBGlobalState.ContentManager.Load<Model>("corona/crown");
+
             private static Model _corridor_corner;
             /// <summary>3D Model: corridor-corner (FBX format/corridor-corner)</summary>
             public static Model corridor_corner => _corridor_corner ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/corridor-corner");
