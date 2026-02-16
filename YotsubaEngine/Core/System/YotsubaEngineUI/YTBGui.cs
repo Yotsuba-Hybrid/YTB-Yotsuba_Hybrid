@@ -157,9 +157,9 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
         /// </summary>
         /// <param name="title">Etiqueta de la casilla. <para>Checkbox label.</para></param>
         /// <param name="state">Estado actual. <para>Current state.</para></param>
-        public static void CheckBox(string title, ref bool state)
+        public static bool CheckBox(string title, ref bool state)
         {
-            ImGui.Checkbox(title, ref state);
+            return ImGui.Checkbox(title, ref state);
         }
 
         /// <summary>

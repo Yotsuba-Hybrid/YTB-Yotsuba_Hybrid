@@ -1279,6 +1279,8 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 
                 foreach(string param in shaderParams.Split(";"))
                 {
+                    if (String.IsNullOrEmpty(param)) continue;
+
                     string key = param.Split("=")[0];
                     int value = int.Parse(param.Split("=")[1]);
 
@@ -1326,8 +1328,45 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 
                 ModelComponent3D modelComponent = new ModelComponent3D(model)
                 {
-                    IsVisible = isVisible
+                    IsVisible = isVisible,
+
                 };
+
+                string radius = component.Propiedades.FirstOrDefault(x => x.Item1 == "SphereRadius")?.Item2;
+                    if (float.TryParse(radius, out float r))
+                    {
+                        modelComponent.RadiusSphere = r;
+                    }
+
+                string offsetSphere = component.Propiedades.FirstOrDefault(x => x.Item1 == "OffsetSphere").Item2;
+
+                Vector3 offset = Vector3.Zero;
+                string[] dims = offsetSphere.Split(",");
+                if (!String.IsNullOrEmpty(offsetSphere))
+                {
+                    for (int i = 0; i < dims.Length; i++)
+                    {
+                        {
+                            switch (i)
+                            {
+                                case 0:
+                                    offset.X = float.Parse(dims[0]);
+                                    break;
+                                case 1:
+                                    offset.Y = float.Parse(dims[1]);
+                                    break;
+                                case 2:
+                                    offset.Z = float.Parse(dims[2]);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+
+                    }
+                }
+
+                modelComponent.SphereOffset = offset;
 
                 EngineUISystem.SendLog($"ModelComponent3D loaded successfully for entity {entityName}: {modelPath}");
                 return modelComponent;

@@ -55,7 +55,6 @@ namespace SandBoxGame.Core.Scripts
             CreateSoundInstance("bounce");
             CreateSoundInstance("collect");
             PlayMusic("theme", true);
-
             SendLog("Bat Script Initialized", Color.Green);
             base.Initialize();
 

@@ -145,7 +145,9 @@ namespace YotsubaEngine.Templates
                         Propiedades = new List<Tuple<string,string>>
                         {
                             new("ModelPath", ""),
-                            new("IsVisible", "")
+                            new("IsVisible", ""),
+                            new("SphereRadius", ""),
+                            new("OffsetSphere", "")
                         }
                     },
                     new YTBComponents
@@ -373,7 +375,7 @@ namespace YotsubaEngine.Templates
                         {
                             new("ShaderPath", ""),
                             new("IsActive", ""),
-                            new("params", "")
+                            new("params", "true")
                         }
             };
         }
@@ -391,7 +393,9 @@ namespace YotsubaEngine.Templates
                 Propiedades = new List<Tuple<string, string>>
                         {
                             new("ModelPath", ""),
-                            new("IsVisible", "true")
+                            new("IsVisible", "true"),
+                            new("SphereRadius", "default"),
+                            new("OffsetSphere", "0,0,0")
                         }
             };
         }
