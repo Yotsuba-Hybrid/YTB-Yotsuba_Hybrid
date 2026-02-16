@@ -4,6 +4,7 @@ using System;
 using YotsubaEngine.Core.Component.C_2D;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;
+using YotsubaEngine.Core.System.Contract;
 using YotsubaEngine.Core.System.YotsubaEngineCore;
 using YotsubaEngine.Core.System.YotsubaEngineUI.UI;
 using YotsubaEngine.Core.YotsubaGame;
@@ -15,7 +16,7 @@ namespace YotsubaEngine.Core.System.S_2D
     /// Sistema que dibuja overlays de debug para visualizar colisiones, grids y otros elementos de ayuda.
     /// <para>System that draws debug overlays to visualize collisions, grids, and helper elements.</para>
     /// </summary>
-    public class DebugDrawSystem
+    public class DebugDrawSystem : ISystem
     {
         private Texture2D _pixel; // Textura de 1x1 para dibujar líneas y rectángulos
         private EntityManager _entityManager;
@@ -379,6 +380,26 @@ namespace YotsubaEngine.Core.System.S_2D
 
                 // Se ha eliminado el dibujo de la cruz central para limpiar la vista
             }
+        }
+
+        public void InitializeSystem(EntityManager entities)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SharedEntityInitialize(Yotsuba Entidad)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateSystem(GameTime gameTime)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SharedEntityForEachUpdate(Yotsuba Entidad, GameTime time)
+        {
+            throw new NotImplementedException();
         }
     }
 #endif
