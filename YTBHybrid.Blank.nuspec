@@ -4,7 +4,7 @@
     <id>Yotsuba.Hybrid.Template.Blank</id>
     <version>1.0.0</version>
     <authors>Yotsuba Hybrid</authors>
-    <description>Plantilla oficial de Yotsuba Hybrid Multiplatforma (Core Assets sin subcarpetas)</description>
+    <description>Plantilla oficial de Yotsuba Hybrid Multiplatforma en blanco</description>
     <packageTypes>
       <packageType name="Template" />
     </packageTypes>
