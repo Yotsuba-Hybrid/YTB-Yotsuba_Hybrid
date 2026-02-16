@@ -2,7 +2,7 @@ name: CI - Enuma Elish (.NET 9)
 
 on:
   push:
-    branches: [ "YTB-Master", "develop" ]
+    branches: [ "YTB-Master", "develop", "YTB" ]
   pull_request:
     branches: [ "YTB-Master", "develop" ]
 
