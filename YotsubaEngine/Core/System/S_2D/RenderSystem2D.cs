@@ -21,6 +21,7 @@ namespace YotsubaEngine.Core.System.S_2D
     public class RenderSystem2D
     {
 
+//-:cnd:noEmit
 #if YTB
         /// <summary>
         /// Indica si la vista de juego está activa en modo depuración.
@@ -52,6 +53,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// </summary>
         public /*const*/ static float EDITOR_SCALE_CAMERA = 0.535f;
 #endif
+//+:cnd:noEmit
         /// <summary>
         /// Event manager reference.
         /// Referencia al administrador de eventos.
@@ -75,15 +77,18 @@ namespace YotsubaEngine.Core.System.S_2D
         public void InitializeSystem(EntityManager entities)
         {
             //exampleEffect = YTBGlobalState.ContentManager.Load<Effect>("grayscaleEffect");
+//-:cnd:noEmit
 #if YTB
             if (GameWontRun.GameWontRunByException) return;
 #endif
+//+:cnd:noEmit
             EventManager = EventManager.Instance;
             EntityManager = entities;
             EngineUISystem.SendLog(typeof(RenderSystem2D).Name + " Se inicio correctamente");
 
 
 
+//-:cnd:noEmit
 #if YTB
             EventManager.Instance.Subscribe<OnHiddeORShowGameUI>(OnHiddeORShowGameUIFunc);
             EventManager.Instance.Subscribe<OnShowGameUIHiddeEngineEditor>(OnHiddeORShowGameUIFunc);
@@ -92,8 +97,10 @@ namespace YotsubaEngine.Core.System.S_2D
             _debugDrawSystem = new DebugDrawSystem();
             _debugDrawSystem.InitializeSystem(entities, YTBGame.Instance.GraphicsDevice);
 #endif
+//+:cnd:noEmit
         }
 
+//-:cnd:noEmit
 #if YTB
         /// <summary>
         /// Handles game UI visibility change events.
@@ -113,6 +120,7 @@ namespace YotsubaEngine.Core.System.S_2D
             IsGameActive = !IsGameActive;
         }
 #endif
+//+:cnd:noEmit
 
         /// <summary>
         /// Dibuja todas las entidades 2D del frame actual.
@@ -122,6 +130,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
         public void UpdateSystem(SpriteBatch @brocha, GameTime @gameTime)
         {
+//-:cnd:noEmit
 #if YTB
             // FEATURE: Allow rendering in Editor mode for real-time scene preview
             // The previous early return prevented any rendering in Editor mode.
@@ -133,12 +142,15 @@ namespace YotsubaEngine.Core.System.S_2D
             // On non-Windows platforms, UI always renders since Editor mode is Windows-only
             bool canRenderUIElements = IsGameActive || !OperatingSystem.IsWindows();
 #endif
+//+:cnd:noEmit
 
             EntityManager entityManager = EntityManager;
 
+//-:cnd:noEmit
 #if YTB
             if (entityManager is null) return;
 #endif
+//+:cnd:noEmit
 
             var cameraEntity = EntityManager.Camera;
             Matrix viewMatrix = Matrix.Identity;
@@ -152,29 +164,37 @@ namespace YotsubaEngine.Core.System.S_2D
                 var viewport = brocha.GraphicsDevice.Viewport;
 
                 float currentZoom =
+//-:cnd:noEmit
 #if YTB
 
               canRenderUIElements ?
 #endif
+//+:cnd:noEmit
               YTBGlobalState.CameraZoom
+//-:cnd:noEmit
 #if YTB
               :
 
               EDITOR_SCALE_CAMERA
 #endif
+//+:cnd:noEmit
               ;
                 // Protección contra división por cero o zoom negativo
                 if (currentZoom <= 0.001f) currentZoom = 0.001f;
 
                 Vector2 offset =
 
+//-:cnd:noEmit
 #if YTB
                     canRenderUIElements ?
 #endif
+//+:cnd:noEmit
                     YTBGlobalState.OffsetCamera
+//-:cnd:noEmit
 #if YTB
                     : new Vector2(EDITOR_OFFSET_CAMERA_X, EDITOR_OFFSET_CAMERA_Y)
 #endif
+//+:cnd:noEmit
                     ;
 
                 Vector2 screenCenter = new Vector2(viewport.Width / 2f, viewport.Height / 2f);
@@ -216,6 +236,7 @@ namespace YotsubaEngine.Core.System.S_2D
             }
 
 
+//-:cnd:noEmit
 #if YTB
             // FEATURE: Skip UI elements rendering in Editor mode to avoid overlapping with editor tools
             // UI elements use absolute screen coordinates and would interfere with Inspector/Hierarchy panels
@@ -223,6 +244,7 @@ namespace YotsubaEngine.Core.System.S_2D
             if (canRenderUIElements)
             {
 #endif
+//+:cnd:noEmit
                 @brocha.Begin(
         sortMode: SpriteSortMode.FrontToBack,
         blendState: BlendState.NonPremultiplied,
@@ -260,9 +282,11 @@ namespace YotsubaEngine.Core.System.S_2D
                 }
 
                 @brocha.End();
+//-:cnd:noEmit
 #if YTB
             }
 #endif
+//+:cnd:noEmit
 
             // --- PRIMER PASS (Objetos del Mundo afectados por la Cámara) ---
             // Primero dibujamos entidades SIN shader para máxima eficiencia de batch
@@ -392,12 +416,14 @@ namespace YotsubaEngine.Core.System.S_2D
                 @brocha.End();
             }
 
+//-:cnd:noEmit
 #if YTB
             // FEATURE: Skip Button/HUD rendering in Editor mode
             // Buttons use absolute screen coordinates and would interfere with Inspector/Hierarchy panels
             if (canRenderUIElements)
             {
 #endif
+//+:cnd:noEmit
                 // --- SEGUNDO PASS (UI / Botones) ---
                 // La UI no se ve afectada por el zoom de la cámara ni su posición, así que no aplicamos el culling de cámara.
                 brocha.Begin(
@@ -431,15 +457,19 @@ namespace YotsubaEngine.Core.System.S_2D
                 }
 
                 @brocha.End();
+//-:cnd:noEmit
 #if YTB
             }
 #endif
+//+:cnd:noEmit
 
 
+//-:cnd:noEmit
 #if YTB
             // Dibujar overlays de debug si están activos
             _debugDrawSystem?.DrawDebugOverlays(@brocha, viewMatrix, cameraWorldBounds);
 #endif
+//+:cnd:noEmit
 
             EventManager.Publish(new OnFrameRenderEvent
             {

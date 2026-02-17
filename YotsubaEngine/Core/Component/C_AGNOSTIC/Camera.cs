@@ -263,6 +263,7 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         /// </summary>
         public void Update()
         {
+//-:cnd:noEmit
 #if YTB
             if (EntityToFollow.HasNotComponent(YTBComponent.Transform))
                 _ = new GameWontRun("La entidad a seguir de la camara 3D no tiene un TransformComponent", YTBErrors.EntityFollowCameraIsNotAppropiate);
@@ -284,6 +285,7 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
                 return;
             }
 #endif
+//+:cnd:noEmit
             ref TransformComponent positionEntity = ref EntityManager.TransformComponents[EntityToFollow];
 
             Vector3 offset = UseOrbit ? GetOrbitOffset() : OffsetCamera;
@@ -340,9 +342,11 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
             var transforms = new Matrix[model3D.Model.Bones.Count];
             model3D.Model.CopyAbsoluteBoneTransformsTo(transforms);
 
+//-:cnd:noEmit
 #if YTB
             bool isSelected = YTBGlobalState.EngineShortcutsMode && entityId != -1 && YTBGlobalState.SelectedModel3DEntityIds.Contains(entityId);
 #endif
+//+:cnd:noEmit
 
             if (shaderComponent.HasValue && shaderComponent.Value.IsActive)
             {
@@ -376,6 +380,7 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
                             * Matrix.CreateTranslation(transformComponent.Position);
 
                         
+//-:cnd:noEmit
 #if YTB 
                         if (isSelected)
                         {
@@ -389,6 +394,7 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
                             e.LightingEnabled = false;
                         }
 #endif
+//+:cnd:noEmit
 
                         e.World = world;
                         e.View = RenderPoint;

@@ -44,9 +44,11 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
         public void InitializeSystem(EntityManager @entities)
         {
+//-:cnd:noEmit
 #if YTB
 			if (GameWontRun.GameWontRunByException) return;
 #endif
+//+:cnd:noEmit
 			EventManager = EventManager.Instance;
             EntityManager = @entities;
             EngineUISystem.SendLog(typeof(PhysicsSystem2D).Name + " Se inicio correctamente");
@@ -59,6 +61,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
         public void UpdateSystem(GameTime gameTime)
         {
+//-:cnd:noEmit
 #if YTB
 			if (OperatingSystem.IsWindows())
 				if (!RenderSystem2D.IsGameActive) return;
@@ -66,6 +69,7 @@ namespace YotsubaEngine.Core.System.S_2D
 			if (GameWontRun.GameWontRunByException) return;
 
 #endif
+//+:cnd:noEmit
 
 			if (EntityManager == null) return;
 			YTB<Yotsuba> entities = EntityManager.YotsubaEntities;
@@ -235,9 +239,11 @@ namespace YotsubaEngine.Core.System.S_2D
                                 GameTime = gameTime
                             });
 
+//-:cnd:noEmit
 #if YTB
                             DebugOverlayUI.AddCollision(entity.Name, $"{tilemapEntity.Name} (Tile [{tileX},{tileY}])", gameTime);
 #endif
+//+:cnd:noEmit
                         }
                     }
 
@@ -265,9 +271,11 @@ namespace YotsubaEngine.Core.System.S_2D
                                     GameTime = gameTime
                                 });
 
+//-:cnd:noEmit
 #if YTB
                                 DebugOverlayUI.AddCollision(entity.Name, $"{tilemapEntity.Name} (Tile [{tileX},{tileY}] native)", gameTime);
 #endif
+//+:cnd:noEmit
                             }
                         }
                     }
@@ -308,9 +316,11 @@ namespace YotsubaEngine.Core.System.S_2D
                     GameTime = gameTime
                 });
 
+//-:cnd:noEmit
 #if YTB
                 DebugOverlayUI.AddCollision(entity.Name, otherEntity.Name, gameTime);
 #endif
+//+:cnd:noEmit
             }
         }
 

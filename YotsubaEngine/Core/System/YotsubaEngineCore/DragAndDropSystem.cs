@@ -124,34 +124,44 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
 
             // RenderSystem2D.IsGameActive is only defined in DEBUG builds.
             // In Release builds, consider only platform when deciding UI rendering.
+//-:cnd:noEmit
 #if YTB
             bool canRenderUIElements = RenderSystem2D.IsGameActive || !OperatingSystem.IsWindows();
 #else
             bool canRenderUIElements = !OperatingSystem.IsWindows();
 #endif
+//+:cnd:noEmit
 
             float currentZoom =
+//-:cnd:noEmit
 #if YTB
 
              canRenderUIElements ?
 #endif
+//+:cnd:noEmit
              YTBGlobalState.CameraZoom
+//-:cnd:noEmit
 #if YTB
              :
 
             RenderSystem2D.EDITOR_SCALE_CAMERA
 #endif
+//+:cnd:noEmit
              ;
 
             Vector2 offset =
 
+//-:cnd:noEmit
 #if YTB
                  canRenderUIElements ?
 #endif
+//+:cnd:noEmit
                  YTBGlobalState.OffsetCamera
+//-:cnd:noEmit
 #if YTB
                  : new Vector2(RenderSystem2D.EDITOR_OFFSET_CAMERA_X, RenderSystem2D.EDITOR_OFFSET_CAMERA_Y)
 #endif
+//+:cnd:noEmit
                  ;
 
             // Datos básicos de la entidad

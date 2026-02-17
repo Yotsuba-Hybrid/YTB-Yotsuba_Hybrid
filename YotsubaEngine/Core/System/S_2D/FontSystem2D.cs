@@ -18,6 +18,7 @@ namespace YotsubaEngine.Core.System.S_2D
     public class FontSystem2D : ISystem
     {
 
+//-:cnd:noEmit
 #if YTB
         /// <summary>
         /// Controla si la vista del juego está activa en modo depuración.
@@ -26,6 +27,7 @@ namespace YotsubaEngine.Core.System.S_2D
         public static bool IsGameActive = false;
 
 #endif
+//+:cnd:noEmit
         /// <summary>
         /// Stores the entity manager reference for this system.
         /// Almacena la referencia al administrador de entidades de este sistema.
@@ -47,10 +49,12 @@ namespace YotsubaEngine.Core.System.S_2D
         {
             Entities = entities;
 
+//-:cnd:noEmit
 #if YTB
             EventManager.Instance.Subscribe<OnHiddeORShowGameUI>(OnHiddeORShowGameUIFunc);
             EventManager.Instance.Subscribe<OnShowGameUIHiddeEngineEditor>(OnHiddeORShowGameUIFunc);
 #endif
+//+:cnd:noEmit
         }
 
         /// <summary>
@@ -75,6 +79,7 @@ namespace YotsubaEngine.Core.System.S_2D
         }
 
 
+//-:cnd:noEmit
 #if YTB
         /// <summary>
         /// Updates debug state when the editor hides or shows the game UI.
@@ -94,6 +99,7 @@ namespace YotsubaEngine.Core.System.S_2D
             IsGameActive = !IsGameActive;
         }
 #endif
+//+:cnd:noEmit
 
 
         /// <summary>
@@ -106,6 +112,7 @@ namespace YotsubaEngine.Core.System.S_2D
         {
 
 
+//-:cnd:noEmit
 #if YTB
             //if (OperatingSystem.IsWindows())
                 //if (!IsGameActive) return;
@@ -113,22 +120,27 @@ namespace YotsubaEngine.Core.System.S_2D
             bool canRenderUIElements = IsGameActive || !OperatingSystem.IsWindows();
 
 #endif
+//+:cnd:noEmit
 
             // --- Unificar lógica con RenderSystem2D ---
             float currentZoom =
+//-:cnd:noEmit
 #if YTB
                 canRenderUIElements ? YTBGlobalState.CameraZoom : RenderSystem2D.EDITOR_SCALE_CAMERA;
 #else
                     YTBGlobalState.CameraZoom;
                                     if (currentZoom <= 0.001f) currentZoom = 0.001f;
 #endif
+//+:cnd:noEmit
 
             Vector2 offset =
+//-:cnd:noEmit
 #if YTB
               canRenderUIElements ? YTBGlobalState.OffsetCamera : new Vector2(RenderSystem2D.EDITOR_OFFSET_CAMERA_X, RenderSystem2D.EDITOR_OFFSET_CAMERA_Y);
 #else
                     YTBGlobalState.OffsetCamera;
 #endif
+//+:cnd:noEmit
             EntityManager entityManager = YTBGlobalState.Game.SceneManager.CurrentScene.EntityManager;
             if (entityManager == null) return;
             var cameraEntity = entityManager.Camera;

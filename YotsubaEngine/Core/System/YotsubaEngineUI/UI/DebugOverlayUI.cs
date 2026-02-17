@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using YotsubaEngine.Core.Entity;
@@ -7,6 +7,7 @@ using Num = System.Numerics;
 
 namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 {
+//-:cnd:noEmit
 #if YTB
     /// <summary>
     /// UI para controlar el debug overlay del juego (solo disponible en DEBUG).
@@ -231,4 +232,5 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
         }
     }
 #endif
+//+:cnd:noEmit
 }

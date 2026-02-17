@@ -19,6 +19,7 @@ namespace YotsubaEngine.Core.System.S_2D
     public class TileMapSystem2D
     {
 
+//-:cnd:noEmit
 #if YTB
         /// <summary>
         /// Indica si la vista de juego está activa en modo editor.
@@ -26,6 +27,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// </summary>
         public static bool IsGameActive = false;
 #endif
+//+:cnd:noEmit
 
         /// <summary>
         /// Referencia al EventManager para manejar eventos.
@@ -47,20 +49,25 @@ namespace YotsubaEngine.Core.System.S_2D
         public void InitializeSystem(EntityManager entities)
         {
 
+//-:cnd:noEmit
 #if YTB
             if (GameWontRun.GameWontRunByException) return;
 #endif
+//+:cnd:noEmit
             EventManager = EventManager.Instance;
             EntityManager = entities;
 
+//-:cnd:noEmit
 #if YTB
             EventManager.Instance.Subscribe<OnHiddeORShowGameUI>(OnHiddeORShowGameUIFunc);
             EventManager.Instance.Subscribe<OnShowGameUIHiddeEngineEditor>(OnHiddeORShowGameUIFunc);
 #endif
+//+:cnd:noEmit
         }
 
 
 
+//-:cnd:noEmit
 #if YTB
         private void OnHiddeORShowGameUIFunc(OnShowGameUIHiddeEngineEditor editor)
         {
@@ -71,6 +78,7 @@ namespace YotsubaEngine.Core.System.S_2D
             IsGameActive = !IsGameActive;
         }
 #endif
+//+:cnd:noEmit
 
         /// <summary>
         /// Hook de actualización compartida por entidad (sin uso).
@@ -100,6 +108,7 @@ namespace YotsubaEngine.Core.System.S_2D
         public void UpdateSystem(GameTime gameTime, SpriteBatch spriteBatch)
         {
 
+//-:cnd:noEmit
 #if YTB
             // FEATURE: Allow tilemap rendering in Editor mode for real-time scene preview
             // The previous early return prevented tilemap rendering in Editor mode.
@@ -107,13 +116,16 @@ namespace YotsubaEngine.Core.System.S_2D
             if (GameWontRun.GameWontRunByException) return;
             bool canRenderUIElements = IsGameActive || !OperatingSystem.IsWindows();
 #endif
+//+:cnd:noEmit
 
 
             EntityManager entityManager = EntityManager;
 
+//-:cnd:noEmit
 #if YTB
             if (entityManager == null) return;
 #endif
+//+:cnd:noEmit
             var cameraEntity = EntityManager.Camera;
             Matrix viewMatrix = Matrix.Identity;
             if (cameraEntity != null)
@@ -124,19 +136,23 @@ namespace YotsubaEngine.Core.System.S_2D
 
                 // --- Unificar lógica con RenderSystem2D ---
                 float currentZoom =
+//-:cnd:noEmit
 #if YTB
                     canRenderUIElements ? YTBGlobalState.CameraZoom : RenderSystem2D.EDITOR_SCALE_CAMERA;
 #else
                     YTBGlobalState.CameraZoom;
                                     if (currentZoom <= 0.001f) currentZoom = 0.001f;
 #endif
+//+:cnd:noEmit
 
                 Vector2 offset =
+//-:cnd:noEmit
 #if YTB
                   canRenderUIElements ? YTBGlobalState.OffsetCamera : new Vector2(RenderSystem2D.EDITOR_OFFSET_CAMERA_X, RenderSystem2D.EDITOR_OFFSET_CAMERA_Y);
 #else
                     YTBGlobalState.OffsetCamera;
 #endif
+//+:cnd:noEmit
                 // Pasamos el screenCenter a tu método actualizado
                 viewMatrix = cameraEntity.Get2DViewMatrix(
                     new Vector2(transform.Position.X, transform.Position.Y) + offset,
