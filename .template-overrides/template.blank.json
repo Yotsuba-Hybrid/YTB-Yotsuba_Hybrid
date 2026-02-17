@@ -19,5 +19,15 @@
   "sourceName": "SandBoxGame",
   "preferNameDirectory": true,
   "symbols": {
-  }
+  },
+  "sources": [
+    {
+        "modifiers": [
+            {
+                "include": ["**/*.cs"],
+                "copyOnly": true
+            }
+        ]
+    }
+  ]
 }
