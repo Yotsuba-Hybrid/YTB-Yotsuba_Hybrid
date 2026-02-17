@@ -76,13 +76,14 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                     cameraEntity.Name = "Camera";
                     
                     // Configurar el componente de cámara
-                    int cameraComponentIndex = cameraEntity.Components.FindIndex(x => x.ComponentName == "CameraComponent");
+                    int cameraComponentIndex = cameraEntity.Components.FindIndex(x => x.ComponentName == "CameraComponent3D");
                     if (cameraComponentIndex >= 0)
                     {
                         cameraEntity.Components[cameraComponentIndex] = EntityYTBXmlTemplate.CameraTemplate();
                         
                         // Asegurar que EntityName apunte a la propia cámara
                         var entityNameIndex = cameraEntity.Components[cameraComponentIndex].Propiedades.FindIndex(x => x.Item1 == "EntityName");
+
                         if (entityNameIndex >= 0)
                         {
                             cameraEntity.Components[cameraComponentIndex].Propiedades[entityNameIndex] = new Tuple<string, string>("EntityName", "Camera");
