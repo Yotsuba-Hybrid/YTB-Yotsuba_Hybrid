@@ -22,6 +22,7 @@ namespace YotsubaEngine.Graphics
         internal static readonly Dictionary<string, Texture2D> PreloadedTextures = new(StringComparer.OrdinalIgnoreCase);
         private static readonly Dictionary<string, SpriteFont> PreloadedFonts = new(StringComparer.OrdinalIgnoreCase);
 
+//-:cnd:noEmit
 #if YTB
         /// <summary>
         /// Dictionary storing all texture regions from all loaded texture atlases.
@@ -30,6 +31,7 @@ namespace YotsubaEngine.Graphics
         /// </summary>
         internal static readonly Dictionary<string, TextureRegion> PreloadedTextureRegions = new(StringComparer.OrdinalIgnoreCase);
 #endif
+//+:cnd:noEmit
 
         /// <summary>
         /// Precarga texturas y las almacena en caché.
@@ -194,6 +196,7 @@ namespace YotsubaEngine.Graphics
                 }
             }
 
+//-:cnd:noEmit
 #if YTB
             // Store all texture regions in the global dictionary for the engine editor
             // Format: "xmlPath/regionName" -> TextureRegion
@@ -204,6 +207,7 @@ namespace YotsubaEngine.Graphics
                 PreloadedTextureRegions[fullKey] = region.Value;
             }
 #endif
+//+:cnd:noEmit
 
             return textureAtlas;
         }

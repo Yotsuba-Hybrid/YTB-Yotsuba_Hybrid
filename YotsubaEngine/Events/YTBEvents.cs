@@ -388,6 +388,7 @@ namespace YotsubaEngine.Events.YTBEvents
         }
 
 
+//-:cnd:noEmit
 #if YTB
         /// <summary>
         /// Evento que alterna la visibilidad de la UI del editor.
@@ -436,5 +437,6 @@ namespace YotsubaEngine.Events.YTBEvents
             public SceneManager SceneManager = sceneManager;
         }
 #endif
+//+:cnd:noEmit
     }
 } 

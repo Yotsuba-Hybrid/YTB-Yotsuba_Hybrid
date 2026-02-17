@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SandBoxGame.Core.Localization;
 using System;
@@ -37,6 +37,7 @@ namespace SandBoxGame.Core
         /// <para>Indicates whether the game starts in fullscreen.</para>
         /// </summary>
         public const bool IS_FULLSCREEN =
+//-:cnd:noEmit
 #if YTB
             // Para el editor visual
             false
@@ -44,9 +45,11 @@ namespace SandBoxGame.Core
             // Para el juego
             true
 #endif
+//+:cnd:noEmit
 ;
 
 
+//-:cnd:noEmit
 #if YTB
         /// <summary>
         /// Indica si el cursor del ratón es visible.
@@ -60,6 +63,7 @@ namespace SandBoxGame.Core
         /// </summary>
         public const bool IS_MOUSE_VISIBLE = true;
 #endif
+//+:cnd:noEmit
 
         /// <summary>
         /// Inicializa una nueva instancia del juego y configura los servicios y el renderizado.
@@ -119,9 +123,11 @@ namespace SandBoxGame.Core
         protected override void SetConfig()
         {
 
+//-:cnd:noEmit
 #if YTB || DEBUG
             System.Console.WriteLine("[SandBoxGameGame] Constructor start");
 #endif
+//+:cnd:noEmit
             ///Coloca un background por defecto al juego y al engine.
             YTBGlobalState.EngineBackground = new Color(32, 40, 78, 255);
 
@@ -157,9 +163,11 @@ namespace SandBoxGame.Core
             #endregion
 
 
+//-:cnd:noEmit
 #if YTB || DEBUG
             System.Console.WriteLine("[SandBoxGameGame] _graphics created");
 #endif
+//+:cnd:noEmit
             // Share _graphics as a service.
             Services.AddService(typeof(GraphicsDeviceManager), _graphics);
 
@@ -179,9 +187,11 @@ namespace SandBoxGame.Core
 
             base.SetConfig();
 
+//-:cnd:noEmit
 #if YTB || DEBUG
             System.Console.WriteLine("[SandBoxGameGame] InitializeGraphicsDevice called from ctor");
 #endif
+//+:cnd:noEmit
         }
         /// <summary>
         /// Loads game content, such as textures and particle systems.

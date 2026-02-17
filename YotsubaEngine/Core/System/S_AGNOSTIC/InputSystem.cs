@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Threading.Tasks;
@@ -42,6 +42,7 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         /// </summary>
         private InputManager InputManager { get; set; }
 
+//-:cnd:noEmit
 #if YTB
         /// <summary>
         /// Estado previo de CapsLock para detectar cambios de modo.
@@ -49,6 +50,7 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         /// </summary>
         private bool _previousCapsLockState = false;
 #endif
+//+:cnd:noEmit
 
         /// <summary>
         /// Inicializa el sistema de entrada.
@@ -58,9 +60,11 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         public void InitializeSystem(EntityManager entities)
         {
 
+//-:cnd:noEmit
 #if YTB
             if (GameWontRun.GameWontRunByException) return;
 #endif
+//+:cnd:noEmit
 
             InputManager = InputManager.Instance;
             EventManager = EventManager.Instance;
@@ -77,6 +81,7 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         public void UpdateSystem(GameTime gameTime)
         {
 
+//-:cnd:noEmit
 #if YTB
             if (InputManager is not null)
                 InputManager.Update(gameTime);
@@ -263,6 +268,7 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
 
             //return;
 #endif
+//+:cnd:noEmit
 
 
 

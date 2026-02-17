@@ -213,6 +213,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
         public bool DisableButtonSystem { get; set; } = false;
         public bool DisableDebugSystem { get; set; } = false;
 
+//-:cnd:noEmit
 #if YTB
         /// <summary>
         /// Posición de la cámara libre del engine en el mundo 3D.
@@ -245,6 +246,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
         internal static HashSet<int> SelectedModel3DEntityIds { get; set; } = new();
 
 #endif
+//+:cnd:noEmit
 
     }
 }
