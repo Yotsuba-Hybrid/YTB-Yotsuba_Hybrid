@@ -6,7 +6,7 @@ on:
       target_branch:
         description: 'Rama oficial a descargar (develop/master)'
         required: true
-        default: 'develop'
+        default: 'YTB-Master'
 
 permissions:
   contents: write
