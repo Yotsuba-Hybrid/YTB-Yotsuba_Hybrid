@@ -1,4 +1,4 @@
-
+﻿
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -84,9 +84,11 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 					// La recompilación solo funciona en Windows donde hay acceso al sistema de archivos
 					if (!OperatingSystem.IsWindows())
 					{
+//-:cnd:noEmit
 #if YTB
 						EngineUISystem.SendLog("Recompilación no disponible en esta plataforma");
 #endif
+//+:cnd:noEmit
 					}
 					else
 					{
@@ -116,9 +118,11 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 			}
 			catch (Exception ex)
 			{
+//-:cnd:noEmit
 #if YTB
 				throw new GameWontRun(ex, YTBErrors.GameEngineCannotUpdateFiles);
 #endif
+//+:cnd:noEmit
 			}
 
 			Task<string> JSONGame;
@@ -160,9 +164,11 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 							androidPath = path.Replace('\\', '/');
 						else
 							androidPath = path;
+//-:cnd:noEmit
 #if YTB
 							EngineUISystem.SendLog($"Android: Intentando leer asset en: {androidPath}");
 #endif
+//+:cnd:noEmit
 
 						using (var stream = TitleContainer.OpenStream(androidPath))
 						using (var reader = new StreamReader(stream))
@@ -172,16 +178,20 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 					}
 					catch (FileNotFoundException fnfEx)
 					{
+//-:cnd:noEmit
 #if YTB
 						EngineUISystem.SendLog($"Android: Archivo no encontrado: {path} - {fnfEx.Message}");
 #endif
+//+:cnd:noEmit
 						return string.Empty;
 					}
 					catch (Exception ex)
 					{
+//-:cnd:noEmit
 #if YTB
 						EngineUISystem.SendLog($"Android: Error leyendo asset {path}: {ex.Message}");
 #endif
+//+:cnd:noEmit
 						return string.Empty;
 					}
 				}
@@ -248,9 +258,11 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 				}
 				else
 				{
+//-:cnd:noEmit
 #if YTB
 					EngineUISystem.SendLog($"Error Fatal: No se encontró el archivo del juego en el APK.");
 #endif
+//+:cnd:noEmit
 					throw new FileNotFoundException($"Es Android y no se encontró el archivo en los assets");
 				}
 			}

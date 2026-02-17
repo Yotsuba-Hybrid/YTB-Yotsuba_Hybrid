@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using System;
 using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.Contract;
@@ -51,10 +51,12 @@ namespace YotsubaEngine.Core.System.S_2D
         /// </remarks>
         public void DrawSystem(GameTime gameTime)
         {
+//-:cnd:noEmit
 #if YTB
             if (OperatingSystem.IsWindows())
                 if (!RenderSystem2D.IsGameActive) return;
 #endif
+//+:cnd:noEmit
             YTBGum.Draw();
         }
 
