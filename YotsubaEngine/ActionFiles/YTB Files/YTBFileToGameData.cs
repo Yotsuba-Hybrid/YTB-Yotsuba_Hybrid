@@ -358,9 +358,11 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                     AudioSystem.PauseAll();
 
                 }
+//-:cnd:noEmit
 #if YTB
                 EventManager.Instance.Publish(new OnChangeEsceneManager(sceneManager));
 #endif
+//+:cnd:noEmit
                 EngineUISystem.SendLog("Se ha actualizado el juego correctamente");
             } catch (Exception ex)
             {

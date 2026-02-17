@@ -38,9 +38,11 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
         public void InitializeSystem(EntityManager @entities)
         {
+//-:cnd:noEmit
 #if YTB
 			if (GameWontRun.GameWontRunByException) return;
 #endif
+//+:cnd:noEmit
 			EventManager = EventManager.Instance;
             EntityManager = @entities;
 
@@ -79,12 +81,14 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
         public void UpdateSystem(GameTime gameTime)
         {
+//-:cnd:noEmit
 #if YTB
 			if (OperatingSystem.IsWindows())
 				if (!RenderSystem2D.IsGameActive) return;
 
             if (GameWontRun.GameWontRunByException) return;
 #endif
+//+:cnd:noEmit
 
             if (EntityManager == null) return;
             foreach (Yotsuba entity in EntityManager.YotsubaEntities)

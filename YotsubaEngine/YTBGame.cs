@@ -229,6 +229,7 @@ namespace YotsubaEngine
                 }
             }
 
+//-:cnd:noEmit
 #if YTB
 
             if (YTBGlobalState.EngineEnabled)
@@ -237,9 +238,11 @@ namespace YotsubaEngine
             }
 
 #endif
+//+:cnd:noEmit
             base.Initialize();
         }
 
+//-:cnd:noEmit
 #if YTB
         /// <summary>
         /// Handles scene manager changes while debugging.
@@ -252,6 +255,7 @@ namespace YotsubaEngine
         }
 
 #endif
+//+:cnd:noEmit
         /// <summary>
         /// Loads engine content and initializes the scene.
         /// Carga el contenido del motor e inicializa la escena.
@@ -285,12 +289,14 @@ namespace YotsubaEngine
         /// </summary>
         protected override void Update(GameTime gameTime)
         {
+//-:cnd:noEmit
 #if YOTSUBA
             // Exit the game if the Back button (GamePad) or Escape key (Keyboard) is pressed.
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
                 || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 #endif
+//+:cnd:noEmit
 
             SceneManager.CurrentScene.Update(gameTime);
             EventManager.Instance.ResolveEvents();

@@ -1,3 +1,4 @@
+﻿//-:cnd:noEmit
 #if YTB
 using ImGuiNET;
 using Microsoft.Xna.Framework;
@@ -248,3 +249,4 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
     }
 }
 #endif
+//+:cnd:noEmit

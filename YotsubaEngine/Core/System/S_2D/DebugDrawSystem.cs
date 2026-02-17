@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using YotsubaEngine.Core.Component.C_2D;
@@ -11,6 +11,7 @@ using YotsubaEngine.Core.YotsubaGame;
 
 namespace YotsubaEngine.Core.System.S_2D
 {
+//-:cnd:noEmit
 #if YTB
     /// <summary>
     /// Sistema que dibuja overlays de debug para visualizar colisiones, grids y otros elementos de ayuda.
@@ -65,32 +66,42 @@ namespace YotsubaEngine.Core.System.S_2D
 
             if (effectiveCameraBounds == Rectangle.Empty && _entityManager?.Camera != null)
             {
+//-:cnd:noEmit
 #if YTB
                 bool canRenderUIElements = RenderSystem2D.IsGameActive || !OperatingSystem.IsWindows();
 #else
                 bool canRenderUIElements = !OperatingSystem.IsWindows();
 #endif
+//+:cnd:noEmit
 
                 float currentZoom =
+//-:cnd:noEmit
 #if YTB
                     canRenderUIElements ?
 #endif
+//+:cnd:noEmit
                     YTBGlobalState.CameraZoom
+//-:cnd:noEmit
 #if YTB
                     : RenderSystem2D.EDITOR_SCALE_CAMERA
 #endif
+//+:cnd:noEmit
                     ;
 
                 if (currentZoom <= 0.001f) currentZoom = 0.001f;
 
                 Vector2 offset =
+//-:cnd:noEmit
 #if YTB
                     canRenderUIElements ?
 #endif
+//+:cnd:noEmit
                     YTBGlobalState.OffsetCamera
+//-:cnd:noEmit
 #if YTB
                     : new Vector2(RenderSystem2D.EDITOR_OFFSET_CAMERA_X, RenderSystem2D.EDITOR_OFFSET_CAMERA_Y)
 #endif
+//+:cnd:noEmit
                     ;
 
                 ref var camTransform = ref _entityManager.TransformComponents[_entityManager.Camera.EntityToFollow];
@@ -403,4 +414,5 @@ namespace YotsubaEngine.Core.System.S_2D
         }
     }
 #endif
+//+:cnd:noEmit
 }

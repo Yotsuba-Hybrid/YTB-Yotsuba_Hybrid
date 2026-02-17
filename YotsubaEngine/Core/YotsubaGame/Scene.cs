@@ -106,6 +106,7 @@ namespace YotsubaEngine.Core.YotsubaGame
 
         private DragAndDropSystem DragAndDropSystem;
 
+//-:cnd:noEmit
 #if YTB
         /// <summary>
         /// Sistema que permite arrastrar entidades con FontComponent2D usando Ctrl + Shift + Click Izquierdo.
@@ -113,6 +114,7 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// </summary>
         private FontDragSystem FontDragSystem;
 #endif
+//+:cnd:noEmit
         #endregion
 
         /// <summary>
@@ -137,9 +139,11 @@ namespace YotsubaEngine.Core.YotsubaGame
             TilemapSystem = new();
             DragAndDropSystem = new();
             FontSystem2D = new();
+//-:cnd:noEmit
 #if YTB
             FontDragSystem = new();
 #endif
+//+:cnd:noEmit
         }
 
 
@@ -164,16 +168,20 @@ namespace YotsubaEngine.Core.YotsubaGame
             TilemapSystem.InitializeSystem(EntityManager);
             DragAndDropSystem.InitializeSystem(EntityManager);
             FontSystem2D.InitializeSystem(EntityManager);
+//-:cnd:noEmit
 #if YTB
             FontDragSystem.InitializeSystem(EntityManager);
             FontDragSystem.SetFontSystem(FontSystem2D); // Pasar la referencia del FontSystem2D
 #endif
+//+:cnd:noEmit
+//-:cnd:noEmit
 #if YTB
             if (OperatingSystem.IsWindows())
             {
                 EngineUISystem.InitializeSystem(EntityManager, content);
             }
 #endif
+//+:cnd:noEmit
 
             foreach(var entity in EntityManager.YotsubaEntities)
             {
@@ -215,17 +223,21 @@ namespace YotsubaEngine.Core.YotsubaGame
                     CameraSystem.SharedEntityForEachUpdate(entity, gameTime);
                     InputSystem.SharedEntityForEachUpdate(entity, gameTime);
                     DragAndDropSystem.SharedEntityForEachUpdate(entity, gameTime);
+//-:cnd:noEmit
 #if YTB
                     FontDragSystem.SharedEntityForEachUpdate(entity, gameTime);
 #endif
+//+:cnd:noEmit
 
                 }
             }catch(Exception ex)
             {
                 EngineUISystem.SendLog($"Error in Scene.Update: {ex.Message}");
+//-:cnd:noEmit
 #if YTB
                 EngineUISystem.SendLog($"StackTrace: {ex.StackTrace}");
 #endif
+//+:cnd:noEmit
             }
         }
 
@@ -256,6 +268,7 @@ namespace YotsubaEngine.Core.YotsubaGame
             Draw3D(gameTime);
 
             Draw2D(gameTime, _spriteBatch);
+//-:cnd:noEmit
 #if YTB
             if (isWindows)
             {
@@ -264,6 +277,7 @@ namespace YotsubaEngine.Core.YotsubaGame
 
 
 #endif
+//+:cnd:noEmit
         }
 
         void Draw3D(GameTime gameTime)

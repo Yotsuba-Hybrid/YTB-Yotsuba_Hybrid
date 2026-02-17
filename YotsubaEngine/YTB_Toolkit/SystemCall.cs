@@ -74,9 +74,11 @@ namespace YotsubaEngine.YTB_Toolkit
                 game.SceneManager.CurrentScene = newScene;
                 newScene.Initialize(YTBFileToGameData.ContentManager);
                 EventManager.StopEvents = false;
+//-:cnd:noEmit
 #if YTB
                 EventManager.Instance.Publish(new OnShowGameUIHiddeEngineEditor(true, false));
 #endif
+//+:cnd:noEmit
             };
 
             EventManager.Instance.EventManagerWasPaused += handler;
@@ -109,9 +111,11 @@ namespace YotsubaEngine.YTB_Toolkit
                 newScene.Initialize(YTBFileToGameData.ContentManager);
                 EventManager.StopEvents = false; AudioSystem.PauseAll();
 
+//-:cnd:noEmit
 #if YTB
                 EventManager.Instance.Publish(new OnShowGameUIHiddeEngineEditor(false, true));
 #endif
+//+:cnd:noEmit
             };
 
             EventManager.Instance.EventManagerWasPaused += handler;

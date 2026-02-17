@@ -31,6 +31,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
     internal class EngineUISystem
     {
 
+//-:cnd:noEmit
 #if YTB
         bool showEngineEditor = true;
         bool pauseSystem = false;
@@ -47,6 +48,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
         /// </summary>
         private string _modeSwitchAlertMessage = string.Empty;
 #endif
+//+:cnd:noEmit
         /// <summary>
         /// Almacena los mensajes que aparecen en la consola del engine durante la sesión.
         /// <para>Stores the messages that appear in the engine console during the session.</para>
@@ -99,6 +101,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
         /// </summary>
         private ConsoleUI _consoleUI;
 
+//-:cnd:noEmit
 #if YTB
         private ImGuiRenderer GuiRenderer = YTBGame.GuiRenderer;
 
@@ -113,12 +116,14 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
         /// </summary>
         private Model3DEditorUI _model3DEditor;
 #endif
+//+:cnd:noEmit
         /// <summary>
         /// Acción utilizada para guardar los cambios del juego desde la UI.
         /// <para>Action used to save game changes from the UI.</para>
         /// </summary>
         public static Action SaveChanges = () => { SaveGameInfo(); };
 
+//-:cnd:noEmit
 #if YTB
         /// <summary>
         /// Instancia singleton interna para acceso desde otros sistemas.
@@ -136,6 +141,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
             _modeSwitchAlertMessage = message;
         }
 #endif
+//+:cnd:noEmit
 
         /// <summary>
         /// Inicializa el sistema de UI del engine y sus paneles.
@@ -145,9 +151,11 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
         /// <param name="content">Administrador de contenido. <para>Content manager.</para></param>
         public void InitializeSystem(EntityManager entities, ContentManager content)
         {
+//-:cnd:noEmit
 #if YTB
             _instance = this;
 #endif
+//+:cnd:noEmit
 
             // Al inicializar (seguro)
             if (ImGui.GetCurrentContext() == IntPtr.Zero)
@@ -167,13 +175,16 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
             _entityManager = new EntityManagerUI(() => SelectedEntity, () => SelectedScene, () => { SaveGameInfo(); });
             _menuBar = new MenuBarUI(() => YTBGlobalState.EngineBackground, ApplyBackgroundColor, SaveBackgroundSetting);
             _consoleUI = new ConsoleUI();
+//-:cnd:noEmit
 #if YTB
             _debugOverlayUI = new DebugOverlayUI();
             _model3DEditor = new Model3DEditorUI();
 #endif
+//+:cnd:noEmit
             //EngineUISystem.SendLog("El EngineUiSystem está listo!");
 
             EventManager.Instance.Subscribe<OnGameFileWasReplaceByHistory>(GameFileWasReplace);
+//-:cnd:noEmit
 #if YTB
             EventManager.Instance.Subscribe<OnHiddeORShowUIEngineEditor>(OnHiddeORShowUIEngineEditorFunc);
             EventManager.Instance.Subscribe<OnShowGameUIHiddeEngineEditor>(OnHiddeORShowUIEngineEditorFunc);
@@ -182,8 +193,10 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
 
             ImGui.StyleColorsClassic();
 #endif
+//+:cnd:noEmit
         }
 
+//-:cnd:noEmit
 #if YTB
         private void OnHiddeORShowUIEngineEditorFunc(OnShowGameUIHiddeEngineEditor editor)
         {
@@ -205,6 +218,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
         }
 
 #endif
+//+:cnd:noEmit
         private void GameFileWasReplace(OnGameFileWasReplaceByHistory history)
         {
             SendLog("Archivo del juego actualizado");
@@ -261,6 +275,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
         /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
         public void UpdateSystem(SpriteBatch spriteBatch, GameTime gameTime)
         {
+//-:cnd:noEmit
 #if YTB
             if (pauseSystem)
             {
@@ -268,12 +283,16 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
 
             }
 #endif
+//+:cnd:noEmit
+//-:cnd:noEmit
 #if YTB
 
             GuiRenderer.BeginLayout(gameTime);
 #endif
+//+:cnd:noEmit
             // Render de la capa base (dockspace + menubar)
             RenderizarCapaBaseEngine();
+//-:cnd:noEmit
 #if YTB
 
 
@@ -299,10 +318,13 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
             // Renderizar alerta de cambio de modo Engine/Game
             RenderModeSwitchAlert(gameTime);
 #endif
+//+:cnd:noEmit
+//-:cnd:noEmit
 #if YTB
 
             GuiRenderer.EndLayout();
 #endif
+//+:cnd:noEmit
 
         }
 
@@ -550,6 +572,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
         /// </summary>
         public void InitializeShowTextureImages()
         {
+//-:cnd:noEmit
 #if YTB
             // BUG FIX: Texture preview disabled for DirectX and Vulkan backends
             // This feature causes visual artifacts (screen tearing, white horizontal lines) when
@@ -610,6 +633,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
             }
             */
 #endif
+//+:cnd:noEmit
         }
 
         string busqueda = "";
@@ -622,6 +646,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
 
             YTBGui.AbrirSeccion("Regiones de texturas", () =>
             {
+//-:cnd:noEmit
 #if YTB
                 foreach (var (regionKey, textureRegion) in YotsubaGraphicsManager.PreloadedTextureRegions)
                 {
@@ -667,9 +692,11 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
                 // Salto de línea final
                 ImGui.NewLine();
 #endif
+//+:cnd:noEmit
             });
             
             // Renderizar texture region siguiendo el mouse (si hay una activa)
+//-:cnd:noEmit
 #if YTB
             if (_draggedRegion.Texture != null && _draggedTexturePtr != IntPtr.Zero)
             {
@@ -727,6 +754,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
                 }
             }
 #endif
+//+:cnd:noEmit
            
             
             //COMENT PART
@@ -1138,10 +1166,12 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
 
         private void RenderizarCapaBaseEngine()
         {
+//-:cnd:noEmit
 #if YTB
             if (pauseSystem)
                 return;
 #endif
+//+:cnd:noEmit
             // Usamos el mismo código de ventana raíz pero delegando la barra de menú
             ImGuiViewportPtr viewport = ImGui.GetMainViewport();
             ImGui.SetNextWindowPos(viewport.Pos);
@@ -1249,6 +1279,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
             SendLog(message, Color.White);
         }
 
+//-:cnd:noEmit
 #if YTB
         /// <summary>
         /// Renderiza la alerta temporal de cambio de modo Engine/Game como overlay ImGui.
@@ -1312,5 +1343,6 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
             ImGui.PopStyleVar(2);
         }
 #endif
+//+:cnd:noEmit
     }
 }
