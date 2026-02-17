@@ -30,29 +30,38 @@ jobs:
            
           echo "Renombrando: $OLD_NAME -> $NEW_NAME"
 
-          if [ "$NEW_NAME" == "$OLD_NAME" ]; then
-            echo "El nombre ya es correcto. Borrando script..."
-            rm .github/workflows/setup.yml
-            exit 0
+          # 1. Reemplazo de contenido y Renombrado (Solo si cambia el nombre)
+          if [ "$NEW_NAME" != "$OLD_NAME" ]; then
+            # Reemplazo de contenido
+            grep -rl "$OLD_NAME" . --exclude-dir=.git --exclude=".github/workflows/setup.yaml" | while read -r file ; do
+              sed -i "s/$OLD_NAME/$NEW_NAME/g" "$file"
+            done
+
+            # Renombrado de archivos y carpetas
+            find . -depth -name "*$OLD_NAME*" -not -path '*/.git/*' | while read -r path ; do
+              dir=$(dirname "$path")
+              filename=$(basename "$path")
+              new_filename="${filename//$OLD_NAME/$NEW_NAME}"
+              mv "$path" "$dir/$new_filename"
+            done
+          else
+            echo "El nombre del repositorio coincide con el template. No se renombrará nada."
           fi
 
-          # 1. Reemplazo de contenido
-          grep -rl "$OLD_NAME" . --exclude-dir=.git --exclude=".github/workflows/setup.yml" | while read -r file ; do
-            sed -i "s/$OLD_NAME/$NEW_NAME/g" "$file"
-          done
-
-          # 2. Renombrado de archivos y carpetas
-          # Nota: Se agregó 'sort -r' implícito al usar -depth para renombrar desde lo más profundo hacia afuera
-          find . -depth -name "*$OLD_NAME*" -not -path '*/.git/*' | while read -r path ; do
-            dir=$(dirname "$path")
-            filename=$(basename "$path")
-            # Reemplazo de string bash
-            new_filename="${filename//$OLD_NAME/$NEW_NAME}"
-            mv "$path" "$dir/$new_filename"
-          done
+          # 2. Limpieza de archivos del template
+          # Se mantienen solo los componentes esenciales
+          echo "🧹 Limpiando archivos innecesarios..."
+          find . -maxdepth 1 -mindepth 1 \
+            -not -name ".git" \
+            -not -name ".github" \
+            -not -name ".gitignore" \
+            -not -name "YotsubaEngine" \
+            -not -name "YTBContentBuilder" \
+            -not -name "$NEW_NAME" \
+            -exec rm -rf {} +
 
       - name: Eliminar este workflow
-        run: rm -f .github/workflows/setup.yml
+        run: rm -f .github/workflows/setup.yaml
 
       - name: Guardar cambios
         uses: stefanzweifel/git-auto-commit-action@v5
