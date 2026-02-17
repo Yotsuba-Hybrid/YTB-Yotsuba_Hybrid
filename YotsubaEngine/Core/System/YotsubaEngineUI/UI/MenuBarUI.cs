@@ -108,9 +108,11 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 
             if (ImGui.Button("Historial"))
             {
+//-:cnd:noEmit
 #if YTB
                 HistoryUI.Open();
 #endif
+//+:cnd:noEmit
             }
 
 
@@ -144,6 +146,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 
             if (ImGui.Button("Recompilar y Ejecutar"))
             {
+//-:cnd:noEmit
 #if YTB
                 YTBContentBuilder.Rebuild(async () =>
                 {
@@ -154,29 +157,36 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
                 //await YTBFileToGameData.UpdateStateOfSceneManager();
                 //EventManager.Instance.Publish(new OnShowGameUIHiddeEngineEditor(true, false));
 #endif
+//+:cnd:noEmit
             }
             ImGui.Separator();
             if (ImGui.Button("Reproducir"))
             {
+//-:cnd:noEmit
 #if YTB
                 AudioSystem.ResumeAll();
                 EventManager.Instance.Publish(new OnShowGameUIHiddeEngineEditor(true,false));
 #endif
+//+:cnd:noEmit
             }
             ImGui.SameLine();
             if (ImGui.Button("Pausar")) 
             {
+//-:cnd:noEmit
 #if YTB
 
                 AudioSystem.PauseAll();
                 EventManager.Instance.Publish(new OnShowGameUIHiddeEngineEditor(false,true));
 #endif
+//+:cnd:noEmit
             }
 
             // --- Ventana de Historial (nueva implementación mejorada) ---
+//-:cnd:noEmit
 #if YTB
             HistoryUI.Render();
 #endif
+//+:cnd:noEmit
 
         }
 

@@ -50,9 +50,11 @@ namespace YotsubaEngine.Core.System.S_3D
         {
             
 
+//-:cnd:noEmit
 #if YTB
             if (GameWontRun.GameWontRunByException) return;
 #endif
+//+:cnd:noEmit
 
             EntityManager = entities;
 
@@ -102,10 +104,12 @@ namespace YotsubaEngine.Core.System.S_3D
         {
 
 
+//-:cnd:noEmit
 #if YTB
             if (OperatingSystem.IsWindows())
 			if (GameWontRun.GameWontRunByException) return;
 #endif
+//+:cnd:noEmit
 
             ref var entities = ref EntityManager.YotsubaEntities;
             ref var Models = ref EntityManager.ModelComponents3D;
@@ -117,6 +121,7 @@ namespace YotsubaEngine.Core.System.S_3D
             CameraComponent3D camera = EntityManager.Camera;
             camera.Update();
 
+//-:cnd:noEmit
 #if YTB
             // Selección múltiple de modelos 3D en modo engine via ray picking
             if (YTBGlobalState.EngineShortcutsMode)
@@ -193,6 +198,7 @@ namespace YotsubaEngine.Core.System.S_3D
                 YTBGlobalState.SelectedModel3DEntityIds.Clear();
             }
 #endif
+//+:cnd:noEmit
 
             foreach (var entity in entities)
             {

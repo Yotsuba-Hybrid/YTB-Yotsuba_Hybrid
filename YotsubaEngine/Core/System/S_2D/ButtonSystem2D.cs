@@ -8,9 +8,11 @@ using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Events.YTBEvents;
 using YotsubaEngine.Exceptions;
 using static YotsubaEngine.Core.System.S_AGNOSTIC.InputSystem;
+//-:cnd:noEmit
 #if YTB
 using YotsubaEngine.Core.System.YotsubaEngineUI.UI;
 #endif
+//+:cnd:noEmit
 
 namespace YotsubaEngine.Core.System.S_2D
 {
@@ -45,9 +47,11 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
         public void InitializeSystem(EntityManager @entities)
         {
+//-:cnd:noEmit
 #if YTB
 			if (GameWontRun.GameWontRunByException) return;
 #endif
+//+:cnd:noEmit
 			EventManager = EventManager.Instance;
             EntityManager = @entities;
             InputManager = InputManager.Instance;
@@ -61,6 +65,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
         public void UpdateSystem(GameTime gameTime)
         {
+//-:cnd:noEmit
 #if YTB
 			if (OperatingSystem.IsWindows())
 				if (!RenderSystem2D.IsGameActive) return;
@@ -68,6 +73,7 @@ namespace YotsubaEngine.Core.System.S_2D
 			if (GameWontRun.GameWontRunByException) return;
 
 #endif
+//+:cnd:noEmit
 
 			if (EntityManager == null) return;
 			Point MousePosition = InputManager.Mouse.Position;
@@ -83,12 +89,14 @@ namespace YotsubaEngine.Core.System.S_2D
 
                     if (Rectangle.Contains(MousePosition) && InputManager.Mouse.WasButtonJustReleased(MouseButton.Left))
                     {
+//-:cnd:noEmit
 #if YTB
                         if (DebugOverlayUI.ShowButtonLogs)
                         {
                             EngineUISystem.SendLog($"[BUTTON] Entity '{entity.Name}' (ID: {entity.Id}) fue PRESIONADO");
                         }
 #endif
+//+:cnd:noEmit
                         if (button.Action is not null)
                         {
                             button.Action.Invoke();
@@ -99,12 +107,14 @@ namespace YotsubaEngine.Core.System.S_2D
 
                     else if (Rectangle.Contains(MousePosition) && !InputManager.Mouse.WasButtonJustReleased(MouseButton.Left))
                     {
+//-:cnd:noEmit
 #if YTB
                         if (DebugOverlayUI.ShowButtonLogs)
                         {
                             EngineUISystem.SendLog($"[BUTTON] Entity '{entity.Name}' (ID: {entity.Id}) tiene HOVER");
                         }
 #endif
+//+:cnd:noEmit
                         EventManager.Publish(new OnHoverButton(entity.Id));
                     }
 
@@ -114,12 +124,14 @@ namespace YotsubaEngine.Core.System.S_2D
                         {
                             if (Rectangle.Contains(touchPoint.Position))
                             {
+//-:cnd:noEmit
 #if YTB
                                 if (DebugOverlayUI.ShowButtonLogs)
                                 {
                                     EngineUISystem.SendLog($"[BUTTON] Entity '{entity.Name}' (ID: {entity.Id}) fue PRESIONADO (TOUCH)");
                                 }
 #endif
+//+:cnd:noEmit
                                 button.Action.Invoke();
                                 return;
                             }

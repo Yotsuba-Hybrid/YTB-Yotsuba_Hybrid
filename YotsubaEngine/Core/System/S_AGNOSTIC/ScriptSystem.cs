@@ -44,10 +44,12 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
         public void InitializeSystem(EntityManager entities)
         {
+//-:cnd:noEmit
 #if YTB
             if (GameWontRun.GameWontRunByException) return;
 
 #endif
+//+:cnd:noEmit
             EntityManager = entities;
             EventManager = EventManager.Instance;
         }
@@ -60,9 +62,11 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         /// <param name="time">Tiempo de juego. <para>Game time.</para></param>
         public void SharedEntityForEachUpdate(Yotsuba entity, GameTime time)
         {
+//-:cnd:noEmit
 #if YTB
 			if (GameWontRun.GameWontRunByException || !RenderSystem2D.IsGameActive) return;
 #endif
+//+:cnd:noEmit
 			if (EntityManager == null) return;
 			if (!entity.HasComponent(YTBComponent.Script)) return;
             ref ScriptComponent component = ref EntityManager.ScriptComponents[entity.Id];
@@ -80,9 +84,11 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         public void SharedEntityInitialize(Yotsuba entity)
         {
 
+//-:cnd:noEmit
 #if YTB
 			if (GameWontRun.GameWontRunByException) return;
 #endif
+//+:cnd:noEmit
 			if (EntityManager == null) return;
 			if (!entity.HasComponent(YTBComponent.Script)) return;
 
@@ -120,9 +126,11 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
         public void DrawSystem3D(GameTime gameTime)
         {
+//-:cnd:noEmit
 #if YTB
             if (GameWontRun.GameWontRunByException) return;
 #endif
+//+:cnd:noEmit
 
             if (EntityManager == null) return;
 
@@ -143,9 +151,11 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         /// <param name="spriteBatch">Sprite batch para dibujar. <para>Sprite batch for drawing.</para></param>
         public void DrawSystem2D(GameTime gameTime, SpriteBatch spriteBatch)
         {
+//-:cnd:noEmit
 #if YTB
             if (GameWontRun.GameWontRunByException) return;
 #endif
+//+:cnd:noEmit
 
             if (EntityManager == null) return;
 

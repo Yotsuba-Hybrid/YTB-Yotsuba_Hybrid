@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Immutable;
@@ -14,6 +14,7 @@ using static YotsubaEngine.Core.System.S_AGNOSTIC.InputSystem;
 
 namespace YotsubaEngine.Core.System.YotsubaEngineCore
 {
+//-:cnd:noEmit
 #if YTB
     /// <summary>
     /// Sistema para arrastrar entidades de texto (FontComponent2D) en modo DEBUG.
@@ -121,30 +122,40 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
 
             if (EntityManager.Camera != null)
             {
+//-:cnd:noEmit
 #if YTB
                 bool canRenderUIElements = RenderSystem2D.IsGameActive || !OperatingSystem.IsWindows();
 #else
                 bool canRenderUIElements = !OperatingSystem.IsWindows();
 #endif
+//+:cnd:noEmit
 
                 float currentZoom =
+//-:cnd:noEmit
 #if YTB
                     canRenderUIElements ?
 #endif
+//+:cnd:noEmit
                     YTBGlobalState.CameraZoom
+//-:cnd:noEmit
 #if YTB
                     : RenderSystem2D.EDITOR_SCALE_CAMERA
 #endif
+//+:cnd:noEmit
                     ;
 
                 Vector2 offset =
+//-:cnd:noEmit
 #if YTB
                     canRenderUIElements ?
 #endif
+//+:cnd:noEmit
                     YTBGlobalState.OffsetCamera
+//-:cnd:noEmit
 #if YTB
                     : new Vector2(RenderSystem2D.EDITOR_OFFSET_CAMERA_X, RenderSystem2D.EDITOR_OFFSET_CAMERA_Y)
 #endif
+//+:cnd:noEmit
                     ;
 
                 ref var camTransform = ref EntityManager.TransformComponents[EntityManager.Camera.EntityToFollow];
@@ -248,4 +259,5 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
         }
     }
 #endif
+//+:cnd:noEmit
 }
