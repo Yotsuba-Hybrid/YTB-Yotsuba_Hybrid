@@ -18,15 +18,5 @@
   "sourceName": "SandBoxGame",
   "preferNameDirectory": true,
   "symbols": {
-    "YTB": {
-      "type": "parameter",
-      "datatype": "bool",
-      "defaultValue": "true"
-    },
-    "YOTSUBA": {
-      "type": "parameter",
-      "datatype": "bool",
-      "defaultValue": "true"
-    }
-  }
+      }
 }
