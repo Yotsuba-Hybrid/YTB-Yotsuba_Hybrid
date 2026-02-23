@@ -7,6 +7,7 @@ using System.Runtime.Versioning;
 using System.Xml.Linq;
 using YotsubaEngine.ActionFiles.YTB_Files;
 using YotsubaEngine.Core.System.YotsubaEngineCore;
+using YotsubaEngine.Core.YotsubaGame;
 
 namespace YotsubaEngine.ActionFiles.XML_SpriteSheet_Files
 {

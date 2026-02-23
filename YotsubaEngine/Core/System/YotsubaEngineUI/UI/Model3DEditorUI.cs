@@ -8,7 +8,6 @@ using System.Linq;
 using YotsubaEngine.ActionFiles.YTB_Files;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;
-using YotsubaEngine.Core.System.YotsubaEngineCore;
 using YotsubaEngine.Core.YotsubaGame;
 using Num = System.Numerics;
 
@@ -65,13 +64,14 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
                 return;
             }
 
+            Span<Yotsuba> Entities = entityManager.YotsubaEntities.AsSpan();
+            Span<TransformComponent> transformComponents = entityManager.TransformComponents.AsSpan();
             foreach (int entityId in selectedIds)
             {
-                if (entityId >= entityManager.YotsubaEntities.Count) continue;
-                var entity = entityManager.YotsubaEntities[entityId];
-                if (entity == null) continue;
+                if (entityId >= Entities.Length) continue;
+                var entity = Entities[entityId];
 
-                ref TransformComponent transform = ref entityManager.TransformComponents[entityId];
+                ref TransformComponent transform = ref transformComponents[entityId];
                 string label = string.IsNullOrEmpty(entity.Name) ? $"Entidad #{entityId}" : entity.Name;
 
                 if (ImGui.CollapsingHeader(label, ImGuiTreeNodeFlags.DefaultOpen))
@@ -193,7 +193,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
             var game = (YTBGame)YTBGame.Instance;
             if (game?.SceneManager?.Scenes == null) return;
 
-            foreach (var scene in game.SceneManager.Scenes)
+            foreach (var scene in game.SceneManager.Scenes.AsSpan())
             {
                 if (scene.EntityManager != entityManager) continue;
 
@@ -205,7 +205,6 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
                 {
                     if (entityId >= entityManager.YotsubaEntities.Count) continue;
                     var entity = entityManager.YotsubaEntities[entityId];
-                    if (entity == null) continue;
 
                     ref TransformComponent transform = ref entityManager.TransformComponents[entityId];
 

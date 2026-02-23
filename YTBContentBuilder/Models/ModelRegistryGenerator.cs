@@ -143,6 +143,7 @@ namespace YotsubaEngine.YTBContentBuilder.Models
             sb.AppendLine("using Microsoft.Xna.Framework.Graphics;");
             sb.AppendLine("using YotsubaEngine.Core.System.YotsubaEngineCore;");
             sb.AppendLine("using YotsubaEngine.Graphics;");
+            sb.AppendLine("using YotsubaEngine.Core.YotsubaGame;");
             sb.AppendLine();
             sb.AppendLine("namespace YotsubaEngine.Graphics");
             sb.AppendLine("{");

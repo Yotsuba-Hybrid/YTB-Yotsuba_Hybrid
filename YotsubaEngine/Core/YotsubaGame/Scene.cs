@@ -5,11 +5,12 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Threading.Tasks;
 using YotsubaEngine.Core.Component.C_2D;
+using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.S_2D;
 using YotsubaEngine.Core.System.S_3D;
 using YotsubaEngine.Core.System.S_AGNOSTIC;
-using YotsubaEngine.Core.System.YotsubaEngineCore;
 using YotsubaEngine.Core.System.YotsubaEngineUI;
+using YotsubaEngine.Core.System.YTBDragAndDrop;
 using YotsubaEngine.YTB_Toolkit;
 
 namespace YotsubaEngine.Core.YotsubaGame
@@ -47,7 +48,17 @@ namespace YotsubaEngine.Core.YotsubaGame
 
         #region Sistemas del engine
 
+        /// <summary>
+        /// Sistema encargado de instanciar y ejecutar todos los sistemas no propios del Yotsuba Hybrid, 
+        /// sino los definidos por el desarrollador del otro lado.
+        /// </summary>
+        public SystemBuilder SystemBuilder { get; set; }
+
+        /// <summary>
+        /// Sistema encargado de dibujar texto en pantalla.
+        /// </summary>
         internal FontSystem2D FontSystem2D;
+
         /// <summary>
         /// Sistema encargado de gestionar todas las animaciones de las entidades del juego
         /// </summary>
@@ -70,6 +81,9 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// </summary>
         private RenderSystem2D RenderSystem2D;
 
+        /// <summary>
+        /// Sistema encargado de mostrar los botones de la libreria ImGui en pantalla
+        /// </summary>
         private GumUISystem2D GumUISystem2D;
 
         /// <summary>
@@ -104,6 +118,9 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// </summary>
         private EngineUISystem EngineUISystem;
 
+        /// <summary>
+        /// Sistema encargado del sistema de Drag y Drop
+        /// </summary>
         private DragAndDropSystem DragAndDropSystem;
 
 //-:cnd:noEmit
@@ -139,7 +156,8 @@ namespace YotsubaEngine.Core.YotsubaGame
             TilemapSystem = new();
             DragAndDropSystem = new();
             FontSystem2D = new();
-//-:cnd:noEmit
+            SystemBuilder = new SystemBuilder();
+            //-:cnd:noEmit
 #if YTB
             FontDragSystem = new();
 #endif
@@ -168,6 +186,7 @@ namespace YotsubaEngine.Core.YotsubaGame
             TilemapSystem.InitializeSystem(EntityManager);
             DragAndDropSystem.InitializeSystem(EntityManager);
             FontSystem2D.InitializeSystem(EntityManager);
+            SystemBuilder.InitializeSystem(EntityManager);
 //-:cnd:noEmit
 #if YTB
             FontDragSystem.InitializeSystem(EntityManager);
@@ -183,15 +202,18 @@ namespace YotsubaEngine.Core.YotsubaGame
 #endif
 //+:cnd:noEmit
 
-            foreach(var entity in EntityManager.YotsubaEntities)
+            foreach(ref Yotsuba entity in EntityManager.YotsubaEntities.AsSpan())
             {
-                ScriptSystem.SharedEntityInitialize(entity);
-                AnimationSystem2D.SharedEntityInitialize(entity);
-                ButtonSystem2D.SharedEntityInitialize(entity);
-                PhysicsSystem2D.SharedEntityInitialize(entity);
-                CameraSystem.SharedEntityInitialize(entity);
-                InputSystem.SharedEntityInitialize(entity);
-                FontSystem2D.SharedEntityInitialize(entity);
+
+                SystemBuilder.SharedEntityInitialize(ref entity);
+                ScriptSystem.SharedEntityInitialize(ref entity);
+                FontSystem2D.SharedEntityInitialize(ref entity);
+
+                //AnimationSystem2D.SharedEntityInitialize(ref entity);
+                //ButtonSystem2D.SharedEntityInitialize(ref entity);
+                //PhysicsSystem2D.SharedEntityInitialize(ref entity);
+                //CameraSystem.SharedEntityInitialize(ref entity);
+                //InputSystem.SharedEntityInitialize(ref entity);
 
             }
         }
@@ -214,23 +236,25 @@ namespace YotsubaEngine.Core.YotsubaGame
             CameraSystem.UpdateSystem(gameTime);
             try
             {
-                foreach (var entity in EntityManager.YotsubaEntities)
+                foreach (ref Yotsuba entity in EntityManager.YotsubaEntities.AsSpan())
                 {
-                    ScriptSystem.SharedEntityForEachUpdate(entity, gameTime);
-                    AnimationSystem2D.SharedEntityForEachUpdate(entity, gameTime);
-                    ButtonSystem2D.SharedEntityForEachUpdate(entity, gameTime);
-                    PhysicsSystem2D.SharedEntityForEachUpdate(entity, gameTime);
-                    CameraSystem.SharedEntityForEachUpdate(entity, gameTime);
-                    InputSystem.SharedEntityForEachUpdate(entity, gameTime);
-                    DragAndDropSystem.SharedEntityForEachUpdate(entity, gameTime);
+                    ScriptSystem.SharedEntityForEachUpdate(ref entity, gameTime);
+                    
+                    DragAndDropSystem.SharedEntityForEachUpdate(ref entity, gameTime);
 //-:cnd:noEmit
 #if YTB
-                    FontDragSystem.SharedEntityForEachUpdate(entity, gameTime);
+                    FontDragSystem.SharedEntityForEachUpdate(ref entity, gameTime);
 #endif
 //+:cnd:noEmit
 
+                    //AnimationSystem2D.SharedEntityForEachUpdate(ref entity, gameTime);
+                    //ButtonSystem2D.SharedEntityForEachUpdate(ref entity, gameTime);
+                    //PhysicsSystem2D.SharedEntityForEachUpdate(ref entity, gameTime);
+                    //CameraSystem.SharedEntityForEachUpdate(ref entity, gameTime);
+                    //InputSystem.SharedEntityForEachUpdate(ref entity, gameTime);
                 }
-            }catch(Exception ex)
+            }
+            catch(Exception ex)
             {
                 EngineUISystem.SendLog($"Error in Scene.Update: {ex.Message}");
 //-:cnd:noEmit

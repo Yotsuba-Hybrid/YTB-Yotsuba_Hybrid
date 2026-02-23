@@ -11,7 +11,7 @@ namespace YotsubaEngine.HighestPerformanceTypes
     /// Arreglo dinámico de alto rendimiento usado por el motor.
     /// <para>High-performance growable array used by the engine.</para>
     /// </summary>
-    public class YTB<T> : IEnumerable<T>
+    public class YTB<T>
     {
         /// <summary>
         /// Tamaños predeterminados para recalcular el tamaño de YTB.
@@ -32,7 +32,9 @@ namespace YotsubaEngine.HighestPerformanceTypes
         /// <summary>
         /// Iterable interno que almacena los elementos.
         /// </summary>
-        private T[] _ytb { get; set; } 
+        private T[] _arr { get; set; }
+
+        public IEnumerable<T> _ytb => _arr.Take(Count);
 
         /// <summary>
         /// Número de elementos en el arreglo.
@@ -47,7 +49,7 @@ namespace YotsubaEngine.HighestPerformanceTypes
         public YTB()
         {
             predetCurrentSizeIndex = 0;
-            _ytb = new T[Capacity];
+            _arr = new T[Capacity];
             Count = 0;
         }
 
@@ -68,10 +70,10 @@ namespace YotsubaEngine.HighestPerformanceTypes
                     throw new System.IndexOutOfRangeException("YTB has reached its maximum capacity.");
 
                 T[] newArray = new T[Capacity];
-                Array.Copy(_ytb, newArray, Count);
-                _ytb = newArray;
+                Array.Copy(_arr, newArray, Count);
+                _arr = newArray;
             }
-            _ytb[Count] = item;
+            _arr[Count] = item;
             return ((Count++));
         }
 
@@ -93,10 +95,10 @@ namespace YotsubaEngine.HighestPerformanceTypes
                     throw new System.IndexOutOfRangeException("YTB has reached its maximum capacity.");
 
                 T[] newArray = new T[Capacity];
-                Array.Copy(_ytb, newArray, Count);
-                _ytb = newArray;
+                Array.Copy(_arr, newArray, Count);
+                _arr = newArray;
             }
-            _ytb[Count] = item;
+            _arr[Count] = item;
             Index = ((Count++));
             return Index;
         }
@@ -114,9 +116,9 @@ namespace YotsubaEngine.HighestPerformanceTypes
             int shiftCount = Count - index - 1;
             if (shiftCount > 0)
             {
-                Array.Copy(_ytb, index + 1, _ytb, index, shiftCount);
+                Array.Copy(_arr, index + 1, _arr, index, shiftCount);
             }
-            _ytb[--Count] = default!;
+            _arr[--Count] = default!;
             return true;
         }
 
@@ -129,7 +131,7 @@ namespace YotsubaEngine.HighestPerformanceTypes
         /// <returns>Retorna true si el elemento fue encontrado y eliminado; de lo contrario, false. <para>Returns true if the element was found and removed; otherwise, false.</para></returns>
         public bool Remove(T item)
         {
-            int index = Array.IndexOf(_ytb, item, 0, Count);
+            int index = Array.IndexOf(_arr, item, 0, Count);
             if (index < 0)
                 return false;
             return RemoveAt(index);
@@ -149,7 +151,7 @@ namespace YotsubaEngine.HighestPerformanceTypes
             {
                 if (index < 0 || index >= Count)
                     throw new ArgumentOutOfRangeException(nameof(index), "Index is out of range.");
-                return ref _ytb[index];
+                return ref _arr[index];
             }
         }
 
@@ -167,7 +169,7 @@ namespace YotsubaEngine.HighestPerformanceTypes
             {
                 if (entity.Id < 0 || entity.Id >= Count)
                     throw new ArgumentOutOfRangeException(nameof(entity.Id), "Index is out of range.");
-                return ref _ytb[entity.Id];
+                return ref _arr[entity.Id];
             }
         }
 
@@ -185,7 +187,7 @@ namespace YotsubaEngine.HighestPerformanceTypes
             {
                 if (index < 0 || index >= Count)
                     throw new ArgumentOutOfRangeException(nameof(index), "Index is out of range.");
-                _ytb[index] = value;
+                _arr[index] = value;
             }
         }
 
@@ -198,7 +200,7 @@ namespace YotsubaEngine.HighestPerformanceTypes
         public T[] ToArray()
         {
             T[] result = new T[Count];
-            Array.Copy(_ytb, result, Count);
+            Array.Copy(_arr, result, Count);
             return result;
         }
 
@@ -210,7 +212,7 @@ namespace YotsubaEngine.HighestPerformanceTypes
         public List<T> ToList()
         {
             List<T> List = new List<T>(Count);
-            List.AddRange(_ytb.AsSpan(0, Count));
+            List.AddRange(_arr.AsSpan(0, Count));
             return List;
         }
 
@@ -221,7 +223,7 @@ namespace YotsubaEngine.HighestPerformanceTypes
         /// <returns>Vista de solo lectura del arreglo. <para>Read-only view of the array.</para></returns>
         public ReadOnlySpan<T> AsReadOnlySpan()
         {
-            return _ytb.AsSpan(0, Count);
+            return _arr.AsSpan(0, Count);
         }
 
         /// <summary>
@@ -231,7 +233,7 @@ namespace YotsubaEngine.HighestPerformanceTypes
         /// <returns>Vista del arreglo. <para>View of the array.</para></returns>
         public Span<T> AsSpan()
         {
-            return _ytb.AsSpan(0, Count);
+            return _arr.AsSpan(0, Count);
         }
 
         /// <summary>
@@ -242,28 +244,7 @@ namespace YotsubaEngine.HighestPerformanceTypes
         {
             Count = 0;
             Capacity = 0;
-            Array.Clear(_ytb, 0, Capacity);
-        }
-
-        /// <summary>
-        /// Implementación de la interfaz IEnumerable&lt;T&gt; para permitir la iteración sobre los elementos del YTB.
-        /// <para>Implementation of IEnumerable&lt;T&gt; to allow iteration over YTB elements.</para>
-        /// </summary>
-        /// <returns>Enumerador de los elementos. <para>Enumerator of the elements.</para></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public IEnumerator<T> GetEnumerator()
-        {
-            foreach(var item in _ytb.Take(Count)) yield return item;
-        }
-
-        /// <summary>
-        /// La implementación no genérica de IEnumerable.
-        /// <para>The non-generic IEnumerable implementation.</para>
-        /// </summary>
-        /// <returns>Enumerador no genérico. <para>Non-generic enumerator.</para></returns>
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
+            Array.Clear(_arr, 0, Capacity);
         }
     }
 }

@@ -5,7 +5,6 @@ using YotsubaEngine.Core.Component.C_2D;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.Contract;
-using YotsubaEngine.Core.System.YotsubaEngineCore;
 using YotsubaEngine.Core.System.YotsubaEngineUI.UI;
 using YotsubaEngine.Core.YotsubaGame;
 
@@ -207,14 +206,17 @@ namespace YotsubaEngine.Core.System.S_2D
         /// </summary>
         private void DrawEntityCollisions(SpriteBatch spriteBatch)
         {
-            foreach (var entity in _entityManager.YotsubaEntities)
+
+            Span<TransformComponent> transformComponents = _entityManager.TransformComponents.AsSpan();
+            Span<RigidBodyComponent2D> rigidBodyComponent2Ds = _entityManager.Rigidbody2DComponents.AsSpan();
+            foreach (ref Yotsuba entity in _entityManager.YotsubaEntities.AsSpan())
             {
                 // Solo dibujar entidades con Transform y RigidBody
                 if (!entity.HasComponent(YTBComponent.Transform) || !entity.HasComponent(YTBComponent.Rigibody) || entity.HasComponent(YTBComponent.TileMap))
                     continue;
 
-                ref TransformComponent transform = ref _entityManager.TransformComponents[entity.Id];
-                ref RigidBodyComponent2D rigidBody = ref _entityManager.Rigidbody2DComponents[entity.Id];
+                ref TransformComponent transform = ref transformComponents[entity.Id];
+                ref RigidBodyComponent2D rigidBody = ref rigidBodyComponent2Ds[entity.Id];
 
                 // Calcular el rectángulo de colisión
                 Rectangle collisionRect = new Rectangle(
@@ -238,21 +240,23 @@ namespace YotsubaEngine.Core.System.S_2D
         /// </summary>
         private void DrawTilemapCollisions(SpriteBatch spriteBatch)
         {
-            foreach (var entity in _entityManager.YotsubaEntities)
+            Span<TileMapComponent2D> tileMapComponent2Ds = _entityManager.TileMapComponent2Ds.AsSpan();
+            Span<TransformComponent> transformComponents = _entityManager.TransformComponents.AsSpan();
+            foreach (ref Yotsuba entity in _entityManager.YotsubaEntities.AsSpan())
             {
                 // Solo entidades con tilemap
                 if (!entity.HasComponent(YTBComponent.TileMap))
                     continue;
 
-                ref TileMapComponent2D tilemap = ref _entityManager.TileMapComponent2Ds[entity.Id];
-                ref TransformComponent transform = ref _entityManager.TransformComponents[entity.Id];
+                ref TileMapComponent2D tilemap = ref tileMapComponent2Ds[entity.Id];
+                ref TransformComponent transform = ref transformComponents[entity.Id];
 
                 // Calcular el desplazamiento del origen (igual que en TileMapSystem2D.DrawTileMap)
                 float originOffsetX = transform.Size.X * 0.5f * transform.Scale;
                 float originOffsetY = transform.Size.Y * 0.5f * transform.Scale;
 
                 // Iterar sobre cada capa del tilemap
-                foreach (var layer in tilemap.TileLayers)
+                foreach (ref TileLayer layer in tilemap.TileLayers.AsSpan())
                 {
                     bool isCollisionLayer = layer.Name.Contains("Collision", StringComparison.OrdinalIgnoreCase);
 
@@ -353,20 +357,22 @@ namespace YotsubaEngine.Core.System.S_2D
         {
             if (_fontSystem == null) return;
 
-            foreach (var entity in _entityManager.YotsubaEntities)
+            Span<FontComponent2D> fontComponent2Ds = _entityManager.Font2DComponents.AsSpan();
+            Span<TransformComponent> transformComponents = _entityManager.TransformComponents.AsSpan();
+            foreach (ref Yotsuba entity in _entityManager.YotsubaEntities.AsSpan())
             {
                 // Solo entidades con FontComponent y Transform
                 if (!entity.HasComponent(YTBComponent.Font) || !entity.HasComponent(YTBComponent.Transform))
                     continue;
 
-                ref var fontComponent = ref _entityManager.Font2DComponents[entity.Id];
-                ref var transform = ref _entityManager.TransformComponents[entity.Id];
+                ref FontComponent2D fontComponent = ref fontComponent2Ds[entity.Id];
+                ref TransformComponent transform = ref transformComponents[entity.Id];
 
                 // Obtener la fuente para medir el texto
                 if (!_fontSystem.Fuentes.ContainsKey(fontComponent.Font))
                     continue;
 
-                var font = _fontSystem.Fuentes[fontComponent.Font];
+                SpriteFont font = _fontSystem.Fuentes[fontComponent.Font];
                 Vector2 textSize = font.MeasureString(fontComponent.Texto);
                 Vector2 scaledTextSize = textSize * transform.Scale;
 
@@ -398,7 +404,7 @@ namespace YotsubaEngine.Core.System.S_2D
             throw new NotImplementedException();
         }
 
-        public void SharedEntityInitialize(Yotsuba Entidad)
+        public void SharedEntityInitialize(ref Yotsuba Entidad)
         {
             throw new NotImplementedException();
         }
@@ -408,7 +414,7 @@ namespace YotsubaEngine.Core.System.S_2D
             throw new NotImplementedException();
         }
 
-        public void SharedEntityForEachUpdate(Yotsuba Entidad, GameTime time)
+        public void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time)
         {
             throw new NotImplementedException();
         }

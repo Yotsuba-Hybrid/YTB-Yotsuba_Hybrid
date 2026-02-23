@@ -7,7 +7,6 @@ using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.Contract;
 using YotsubaEngine.Core.System.S_2D;
-using YotsubaEngine.Core.System.YotsubaEngineCore;
 using YotsubaEngine.Core.System.YotsubaEngineUI;
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Events.YTBEvents;
@@ -277,31 +276,15 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
             InputManager.Update(gameTime);
 
 
-            if (entityManager.YotsubaEntities.Count > 1000)
-            {
-                Parallel.ForEach(entityManager.YotsubaEntities, (entity) =>
+            
+
+                Span<InputComponent> inputComponents = entityManager.InputComponents.AsSpan();
+                foreach (ref Yotsuba entity in entityManager.YotsubaEntities.AsSpan())
                 {
                     if (entity.HasComponent(YTBComponent.Input))
                     {
+                        ref InputComponent inputComponent = ref inputComponents[entity.Id];
 
-                        ref InputComponent inputComponent =
-                        ref entityManager.InputComponents[entity.Id];
-
-                        ProcessKeyboard(entity.Id, ref inputComponent, gameTime);
-                        ProcessMouse(entity.Id, ref inputComponent, gameTime);
-                        ProcessGamePad(entity.Id, ref inputComponent, gameTime);
-                        ProcessThumbsticks(entity.Id, ref inputComponent, gameTime);
-                    }
-                });
-            }
-            else
-            {
-                foreach (Yotsuba entity in entityManager.YotsubaEntities)
-                {
-                    if (entity.HasComponent(YTBComponent.Input))
-                    {
-                        ref InputComponent inputComponent =
-                        ref entityManager.InputComponents[entity.Id];
 
                         ProcessKeyboard(entity.Id, ref inputComponent, gameTime);
                         ProcessMouse(entity.Id, ref inputComponent, gameTime);
@@ -309,7 +292,7 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
                         ProcessThumbsticks(entity.Id, ref inputComponent, gameTime);
                     }
                 }
-            }
+            
 
         }
 
@@ -448,7 +431,7 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         /// </summary>
         /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
         /// <param name="time">Tiempo de juego. <para>Game time.</para></param>
-        public void SharedEntityForEachUpdate(Yotsuba Entidad, GameTime time)
+        public void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time)
         {
             //throw new NotImplementedException();
         }
@@ -458,7 +441,7 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         /// <para>Shared entity initialization hook (unused in this system).</para>
         /// </summary>
         /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
-        public void SharedEntityInitialize(Yotsuba Entidad)
+        public void SharedEntityInitialize(ref Yotsuba Entidad)
         {
             //throw new NotImplementedException();
         }
