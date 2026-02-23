@@ -66,7 +66,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// </summary>
         /// <param name="Entidad">Entidad a actualizar. <para>The entity to update.</para></param>
         /// <param name="time">Información de tiempo del juego. <para>Game timing information.</para></param>
-        public void SharedEntityForEachUpdate(Yotsuba Entidad, GameTime time)
+        public void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time)
         {
         }
 
@@ -75,7 +75,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <para>Per-entity initialization callback (not used by GumUI system).</para>
         /// </summary>
         /// <param name="Entidad">Entidad a inicializar. <para>The entity to initialize.</para></param>
-        public void SharedEntityInitialize(Yotsuba Entidad)
+        public void SharedEntityInitialize(ref Yotsuba Entidad)
         {
         }
     }

@@ -7,7 +7,7 @@ using System.Globalization;
 using System.IO;
 using YotsubaEngine;
 using YotsubaEngine.Audio;
-using YotsubaEngine.Core.System.YotsubaEngineCore;
+using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Graphics;
 using YotsubaEngine.Scripting;
 

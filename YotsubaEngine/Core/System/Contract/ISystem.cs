@@ -23,7 +23,7 @@ namespace YotsubaEngine.Core.System.Contract
         /// <para>Runs once per entity during initialization.</para>
         /// </summary>
         /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
-        void SharedEntityInitialize(Yotsuba @Entidad);
+        void SharedEntityInitialize(ref Yotsuba @Entidad);
 
         /// <summary>
         /// Actualiza el sistema en cada frame.
@@ -38,7 +38,7 @@ namespace YotsubaEngine.Core.System.Contract
         /// </summary>
         /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
         /// <param name="time">Tiempo de juego. <para>Game time.</para></param>
-        void SharedEntityForEachUpdate(Yotsuba @Entidad, GameTime time);
+        void SharedEntityForEachUpdate(ref Yotsuba @Entidad, GameTime time);
 
 
 

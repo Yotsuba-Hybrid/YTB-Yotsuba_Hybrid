@@ -8,9 +8,9 @@ using System.IO;
 using YotsubaEngine.ActionFiles.YTB_Files;
 using YotsubaEngine.Audio;
 using YotsubaEngine.Core.System.GumUI;
-using YotsubaEngine.Core.System.YotsubaEngineCore;
 using YotsubaEngine.Core.System.YotsubaEngineUI;
 using YotsubaEngine.Core.System.YotsubaEngineUI.UI;
+using YotsubaEngine.Core.System.YTBDragAndDrop;
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Events.YTBEvents.EngineEvents;
 using YotsubaEngine.Graphics;
@@ -97,6 +97,7 @@ namespace YotsubaEngine
         /// <param name="isMouseVisible">Indica si el cursor del mouse es visible. <para>Whether the mouse cursor is visible.</para></param>
         public YTBGame(bool isMouseVisible = true) : base()
         {
+            Console.ResetColor();
             Instance = this;
             //_graphics = graphicsDeviceManager;
             // Configurar Content.RootDirectory con la carpeta de assets compilados

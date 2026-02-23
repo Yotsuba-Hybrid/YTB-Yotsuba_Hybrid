@@ -7,7 +7,6 @@ using YotsubaEngine.ActionFiles.YTB_Files;
 using YotsubaEngine.Audio;
 using YotsubaEngine.Core.Component.C_2D;
 using YotsubaEngine.Core.Entity;
-using YotsubaEngine.Core.System.YotsubaEngineCore;
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Events.YTBEvents;
 using YotsubaEngine.Events.YTBEvents.EngineEvents;
@@ -59,7 +58,7 @@ namespace YotsubaEngine.YTB_Toolkit
             EventManager.Instance.Publish(new StopEvents());
 
             YTBGame game = (YTBGame)YTBGame.Instance;
-            Scene? newScene = game.SceneManager.Scenes
+            Scene? newScene = game.SceneManager.Scenes._ytb
                 .FirstOrDefault(x => x.SceneName == sceneName);
 
             if (newScene == null)
@@ -95,7 +94,7 @@ namespace YotsubaEngine.YTB_Toolkit
             EventManager.Instance.Publish(new StopEvents());
 
             YTBGame game = (YTBGame)YTBGame.Instance;
-            Scene? newScene = game.SceneManager.Scenes
+            Scene? newScene = game.SceneManager.Scenes._ytb
                 .FirstOrDefault(x => x.SceneName == sceneName);
 
             if (newScene == null)

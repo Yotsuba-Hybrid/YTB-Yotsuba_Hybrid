@@ -22,7 +22,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 		public void Render()
 		{
 			ImGui.Begin("Consola");
-			foreach ((Color, string) message in EngineUISystem.Messages.Reverse())
+			foreach ((Color, string) message in EngineUISystem.Messages._ytb.Reverse())
 			{
 				ImGui.TextColored(message.Item1.ToVector4().ToNumerics(), message.Item2);
 			}

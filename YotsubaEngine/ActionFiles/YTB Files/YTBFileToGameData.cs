@@ -14,13 +14,14 @@ using YotsubaEngine.Core.Component.C_2D;
 using YotsubaEngine.Core.Component.C_3D;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;
-using YotsubaEngine.Core.System.YotsubaEngineCore;
 using YotsubaEngine.Core.System.YotsubaEngineUI;
 using YotsubaEngine.Core.YotsubaGame;
+using YotsubaEngine.Core.YotsubaGame.Scripting;
 using YotsubaEngine.Events.YTBEvents.EngineEvents;
 using YotsubaEngine.Exceptions;
 using YotsubaEngine.Graphics;
 using YotsubaEngine.Graphics.Shaders;
+using YotsubaEngine.HighestPerformanceTypes;
 using YotsubaEngine.Templates;
 using static YotsubaEngine.Core.Component.C_AGNOSTIC.RigidBody;
 using static YotsubaEngine.Core.System.S_AGNOSTIC.InputSystem;
@@ -334,10 +335,10 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 						continue;
 					}
 
-					Yotsuba ent = scene.EntityManager.YotsubaEntities.FirstOrDefault(x => x.Name == entityFollowCameraName);
-                    if (ent != null)
+					Yotsuba ent = scene.EntityManager.YotsubaEntities._ytb.FirstOrDefault(x => x.Name == entityFollowCameraName);
+                    if (ent.Id > 0)
                     {
-                        scene.EntityManager.Camera.EntityToFollow = ent;
+                        scene.EntityManager.Camera.EntityToFollow = ent.Id;
                     }
                     else
                     {
@@ -348,13 +349,13 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 				}
                 if (!String.IsNullOrEmpty(YTBGlobalState.LastSceneNameBeforeUpdate))
                 {
-                    sceneManager.CurrentScene = sceneManager.Scenes.Any(x => x.SceneName == YTBGlobalState.LastSceneNameBeforeUpdate) ? sceneManager.Scenes.FirstOrDefault(x => x.SceneName == YTBGlobalState.LastSceneNameBeforeUpdate) : sceneManager.Scenes[0];
+                    sceneManager.CurrentScene = sceneManager.Scenes._ytb.Any(x => x.SceneName == YTBGlobalState.LastSceneNameBeforeUpdate) ? sceneManager.Scenes._ytb.FirstOrDefault(x => x.SceneName == YTBGlobalState.LastSceneNameBeforeUpdate) : sceneManager.Scenes[0];
                     AudioSystem.PauseAll();
                 }
                 else
                 {
 
-                    sceneManager.CurrentScene = sceneManager.Scenes.Any(x => x.SceneName == "Index") ? sceneManager.Scenes.FirstOrDefault(x => x.SceneName == "Index") : sceneManager.Scenes[0];
+                    sceneManager.CurrentScene = sceneManager.Scenes._ytb.Any(x => x.SceneName == "Index") ? sceneManager.Scenes._ytb.FirstOrDefault(x => x.SceneName == "Index") : sceneManager.Scenes[0];
                     AudioSystem.PauseAll();
 
                 }
@@ -526,10 +527,10 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 
 					//Agrego la escena al arreglo de escenas
 					sceneManager.Scenes.Add(scene);
-                    Yotsuba ent = scene.EntityManager.YotsubaEntities.FirstOrDefault(x => x.Name == entityFollowCameraName);
-                    if (ent != null)
+                    Yotsuba ent = scene.EntityManager.YotsubaEntities._ytb.FirstOrDefault(x => x.Name == entityFollowCameraName);
+                    if (ent.Name is not null)
                     {
-                        scene.EntityManager.Camera.EntityToFollow = ent;
+                        scene.EntityManager.Camera.EntityToFollow = ent.Id;
                     }
                     else
                     {
@@ -539,7 +540,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 
                 if (sceneManager.Scenes.Count > 0)
                 {
-                    sceneManager.CurrentScene = sceneManager.Scenes.Any(x => x.SceneName == "Index") ? sceneManager.Scenes.FirstOrDefault(x => x.SceneName == "Index") : sceneManager.Scenes[0];
+                    sceneManager.CurrentScene = sceneManager.Scenes._ytb.Any(x => x.SceneName == "Index") ? sceneManager.Scenes._ytb.FirstOrDefault(x => x.SceneName == "Index") : sceneManager.Scenes[0];
 
 
                 }
@@ -552,7 +553,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
             }
             catch (Exception ex)
             {
-                sceneManager = new SceneManager(graphicsDeviceManager) { CurrentScene = new(graphicsDeviceManager), Scenes = [] };
+                sceneManager = new SceneManager(graphicsDeviceManager) { CurrentScene = new(graphicsDeviceManager), Scenes = new YTB<Scene>() };
                 if (!GameWontRun.GameWontRunByException)
                 {
                     try
@@ -596,6 +597,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
         {
             ScriptComponent scriptComponent = new ScriptComponent();
 
+            
             try
             {
                 foreach (var prop in component.Propiedades)
@@ -619,6 +621,11 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                             scriptComponent.ScriptLanguaje = scriptLanguages;
                             break;
                     }
+                }
+
+                foreach(ref BaseScript script in scriptComponent.Scripts.AsSpan())
+                {
+                    script.EntityId = entity.Id;
                 }
             }
             catch (Exception ex)

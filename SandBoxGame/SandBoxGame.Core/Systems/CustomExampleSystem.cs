@@ -40,7 +40,7 @@ namespace SandBoxGame.Core.Systems
         /// </summary>
         /// <param name="Entidad"></param>
         /// <exception cref="NotImplementedException"></exception>
-        public void SharedEntityInitialize(Yotsuba Entidad)
+        public void SharedEntityInitialize(ref Yotsuba Entidad)
         {
             throw new NotImplementedException();
         }
@@ -51,7 +51,7 @@ namespace SandBoxGame.Core.Systems
         /// <param name="Entidad"></param>
         /// <param name="time"></param>
         /// <exception cref="NotImplementedException"></exception>
-        public void SharedEntityForEachUpdate(Yotsuba Entidad, GameTime time)
+        public void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time)
         {
             
         }

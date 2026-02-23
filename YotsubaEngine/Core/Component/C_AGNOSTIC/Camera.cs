@@ -6,10 +6,9 @@ using YotsubaEngine.Core.Component.C_2D;
 using YotsubaEngine.Core.Component.C_3D;
 using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.S_2D;
-using YotsubaEngine.Core.System.YotsubaEngineCore;
 using YotsubaEngine.Core.YotsubaGame;
-using YotsubaEngine.Core.YTBMath;
 using YotsubaEngine.Exceptions;
+using YotsubaEngine.YTBMath;
 using static YotsubaEngine.Exceptions.GameWontRun;
 
 namespace YotsubaEngine.Core.Component.C_AGNOSTIC
@@ -179,7 +178,7 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         /// Entidad a la que seguirá la cámara.
         /// <para>Entity that the camera will follow.</para>
         /// </summary>
-        public Yotsuba EntityToFollow { get; set; }
+        public int EntityToFollow { get; set; }
 
         /// <summary>
         /// Referencia al administrador de entidades.
@@ -263,10 +262,11 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         /// </summary>
         public void Update()
         {
-//-:cnd:noEmit
+            //-:cnd:noEmit
 #if YTB
-            if (EntityToFollow.HasNotComponent(YTBComponent.Transform))
-                _ = new GameWontRun("La entidad a seguir de la camara 3D no tiene un TransformComponent", YTBErrors.EntityFollowCameraIsNotAppropiate);
+            Yotsuba ytb = EntityManager.YotsubaEntities.AsSpan()[EntityManager.Camera.EntityToFollow];
+            //if (ytb.HasNotComponent(YTBComponent.Transform))
+            //    _ = new GameWontRun("La entidad a seguir de la camara 3D no tiene un TransformComponent", YTBErrors.EntityFollowCameraIsNotAppropiate);
 
             // Cámara libre del engine: solo escribe las matrices de render sin tocar CameraPosition
             if (YTBGlobalState.EngineShortcutsMode && YTBGlobalState.FreeCameraInitialized)

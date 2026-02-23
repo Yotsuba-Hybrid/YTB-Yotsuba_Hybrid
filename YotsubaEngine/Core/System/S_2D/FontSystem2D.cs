@@ -2,9 +2,10 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using YotsubaEngine.Core.Component.C_2D;
+using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.Contract;
-using YotsubaEngine.Core.System.YotsubaEngineCore;
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Events.YTBEvents.EngineEvents;
 using YotsubaEngine.Exceptions;
@@ -62,11 +63,11 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <para>Loads font assets for entities that include font components.</para>
         /// </summary>
         /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
-        public void SharedEntityInitialize(Yotsuba Entidad)
+        public void SharedEntityInitialize(ref Yotsuba Entidad)
         {
 
-                if (!Entidad.HasComponent(YTBComponent.Font)) return;
-                ref var fuenteComp = ref Entities.Font2DComponents[Entidad];
+                if (Entidad.HasNotComponent(YTBComponent.Font)) return;
+                ref FontComponent2D fuenteComp = ref Entities.Font2DComponents[Entidad];
 
                 if (Fuentes.ContainsKey(fuenteComp.Font))
                 {
@@ -204,14 +205,20 @@ namespace YotsubaEngine.Core.System.S_2D
                 samplerState: SamplerState.PointClamp,
                 depthStencilState: DepthStencilState.Default,
                 rasterizerState: RasterizerState.CullCounterClockwise
-            ); foreach (var entidad in Entities.YotsubaEntities)
+            );
+
+            Span<FontComponent2D> fontComponents = Entities.Font2DComponents.AsSpan();
+            Span<TransformComponent> transformComponents = Entities.TransformComponents.AsSpan();
+            foreach (ref Yotsuba entidad in Entities.YotsubaEntities.AsSpan())
             {
+                int entityID = entidad.Id;
+
                 if (!entidad.HasComponent(YTBComponent.Font) || !entidad.HasComponent(YTBComponent.Transform)) continue;
-                ref var fuenteComp = ref Entities.Font2DComponents[entidad];
+                ref var fuenteComp = ref fontComponents[entityID];
 
                 if (!fuenteComp.IsVisible) continue;
 
-                ref var transformComp = ref Entities.TransformComponents[entidad];
+                ref var transformComp = ref transformComponents[entityID];
 
                 brocha.DrawString(
                     Fuentes[fuenteComp.Font],
@@ -235,7 +242,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// </summary>
         /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
         /// <param name="time">Tiempo de juego. <para>Game time.</para></param>
-        public void SharedEntityForEachUpdate(Yotsuba Entidad, GameTime time)
+        public void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time)
         {
             // No per-entity update logic required for fonts
         }

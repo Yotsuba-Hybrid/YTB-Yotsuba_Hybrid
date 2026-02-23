@@ -1,11 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Reflection.Metadata;
 using YotsubaEngine.Core.Component.C_2D;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;
-using YotsubaEngine.Core.System.YotsubaEngineCore;
 using YotsubaEngine.Core.System.YotsubaEngineUI;
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Events.YTBEvents;
@@ -39,19 +37,19 @@ namespace YotsubaEngine.Core.System.S_2D
         /// Especifica el desplazamiento horizontal aplicado a la cámara en la vista del editor.
         /// <para>Specifies the horizontal offset applied to the camera in the editor view.</para>
         /// </summary>
-        public /*const*/static float EDITOR_OFFSET_CAMERA_X = 270;
+        public const float EDITOR_OFFSET_CAMERA_X = 270;
 
         /// <summary>
         /// Especifica el desplazamiento vertical aplicado a la cámara en la vista del editor.
         /// <para>Specifies the vertical offset, in units, applied to the camera in the editor view.</para>
         /// </summary>
-        public /*const*/ static float EDITOR_OFFSET_CAMERA_Y = 120;
+        public const float EDITOR_OFFSET_CAMERA_Y = 120;
 
         /// <summary>
         /// Obtiene o establece la escala aplicada a la cámara en el entorno del editor.
         /// <para>Gets or sets the scale factor applied to the camera in the editor environment.</para>
         /// </summary>
-        public /*const*/ static float EDITOR_SCALE_CAMERA = 0.535f;
+        public const float EDITOR_SCALE_CAMERA = 0.535f;
 #endif
 //+:cnd:noEmit
         /// <summary>
@@ -158,9 +156,11 @@ namespace YotsubaEngine.Core.System.S_2D
             // Rectángulo que representa el área del mundo que la cámara está viendo actualmente.
             Rectangle cameraWorldBounds = Rectangle.Empty;
 
+            Span<TransformComponent> transformComponents = entityManager.TransformComponents.AsSpan();
+
             if (cameraEntity != null)
             {
-                ref var camTransform = ref EntityManager.TransformComponents[cameraEntity.EntityToFollow];
+                ref readonly var camTransform = ref transformComponents[cameraEntity.EntityToFollow];
                 var viewport = brocha.GraphicsDevice.Viewport;
 
                 float currentZoom =
@@ -204,7 +204,7 @@ namespace YotsubaEngine.Core.System.S_2D
                     currentZoom,
                     0f
                 );
-
+                
                 // 2. CÁLCULO DEL RECTÁNGULO DE VISIÓN (Frustum Culling 2D)
                 // Cuanto mayor es el zoom, MENOS mundo vemos. Por eso dividimos el tamaño de pantalla entre el zoom.
                 float visibleWorldWidth = viewport.Width / currentZoom;
@@ -235,8 +235,10 @@ namespace YotsubaEngine.Core.System.S_2D
                 cameraWorldBounds = new Rectangle(0, 0, vp.Width, vp.Height);
             }
 
+            Span<SpriteComponent2D> spriteComponent2Ds = entityManager.Sprite2DComponents.AsSpan();
+            Span<Yotsuba> SpanEntities = EntityManager.YotsubaEntities.AsSpan();
 
-//-:cnd:noEmit
+            //-:cnd:noEmit
 #if YTB
             // FEATURE: Skip UI elements rendering in Editor mode to avoid overlapping with editor tools
             // UI elements use absolute screen coordinates and would interfere with Inspector/Hierarchy panels
@@ -244,7 +246,11 @@ namespace YotsubaEngine.Core.System.S_2D
             if (canRenderUIElements)
             {
 #endif
-//+:cnd:noEmit
+                //+:cnd:noEmit
+
+
+                
+
                 @brocha.Begin(
         sortMode: SpriteSortMode.FrontToBack,
         blendState: BlendState.NonPremultiplied,
@@ -252,14 +258,14 @@ namespace YotsubaEngine.Core.System.S_2D
         depthStencilState: DepthStencilState.Default,
         rasterizerState: RasterizerState.CullCounterClockwise
     );
-                foreach (var entity in EntityManager.YotsubaEntities)
+                foreach (ref Yotsuba entity in SpanEntities)
                 {
                     if (!entity.HasComponent(YTBComponent.YTBUIElement)) continue;
 
-                    ref SpriteComponent2D Sprite = ref entityManager.Sprite2DComponents[entity.Id];
+                    ref readonly SpriteComponent2D Sprite = ref spriteComponent2Ds[entity.Id];
                     if (!Sprite.IsVisible || Sprite.Is2_5D) continue;
 
-                    ref TransformComponent Transform = ref entityManager.TransformComponents[entity.Id];
+                    ref readonly TransformComponent Transform = ref transformComponents[entity.Id];
 
                     // Use destinationRectangle for UI elements (pixel texture scaled to Size)
                     Rectangle destinationRect = new Rectangle(
@@ -288,6 +294,9 @@ namespace YotsubaEngine.Core.System.S_2D
 #endif
 //+:cnd:noEmit
 
+
+            Span<ShaderComponent> shaderComponents = entityManager.ShaderComponents.AsSpan();
+
             // --- PRIMER PASS (Objetos del Mundo afectados por la Cámara) ---
             // Primero dibujamos entidades SIN shader para máxima eficiencia de batch
             brocha.Begin(
@@ -299,7 +308,7 @@ namespace YotsubaEngine.Core.System.S_2D
                 rasterizerState: RasterizerState.CullCounterClockwise
             );
 
-            foreach (var entity in EntityManager.YotsubaEntities)
+            foreach (ref Yotsuba entity in SpanEntities)
             {
                 // Filtramos entidades que no se deben dibujar en el mundo (sin sprite, sin transform, o que son UI)
                 if ((!entity.HasComponent(YTBComponent.Sprite) || !entity.HasComponent(YTBComponent.Transform)) || entity.HasComponent(YTBComponent.Button2D)) continue;
@@ -308,17 +317,17 @@ namespace YotsubaEngine.Core.System.S_2D
                 // Note: This lookup is intentional to filter shader entities early
                 if (entity.HasComponent(YTBComponent.Shader))
                 {
-                    ShaderComponent shaderComp = entityManager.ShaderComponents[entity.Id];
+                    ShaderComponent shaderComp = shaderComponents[entity.Id];
                     if (shaderComp.IsActive && shaderComp.Effect != null)
                         continue;
                 }
 
-                SpriteComponent2D Sprite = entityManager.Sprite2DComponents[entity.Id];
+                ref readonly SpriteComponent2D Sprite = ref spriteComponent2Ds[entity.Id];
 
                 if (!Sprite.IsVisible || Sprite.Is2_5D) continue;
 
                 // Obtenemos el transform (ojo, es una copia struct si no usas ref, pero para lectura rápida está bien)
-                TransformComponent Transform = entityManager.TransformComponents[entity.Id];
+                ref readonly TransformComponent Transform = ref transformComponents[entity.Id];
 
                 // --- LÓGICA DE CULLING ---
 
@@ -360,19 +369,19 @@ namespace YotsubaEngine.Core.System.S_2D
 
             // --- SEGUNDO PASS (Entidades CON shader) ---
             // Dibujamos entidades con shaders en pases separados
-            foreach (var entity in EntityManager.YotsubaEntities)
+            foreach (ref Yotsuba entity in SpanEntities)
             {
                 if ((!entity.HasComponent(YTBComponent.Sprite) || !entity.HasComponent(YTBComponent.Transform)) || entity.HasComponent(YTBComponent.Button2D)) continue;
 
                 if (!entity.HasComponent(YTBComponent.Shader)) continue;
 
-                ShaderComponent shaderComp = entityManager.ShaderComponents[entity.Id];
+                ref readonly ShaderComponent shaderComp = ref shaderComponents[entity.Id];
                 if (!shaderComp.IsActive || shaderComp.Effect == null) continue;
 
-                SpriteComponent2D Sprite = entityManager.Sprite2DComponents[entity.Id];
+                ref readonly SpriteComponent2D Sprite = ref spriteComponent2Ds[entity.Id];
                 if (!Sprite.IsVisible || Sprite.Is2_5D) continue;
 
-                TransformComponent Transform = entityManager.TransformComponents[entity.Id];
+                ref readonly TransformComponent Transform = ref transformComponents[entity.Id];
 
                 // Culling check
                 float entWidth = Transform.Size.X * Transform.Scale;
@@ -434,14 +443,14 @@ namespace YotsubaEngine.Core.System.S_2D
                     rasterizerState: RasterizerState.CullCounterClockwise
                 );
 
-                foreach (var entity in EntityManager.YotsubaEntities)
+                foreach (ref Yotsuba entity in SpanEntities)
                 {
                     if ((!entity.HasComponent(YTBComponent.Sprite) || !entity.HasComponent(YTBComponent.Transform)) || !entity.HasComponent(YTBComponent.Button2D) || entity.HasComponent(YTBComponent.YTBUIElement)) continue;
 
-                    SpriteComponent2D Sprite = entityManager.Sprite2DComponents[entity.Id];
+                    ref readonly SpriteComponent2D Sprite = ref spriteComponent2Ds[entity.Id];
                     if (!Sprite.IsVisible || Sprite.Is2_5D) continue;
 
-                    TransformComponent Transform = entityManager.TransformComponents[entity.Id];
+                    ref readonly TransformComponent Transform = ref transformComponents[entity.Id];
 
                     @brocha.Draw(
                         Sprite.Texture,

@@ -9,7 +9,7 @@ namespace YotsubaEngine.Core.Entity
     /// <para>Base class for all entities. In this engine, entities are called "Yotsuba".</para>
     /// </summary>
     /// <param name="id">Identificador único de la entidad.<para>Unique entity identifier.</para></param>
-    public class Yotsuba(int id)
+    public struct Yotsuba(int id)
     {
         /// <summary>
         /// Identificador único de la entidad.

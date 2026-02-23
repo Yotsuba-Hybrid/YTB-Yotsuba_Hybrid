@@ -4,7 +4,6 @@ using System;
 using YotsubaEngine.Core.Component.C_2D;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;
-using YotsubaEngine.Core.System.YotsubaEngineCore;
 using YotsubaEngine.Core.System.YotsubaEngineUI;
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Events.YTBEvents.EngineEvents;
@@ -86,7 +85,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// </summary>
         /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
         /// <param name="time">Tiempo de juego. <para>Game time.</para></param>
-        public void SharedEntityForEachUpdate(Yotsuba Entidad, GameTime time)
+        public void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time)
         {
         }
 
@@ -95,7 +94,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <para>Shared per-entity initialization hook (unused).</para>
         /// </summary>
         /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
-        public void SharedEntityInitialize(Yotsuba Entidad)
+        public void SharedEntityInitialize(ref Yotsuba Entidad)
         {
         }
 
@@ -128,9 +127,11 @@ namespace YotsubaEngine.Core.System.S_2D
 //+:cnd:noEmit
             var cameraEntity = EntityManager.Camera;
             Matrix viewMatrix = Matrix.Identity;
+
+            Span<TransformComponent> transformComponents = EntityManager.TransformComponents.AsSpan();
             if (cameraEntity != null)
             {
-                ref var transform = ref EntityManager.TransformComponents[cameraEntity.EntityToFollow];
+                ref var transform = ref transformComponents[cameraEntity.EntityToFollow];
                 var viewport = spriteBatch.GraphicsDevice.Viewport;
                 Vector2 screenCenter = new Vector2(viewport.Width / 2f, viewport.Height / 2f);
 
@@ -163,6 +164,8 @@ namespace YotsubaEngine.Core.System.S_2D
                 // --- FIN DEL CAMBIO ---
             }
 
+            Span<TileMapComponent2D> tileMapComponent2Ds = EntityManager.TileMapComponent2Ds.AsSpan();
+
             spriteBatch.Begin(
                 transformMatrix: viewMatrix,
                 sortMode: SpriteSortMode.Deferred,
@@ -172,12 +175,12 @@ namespace YotsubaEngine.Core.System.S_2D
                 rasterizerState: RasterizerState.CullCounterClockwise
             );
 
-            foreach (var entity in EntityManager.YotsubaEntities)
+            foreach (ref Yotsuba entity in EntityManager.YotsubaEntities.AsSpan())
             {
                 if (entity.HasComponent(YTBComponent.TileMap) && entity.HasComponent(YTBComponent.Transform))
                 {
-                    ref TileMapComponent2D tilemap = ref EntityManager.TileMapComponent2Ds[entity.Id];
-                    ref TransformComponent transform = ref EntityManager.TransformComponents[entity.Id];
+                    ref TileMapComponent2D tilemap = ref tileMapComponent2Ds[entity.Id];
+                    ref TransformComponent transform = ref transformComponents[entity.Id];
                     DrawTileMap(spriteBatch, ref tilemap, ref transform);
                 }
             }
@@ -194,7 +197,7 @@ namespace YotsubaEngine.Core.System.S_2D
         public void DrawTileMap(SpriteBatch spriteBatch, ref TileMapComponent2D map, ref TransformComponent transform)
         {
             // 1. Recorremos las capas en orden (primero el suelo, luego objetos, etc.)
-            foreach (ref var layer in map.TileLayers.AsSpan())
+            foreach (ref TileLayer layer in map.TileLayers.AsSpan())
             {
                 if (!layer.IsVisible) continue; // Si la capa está oculta, la saltamos
                 if (layer.Name.Contains("collision", StringComparison.OrdinalIgnoreCase))
