@@ -38,11 +38,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
         public void InitializeSystem(EntityManager @entities)
         {
-//-:cnd:noEmit
-#if YTB
-			if (GameWontRun.GameWontRunByException) return;
-#endif
-//+:cnd:noEmit
+
 			EventManager = EventManager.Instance;
             EntityManager = @entities;
 

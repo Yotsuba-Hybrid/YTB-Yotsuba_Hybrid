@@ -8,6 +8,7 @@ using System.IO;
 using YotsubaEngine.ActionFiles.YTB_Files;
 using YotsubaEngine.Audio;
 using YotsubaEngine.Core.System.GumUI;
+using YotsubaEngine.Core.System.S_AGNOSTIC;
 using YotsubaEngine.Core.System.YotsubaEngineUI;
 using YotsubaEngine.Core.System.YotsubaEngineUI.UI;
 using YotsubaEngine.Core.System.YTBDragAndDrop;
@@ -119,10 +120,12 @@ namespace YotsubaEngine
 
         protected virtual void SetConfig()
         {
-
+            AddSystems();
         }
 
-
+        protected virtual void AddSystems()
+        {
+        }
 
         /// <summary>
         /// Asigna el registro de scripts usado por el motor.

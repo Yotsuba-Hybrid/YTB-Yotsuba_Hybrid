@@ -120,7 +120,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 			{
 //-:cnd:noEmit
 #if YTB
-				throw new GameWontRun(ex, YTBErrors.GameEngineCannotUpdateFiles);
+				_= new GameWontRun(ex, YTBErrors.GameEngineCannotUpdateFiles);
 #endif
 //+:cnd:noEmit
 			}

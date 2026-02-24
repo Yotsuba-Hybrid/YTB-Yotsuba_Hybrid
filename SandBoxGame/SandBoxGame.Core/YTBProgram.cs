@@ -1,12 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SandBoxGame.Core.Localization;
+using SandBoxGame.Core.Systems;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using YotsubaEngine;
 using YotsubaEngine.Audio;
+using YotsubaEngine.Core.System.S_AGNOSTIC;
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Graphics;
 using YotsubaEngine.Scripting;
@@ -71,8 +73,17 @@ namespace SandBoxGame.Core
         /// </summary>
         public YTBProgram() : base(IS_MOUSE_VISIBLE)
         {
-            Console.WriteLine("[SandBoxGameGame] Constructor start");
+            SetConfig();
+        }
 
+        protected override void AddSystems()
+        {
+            SystemBuilder.AddSystem<CustomExampleSystem>();
+            base.AddSystems();
+        }
+
+        protected override void SetConfig()
+        {
             _graphics = new(this);
 
             SetScriptManager(new ScriptRegistry());
@@ -85,49 +96,16 @@ namespace SandBoxGame.Core
             // Esta ruta se calcula autom�ticamente: DirectorioSalida + "Content"
             YTBGlobalState.CompiledAssetsFolderName = "Content";
 
-            Console.WriteLine("[SandBoxGameGame] _graphics created");
-            
+
             Content.RootDirectory = YTBGlobalState.CompiledAssetsFolderName;
 
             // Configure screen orientations.
             _graphics.SupportedOrientations = DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight;
-
-            Console.WriteLine("[SandBoxGameGame] InitializeGraphicsDevice called from ctor");
-
-            SetConfig();
-        }
-
-       
-        /// <summary>
-        /// Initializes the game, including setting up localization and adding the 
-        /// initial screens to the ScreenManager.
-        /// </summary>
-        protected override void Initialize()
-        {
-            // Load supported languages and set the default language.
-            List<CultureInfo> cultures = LocalizationManager.GetSupportedCultures();
-            var languages = new List<CultureInfo>();
-            for (int i = 0; i < cultures.Count; i++)
-            {
-                languages.Add(cultures[i]);
-            }
-
-            // TODO You should load this from a settings file or similar,
-            // based on what the user or operating system selected.
-            var selectedLanguage = LocalizationManager.DEFAULT_CULTURE_CODE;
-            LocalizationManager.SetCulture(selectedLanguage);
-            base.Initialize();
-
-        }
-
-        protected override void SetConfig()
-        {
-
-//-:cnd:noEmit
+            //-:cnd:noEmit
 #if YTB || DEBUG
             System.Console.WriteLine("[SandBoxGameGame] Constructor start");
 #endif
-//+:cnd:noEmit
+            //+:cnd:noEmit
             ///Coloca un background por defecto al juego y al engine.
             YTBGlobalState.EngineBackground = new Color(32, 40, 78, 255);
 
@@ -163,11 +141,11 @@ namespace SandBoxGame.Core
             #endregion
 
 
-//-:cnd:noEmit
+            //-:cnd:noEmit
 #if YTB || DEBUG
             System.Console.WriteLine("[SandBoxGameGame] _graphics created");
 #endif
-//+:cnd:noEmit
+            //+:cnd:noEmit
             // Share _graphics as a service.
             Services.AddService(typeof(GraphicsDeviceManager), _graphics);
 
@@ -187,12 +165,36 @@ namespace SandBoxGame.Core
 
             base.SetConfig();
 
-//-:cnd:noEmit
+            //-:cnd:noEmit
 #if YTB || DEBUG
             System.Console.WriteLine("[SandBoxGameGame] InitializeGraphicsDevice called from ctor");
 #endif
-//+:cnd:noEmit
+            //+:cnd:noEmit
         }
+
+        /// <summary>
+        /// Initializes the game, including setting up localization and adding the 
+        /// initial screens to the ScreenManager.
+        /// </summary>
+        protected override void Initialize()
+        {
+            // Load supported languages and set the default language.
+            List<CultureInfo> cultures = LocalizationManager.GetSupportedCultures();
+            var languages = new List<CultureInfo>();
+            for (int i = 0; i < cultures.Count; i++)
+            {
+                languages.Add(cultures[i]);
+            }
+
+            // TODO You should load this from a settings file or similar,
+            // based on what the user or operating system selected.
+            var selectedLanguage = LocalizationManager.DEFAULT_CULTURE_CODE;
+            LocalizationManager.SetCulture(selectedLanguage);
+            base.Initialize();
+
+        }
+
+        
         /// <summary>
         /// Loads game content, such as textures and particle systems.
         /// </summary>

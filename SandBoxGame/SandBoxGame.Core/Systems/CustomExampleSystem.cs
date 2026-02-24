@@ -42,7 +42,7 @@ namespace SandBoxGame.Core.Systems
         /// <exception cref="NotImplementedException"></exception>
         public void SharedEntityInitialize(ref Yotsuba Entidad)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         /// <summary>
@@ -71,12 +71,12 @@ namespace SandBoxGame.Core.Systems
         #region Los metodos de renderizado se ejecutan una vez por frame y despues de todos los demas metodos
         public void Render2D(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public void Render3D(GameTime gameTime)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         #endregion

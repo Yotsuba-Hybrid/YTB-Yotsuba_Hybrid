@@ -277,21 +277,22 @@ namespace YotsubaEngine.Core.YotsubaGame
 
 
 
-            if (EntityManager.YotsubaEntities == null || EntityManager.YotsubaEntities.Count == 0) return;
+            if (EntityManager.YotsubaEntities != null && EntityManager.YotsubaEntities.Count > 0)
+            {
+                TilemapSystem.UpdateSystem(gameTime, _spriteBatch);
 
-            TilemapSystem.UpdateSystem(gameTime, _spriteBatch);
+                RenderSystem2D.UpdateSystem(_spriteBatch, gameTime);
+                //RenderSystem3D.UpdateSystem(gameTime);
 
-            RenderSystem2D.UpdateSystem(_spriteBatch, gameTime);
-            //RenderSystem3D.UpdateSystem(gameTime);
+                FontSystem2D.DrawSystem(gameTime, _spriteBatch);
 
-            FontSystem2D.DrawSystem(gameTime, _spriteBatch);
-
-            GumUISystem2D.DrawSystem(gameTime);
+                GumUISystem2D.DrawSystem(gameTime);
 
 
-            Draw3D(gameTime);
+                Draw3D(gameTime);
 
-            Draw2D(gameTime, _spriteBatch);
+                Draw2D(gameTime, _spriteBatch);
+            }
 //-:cnd:noEmit
 #if YTB
             if (isWindows)
@@ -321,8 +322,9 @@ namespace YotsubaEngine.Core.YotsubaGame
             gd.RasterizerState = RasterizerState.CullCounterClockwise;
             gd.SamplerStates[0] = SamplerState.LinearWrap;
 
-            RenderSystem3D.UpdateSystem(gameTime);
             ScriptSystem.DrawSystem3D(gameTime);
+            RenderSystem3D.UpdateSystem(gameTime);
+            SystemBuilder.Render3D(gameTime);
 
             gd.BlendState = oldBlendState;
             gd.DepthStencilState = oldDepthStencilState;
@@ -333,6 +335,7 @@ namespace YotsubaEngine.Core.YotsubaGame
         void Draw2D(GameTime gameTime, SpriteBatch _spriteBatch)
         {
             ScriptSystem.DrawSystem2D(gameTime, _spriteBatch);
+            SystemBuilder.Render2D(_spriteBatch, gameTime);
         }
 
     }
