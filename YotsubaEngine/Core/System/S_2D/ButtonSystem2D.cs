@@ -8,6 +8,8 @@ using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Events.YTBEvents;
 using YotsubaEngine.Exceptions;
 using static YotsubaEngine.Core.System.S_AGNOSTIC.InputSystem;
+using YotsubaEngine.Core.Component.C_2D;
+
 //-:cnd:noEmit
 #if YTB
 using YotsubaEngine.Core.System.YotsubaEngineUI.UI;
@@ -47,11 +49,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
         public void InitializeSystem(EntityManager @entities)
         {
-//-:cnd:noEmit
-#if YTB
-			if (GameWontRun.GameWontRunByException) return;
-#endif
-//+:cnd:noEmit
+
 			EventManager = EventManager.Instance;
             EntityManager = @entities;
             InputManager = InputManager.Instance;
@@ -79,11 +77,12 @@ namespace YotsubaEngine.Core.System.S_2D
 			Point MousePosition = InputManager.Mouse.Position;
             var touch = InputManager.Touch;
 
-            foreach (var entity in EntityManager.YotsubaEntities)
+            Span<ButtonComponent2D> buttonComponents = EntityManager.Button2DComponents.AsSpan();
+            foreach (ref Yotsuba entity in EntityManager.YotsubaEntities.AsSpan())
             {
                 if (entity.HasComponent(YTBComponent.Button2D))
                 {
-                    var button = EntityManager.Button2DComponents[entity.Id];
+                    ref var button = ref buttonComponents[entity.Id];
 
                     Rectangle Rectangle = button.EffectiveArea;
 
@@ -149,7 +148,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// </summary>
         /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
         /// <param name="time">Tiempo de juego. <para>Game time.</para></param>
-        public void SharedEntityForEachUpdate(Yotsuba Entidad, GameTime time)
+        public void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time)
         {
             //throw new NotImplementedException();
         }
@@ -159,7 +158,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <para>Shared entity initialization hook (unused in this system).</para>
         /// </summary>
         /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
-        public void SharedEntityInitialize(Yotsuba Entidad)
+        public void SharedEntityInitialize(ref Yotsuba Entidad)
         {
             //throw new NotImplementedException();
         }

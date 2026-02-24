@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using YotsubaEngine.Core.Component.C_2D;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
-using YotsubaEngine.Core.System.YotsubaEngineCore;
+using YotsubaEngine.Core.YotsubaGame;
 
 namespace YotsubaEngine.Graphics;
 /// <summary>
@@ -271,7 +271,7 @@ public class Graphics3D
     /// <param name="view">Matriz de vista. <para>View matrix.</para></param>
     /// <param name="projection">Matriz de proyección. <para>Projection matrix.</para></param>
     /// <param name="rotation">Rotación en grados. <para>Rotation in degrees.</para></param>
-    public void DrawSprite2_5D(SpriteComponent2D texture2D, Vector3 center, Color color, Matrix view, Matrix projection, float rotation = 0f)
+    public void DrawSprite2_5D(ref SpriteComponent2D texture2D, Vector3 center, Color color, Matrix view, Matrix projection, float rotation = 0f)
     {
 
         float width = texture2D.SourceRectangle.Width;

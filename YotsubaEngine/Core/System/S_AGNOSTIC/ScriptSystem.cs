@@ -44,12 +44,7 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
         public void InitializeSystem(EntityManager entities)
         {
-//-:cnd:noEmit
-#if YTB
-            if (GameWontRun.GameWontRunByException) return;
 
-#endif
-//+:cnd:noEmit
             EntityManager = entities;
             EventManager = EventManager.Instance;
         }
@@ -60,7 +55,7 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         /// </summary>
         /// <param name="entity">Instancia de entidad. <para>Entity instance.</para></param>
         /// <param name="time">Tiempo de juego. <para>Game time.</para></param>
-        public void SharedEntityForEachUpdate(Yotsuba entity, GameTime time)
+        public void SharedEntityForEachUpdate(ref Yotsuba entity, GameTime time)
         {
 //-:cnd:noEmit
 #if YTB
@@ -70,7 +65,7 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
 			if (EntityManager == null) return;
 			if (!entity.HasComponent(YTBComponent.Script)) return;
             ref ScriptComponent component = ref EntityManager.ScriptComponents[entity.Id];
-            foreach(var script in component.Scripts)
+            foreach(ref var script in component.Scripts.AsSpan())
             {
                 script.Update(time);
             }
@@ -81,7 +76,7 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         /// <para>Initializes scripts for a single entity.</para>
         /// </summary>
         /// <param name="entity">Instancia de entidad. <para>Entity instance.</para></param>
-        public void SharedEntityInitialize(Yotsuba entity)
+        public void SharedEntityInitialize(ref Yotsuba entity)
         {
 
 //-:cnd:noEmit
@@ -104,7 +99,7 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
                     string scriptPath = Path.Combine(basePath, scriptName);
 
                     BaseScript scriptCompilado = ScriptLoader.LoadScriptInstance(scriptPath);
-                    scriptCompilado.Entity = entity;
+                    scriptCompilado.EntityId = entity.Id;
                     scriptCompilado.EntityManager = EntityManager;
                     component.Scripts.Add(scriptCompilado);
 
@@ -134,12 +129,12 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
 
             if (EntityManager == null) return;
 
-            foreach (var entities in EntityManager.YotsubaEntities)
+            foreach (ref Yotsuba entities in EntityManager.YotsubaEntities.AsSpan())
             {
                 if (!entities.HasComponent(YTBComponent.Script)) continue;
 
-                ref var script = ref EntityManager.ScriptComponents[entities];
-                script.Scripts.FirstOrDefault()?.Draw3D(gameTime);
+                ref ScriptComponent script = ref EntityManager.ScriptComponents[entities];
+                script.Scripts[0].Draw3D(gameTime);
             }
         }
 
@@ -159,12 +154,12 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
 
             if (EntityManager == null) return;
 
-            foreach(var entities in EntityManager.YotsubaEntities)
+            foreach(ref Yotsuba entities in EntityManager.YotsubaEntities.AsSpan())
             {
                 if (!entities.HasComponent(YTBComponent.Script)) continue;
 
-                ref var script = ref EntityManager.ScriptComponents[entities];
-                script.Scripts.FirstOrDefault()?.Draw2D(spriteBatch, gameTime);
+                ref ScriptComponent script = ref EntityManager.ScriptComponents[entities];
+                script.Scripts[0].Draw2D(spriteBatch, gameTime);
             }
 		}
 	}

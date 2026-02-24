@@ -3,14 +3,13 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Linq;
 using YotsubaEngine.Audio;
 using YotsubaEngine.Core.Component.C_2D;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;
-using YotsubaEngine.Core.System.YotsubaEngineCore;
 using YotsubaEngine.Core.System.YotsubaEngineUI;
 using YotsubaEngine.Events.YTBEvents;
+using YotsubaEngine.Exceptions;
 using YotsubaEngine.Input;
 using YotsubaEngine.YTB_Toolkit;
 using static YotsubaEngine.Core.System.S_AGNOSTIC.InputSystem;
@@ -24,6 +23,12 @@ namespace YotsubaEngine.Core.YotsubaGame.Scripting
     public abstract class BaseScript
     {
         #region Field Properties
+
+        /// <summary>
+        /// Se pasa el id de la entidad
+        /// </summary>
+        internal int EntityId { get; set; }
+
         /// <summary>
         /// Ruta de este archivo.
         /// <para>Path to this file.</para>
@@ -49,7 +54,8 @@ namespace YotsubaEngine.Core.YotsubaGame.Scripting
         /// Referencia a la entidad del script.
         /// <para>Reference to the script entity.</para>
         /// </summary>
-        public Yotsuba Entity { get; set; }
+        public ref Yotsuba Entity => ref EntityManager.YotsubaEntities.AsSpan()[EntityId];
+
         #endregion
 
         /// <summary>
@@ -258,12 +264,28 @@ namespace YotsubaEngine.Core.YotsubaGame.Scripting
         /// <param name="Velocity">Vector de velocidad a sumar. <para>Velocity vector to add.</para></param>
         public void ApplyMovement(int entityId, Vector2 Velocity)
         {
-            var yotsuba = EntityManager.YotsubaEntities.FirstOrDefault(x => x.Id == entityId);
-            if (yotsuba == null || !yotsuba.HasComponent(YTBComponent.Rigibody))
+            ref var yotsuba = ref EntityManager.YotsubaEntities.AsSpan()[entityId];
+            if (yotsuba.HasNotComponent(YTBComponent.Rigibody))
             {
                 throw new Exception($"La entidad con id {entityId} no tiene un RigidBody2D para aplicar movimiento. Esta entidad puede no estar en la escena actual.");
             }
             ref RigidBodyComponent2D rigidBody = ref EntityManager.Rigidbody2DComponents[entityId];
+            rigidBody.Velocity += new Vector3(Velocity.X, Velocity.Y, 0);
+        }
+
+        /// <summary>
+        /// Aplica una fuerza de movimiento a una entidad específica (requiere RigidBody).
+        /// <para>Applies a movement force to a specific entity (requires a RigidBody).</para>
+        /// </summary>
+        /// <param name="entity">Entidad objetivo. <para>Target entity.</para></param>
+        /// <param name="Velocity">Vector de velocidad a sumar. <para>Velocity vector to add.</para></param>
+        public void ApplyMovement(ref Yotsuba entity, Vector2 Velocity)
+        {
+            if (!entity.HasComponent(YTBComponent.Rigibody))
+            {
+                throw new Exception($"La entidad {entity.Name} con id {entity.Id} no tiene un RigidBody2D para aplicar movimiento. Esta entidad puede no estar en la escena actual.");
+            }
+            ref RigidBodyComponent2D rigidBody = ref EntityManager.Rigidbody2DComponents[entity.Id];
             rigidBody.Velocity += new Vector3(Velocity.X, Velocity.Y, 0);
         }
 
@@ -521,7 +543,7 @@ namespace YotsubaEngine.Core.YotsubaGame.Scripting
         /// <para>Gets the current script entity.</para>
         /// </summary>
         /// <returns>Entidad del script. <para>Script entity.</para></returns>
-        public Yotsuba GetEntity() => Entity;
+        public ref Yotsuba GetEntity() => ref Entity;
 
         /// <summary>
         /// Obtiene una entidad por su identificador.
@@ -529,7 +551,7 @@ namespace YotsubaEngine.Core.YotsubaGame.Scripting
         /// </summary>
         /// <param name="entityId">Identificador de la entidad. <para>Entity identifier.</para></param>
         /// <returns>Entidad encontrada o null. <para>Found entity or null.</para></returns>
-        public Yotsuba GetEntity(int entityId) => EntityManager.YotsubaEntities.FirstOrDefault(x => x.Id == entityId);
+        public ref Yotsuba GetEntity(int entityId) => ref EntityManager.YotsubaEntities[entityId];
 
         /// <summary>
         /// Obtiene una entidad por su nombre.
@@ -537,7 +559,16 @@ namespace YotsubaEngine.Core.YotsubaGame.Scripting
         /// </summary>
         /// <param name="entityName">Nombre de la entidad. <para>Entity name.</para></param>
         /// <returns>Entidad encontrada o null. <para>Found entity or null.</para></returns>
-        public Yotsuba GetEntity(string entityName) => EntityManager.YotsubaEntities.FirstOrDefault(x => x.Name == entityName);
+        public ref Yotsuba GetEntity(string entityName)
+        {
+            Span<Yotsuba> Entities = EntityManager.YotsubaEntities.AsSpan();
+            foreach (ref var entity in Entities)
+            {
+                if (entity.Name == entityName) return ref entity;
+            }
+
+            throw new EntityDoesNotExist("GetEntity", entityName);
+        }
 
         #endregion
 
@@ -627,6 +658,16 @@ namespace YotsubaEngine.Core.YotsubaGame.Scripting
         /// <param name="action">Acción a vincular. <para>Action to bind.</para></param>
         /// <param name="key">Tecla del teclado. <para>Keyboard key.</para></param>
         public void BindKeyboard(Yotsuba entity, ActionEntityInput action, Keys key)
+            => InputHelpers.BindKeyboard(entity, action, key);
+
+        /// <summary>
+        /// Vincula una tecla del teclado a una acción para una entidad específica.
+        /// <para>Binds a keyboard key to an action for a specific entity.</para>
+        /// </summary>
+        /// <param name="entity">Entidad objetivo. <para>Target entity.</para></param>
+        /// <param name="action">Acción a vincular. <para>Action to bind.</para></param>
+        /// <param name="key">Tecla del teclado. <para>Keyboard key.</para></param>
+        public void BindKeyboard(ref Yotsuba entity, ActionEntityInput action, Keys key)
             => InputHelpers.BindKeyboard(entity, action, key);
 
         /// <summary>

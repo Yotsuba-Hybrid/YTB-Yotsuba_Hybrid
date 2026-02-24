@@ -16,7 +16,7 @@ using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.HighestPerformanceTypes;
 using static YotsubaEngine.Core.System.S_AGNOSTIC.InputSystem;
 
-namespace YotsubaEngine.Core.System.YotsubaEngineCore
+namespace YotsubaEngine.Core.System.YTBDragAndDrop
 {
     /// <summary>
     /// Gestiona el arrastrar y soltar y el arrastre de entidades en el editor.
@@ -65,9 +65,9 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
         /// </summary>
         /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
         /// <param name="time">Tiempo de juego. <para>Game time.</para></param>
-        public void SharedEntityForEachUpdate(Yotsuba Entidad, GameTime time)
+        public void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time)
         { 
-            EntityDrag(Entidad);
+            EntityDrag(ref Entidad);
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
         /// <para>Initializes per-entity state when needed.</para>
         /// </summary>
         /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
-        public void SharedEntityInitialize(Yotsuba Entidad)
+        public void SharedEntityInitialize(ref Yotsuba Entidad)
         {
             // Drag-and-drop initialization is handled in InitializeSystem
         }
@@ -110,7 +110,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
         /// <para>Applies drag logic to the specified entity.</para>
         /// </summary>
         /// <param name="entity">Entidad objetivo. <para>Target entity.</para></param>
-        public void EntityDrag(Yotsuba entity)
+        public void EntityDrag(ref Yotsuba entity)
         {
 
             var input = InputManager.Instance;
@@ -120,7 +120,9 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
 
 
             if (!entity.HasComponent(YTBComponent.Transform) || entity.HasComponent(YTBComponent.TileMap)) return;
-            ref TransformComponent transform = ref EntityManager.TransformComponents[entity.Id];
+
+            Span<TransformComponent> transformComponentsSpan = EntityManager.TransformComponents.AsSpan();
+            ref TransformComponent transform = ref transformComponentsSpan[entity.Id];
 
             // RenderSystem2D.IsGameActive is only defined in DEBUG builds.
             // In Release builds, consider only platform when deciding UI rendering.
@@ -194,7 +196,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
                 if (EntityManager.Camera != null)
                 {
                     // 1. Obtenemos la matriz de vista actual (Idéntica a la del UpdateSystem)
-                    ref var camTransform = ref EntityManager.TransformComponents[EntityManager.Camera.EntityToFollow];
+                    ref var camTransform = ref transformComponentsSpan[EntityManager.Camera.EntityToFollow];
                     var viewport = ((YTBGame)YTBGame.Instance).GraphicsDevice.Viewport;
                     Vector2 screenCenter = new Vector2(viewport.Width / 2f, viewport.Height / 2f);
 
@@ -315,7 +317,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
 
             foreach (string file in e.Files)
             {
-                if (Files.Any(x => x.Name == file)) continue;
+                if (Files.ToArray().Any(x => x.Name == file)) continue;
 
                 if (TryGetDroppedFileKind(file, out var kind))
                 {

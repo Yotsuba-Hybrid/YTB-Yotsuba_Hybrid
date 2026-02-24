@@ -29,7 +29,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
         private string _nuevaEscenaNombre = string.Empty;
         private string _nuevoNombreEscena = string.Empty;
         private YTBScene? _sceneToRename = null;
-        private YTB<(string, string)> SceneAndEntityForDelete = [];
+        private YTB<(string, string)> SceneAndEntityForDelete = new YTB<(string, string)>();
         
         // --- Variables para mover/duplicar entidades ---
         private YTBEntity? _entityToMoveOrDuplicate = null;
@@ -80,7 +80,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 
                 if (ImGui.Button($"Eliminar {SceneAndEntityForDelete.Count}"))
                 {
-                    foreach (var (sceneName, entityName) in SceneAndEntityForDelete)
+                    foreach (var (sceneName, entityName) in SceneAndEntityForDelete.AsSpan())
                     {
                         var ytbScene = _gameInfo.Scene.FirstOrDefault(s => s.Name == sceneName);
                         if (ytbScene != null)
@@ -124,14 +124,14 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 
                             ImGui.PushID(id);
 
-                            bool marcada = SceneAndEntityForDelete.Contains((scene.Name, entity.Name));
+                            bool marcada = SceneAndEntityForDelete._ytb.Contains((scene.Name, entity.Name));
                             if (marcada) ImGui.PushStyleColor((int)ImGuiCol.Text, ImGuiThemeColors.ERROR);
 
                             if (ImGui.Selectable(entity.Name))
                             {
                                 if (deleteEntities)
                                 {
-                                    if (!SceneAndEntityForDelete.Contains((scene.Name, entity.Name)))
+                                    if (!SceneAndEntityForDelete._ytb.Contains((scene.Name, entity.Name)))
                                         SceneAndEntityForDelete.Add((scene.Name, entity.Name));
                                     else
                                         SceneAndEntityForDelete.Remove((scene.Name, entity.Name));

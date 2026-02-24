@@ -8,7 +8,7 @@ using System.Xml;
 using System.Xml.Linq;
 using YotsubaEngine.Core.Component.C_2D;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
-using YotsubaEngine.Core.System.YotsubaEngineCore;
+using YotsubaEngine.Core.YotsubaGame;
 
 namespace YotsubaEngine.Graphics
 {

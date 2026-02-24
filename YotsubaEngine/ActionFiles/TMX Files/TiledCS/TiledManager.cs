@@ -213,7 +213,7 @@ namespace YotsubaEngine.ActionFiles.TMX_Files.TiledCS
 
             // --- FASE 1: PROCESAMIENTO DE TILESETS (LA PALETA) ---
             // Recorremos cada definición de tileset para cargar su textura y recortar los tiles
-            foreach (TiledTileSet tilesetData in tiledTileSets)
+            foreach (ref TiledTileSet tilesetData in tiledTileSets.AsSpan())
             {
                 // Construcción de la ruta absoluta o relativa para el ContentManager
                 string dir = Path.GetDirectoryName(tmxPath);
@@ -250,7 +250,7 @@ namespace YotsubaEngine.ActionFiles.TMX_Files.TiledCS
                     if (tilesetData.TileCollisions != null && tilesetData.TileCollisions.TryGetValue(i, out var tileCollisionRects))
                     {
                         List<Rectangle> rects = new List<Rectangle>(tileCollisionRects.Count);
-                        foreach (var rect in tileCollisionRects)
+                        foreach (ref var rect in tileCollisionRects.AsSpan())
                             rects.Add(rect);
                         tilemapComponent.Collisions[currentGid] = rects;
                     }
@@ -259,7 +259,7 @@ namespace YotsubaEngine.ActionFiles.TMX_Files.TiledCS
 
             // --- FASE 2: CONSTRUCCIÓN DEL MAPA (CAPAS) ---
             // Transferimos la data numérica de las capas al componente
-            foreach (TiledLayer layerRaw in tiledLayersRaw)
+            foreach (ref TiledLayer layerRaw in tiledLayersRaw.AsSpan())
             {
                 TileLayer finalLayer = new TileLayer
                 {

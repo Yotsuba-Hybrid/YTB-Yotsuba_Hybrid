@@ -6,7 +6,7 @@ using System.Reflection.Metadata;
 using System.Text;
 using YotsubaEngine.Attributes;
 using YotsubaEngine.Core.Component.C_2D;
-using YotsubaEngine.Core.System.YotsubaEngineCore;
+using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Core.YotsubaGame.Scripting;
 
 namespace SandBoxGame.Core.Scripts.HomeScreen
