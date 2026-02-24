@@ -8,6 +8,7 @@
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
 using YotsubaEngine.Audio;
+using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Core.System.YotsubaEngineCore;
 
 namespace YotsubaEngine.Audio

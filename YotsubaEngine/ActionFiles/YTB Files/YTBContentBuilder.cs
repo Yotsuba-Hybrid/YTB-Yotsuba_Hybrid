@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using YotsubaEngine.ActionFiles.YTB_Files;
 using YotsubaEngine.Core.System.YotsubaEngineUI;
+using YotsubaEngine.Core.YotsubaGame;
 
 namespace YotsubaEngine.Core.System.YotsubaEngineCore
 {

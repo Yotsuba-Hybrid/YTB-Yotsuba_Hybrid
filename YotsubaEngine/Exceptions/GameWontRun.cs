@@ -73,7 +73,7 @@ namespace YotsubaEngine.Exceptions
 	/// Esta clase indica que el juego no puede ejecutarse debido a una excepción crítica.
 	/// <para>Exception that signals the game cannot run due to a critical error.</para>
 	/// </summary>
-	public class GameWontRun : Exception
+	public class GameWontRun
     {
 
 		/// <summary>
@@ -112,7 +112,7 @@ namespace YotsubaEngine.Exceptions
 		/// </summary>
 		/// <param name="ex">Excepción que causó el fallo. <para>Exception that triggered the failure.</para></param>
 		/// <param name="error">Bandera de error. <para>Error flag.</para></param>
-		public GameWontRun(Exception ex, YTBErrors error) : base(ex.Message, ex)
+		public GameWontRun(Exception ex, YTBErrors error)
         {
             GameWontRunByException = true;
 			CauseWontRunByException = ex.Message;
@@ -131,7 +131,7 @@ namespace YotsubaEngine.Exceptions
 		/// </summary>
 		/// <param name="ex">Mensaje de error. <para>Error message.</para></param>
 		/// <param name="error">Bandera de error. <para>Error flag.</para></param>
-		public GameWontRun(string ex, YTBErrors error) :  base(ex)
+		public GameWontRun(string ex, YTBErrors error)
 		{
 			GameWontRunByException = true;
 			CauseWontRunByException = ex;
@@ -153,7 +153,7 @@ namespace YotsubaEngine.Exceptions
 		/// <param name="propertyName">Nombre de la propiedad. <para>Property name.</para></param>
 		/// <param name="message">Mensaje descriptivo. <para>Descriptive message.</para></param>
 		/// <param name="howToFix">Cómo arreglar el error. <para>How to fix the error.</para></param>
-		public GameWontRun(YTBErrors error, string sceneName, string entityName, string componentName, string propertyName, string message, string howToFix) : base(message)
+		public GameWontRun(YTBErrors error, string sceneName, string entityName, string componentName, string propertyName, string message, string howToFix)
 		{
 			GameWontRunByException = true;
 			CauseWontRunByException = message;

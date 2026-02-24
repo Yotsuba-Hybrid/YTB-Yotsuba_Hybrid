@@ -7,7 +7,7 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.Text.RegularExpressions;
 using YotsubaEngine.Attributes;
-using YotsubaEngine.Core.System.YotsubaEngineCore;
+using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Core.YotsubaGame.Scripting;
 using YotsubaEngine.Events.YTBEvents;
 

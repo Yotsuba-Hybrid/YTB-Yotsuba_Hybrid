@@ -111,19 +111,9 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// Crea un administrador de entidades vacío.
         /// <para>Creates an empty entity manager.</para>
         /// </summary>
-        public EntityManager() : this([])
+        public EntityManager() : this(new YTB<Yotsuba>())
         {
 
-        }
-
-        /// <summary>
-        /// Agrega una entidad al administrador.
-        /// <para>Adds an entity to the manager.</para>
-        /// </summary>
-        /// <param name="entity">Entidad a agregar. <para>Entity to add.</para></param>
-        public void AddEntity(Yotsuba entity)
-        {
-            AddEntity(ref entity);
         }
 
         /// <summary>
@@ -233,7 +223,8 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// <param name="component">Componente de tilemap. <para>Tile map component.</para></param>
         public void AddTileMapComponent(Yotsuba entity, TileMapComponent2D component)
         {
-            entity.AddComponent(YTBComponent.TileMap);
+
+            YotsubaEntities[entity.Id].AddComponent(YTBComponent.TileMap);
             TileMapComponent2Ds[(uint)entity.Id] = component;
         }
 
@@ -245,7 +236,7 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// <param name="component">Componente de transformación. <para>Transform component.</para></param>
         public void AddTransformComponent(Yotsuba entity, TransformComponent component)
         {
-            entity.AddComponent(YTBComponent.Transform);
+            YotsubaEntities[entity.Id].AddComponent(YTBComponent.Transform);
             TransformComponents[(uint)entity.Id] = component;
         }
 
@@ -257,7 +248,7 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// <param name="component">Componente de sprite. <para>Sprite component.</para></param>
         public void AddSpriteComponent(Yotsuba entity, SpriteComponent2D component)
         {
-            entity.AddComponent(YTBComponent.Sprite);
+            YotsubaEntities[entity.Id].AddComponent(YTBComponent.Sprite);
             Sprite2DComponents[(uint)entity.Id] = component;
         }
 
@@ -269,7 +260,7 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// <param name="component">Componente de animación. <para>Animation component.</para></param>
         public void AddAnimationComponent(Yotsuba entity, AnimationComponent2D component)
         {
-            entity.AddComponent(YTBComponent.Animation);
+            YotsubaEntities[entity.Id].AddComponent(YTBComponent.Animation);
             Animation2DComponents[(uint)entity.Id] = component;
         }
 
@@ -282,7 +273,7 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// <param name="animation">Animación a agregar. <para>Animation to add.</para></param>
         public void AddAnimationInAnimationComponent(Yotsuba entity, AnimationType animationType, Animation animation)
         {
-            if (!entity.HasComponent(YTBComponent.Animation))
+            if (!YotsubaEntities[entity.Id].HasComponent(YTBComponent.Animation))
                 return;
             Animation2DComponents[entity.Id].AddAnimation(animationType, animation);
         }
@@ -296,7 +287,7 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// <param name="component">Componente de cuerpo rígido. <para>Rigid body component.</para></param>
         public void AddRigidbodyComponent(Yotsuba entity, RigidBodyComponent2D component)
         {
-            entity.AddComponent(YTBComponent.Rigibody);
+            YotsubaEntities[entity.Id].AddComponent(YTBComponent.Rigibody);
             Rigidbody2DComponents[(uint)entity.Id] = component;
         }
 
@@ -309,7 +300,7 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// <param name="component">Componente de entrada. <para>Input component.</para></param>
         public void AddInputComponent(Yotsuba entity, InputComponent component)
         {
-            entity.AddComponent(YTBComponent.Input);
+            YotsubaEntities[entity.Id].AddComponent(YTBComponent.Input);
             InputComponents[(uint)entity.Id] = component;
         }
 
@@ -321,7 +312,7 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// <param name="component">Componente de modelo 3D. <para>3D model component.</para></param>
         public void AddModelComponent3D(Yotsuba entity, ModelComponent3D component)
         {
-            entity.AddComponent(YTBComponent.Model3D);
+            YotsubaEntities[entity.Id].AddComponent(YTBComponent.Model3D);
             ModelComponents3D[(uint)entity.Id] = component;
         }
 
@@ -333,7 +324,7 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// <param name="entity">Entidad objetivo. <para>Target entity.</para></param>
         public void AddCameraComponent(CameraComponent3D component, Yotsuba entity)
         {
-            entity.AddComponent(YTBComponent.Camera);
+            YotsubaEntities[entity.Id].AddComponent(YTBComponent.Camera);
             Camera = component;
         }
 
@@ -345,7 +336,7 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// <param name="component">Componente de botón 2D. <para>2D button component.</para></param>
         public void AddButtonComponent2D(Yotsuba entity, ButtonComponent2D component)
         {
-            entity.AddComponent(YTBComponent.Button2D);
+            YotsubaEntities[entity.Id].AddComponent(YTBComponent.Button2D);
             Button2DComponents[(uint)entity.Id] = component;
         }
 
@@ -357,7 +348,7 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// <param name="script">Componente de script. <para>Script component.</para></param>
         public void AddScriptComponent(Yotsuba entity, ScriptComponent script)
         {
-            entity.AddComponent(YTBComponent.Script);
+            YotsubaEntities[entity.Id].AddComponent(YTBComponent.Script);
             ScriptComponents[(uint)entity.Id] = script;
         }
 
@@ -369,7 +360,7 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// <param name="component">Componente de fuente 2D. <para>2D font component.</para></param>
         public void AddFontComponent2D(Yotsuba entity, FontComponent2D component)
         {
-            entity.AddComponent(YTBComponent.Font);
+            YotsubaEntities[entity.Id].AddComponent(YTBComponent.Font);
             Font2DComponents[(uint)entity.Id] = component;
         }
 
@@ -381,7 +372,7 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// <param name="component">Componente de shader. <para>Shader component.</para></param>
         public void AddShaderComponent2D(Yotsuba entity, ShaderComponent component)
         {
-            entity.AddComponent(YTBComponent.Shader);
+            YotsubaEntities[entity.Id].AddComponent(YTBComponent.Shader);
             ShaderComponents[(uint)entity.Id] = component;
         }
 
@@ -393,7 +384,7 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// <param name="component">Componente de almacenamiento 3D. <para>3D storage component.</para></param>
         public void AddStorageObject3D(Yotsuba entity, ListObject3D component)
         {
-            entity.AddComponent(YTBComponent.StorageObjects3D);
+            YotsubaEntities[entity.Id].AddComponent(YTBComponent.StorageObjects3D);
             StorageObjectS3D[(uint)entity.Id] = component;
         }
 
@@ -405,7 +396,7 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// <param name="component">Componente de objeto 3D. <para>3D object component.</para></param>
         public void AddObject3D(Yotsuba entity, Object3D component)
         {
-            entity.AddComponent(YTBComponent.Object3D);
+            YotsubaEntities[entity.Id].AddComponent(YTBComponent.Object3D);
             Object3Ds[(uint)entity.Id] = component;
         }
     }

@@ -9,12 +9,12 @@ using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.Contract;
 using YotsubaEngine.Core.System.YotsubaEngineUI;
 using YotsubaEngine.Core.System.YotsubaEngineUI.UI;
-using YotsubaEngine.Core.YTBMath;
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Events.YTBEvents;
 using YotsubaEngine.Exceptions;
 using YotsubaEngine.HighestPerformanceTypes;
 using static YotsubaEngine.Core.Component.C_AGNOSTIC.RigidBody;
+using YotsubaEngine.YTBMath;
 
 namespace YotsubaEngine.Core.System.S_2D
 {
@@ -72,9 +72,9 @@ namespace YotsubaEngine.Core.System.S_2D
 //+:cnd:noEmit
 
 			if (EntityManager == null) return;
-			YTB<Yotsuba> entities = EntityManager.YotsubaEntities;
-            YTB<TransformComponent> transformComponents = EntityManager.TransformComponents;
-            YTB<RigidBodyComponent2D> rigidbodyComponents = EntityManager.Rigidbody2DComponents;
+            Span<Yotsuba> entities = EntityManager.YotsubaEntities.AsSpan();
+            Span<TransformComponent> transformComponents = EntityManager.TransformComponents.AsSpan();
+            Span<RigidBodyComponent2D> rigidbodyComponents = EntityManager.Rigidbody2DComponents.AsSpan();
 
             // First apply gravity and physics for Platform mode entities
             ApplyPlatformPhysics(entities, rigidbodyComponents, gameTime);
@@ -87,9 +87,9 @@ namespace YotsubaEngine.Core.System.S_2D
         /// Applies gravity and platform physics to entities in Platform mode.
         /// Aplica gravedad y física de plataformas a entidades en modo Platform.
         /// </summary>
-        private void ApplyPlatformPhysics(YTB<Yotsuba> entities, YTB<RigidBodyComponent2D> rigidbodyComponents, GameTime gameTime)
+        private void ApplyPlatformPhysics(Span<Yotsuba> entities, Span<RigidBodyComponent2D> rigidbodyComponents, GameTime gameTime)
         {
-            foreach (var entity in entities)
+            foreach (ref Yotsuba entity in entities)
             {
                 if (!entity.HasComponent(YTBComponent.Rigibody)) continue;
 
@@ -122,9 +122,9 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <param name="transformComponents">Transform components. Componentes de transformación.</param>
         /// <param name="rigibodyComponents">Rigid body components. Componentes de cuerpo rígido.</param>
         /// <param name="gameTime">Game time. Tiempo de juego.</param>
-        private void MoveEntities(YTB<Yotsuba> entities, YTB<TransformComponent> transformComponents, YTB<RigidBodyComponent2D> rigibodyComponents, GameTime gameTime)
+        private void MoveEntities(Span<Yotsuba> entities, Span<TransformComponent> transformComponents, Span<RigidBodyComponent2D> rigibodyComponents, GameTime gameTime)
         {
-            foreach (var entity in entities)
+            foreach (ref Yotsuba entity in entities)
             {
                 if (!entity.HasComponent(YTBComponent.Transform) || !entity.HasComponent(YTBComponent.Rigibody)) continue;
                 
@@ -152,7 +152,7 @@ namespace YotsubaEngine.Core.System.S_2D
                 bool sizeZero = transform.Size == Vector3.Zero;
 
                 // Check collisions with other entities
-                foreach (var otherEntity in entities)
+                foreach (ref Yotsuba otherEntity in entities)
                 {
                     if (otherEntity.Id == entity.Id) continue;
                     if (!otherEntity.HasComponent(YTBComponent.Transform) || !otherEntity.HasComponent(YTBComponent.Rigibody)) continue;
@@ -164,7 +164,7 @@ namespace YotsubaEngine.Core.System.S_2D
                     if (otherEntity.HasComponent(YTBComponent.TileMap))
                     {
                         CheckTileMapCollision(
-                            entity, otherEntity, ref rigidBody, ref otherRigidBody, 
+                            ref entity, ref otherEntity, ref rigidBody, ref otherRigidBody, 
                             ref transform, ref otherTransform, entityRect, sizeZero, gameTime,
                             ref collisionBottom, ref collisionTop, ref collisionLeft, ref collisionRight);
                     }
@@ -172,7 +172,7 @@ namespace YotsubaEngine.Core.System.S_2D
                     {
                         // Regular entity collision
                         CheckEntityCollision(
-                            entity, otherEntity, ref rigidBody, ref otherRigidBody,
+                            ref entity, ref otherEntity, ref rigidBody, ref otherRigidBody,
                             ref transform, ref otherTransform, entityRect, sizeZero, gameTime,
                             ref collisionBottom, ref collisionTop, ref collisionLeft, ref collisionRight);
                     }
@@ -187,7 +187,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// Checks collision with a TileMap entity.
         /// </summary>
         private void CheckTileMapCollision(
-            Yotsuba entity, Yotsuba tilemapEntity,
+            ref Yotsuba entity, ref Yotsuba tilemapEntity,
             ref RigidBodyComponent2D rigidBody, ref RigidBodyComponent2D otherRigidBody,
             ref TransformComponent transform, ref TransformComponent otherTransform,
             Rectangle entityRect, bool sizeZero, GameTime gameTime,
@@ -200,9 +200,9 @@ namespace YotsubaEngine.Core.System.S_2D
             float originOffsetX = otherTransform.Size.X * 0.5f * otherTransform.Scale;
             float originOffsetY = otherTransform.Size.Y * 0.5f * otherTransform.Scale;
 
-            foreach (var layer in tilemap.TileLayers)
+            foreach (ref TileLayer layer in tilemap.TileLayers.AsSpan())
             {
-                bool isCollisionLayer = layer.Name.Contains("Collision", StringComparison.OrdinalIgnoreCase);
+                bool isCollisionLayer = layer.Name.Contains("Collision", StringComparison.OrdinalIgnoreCase) || layer.Name.Contains("Collider", StringComparison.OrdinalIgnoreCase);
 
                 for (int i = 0; i < layer.Data.Length; i++)
                 {
@@ -287,7 +287,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// Checks collision with another entity.
         /// </summary>
         private void CheckEntityCollision(
-            Yotsuba entity, Yotsuba otherEntity,
+            ref Yotsuba entity, ref Yotsuba otherEntity,
             ref RigidBodyComponent2D rigidBody, ref RigidBodyComponent2D otherRigidBody,
             ref TransformComponent transform, ref TransformComponent otherTransform,
             Rectangle entityRect, bool sizeZero, GameTime gameTime,
@@ -441,7 +441,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// </summary>
         /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
         /// <param name="time">Tiempo de juego. <para>Game time.</para></param>
-        public void SharedEntityForEachUpdate(Yotsuba Entidad, GameTime time)
+        public void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time)
         {
             //throw new NotImplementedException();
         }
@@ -451,7 +451,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <para>Shared entity initialization hook (unused in this system).</para>
         /// </summary>
         /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
-        public void SharedEntityInitialize(Yotsuba Entidad)
+        public void SharedEntityInitialize(ref Yotsuba Entidad)
         {
             //throw new NotImplementedException();
         }

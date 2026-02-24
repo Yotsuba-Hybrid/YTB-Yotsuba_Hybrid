@@ -3,8 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Linq;
 using YotsubaEngine.Attributes;
 using YotsubaEngine.Core.Entity;
-using YotsubaEngine.Core.System.YotsubaEngineCore;
-using YotsubaEngine.Core.System.YotsubaEngineUI;
+using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Core.YotsubaGame.Scripting;
 using YotsubaEngine.Events.YTBEvents;
 
@@ -58,7 +57,7 @@ namespace SandBoxGame.Core.Scripts
             SendLog("Bat Script Initialized", Color.Green);
             base.Initialize();
 
-            Font = EntityManager.YotsubaEntities.FirstOrDefault(Entity => Entity.Name == "ScoreText");
+            Font = GetEntity("ScoreText");
             GetFontComponent(Font).Texto = "Score: 0";
 
             ApplyRandomMovement();

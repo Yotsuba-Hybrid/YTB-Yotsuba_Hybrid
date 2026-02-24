@@ -6,7 +6,6 @@ using YotsubaEngine.Core.Component.C_3D;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.Contract;
-using YotsubaEngine.Core.System.YotsubaEngineCore;
 using YotsubaEngine.Core.System.YotsubaEngineUI;
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Exceptions;
@@ -48,13 +47,6 @@ namespace YotsubaEngine.Core.System.S_3D
         /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
         public void InitializeSystem(EntityManager entities)
         {
-            
-
-//-:cnd:noEmit
-#if YTB
-            if (GameWontRun.GameWontRunByException) return;
-#endif
-//+:cnd:noEmit
 
             EntityManager = entities;
 
@@ -87,12 +79,12 @@ namespace YotsubaEngine.Core.System.S_3D
                 transform.Rotation = 0f;
 
                 Yotsuba EntidadObj = new(0);
-                EntityManager.AddEntity(EntidadObj);
+                EntityManager.AddEntity(ref EntidadObj);
                 EntityManager.AddTransformComponent(EntidadObj, transform);
                 storageObjectS3D.Object3Ds.Add(EntidadObj.Id);
             }
 
-            EntityManager.AddEntity(storageObjectS3DEntity);
+            EntityManager.AddEntity(ref storageObjectS3DEntity);
             EntityManager.AddStorageObject3D(storageObjectS3DEntity, storageObjectS3D);
         }
         /// <summary>
@@ -111,12 +103,12 @@ namespace YotsubaEngine.Core.System.S_3D
 #endif
 //+:cnd:noEmit
 
-            ref var entities = ref EntityManager.YotsubaEntities;
-            ref var Models = ref EntityManager.ModelComponents3D;
-
+            Span<Yotsuba> entities = EntityManager.YotsubaEntities.AsSpan();
+            Span<ModelComponent3D> Models = EntityManager.ModelComponents3D.AsSpan();
+            Span<TransformComponent> transformComponents = EntityManager.TransformComponents.AsSpan();
             // TODO: 3D rendering is currently incomplete (Coming Soon)
             // Skip if no 3D models are loaded to avoid errors
-            if (Models == null || Models.Count == 0) return;
+            if (Models.Length is 0) return;
 
             CameraComponent3D camera = EntityManager.Camera;
             camera.Update();
@@ -146,11 +138,11 @@ namespace YotsubaEngine.Core.System.S_3D
                     float closestDistance = float.MaxValue;
                     int closestEntityId = -1;
 
-                    foreach (var entity in entities)
+                    foreach (ref Yotsuba entity in entities)
                     {
                         if (entity.HasNotComponent(YTBComponent.Model3D)) continue;
-                        ref ModelComponent3D model = ref Models[entity];
-                        ref TransformComponent transform = ref EntityManager.TransformComponents[entity];
+                        ref ModelComponent3D model = ref Models[entity.Id];
+                        ref TransformComponent transform = ref transformComponents[entity.Id];
 
                         float sphereRadius = model.RadiusSphere;
                         foreach (ModelMesh mesh in model.Model.Meshes)
@@ -198,26 +190,30 @@ namespace YotsubaEngine.Core.System.S_3D
                 YTBGlobalState.SelectedModel3DEntityIds.Clear();
             }
 #endif
-//+:cnd:noEmit
+            //+:cnd:noEmit
 
-            foreach (var entity in entities)
+            Span<ShaderComponent> shaderComponents = EntityManager.ShaderComponents.AsSpan();
+
+            foreach (ref Yotsuba entity in entities)
             {
                 if (entity.HasNotComponent(YTBComponent.Model3D)) continue;
                 ref var model = ref Models[entity.Id];
-                camera.DrawModel(model, ref EntityManager.TransformComponents[entity.Id],
-                    entity.HasComponent(YTBComponent.Shader) ? EntityManager.ShaderComponents[entity.Id] : null,
+                camera.DrawModel(model, ref transformComponents[entity.Id],
+                    entity.HasComponent(YTBComponent.Shader) ? shaderComponents[entity.Id] : null,
                     entity.Id);
             }
 
-            foreach (var entity in entities)
+            Span<SpriteComponent2D> spriteComponent2Ds = EntityManager.Sprite2DComponents.AsSpan();
+
+            foreach (ref Yotsuba entity in entities)
             {
                 if (!entity.HasComponent(YTBComponent.Sprite)) continue;
 
-                ref SpriteComponent2D sprite = ref EntityManager.Sprite2DComponents[entity];
+                ref SpriteComponent2D sprite = ref spriteComponent2Ds[entity.Id];
                 if (!sprite.Is2_5D) continue;
 
-                ref TransformComponent transform = ref EntityManager.TransformComponents[entity];
-                Graphics3D.DrawSprite2_5D(sprite, transform.Position, transform.Color, camera.ViewMatrix, camera.ProjectionMatrix, transform.Rotation);
+                ref TransformComponent transform = ref transformComponents[entity.Id];
+                Graphics3D.DrawSprite2_5D(ref sprite, transform.Position, transform.Color, camera.ViewMatrix, camera.ProjectionMatrix, transform.Rotation);
             }
         }
 
@@ -227,7 +223,7 @@ namespace YotsubaEngine.Core.System.S_3D
         /// </summary>
         /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
         /// <param name="time">Tiempo de juego. <para>Game time.</para></param>
-        public void SharedEntityForEachUpdate(Yotsuba Entidad, GameTime time)
+        public void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time)
         {
             // 3D render system does not require per-entity updates; handled in UpdateSystem
         }
@@ -237,7 +233,7 @@ namespace YotsubaEngine.Core.System.S_3D
         /// <para>Shared per-entity initialization hook (unused).</para>
         /// </summary>
         /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
-        public void SharedEntityInitialize(Yotsuba Entidad)
+        public void SharedEntityInitialize(ref Yotsuba Entidad)
         {
             // 3D entity initialization is currently handled externally (Coming Soon)
         }

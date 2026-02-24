@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 
 
-namespace YotsubaEngine.Core.YTBMath
+namespace YotsubaEngine.YTBMath
 {
     /// <summary>
     /// Ayudantes matemáticos cartesianos para vectores 2D y 3D.

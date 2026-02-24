@@ -58,25 +58,27 @@ namespace YotsubaEngine.YTB_Toolkit
 		/// </summary>
 		/// <param name="entity">Entidad a añadir. <para>Entity to add.</para></param>
 		/// <exception cref="GameWontRun">Si la entidad no tiene InputComponent o ya existe. <para>If the entity lacks InputComponent or already exists.</para></exception>
-		public void AddEntity(Yotsuba entity)
+		public void AddEntity(Yotsuba en)
 		{
-			if (_entities.Contains(entity))
+			ref Yotsuba entity = ref _entityManager.YotsubaEntities[en.Id];
+
+			if (_entities._ytb.Any(x => x.Id == en.Id))
 			{
-				throw new GameWontRun(
+				_ = new GameWontRun(
 					$"Entity {entity.Name} is already registered in WASDControl. Check your script.",
 					YTBErrors.EntityCannotAddToWasdYTB_toolkit);
 			}
 
 			if (!entity.HasComponent(YTBComponent.Input))
 			{
-				throw new GameWontRun(
+				_ = new GameWontRun(
 					$"Entity {entity.Name} requires InputComponent for WASDControl.",
 					YTBErrors.EntityCannotAddToWasdYTB_toolkit);
 			}
 
 			if (!entity.HasComponent(YTBComponent.Transform))
 			{
-				throw new GameWontRun(
+				_ = new GameWontRun(
 					$"Entity {entity.Name} requires TransformComponent for WASDControl.",
 					YTBErrors.EntityCannotAddToWasdYTB_toolkit);
 			}
@@ -92,13 +94,14 @@ namespace YotsubaEngine.YTB_Toolkit
 		/// <exception cref="GameWontRun">Si la entidad no existe. <para>If the entity doesn't exist.</para></exception>
 		public void RemoveEntity(Yotsuba entity)
 		{
-			if (!_entities.Contains(entity))
+			if (!_entities._ytb.Any(x => x.Id == entity.Id))
 			{
-				throw new GameWontRun(
+				_ = new GameWontRun(
 					$"Entity {entity.Name} is not registered in WASDControl.",
 					YTBErrors.EntityCannotAddToWasdYTB_toolkit);
 			}
-			_entities.Remove(entity);
+			var e = _entities._ytb.FirstOrDefault(x => x.Id == entity.Id);
+			_entities.Remove(e);
 		}
 
 		/// <summary>
@@ -145,8 +148,8 @@ namespace YotsubaEngine.YTB_Toolkit
 		/// </summary>
 		private bool IsEntity2_5D(int entityId)
 		{
-			var entity = _entities.FirstOrDefault(e => e.Id == entityId);
-			if (entity == null || !entity.HasComponent(YTBComponent.Sprite)) return false;
+			ref Yotsuba entity = ref _entityManager.YotsubaEntities[entityId];
+			if (!entity.HasComponent(YTBComponent.Sprite)) return false;
 			return _entityManager.Sprite2DComponents[entityId].Is2_5D;
 		}
 
@@ -456,8 +459,7 @@ namespace YotsubaEngine.YTB_Toolkit
 		/// <param name="evt">Evento de teclado a procesar. <para>Keyboard event to process.</para></param>
 		public void HandleKeyboardInput(OnKeyBoardEvent evt)
 		{
-			var entity = _entities.FirstOrDefault(e => e.Id == evt.EntityId);
-			if (entity == null) return;
+			ref var entity = ref _entityManager.YotsubaEntities[evt.EntityId];
 
 			if (!entity.HasComponent(YTBComponent.Transform)) return;
 
@@ -466,7 +468,10 @@ namespace YotsubaEngine.YTB_Toolkit
 			
 			// Animation component is optional
 			bool hasAnimation = entity.HasComponent(YTBComponent.Animation);
-			ref var animation = ref _entityManager.Animation2DComponents[entity.Id];
+			AnimationComponent2D dummyAnimation = default;
+			ref AnimationComponent2D animation = ref dummyAnimation;
+			if (hasAnimation)
+				animation = ref _entityManager.Animation2DComponents[entity.Id];
 
 			// Map key to action
 			ActionEntityInput? action = evt.Key switch
@@ -491,8 +496,7 @@ namespace YotsubaEngine.YTB_Toolkit
 		/// <param name="evt">Evento de gamepad a procesar. <para>Gamepad event to process.</para></param>
 		public void HandleGamePadInput(OnGamePadEvent evt)
 		{
-			var entity = _entities.FirstOrDefault(e => e.Id == evt.EntityId);
-			if (entity == null) return;
+			ref Yotsuba entity = ref _entityManager.YotsubaEntities[evt.EntityId];
 
 			if (!entity.HasComponent(YTBComponent.Transform)) return;
 
@@ -500,7 +504,10 @@ namespace YotsubaEngine.YTB_Toolkit
 			ref var rigidBody = ref _entityManager.Rigidbody2DComponents[entity.Id];
 			
 			bool hasAnimation = entity.HasComponent(YTBComponent.Animation);
-			ref var animation = ref _entityManager.Animation2DComponents[entity.Id];
+			AnimationComponent2D dummyAnimation = default;
+			ref AnimationComponent2D animation = ref dummyAnimation;
+			if (hasAnimation)
+				animation = ref _entityManager.Animation2DComponents[entity.Id];
 
 			// Map gamepad button to action
 			ActionEntityInput? action = evt.Button switch
@@ -525,8 +532,7 @@ namespace YotsubaEngine.YTB_Toolkit
 		/// <param name="evt">Evento de thumbstick a procesar. <para>Thumbstick event to process.</para></param>
 		public void HandleThumbstickInput(OnThumbstickEvent evt)
 		{
-			var entity = _entities.FirstOrDefault(e => e.Id == evt.EntityId);
-			if (entity == null) return;
+			ref Yotsuba entity = ref _entityManager.YotsubaEntities[evt.EntityId];
 
 			if (!entity.HasComponent(YTBComponent.Transform)) return;
 
@@ -534,13 +540,12 @@ namespace YotsubaEngine.YTB_Toolkit
 			ref var rigidBody = ref _entityManager.Rigidbody2DComponents[entity.Id];
 
 			bool hasAnimation = entity.HasComponent(YTBComponent.Animation);
-			ref var animation = ref _entityManager.Animation2DComponents[entity.Id];
+			AnimationComponent2D dummyAnimation = default;
+			ref AnimationComponent2D animation = ref dummyAnimation;
+			if (hasAnimation)
+				animation = ref _entityManager.Animation2DComponents[entity.Id];
 
-			// Create a dummy animation component if entity doesn't have one
-			if (!hasAnimation)
-			{
-				animation = default;
-			}
+
 
 			Vector2 leftStick = evt.LeftThumbstick;
 			const float deadzone = 0.1f;
@@ -717,8 +722,7 @@ namespace YotsubaEngine.YTB_Toolkit
 		/// <param name="evt">Evento de fin de animación a procesar. <para>Animation end event to process.</para></param>
 		public void HandleAnimationEnd(OnAnimationDontLoopReleaseEvent evt)
 		{
-			var entity = _entities.FirstOrDefault(e => e.Id == evt.EntityId);
-			if (entity == null) return;
+			ref var entity = ref _entityManager.YotsubaEntities[evt.EntityId];
 
 			if (!entity.HasComponent(YTBComponent.Animation)) return;
 
@@ -743,8 +747,7 @@ namespace YotsubaEngine.YTB_Toolkit
 		/// <param name="evt">Evento de entidad en el suelo a procesar. <para>Grounded entity event to process.</para></param>
 		public void HandleEntityGrounded(OnEntityGroundedEvent evt)
 		{
-			var entity = _entities.FirstOrDefault(e => e.Id == evt.EntityId);
-			if (entity == null) return;
+			ref var entity = ref _entityManager.YotsubaEntities[evt.EntityId];
 
 			if (!entity.HasComponent(YTBComponent.Animation)) return;
 
@@ -773,8 +776,7 @@ namespace YotsubaEngine.YTB_Toolkit
 		/// <param name="evt">Evento de entidad en el aire a procesar. <para>Airborne entity event to process.</para></param>
 		public void HandleEntityAirborne(OnEntityAirborneEvent evt)
 		{
-			var entity = _entities.FirstOrDefault(e => e.Id == evt.EntityId);
-			if (entity == null) return;
+			ref var entity = ref _entityManager.YotsubaEntities[evt.EntityId];
 
 			if (!entity.HasComponent(YTBComponent.Animation)) return;
 

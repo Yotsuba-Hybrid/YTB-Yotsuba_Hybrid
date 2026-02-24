@@ -8,6 +8,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using YotsubaEngine.Core.System.YotsubaEngineCore;
 using YotsubaEngine.Graphics;
+using YotsubaEngine.Core.YotsubaGame;
 
 namespace YotsubaEngine.Graphics
 {

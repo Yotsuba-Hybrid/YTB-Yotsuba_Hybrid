@@ -43,12 +43,6 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         public float Rotation { get; set; } = 0f;
 
         /// <summary>
-        /// Capa de profundidad para el orden de renderizado.
-        /// <para>Depth layer for rendering order.</para>
-        /// </summary>
-        public float LayerDepth { get; set; } = 0f;
-
-        /// <summary>
         /// Posición del sprite en el espacio del mundo.
         /// <para>Sprite position in world space.</para>
         /// </summary>
