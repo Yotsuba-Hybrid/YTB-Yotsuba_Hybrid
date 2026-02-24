@@ -59,12 +59,6 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         public void InitializeSystem(EntityManager entities)
         {
 
-//-:cnd:noEmit
-#if YTB
-            if (GameWontRun.GameWontRunByException) return;
-#endif
-//+:cnd:noEmit
-
             InputManager = InputManager.Instance;
             EventManager = EventManager.Instance;
             EntityManager = entities;

@@ -64,21 +64,21 @@ namespace YotsubaEngine.YTB_Toolkit
 
 			if (_entities._ytb.Any(x => x.Id == en.Id))
 			{
-				throw new GameWontRun(
+				_ = new GameWontRun(
 					$"Entity {entity.Name} is already registered in WASDControl. Check your script.",
 					YTBErrors.EntityCannotAddToWasdYTB_toolkit);
 			}
 
 			if (!entity.HasComponent(YTBComponent.Input))
 			{
-				throw new GameWontRun(
+				_ = new GameWontRun(
 					$"Entity {entity.Name} requires InputComponent for WASDControl.",
 					YTBErrors.EntityCannotAddToWasdYTB_toolkit);
 			}
 
 			if (!entity.HasComponent(YTBComponent.Transform))
 			{
-				throw new GameWontRun(
+				_ = new GameWontRun(
 					$"Entity {entity.Name} requires TransformComponent for WASDControl.",
 					YTBErrors.EntityCannotAddToWasdYTB_toolkit);
 			}
@@ -96,7 +96,7 @@ namespace YotsubaEngine.YTB_Toolkit
 		{
 			if (!_entities._ytb.Any(x => x.Id == entity.Id))
 			{
-				throw new GameWontRun(
+				_ = new GameWontRun(
 					$"Entity {entity.Name} is not registered in WASDControl.",
 					YTBErrors.EntityCannotAddToWasdYTB_toolkit);
 			}

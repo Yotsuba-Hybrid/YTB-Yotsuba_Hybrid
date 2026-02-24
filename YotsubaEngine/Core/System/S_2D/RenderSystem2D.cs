@@ -361,7 +361,7 @@ namespace YotsubaEngine.Core.System.S_2D
                     new Vector2(Transform.Size.X * 0.5f, Transform.Size.Y * 0.5f), // Origin en el centro
                     Transform.Scale,
                     Transform.SpriteEffects,
-                    Transform.LayerDepth
+                    Transform.Position.Z
                 );
             }
 
@@ -419,7 +419,7 @@ namespace YotsubaEngine.Core.System.S_2D
                     new Vector2(Transform.Size.X * 0.5f, Transform.Size.Y * 0.5f),
                     Transform.Scale,
                     Transform.SpriteEffects,
-                    Transform.LayerDepth
+                    Transform.Position.Z
                 );
 
                 @brocha.End();
@@ -461,7 +461,7 @@ namespace YotsubaEngine.Core.System.S_2D
                         new Vector2(Transform.Size.X * 0.5f, Transform.Size.Y * 0.5f),
                         Transform.Scale,
                         Transform.SpriteEffects,
-                        Transform.LayerDepth
+                        Transform.Position.Z
                     );
                 }
 
