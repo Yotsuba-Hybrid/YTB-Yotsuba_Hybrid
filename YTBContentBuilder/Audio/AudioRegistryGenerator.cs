@@ -185,6 +185,7 @@ namespace YotsubaEngine.YTBContentBuilder.Audio
             sb.AppendLine("using Microsoft.Xna.Framework.Audio;");
             sb.AppendLine("using Microsoft.Xna.Framework.Media;");
             sb.AppendLine("using YotsubaEngine.Audio;");
+            sb.AppendLine("using YotsubaEngine.Core.YotsubaGame;");
             sb.AppendLine("using YotsubaEngine.Core.System.YotsubaEngineCore;");
             sb.AppendLine();
             sb.AppendLine("namespace YotsubaEngine.Audio");

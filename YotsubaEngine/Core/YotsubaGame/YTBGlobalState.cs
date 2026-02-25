@@ -7,7 +7,7 @@ using System.IO;
 using YotsubaEngine.YTB_Toolkit;
 
 
-namespace YotsubaEngine.Core.System.YotsubaEngineCore
+namespace YotsubaEngine.Core.YotsubaGame
 {
     /// <summary>
     /// Almacena la configuración global compartida del runtime del motor.

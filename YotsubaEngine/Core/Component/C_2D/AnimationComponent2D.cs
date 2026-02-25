@@ -34,6 +34,11 @@ namespace YotsubaEngine.Core.Component.C_2D
                 Animations.Add(tup.Item1, tup.Item2);
         }
 
+        public AnimationComponent2D()
+        {
+            
+        }
+
         /// <summary>
         /// Agrega o reemplaza una animación.
         /// <para>Adds or replaces an animation entry.</para>
@@ -62,6 +67,8 @@ namespace YotsubaEngine.Core.Component.C_2D
         /// <param name="animationType">Tipo de animación.<para>Animation type key.</para></param>
         public void RemoveAnimation(AnimationType animationType)
         {
+            if (Animations is null)
+                return;
             Animations.Remove(animationType);
         }
 
@@ -73,6 +80,8 @@ namespace YotsubaEngine.Core.Component.C_2D
         /// <returns>La animación solicitada.<para>The requested animation.</para></returns>
         public readonly Animation GetAnimation(AnimationType animationType)
         {
+            if (Animations is null)
+                throw new KeyNotFoundException("AnimationComponent2D has no animations dictionary (default/uninitialized state).");
             return Animations[animationType];
         }
 
@@ -82,7 +91,7 @@ namespace YotsubaEngine.Core.Component.C_2D
         /// </summary>
         /// <param name="type">Tipo de animación a comprobar.<para>Animation type to check.</para></param>
         /// <returns>True si existe la animación.<para>True if the animation exists.</para></returns>
-        public bool ContainsAnimation(AnimationType type) => Animations.ContainsKey(type);
+        public bool ContainsAnimation(AnimationType type) => Animations != null && Animations.ContainsKey(type);
 
         /// <summary>
         /// Activa la animación solicitada.

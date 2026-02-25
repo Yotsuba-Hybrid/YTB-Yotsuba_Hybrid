@@ -12,7 +12,7 @@ using YotsubaEngine.Core.System.YotsubaEngineUI;
 using YotsubaEngine.Core.YotsubaGame;
 using static YotsubaEngine.Core.System.S_AGNOSTIC.InputSystem;
 
-namespace YotsubaEngine.Core.System.YotsubaEngineCore
+namespace YotsubaEngine.Core.System.YTBDragAndDrop
 {
 //-:cnd:noEmit
 #if YTB
@@ -57,12 +57,12 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
         /// </summary>
         /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
         /// <param name="time">Tiempo de juego. <para>Game time.</para></param>
-        public void SharedEntityForEachUpdate(Yotsuba Entidad, GameTime time)
+        public void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time)
         {
             // Solo procesar entidades con FontComponent2D
             if (!Entidad.HasComponent(YTBComponent.Font)) return;
 
-            FontEntityDrag(Entidad);
+            FontEntityDrag(ref Entidad);
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
         /// <para>Initializes per-entity state (no additional setup).</para>
         /// </summary>
         /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
-        public void SharedEntityInitialize(Yotsuba Entidad)
+        public void SharedEntityInitialize(ref Yotsuba Entidad)
         {
             // No se requiere inicialización especial
         }
@@ -84,7 +84,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
         {
             // No se requiere lógica global por frame
         }
-        private void FontEntityDrag(Yotsuba entity)
+        private void FontEntityDrag(ref Yotsuba entity)
         {
             // Si aún no tenemos la referencia al FontSystem, salimos
             if (FontSystem == null) return;
@@ -95,7 +95,10 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
 
             // Verificar que la entidad tenga Transform
             if (!entity.HasComponent(YTBComponent.Transform)) return;
-            ref TransformComponent transform = ref EntityManager.TransformComponents[entity.Id];
+
+            Span<TransformComponent> transformComponentsSpan = EntityManager.TransformComponents.AsSpan();
+
+            ref TransformComponent transform = ref transformComponentsSpan[entity.Id];
 
             // Obtener referencia al componente de fuente para calcular el bounding box del texto
             ref var fontComponent = ref EntityManager.Font2DComponents[entity.Id];
@@ -158,7 +161,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
 //+:cnd:noEmit
                     ;
 
-                ref var camTransform = ref EntityManager.TransformComponents[EntityManager.Camera.EntityToFollow];
+                ref var camTransform = ref transformComponentsSpan[EntityManager.Camera.EntityToFollow];
                 var viewport = ((YTBGame)YTBGame.Instance).GraphicsDevice.Viewport;
                 Vector2 screenCenter = new Vector2(viewport.Width / 2f, viewport.Height / 2f);
 

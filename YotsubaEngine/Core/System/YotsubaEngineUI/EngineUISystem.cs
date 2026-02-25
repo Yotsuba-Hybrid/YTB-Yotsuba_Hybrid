@@ -13,6 +13,7 @@ using YotsubaEngine.ActionFiles.YTB_Files;
 using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.YotsubaEngineCore;
 using YotsubaEngine.Core.System.YotsubaEngineUI.UI;
+using YotsubaEngine.Core.System.YTBDragAndDrop;
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Events.YTBEvents.EngineEvents;
 using YotsubaEngine.Exceptions;
@@ -151,7 +152,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
         /// <param name="content">Administrador de contenido. <para>Content manager.</para></param>
         public void InitializeSystem(EntityManager entities, ContentManager content)
         {
-//-:cnd:noEmit
+            //-:cnd:noEmit
 #if YTB
             _instance = this;
 #endif
@@ -317,9 +318,11 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
 
             // Renderizar alerta de cambio de modo Engine/Game
             RenderModeSwitchAlert(gameTime);
+            
+
 #endif
-//+:cnd:noEmit
-//-:cnd:noEmit
+            //+:cnd:noEmit
+            //-:cnd:noEmit
 #if YTB
 
             GuiRenderer.EndLayout();
@@ -347,7 +350,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
 
                     YTBGui.CheckBox("Seleccionar Todos", ref todos);
 
-                    foreach (FileDropped file in DragAndDropSystem.Files)
+                    foreach (FileDropped file in DragAndDropSystem.Files.AsSpan())
                     {
                         bool shouldShow = !spriteSheetXmlSelected || file.Kind != DroppedFileKind.SpriteSheetXml || file.selected;
                         if (!shouldShow)
@@ -360,7 +363,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
 
                     if (todos)
                     {
-                        foreach (FileDropped file in DragAndDropSystem.Files)
+                        foreach (FileDropped file in DragAndDropSystem.Files.AsSpan())
                             file.selected = true;
                     }
                     ImGui.Spacing();
@@ -382,8 +385,8 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
                     {
                         YTBGui.Button("Crear hoja de sprites con el XML seleccionado", () =>
                         {
-                            var selectedXml = DragAndDropSystem.Files.FirstOrDefault(x => x.selected && x.Kind == DroppedFileKind.SpriteSheetXml);
-                            var selectedImages = DragAndDropSystem.Files.Where(x => x.selected && x.Kind == DroppedFileKind.Image).ToList();
+                            var selectedXml = DragAndDropSystem.Files._ytb.FirstOrDefault(x => x.selected && x.Kind == DroppedFileKind.SpriteSheetXml);
+                            var selectedImages = DragAndDropSystem.Files._ytb.Where(x => x.selected && x.Kind == DroppedFileKind.Image).ToList();
                             if (selectedXml != null)
                             {
                                 TryImportSpriteSheetFromXml(selectedXml, selectedImages);
@@ -397,7 +400,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
 
                     YTBGui.Button("Crear hoja de sprites", () =>
                     {
-                        var selectedImages = DragAndDropSystem.Files.Where(x => x.selected && x.Kind == DroppedFileKind.Image).ToList();
+                        var selectedImages = DragAndDropSystem.Files._ytb.Where(x => x.selected && x.Kind == DroppedFileKind.Image).ToList();
                         if (selectedImages.Count == 0)
                         {
                             SendLog("[HojaDeSprites] Selecciona al menos una imagen para crear el atlas.", Color.Yellow);
@@ -430,7 +433,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
                         YTBGui.Continue();
                         YTBGui.Button("Importar archivos a Assets", () =>
                         {
-                            var selectedImports = DragAndDropSystem.Files.Where(x => x.selected && x.Kind != DroppedFileKind.Image && x.Kind != DroppedFileKind.SpriteSheetXml).ToList();
+                            var selectedImports = DragAndDropSystem.Files._ytb.Where(x => x.selected && x.Kind != DroppedFileKind.Image && x.Kind != DroppedFileKind.SpriteSheetXml).ToList();
                             TryImportAssets(selectedImports);
                             DragAndDropSystem.Files.Clear();
                             todos = false;
@@ -457,7 +460,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
                             YTBGui.Button(Path.GetFileName(xml), () =>
                             {
                                 // Aquí agregaríamos el xml al spritesheet seleccionado
-                                string[] images = DragAndDropSystem.Files.Where(x => x.Kind == DroppedFileKind.Image && x.selected).Select(s => s.Name).ToArray();
+                                string[] images = DragAndDropSystem.Files._ytb.Where(x => x.Kind == DroppedFileKind.Image && x.selected).Select(s => s.Name).ToArray();
 
                                 if (images.Length == 0)
                                 {
@@ -498,7 +501,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
             imageSelected = false;
             importSelected = false;
 
-            foreach (var file in DragAndDropSystem.Files)
+            foreach (FileDropped file in DragAndDropSystem.Files.AsSpan())
             {
                 if (!file.selected)
                     continue;

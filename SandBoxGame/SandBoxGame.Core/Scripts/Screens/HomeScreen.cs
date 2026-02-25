@@ -13,7 +13,7 @@ using YotsubaEngine.Attributes;
 using YotsubaEngine.Audio;
 using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.GumUI;
-using YotsubaEngine.Core.System.YotsubaEngineCore;
+using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Core.YotsubaGame.Scripting;
 using YotsubaEngine.Events.YTBEvents;
 using static YotsubaEngine.Audio.AudioAssets;

@@ -5,8 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using YotsubaEngine.Core.System.YotsubaEngineCore;
 using YotsubaEngine.Core.System.YotsubaEngineUI;
+using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Templates;
 
 namespace YotsubaEngine.ActionFiles.YTB_Files
