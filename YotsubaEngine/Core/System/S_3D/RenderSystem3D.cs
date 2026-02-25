@@ -37,9 +37,6 @@ namespace YotsubaEngine.Core.System.S_3D
         /// </summary>
         private Graphics3D Graphics3D;
 
-        private Texture2D Texture2D;
-
-        
         /// <summary>
         /// Inicializa el sistema de renderizado 3D.
         /// <para>Initializes the 3D render system.</para>
@@ -51,42 +48,11 @@ namespace YotsubaEngine.Core.System.S_3D
             EntityManager = entities;
 
             Graphics3D = new();
-			EventManager = EventManager.Instance;
+            EventManager = EventManager.Instance;
             EngineUISystem.SendLog(typeof(RenderSystem3D).Name + " Se inicio correctamente");
-            Texture2D = YTBGlobalState.ContentManager.Load<Texture2D>("moho/mohoanimation_00001");
 
         }
 
-        void CreateObjects3DExaples()
-        {
-            if (EntityManager == null) return;
-            Yotsuba storageObjectS3DEntity = new(0);
-            ListObject3D storageObjectS3D = new();
-            storageObjectS3D.IsVisible = true;
-            for (int i = 0; i < 1; i++)
-            {
-                Object3D object3D = new();
-                TransformComponent transform = new();
-                transform.SetPosition(1300, -200, 750);
-
-                float red = YTBGlobalState.Random.Next(0, 255) / 255f;
-                float blue = YTBGlobalState.Random.Next(0, 255) / 255f;
-                float green = YTBGlobalState.Random.Next(0, 255) / 255f;
-
-                float alpha = (float)YTBGlobalState.Random.NextDouble();
-                transform.Color = new Num.Vector4(red, green, blue, alpha);
-                transform.Size = new Num.Vector3(1920, 1080, 800);
-                transform.Rotation = 0f;
-
-                Yotsuba EntidadObj = new(0);
-                EntityManager.AddEntity(ref EntidadObj);
-                EntityManager.AddTransformComponent(EntidadObj, transform);
-                storageObjectS3D.Object3Ds.Add(EntidadObj.Id);
-            }
-
-            EntityManager.AddEntity(ref storageObjectS3DEntity);
-            EntityManager.AddStorageObject3D(storageObjectS3DEntity, storageObjectS3D);
-        }
         /// <summary>
         /// Actualiza el renderizado 3D en cada frame.
         /// <para>Updates 3D rendering each frame.</para>
@@ -96,12 +62,12 @@ namespace YotsubaEngine.Core.System.S_3D
         {
 
 
-//-:cnd:noEmit
+            //-:cnd:noEmit
 #if YTB
             if (OperatingSystem.IsWindows())
-			if (GameWontRun.GameWontRunByException) return;
+                if (GameWontRun.GameWontRunByException) return;
 #endif
-//+:cnd:noEmit
+            //+:cnd:noEmit
 
             Span<Yotsuba> entities = EntityManager.YotsubaEntities.AsSpan();
             Span<ModelComponent3D> Models = EntityManager.ModelComponents3D.AsSpan();
@@ -113,7 +79,7 @@ namespace YotsubaEngine.Core.System.S_3D
             CameraComponent3D camera = EntityManager.Camera;
             camera.Update();
 
-//-:cnd:noEmit
+            //-:cnd:noEmit
 #if YTB
             // Selección múltiple de modelos 3D en modo engine via ray picking
             if (YTBGlobalState.EngineShortcutsMode)
@@ -151,7 +117,7 @@ namespace YotsubaEngine.Core.System.S_3D
                             sphere = sphere.Transform(
                                 Matrix.CreateTranslation(transform.Position))
                                 ;
-                            if(sphereRadius >= 0)
+                            if (sphereRadius >= 0)
                             {
                                 sphere.Radius = sphereRadius;
                             }
