@@ -152,7 +152,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
         /// <param name="content">Administrador de contenido. <para>Content manager.</para></param>
         public void InitializeSystem(EntityManager entities, ContentManager content)
         {
-//-:cnd:noEmit
+            //-:cnd:noEmit
 #if YTB
             _instance = this;
 #endif
@@ -318,9 +318,11 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
 
             // Renderizar alerta de cambio de modo Engine/Game
             RenderModeSwitchAlert(gameTime);
+            
+
 #endif
-//+:cnd:noEmit
-//-:cnd:noEmit
+            //+:cnd:noEmit
+            //-:cnd:noEmit
 #if YTB
 
             GuiRenderer.EndLayout();
