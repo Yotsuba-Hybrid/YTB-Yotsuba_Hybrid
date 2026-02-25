@@ -66,8 +66,10 @@ namespace YotsubaEngine.Core.System.YTBDragAndDrop
         /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
         /// <param name="time">Tiempo de juego. <para>Game time.</para></param>
         public void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time)
-        { 
+        {
+#if YTB
             EntityDrag(ref Entidad);
+#endif
         }
 
         /// <summary>
