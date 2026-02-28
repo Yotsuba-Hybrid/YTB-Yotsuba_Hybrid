@@ -128,44 +128,44 @@ namespace YotsubaEngine.Core.System.YTBDragAndDrop
 
             // RenderSystem2D.IsGameActive is only defined in DEBUG builds.
             // In Release builds, consider only platform when deciding UI rendering.
-//-:cnd:noEmit
+            //-:cnd:noEmit
 #if YTB
             bool canRenderUIElements = RenderSystem2D.IsGameActive || !OperatingSystem.IsWindows();
 #else
             bool canRenderUIElements = !OperatingSystem.IsWindows();
 #endif
-//+:cnd:noEmit
+            //+:cnd:noEmit
 
             float currentZoom =
-//-:cnd:noEmit
+             //-:cnd:noEmit
 #if YTB
 
              canRenderUIElements ?
 #endif
-//+:cnd:noEmit
+             //+:cnd:noEmit
              YTBGlobalState.CameraZoom
-//-:cnd:noEmit
+             //-:cnd:noEmit
 #if YTB
              :
 
             RenderSystem2D.EDITOR_SCALE_CAMERA
 #endif
-//+:cnd:noEmit
+             //+:cnd:noEmit
              ;
 
             Vector2 offset =
 
-//-:cnd:noEmit
+                 //-:cnd:noEmit
 #if YTB
                  canRenderUIElements ?
 #endif
-//+:cnd:noEmit
+                 //+:cnd:noEmit
                  YTBGlobalState.OffsetCamera
-//-:cnd:noEmit
+                 //-:cnd:noEmit
 #if YTB
                  : new Vector2(RenderSystem2D.EDITOR_OFFSET_CAMERA_X, RenderSystem2D.EDITOR_OFFSET_CAMERA_Y)
 #endif
-//+:cnd:noEmit
+                 //+:cnd:noEmit
                  ;
 
             // Datos básicos de la entidad
@@ -185,7 +185,7 @@ namespace YotsubaEngine.Core.System.YTBDragAndDrop
                 currentMousePos = new Vector2(mouseState.X, mouseState.Y);
 
                 // UI: Generalmente el origen es la esquina superior izquierda
-                entityRect = new Rectangle(entityPos.ToPoint(), entitySize.ToPoint());
+                entityRect = new Rectangle(entityPos.ToPoint(), (entitySize).ToPoint());
             }
             // -----------------------------------------------------------------------
             // CASO 2: ES ENTIDAD DEL MUNDO (SPRITE NORMAL)
@@ -222,12 +222,18 @@ namespace YotsubaEngine.Core.System.YTBDragAndDrop
                 }
 
                 // MUNDO: En tu UpdateSystem, los sprites se dibujan centrados (origin = size * 0.5).
-                // Por lo tanto, el rectángulo de colisión debe centrarse en la posición.
+                // Por lo tanto, el rectángulo de colisión debe centrarse en la posición tomando en cuenta la ESCALA.
+
+                // 1. Calculamos el tamaño final ya escalado
+                float scaledWidth = entitySize.X * transform.Scale;
+                float scaledHeight = entitySize.Y * transform.Scale;
+
+                // 2. Centramos usando el tamaño escalado
                 entityRect = new Rectangle(
-                    (int)(entityPos.X - entitySize.X / 2f), // Restamos mitad del ancho
-                    (int)(entityPos.Y - entitySize.Y / 2f), // Restamos mitad del alto
-                    (int)(entitySize.X * transform.Scale),
-                    (int)(entitySize.Y * transform.Scale)
+                    (int)(entityPos.X - scaledWidth * 0.5f),
+                    (int)(entityPos.Y - scaledHeight * 0.5f),
+                    (int)scaledWidth,
+                    (int)scaledHeight
                 );
             }
 
