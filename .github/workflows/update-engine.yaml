@@ -35,7 +35,6 @@ jobs:
           ITEMS_TO_SYNC=(
             "YotsubaEngine"
             "YTBContentBuilder"
-            ".github/workflows/update-engine.yaml"
           )
           # -----------------------------------------------
 
