@@ -8,7 +8,6 @@ using System.IO;
 using YotsubaEngine.ActionFiles.YTB_Files;
 using YotsubaEngine.Audio;
 using YotsubaEngine.Core.System.GumUI;
-using YotsubaEngine.Core.System.S_AGNOSTIC;
 using YotsubaEngine.Core.System.YotsubaEngineUI;
 using YotsubaEngine.Core.System.YotsubaEngineUI.UI;
 using YotsubaEngine.Core.System.YTBDragAndDrop;
@@ -182,31 +181,71 @@ namespace YotsubaEngine
         {
 
             YTBGum.Initialize(this);
-            if (YTBGlobalState.EngineEnabled && OperatingSystem.IsWindows())
+            if (YTBGlobalState.EngineEnabled && YTBGlobalState.IsDesktop)
             {
                 GuiRenderer = new ImGuiRenderer(this);
                 // ImGui setup (fonts, theme)
                 var io = ImGui.GetIO();
                 io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
 
+                string outputFontsDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Fonts");
+                string fuentePrincipal = Path.Combine(outputFontsDir, "GeistPixel-Square.ttf");
+                string fuenteIconos = Path.Combine(outputFontsDir, "NerdFontsSymbolsOnly.ttf");
+
+                // ¡Validación de seguridad para evitar crashes de ImGui C++!
+                if (!File.Exists(fuentePrincipal))
+                {
+                    throw new FileNotFoundException($"¡CRÍTICO! ImGui no encontró la fuente en: {fuentePrincipal}");
+                }
+                if (!File.Exists(fuenteIconos))
+                {
+                    throw new FileNotFoundException($"¡CRÍTICO! ImGui no encontró los íconos en: {fuenteIconos}");
+                }
+
                 unsafe
                 {
-                    fixed (ushort* rangePtr = ranges)
+
+#if !YTB
+                    io.Fonts.AddFontFromFileTTF(fuentePrincipal, 24.0f, null, io.Fonts.GetGlyphRangesDefault());
+#else
+                    // 1. Cargar la fuente principal (texto)
+                    // Usamos GetGlyphRangesDefault() para que cargue el alfabeto normal (ASCII).
+                    io.Fonts.AddFontFromFileTTF(fuentePrincipal, 20.0f, null, io.Fonts.GetGlyphRangesDefault());
+#endif
+
+                    // 2. Crear la configuración para la fuente de íconos
+                    ImFontConfigPtr config = ImGuiNative.ImFontConfig_ImFontConfig();
+                    config.MergeMode = true;  // ¡Esto fusiona los íconos con la fuente principal!
+                    config.PixelSnapH = true; // Alinea los íconos a los píxeles para mayor nitidez
+
+                    // 3. Definir el rango de caracteres para Nerd Fonts.
+                    // El rango 0xE000 a 0xF8FF cubre casi todos los íconos de programación 
+                    // (FontAwesome, Devicons, Material, etc.) que vienen en NerdFonts.
+                    ushort[] iconRanges = new ushort[]
                     {
-                        //3.Cargar la fuente desde el archivo
-                        //Ajusta la ruta y el tamaño(18.0f) a tu gusto.
-                        // El tercer parámetro es la configuración(null usa default).
-                        // El cuarto parámetro es el puntero al rango.
+        0xE000, 0xF8FF,
+        0 // El array SIEMPRE debe terminar en 0
+                    };
 
-                        // Prefer runtime-copied engine font under the output `Fonts` folder
-                        string outputFontsDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Fonts");
-                        string fuente = Path.Combine(outputFontsDir, "GeistPixel-Square.ttf");
-
-                        io.Fonts.AddFontFromFileTTF(fuente, 20.0f, null, (IntPtr)rangePtr);
+                    fixed (ushort* rangePtr = iconRanges)
+                    {
+                        // 4. Cargar la fuente de íconos con el config de Merge y el rango especial
+                        // Puedes ajustar el tamaño (20.0f) si sientes que los íconos se ven muy grandes o pequeños respecto al texto
+                        io.Fonts.AddFontFromFileTTF(fuenteIconos, 20.0f, config, (IntPtr)rangePtr);
                     }
+
+                    // 5. Destruir el objeto de configuración nativo para evitar fugas de memoria (C++)
+                    config.Destroy();
                 }
 
                 io.FontGlobalScale = 1.0f;
+
+                // 6. Construir la textura final (Obligatorio después de añadir fuentes)
+                io.Fonts.Build();
+
+                // Nota: Algunos wrappers de MonoGame (ImGuiRenderer) requieren que llames a un método 
+                // interno para actualizar la textura en la GPU. Si no ves las fuentes, puede que necesites:
+                // GuiRenderer.RebuildFontAtlas();
                 ImGuiThemeColors.AplicarTemaCompleto();
                 GuiRenderer.RebuildFontAtlas();
 
@@ -233,7 +272,7 @@ namespace YotsubaEngine
                 }
             }
 
-//-:cnd:noEmit
+            //-:cnd:noEmit
 #if YTB
 
             if (YTBGlobalState.EngineEnabled)
@@ -242,11 +281,11 @@ namespace YotsubaEngine
             }
 
 #endif
-//+:cnd:noEmit
+            //+:cnd:noEmit
             base.Initialize();
         }
 
-//-:cnd:noEmit
+        //-:cnd:noEmit
 #if YTB
         /// <summary>
         /// Handles scene manager changes while debugging.
@@ -259,7 +298,7 @@ namespace YotsubaEngine
         }
 
 #endif
-//+:cnd:noEmit
+        //+:cnd:noEmit
         /// <summary>
         /// Loads engine content and initializes the scene.
         /// Carga el contenido del motor e inicializa la escena.
@@ -270,11 +309,11 @@ namespace YotsubaEngine
             {
 
                 _spriteBatch = new SpriteBatch(GraphicsDevice);
-                
+
                 // Initialize the audio system
                 // Inicializar el sistema de audio
                 AudioSystem.Initialize();
-                
+
                 SceneManager = YTBFileToGameData.GenerateSceneManager(_graphics);
 
                 SceneManager.CurrentScene.Initialize(Content);
@@ -293,14 +332,14 @@ namespace YotsubaEngine
         /// </summary>
         protected override void Update(GameTime gameTime)
         {
-//-:cnd:noEmit
+            //-:cnd:noEmit
 #if YOTSUBA
             // Exit the game if the Back button (GamePad) or Escape key (Keyboard) is pressed.
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
                 || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 #endif
-//+:cnd:noEmit
+            //+:cnd:noEmit
 
             SceneManager.CurrentScene.Update(gameTime);
             EventManager.Instance.ResolveEvents();
