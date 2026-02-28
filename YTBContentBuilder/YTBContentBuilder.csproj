@@ -5,11 +5,6 @@
 	  <Configurations>Debug;Release;YTB</Configurations>
 
   </PropertyGroup>
-
-  <PropertyGroup>
-    <!-- Ensure the build doesn't rely on ref assemblies which may not be produced in some CI/IDE setups -->
-    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
-  </PropertyGroup>
 	<PropertyGroup>
 		<DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
 	</PropertyGroup>
