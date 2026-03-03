@@ -393,20 +393,19 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
             var mainCamera = EntityYTBXmlTemplate.GenerateNew();
             mainCamera.Name = "MainCamera";
             
-            // Configurar TransformComponent con posición inicial en origen
-            var transformComponent = mainCamera.Components.FirstOrDefault(c => c.ComponentName == "TransformComponent");
-            if (transformComponent != null)
+            // Reemplazar TransformComponent vacío con la plantilla que tiene valores por defecto
+            int transformIndex = mainCamera.Components.FindIndex(c => c.ComponentName == "TransformComponent");
+            if (transformIndex >= 0)
             {
-                var positionProp = transformComponent.Propiedades.FirstOrDefault(p => p.Item1 == "Position");
-                if (positionProp != null)
-                {
-                    int index = transformComponent.Propiedades.IndexOf(positionProp);
-                    transformComponent.Propiedades[index] = new Tuple<string, string>("Position", "0,0,0");
-                }
+                mainCamera.Components[transformIndex] = EntityYTBXmlTemplate.TransformTemplate();
+                // Ajustar posición a origen para la cámara
+                var posIndex = mainCamera.Components[transformIndex].Propiedades.FindIndex(p => p.Item1 == "Position");
+                if (posIndex >= 0)
+                    mainCamera.Components[transformIndex].Propiedades[posIndex] = new Tuple<string, string>("Position", "0,0,0");
             }
-            
-            // Configurar CameraComponent con valores válidos
-            int cameraComponentIndex = mainCamera.Components.FindIndex(x => x.ComponentName == "CameraComponent");
+
+            // Configurar CameraComponent3D con valores válidos
+            int cameraComponentIndex = mainCamera.Components.FindIndex(x => x.ComponentName == "CameraComponent3D");
             if (cameraComponentIndex >= 0)
             {
                 // Reemplazar el componente vacío con un template válido
