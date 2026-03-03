@@ -113,7 +113,7 @@ namespace YotsubaEngine.ActionFiles.XML_SpriteSheet_Files
                     }
                 }
 
-                outputPath = outputPath.Replace("/",@"\\");
+                outputPath = outputPath.Replace("/","\\");
                 atlasBitmap.Save(outputPath, System.Drawing.Imaging.ImageFormat.Png);
             }
         }
@@ -232,23 +232,11 @@ namespace YotsubaEngine.ActionFiles.XML_SpriteSheet_Files
                 if (relativePath.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
                     relativePath = relativePath.Substring(0, relativePath.Length - 4);
 
-                string lastPath = existingXmlPath.Split(YTBFileToGameData.ContentManager.RootDirectory).LastOrDefault();
-
-                // Si el último segmento path es vacío, significa que la carpeta ya estaba normalizada
-                if (string.IsNullOrEmpty(lastPath) || lastPath == "\\" || lastPath == "/")
-                    lastPath = YTBFileToGameData.ContentManager.RootDirectory;
-                else
-                {
-                    if (lastPath.StartsWith("\\")) lastPath = lastPath.Substring(1);
-                    if (lastPath.StartsWith("/")) lastPath = lastPath.Substring(1);
-                }
-
-                // Construir imagePath relativo y pasar a UnpackAtlas
-                string imagePath = existingXmlPath.Replace(lastPath, relativePath);
-                UnpackAtlas(existingXmlPath, imagePath, tempFolder);
+                // relativePath ya es relativo a DevelopmentAssetsPath, usarlo directamente
+                UnpackAtlas(existingXmlPath, relativePath, tempFolder);
 
                 // Construir la ruta absoluta asegurando una sola extensión .png
-                imagePath = Path.Combine(YTBGlobalState.DevelopmentAssetsPath, imagePath);
+                string imagePath = Path.Combine(YTBGlobalState.DevelopmentAssetsPath, relativePath);
                 imagePath = Path.ChangeExtension(imagePath, ".png");
 
                 using (var fs = File.OpenRead(imagePath))
