@@ -216,147 +216,23 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
         {
             GameWontRun.Reset();
 
-            var cm = ContentManager;
-
             var game = await ReadYTBFile.ReadYTBFiles(true);
 
             SceneManager sceneManager = new(GraphicsDeviceManager);
+            BuildSceneManager(sceneManager, game.Item1);
 
-            foreach (var element in game.Item1.Scene)
+            // Restaurar escena previa o usar "Index"
+            string targetScene = !String.IsNullOrEmpty(YTBGlobalState.LastSceneNameBeforeUpdate)
+                ? YTBGlobalState.LastSceneNameBeforeUpdate : "Index";
+
+            if (sceneManager.Scenes.Count > 0)
             {
-                string entityFollowCameraName = string.Empty;
-                //Creo la escena y lleno sus propiedades
-                Scene scene = new(GraphicsDeviceManager);
-                scene.EventManager = EventManager.Instance;
-                scene.EntityManager = new EntityManager();
-                scene.SceneName = element.Name;
-
-                //Agrego entidades a la escena
-                foreach (YTBEntity en in element.Entities)
-                {
-                    //Creo la entidad y lleno sus propiedades
-                    Yotsuba entity = new Yotsuba(scene.EntityManager.YotsubaEntities.Count + 1);
-                    entity.Name = en.Name;
-                    //Agrego la entidad a su arreglo de entidades
-                    scene.EntityManager.AddEntity(ref entity);
-
-                    //Agrego componentes a las entidades
-                    foreach (var component in en.Components)
-                    {
-                        if (EntityYTBXmlTemplate.GenerateNew().Components.Contains(component))
-                            continue;
-                        switch (component.ComponentName)
-                        {
-                            case nameof(TransformComponent):
-                                TransformComponent transformComponent = ConvertToTransform(component, element.Name, entity.Name);
-                                scene.EntityManager.AddTransformComponent(entity, transformComponent);
-                                break;
-                            case nameof(SpriteComponent2D):
-                                SpriteComponent2D spriteComponent2D = ConvertToSprite(component, entity.Name, element.Name);
-                                scene.EntityManager.AddSpriteComponent(entity, spriteComponent2D);
-                                break;
-                            case nameof(RigidBodyComponent2D):
-                                RigidBodyComponent2D rigidBodyComponent2D = ConvertTo2DRigibody(component, entity.Name, element.Name);
-                                scene.EntityManager.AddRigidbodyComponent(entity, rigidBodyComponent2D);
-                                break;
-                            case nameof(ButtonComponent2D):
-                                ButtonComponent2D buttonComponent2D = ConvertTo2DButton(component, entity.Name, element.Name);
-                                scene.EntityManager.AddButtonComponent2D(entity, buttonComponent2D);
-                                break;
-                            case nameof(AnimationComponent2D):
-                                AnimationComponent2D animationComponent2D = ConvertToAnimation(component, entity.Name, element.Name);
-                                scene.EntityManager.AddAnimationComponent(entity, animationComponent2D);
-                                break;
-                            case nameof(ModelComponent3D):
-                                ModelComponent3D modelComponent3D = ConvertToModel3D(component, entity.Name, element.Name);
-                                if (modelComponent3D.Model != null)
-                                {
-                                    scene.EntityManager.AddModelComponent3D(entity, modelComponent3D);
-                                }
-                                break;
-                            case nameof(RigidBodyComponent3D):
-                                // 3D rigid body support is not yet implemented (Coming Soon)
-                                EngineUISystem.SendLog($"Warning: RigidBodyComponent3D not supported yet for entity {entity.Name}. Skipping component.");
-                                break;
-                            case nameof(CameraComponent3D):
-                                CameraComponent3D cameraComponent = ConvertToCamera(scene.EntityManager, component, entity.Id, out string entityFollowName, element.Name, entity.Name);
-                                entityFollowCameraName = entityFollowName;
-                                scene.EntityManager.AddCameraComponent(cameraComponent, entity);
-                                scene.EntityManager.Camera = cameraComponent;
-                                break;
-                            case nameof(InputComponent):
-                                InputComponent inputComponent = ConvertToInput(component, entity.Name, element.Name);
-                                scene.EntityManager.AddInputComponent(entity, inputComponent);
-                                break;
-                            case nameof(ScriptComponent):
-                                if (component.Propiedades[0].Item1 == "Scripts")
-                                {
-                                    string mainScript = component.Propiedades[0].Item2.Split("&;&")[0];
-
-                                    string scriptType = mainScript.Split("&:&")[0];
-                                    string path = mainScript.Split("&:&")[1];
-                                    if (String.IsNullOrEmpty(path)) break;
-                                }
-                                ScriptComponent scriptComponent = ConvertToScript(component, entity);
-                                scene.EntityManager.AddScriptComponent(entity, scriptComponent);
-                                break;
-                            case nameof(TileMapComponent2D):
-                                if (String.IsNullOrEmpty(component.Propiedades[0].Item2))
-                                    break;
-                                scene.EntityManager.AddTileMapComponent(entity, TiledManager.GenerateTilemapComponent(component.Propiedades[0].Item2));
-                                break;
-                            case nameof(FontComponent2D):
-                                FontComponent2D fontComponent2D = ConvertToFont(component, entity.Name, element.Name);
-                                scene.EntityManager.AddFontComponent2D(entity, fontComponent2D);
-                                break;
-                            case nameof(ShaderComponent):
-                                ShaderComponent shaderComponent2D = ConvertToShader(component, entity.Name, element.Name);
-                                scene.EntityManager.AddShaderComponent2D(entity, shaderComponent2D);
-                                break;
-                            default:
-                                _ = new GameWontRun(YTBErrors.ComponentUnknown, element.Name, entity.Name, component.ComponentName, "",
-                                    $"Componente desconocido: '{component.ComponentName}'",
-                                    "Verifique que el nombre del componente sea válido o que esté implementado en el engine");
-                                break;
-                        }
-                    }
-
-
-
-                }
-                //Agrego la escena al arreglo de escenas
-                sceneManager.Scenes.Add(scene);
-
-                if (scene.EntityManager.Camera == null)
-                {
-                    _ = new GameWontRun(YTBErrors.CameraNotFound, scene.SceneName, "None", "CameraComponent", "None", $"El juego necesita que la escena {scene.SceneName} tenga una camara para poder continuar.", "Agrega una cámara a la escena.");
-                    continue;
-                }
-
-                Yotsuba ent = scene.EntityManager.YotsubaEntities._ytb.FirstOrDefault(x => x.Name == entityFollowCameraName);
-                if (ent.Id > 0)
-                {
-                    scene.EntityManager.Camera.EntityToFollow = ent.Id;
-                }
-                else
-                {
-                    _ = new GameWontRun(YTBErrors.CameraFollowNothing, scene.SceneName, "Sin Detalles (Solo se que es la Camara)", "CameraComponent3D", "Entidad a Seguir", $"El juego necesita que en la escena {scene.SceneName} la camara siga a una entidad.", "Selecciona una entidad para que la camara la siga, si no hay entidades, puedes suprimir el error colocando que la camara se autosiga (PERO LA CAMARA DEBE TENER UN COMPONENTE DE TRANSFORMACION <<TRANSFORMCOMPONENT>>)");
-                }
-
-                sceneManager.Scenes.Add(scene);
+                sceneManager.CurrentScene = sceneManager.Scenes._ytb.Any(x => x.SceneName == targetScene)
+                    ? sceneManager.Scenes._ytb.FirstOrDefault(x => x.SceneName == targetScene)
+                    : sceneManager.Scenes[0];
             }
-            if (!String.IsNullOrEmpty(YTBGlobalState.LastSceneNameBeforeUpdate))
-            {
-                sceneManager.CurrentScene = sceneManager.Scenes._ytb.Any(x => x.SceneName == YTBGlobalState.LastSceneNameBeforeUpdate) ? sceneManager.Scenes._ytb.FirstOrDefault(x => x.SceneName == YTBGlobalState.LastSceneNameBeforeUpdate) : sceneManager.Scenes[0];
-                AudioSystem.PauseAll();
-            }
-            else
-            {
+            AudioSystem.PauseAll();
 
-                sceneManager.CurrentScene = sceneManager.Scenes._ytb.Any(x => x.SceneName == "Index") ? sceneManager.Scenes._ytb.FirstOrDefault(x => x.SceneName == "Index") : sceneManager.Scenes[0];
-                AudioSystem.PauseAll();
-
-            }
             //-:cnd:noEmit
 #if YTB
             EventManager.Instance.Publish(new OnChangeEsceneManager(sceneManager));
@@ -364,8 +240,6 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
             //+:cnd:noEmit
             EngineUISystem.SendLog("Se ha actualizado el juego correctamente");
         }
-
-
 
 
         /// <summary>
@@ -376,20 +250,38 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
         /// <returns>El administrador de escenas generado. <para>The generated scene manager.</para></returns>
         public static SceneManager GenerateSceneManager(GraphicsDeviceManager graphicsDeviceManager)
         {
-            SceneManager sceneManager;
             GraphicsDeviceManager = graphicsDeviceManager;
             WriteYTBFile.RefactorYTBFile().GetAwaiter().GetResult();
 
             var game = ReadYTBFile.ReadYTBFiles(false).GetAwaiter().GetResult();
 
-            sceneManager = new(graphicsDeviceManager);
+            SceneManager sceneManager = new(graphicsDeviceManager);
+            BuildSceneManager(sceneManager, game.Item1);
 
-            foreach (var element in game.Item1.Scene)
+            if (sceneManager.Scenes.Count > 0)
+            {
+                sceneManager.CurrentScene = sceneManager.Scenes._ytb.Any(x => x.SceneName == "Index") ? sceneManager.Scenes._ytb.FirstOrDefault(x => x.SceneName == "Index") : sceneManager.Scenes[0];
+            }
+            else
+            {
+                _ = new GameWontRun($"El juego necesita tener escenas para poder funcionar, por favor, considera crear una.", YTBErrors.GameWithoutScenes);
+            }
+
+            return sceneManager;
+        }
+
+        /// <summary>
+        /// Construye las escenas y entidades dentro de un SceneManager a partir de los datos YTB.
+        /// <para>Builds scenes and entities into a SceneManager from YTB data.</para>
+        /// </summary>
+        private static void BuildSceneManager(SceneManager sceneManager, YTBGameInfo gameInfo)
+        {
+            foreach (var element in gameInfo.Scene)
             {
                 string entityFollowCameraName = string.Empty;
 
                 //Creo la escena y lleno sus propiedades
-                Scene scene = new(graphicsDeviceManager);
+                Scene scene = new(GraphicsDeviceManager);
                 scene.EventManager = EventManager.Instance;
                 scene.EntityManager = new EntityManager();
                 scene.SceneName = element.Name;
@@ -495,8 +387,6 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                                 break;
                         }
                     }
-
-
                 }
 
                 if (scene.EntityManager.Camera == null)
@@ -517,17 +407,6 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                     _ = new GameWontRun(YTBErrors.CameraFollowNothing, scene.SceneName,"Sin Detalles (Solo se que es la Camara)","CameraComponent3D", "Entidad a Seguir",$"El juego necesita que en la escena {scene.SceneName} la camara siga a una entidad.", "Selecciona una entidad para que la camara la siga, si no hay entidades, puedes suprimir el error colocando que la camara se autosiga (PERO LA CAMARA DEBE TENER UN COMPONENTE DE TRANSFORMACION <<TRANSFORMCOMPONENT>>)");
                 }
             }
-
-            if (sceneManager.Scenes.Count > 0)
-            {
-                sceneManager.CurrentScene = sceneManager.Scenes._ytb.Any(x => x.SceneName == "Index") ? sceneManager.Scenes._ytb.FirstOrDefault(x => x.SceneName == "Index") : sceneManager.Scenes[0];
-            }
-            else
-            {
-                _ = new GameWontRun($"El juego necesita tener escenas para poder funcionar, por favor, considera crear una.", YTBErrors.GameWithoutScenes);
-            }
-
-            return sceneManager;
         }
     
 
