@@ -419,6 +419,9 @@ namespace YotsubaEngine.Core.System.YTBDragAndDrop
             }
         }
 
+        public void Dispose()
+        {
+        }
     }
 
     /// <summary>

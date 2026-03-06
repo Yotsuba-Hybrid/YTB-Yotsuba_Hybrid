@@ -455,5 +455,9 @@ namespace YotsubaEngine.Core.System.S_2D
         {
             //throw new NotImplementedException();
         }
+
+        public void Dispose()
+        {
+        }
     }
 }

@@ -203,5 +203,9 @@ namespace YotsubaEngine.Core.System.S_3D
         {
             // 3D entity initialization is currently handled externally (Coming Soon)
         }
+
+        public void Dispose()
+        {
+        }
     }
 }
