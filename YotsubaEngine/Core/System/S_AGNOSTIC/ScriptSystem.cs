@@ -2,19 +2,12 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.IO;
-using System.Linq;
-using YotsubaEngine.Audio;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;
-using YotsubaEngine.Core.System.Contract;
-using YotsubaEngine.Core.System.GumUI;
 using YotsubaEngine.Core.System.S_2D;
-using YotsubaEngine.Core.System.YotsubaEngineCore;
-using YotsubaEngine.Core.System.YotsubaEngineUI;
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Core.YotsubaGame.Scripting;
 using YotsubaEngine.Exceptions;
-using YotsubaEngine.HighestPerformanceTypes;
 
 namespace YotsubaEngine.Core.System.S_AGNOSTIC
 {
@@ -162,5 +155,19 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
                 script.Scripts[0].Draw2D(spriteBatch, gameTime);
             }
 		}
-	}
+
+        public void Clear()
+        {
+            if (EntityManager == null) return;
+
+            foreach (ref Yotsuba entities in EntityManager.YotsubaEntities.AsSpan())
+            {
+                if (!entities.HasComponent(YTBComponent.Script)) continue;
+
+                ref ScriptComponent script = ref EntityManager.ScriptComponents[entities];
+                script.Scripts[0].Cleanup();
+            }
+        }
+
+    }
 }

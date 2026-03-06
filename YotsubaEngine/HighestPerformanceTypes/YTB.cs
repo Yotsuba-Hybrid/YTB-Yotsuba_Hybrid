@@ -32,7 +32,7 @@ namespace YotsubaEngine.HighestPerformanceTypes
         /// <summary>
         /// Iterable interno que almacena los elementos.
         /// </summary>
-        private T[] _arr { get; set; }
+        internal T[] _arr { get; set; }
 
         public IEnumerable<T> _ytb => _arr.Take(Count);
 

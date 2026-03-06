@@ -3,8 +3,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Threading.Tasks;
-using YotsubaEngine.Core.Component.C_2D;
 using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.S_2D;
 using YotsubaEngine.Core.System.S_3D;
@@ -19,7 +17,7 @@ namespace YotsubaEngine.Core.YotsubaGame
     /// La representación de una escena del juego.
     /// <para>The representation of a game scene.</para>
     /// </summary>
-    public class Scene
+    public class Scene : IDisposable
     {
 
         bool isWindows = OperatingSystem.IsWindows();
@@ -338,6 +336,15 @@ namespace YotsubaEngine.Core.YotsubaGame
             ScriptSystem.DrawSystem2D(gameTime, _spriteBatch);
             SystemBuilder.Render2D(_spriteBatch, gameTime);
         }
+        public void Clear()
+        {
+            ScriptSystem.Clear();
+            SystemBuilder.Dispose();
+        }
 
+        public void Dispose()
+        {
+            Clear();
+        }
     }
 }

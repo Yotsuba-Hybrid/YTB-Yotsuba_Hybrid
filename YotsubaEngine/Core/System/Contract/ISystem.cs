@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.YotsubaGame;
 
@@ -9,7 +10,7 @@ namespace YotsubaEngine.Core.System.Contract
     /// Define una interfaz común para los sistemas del motor.
     /// <para>Defines a common interface for engine systems.</para>
     /// </summary>
-    public interface ISystem
+    public interface ISystem : IDisposable
     {
         /// <summary>
         /// Inicializa el sistema con las referencias de entidades necesarias.
