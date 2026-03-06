@@ -78,5 +78,9 @@ namespace YotsubaEngine.Core.System.S_2D
         public void SharedEntityInitialize(ref Yotsuba Entidad)
         {
         }
+
+        public void Dispose()
+        {
+        }
     }
 }
