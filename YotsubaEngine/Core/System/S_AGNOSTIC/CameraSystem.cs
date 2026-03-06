@@ -103,5 +103,9 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         {
             //throw new NotImplementedException();
         }
+
+        public void Dispose()
+        {
+        }
     }
 }

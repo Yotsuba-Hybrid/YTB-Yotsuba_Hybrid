@@ -169,5 +169,9 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
             }
         }
 
+        public void Dispose()
+        {
+            Clear();
+        }
     }
 }

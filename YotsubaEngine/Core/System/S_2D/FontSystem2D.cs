@@ -258,6 +258,9 @@ namespace YotsubaEngine.Core.System.S_2D
             // No system-level update logic required for fonts
         }
 
+        public void Dispose()
+        {
+        }
 
     }
 }
