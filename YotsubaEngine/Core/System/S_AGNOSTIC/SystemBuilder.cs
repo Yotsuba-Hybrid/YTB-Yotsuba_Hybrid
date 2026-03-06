@@ -80,5 +80,11 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
                     system.Render3D(gameTime);
             }
         }
+
+        public void Dispose()
+        {
+            foreach (ref var system in SystemsInstances.AsSpan())
+                system.Dispose();
+        }
     }
 }

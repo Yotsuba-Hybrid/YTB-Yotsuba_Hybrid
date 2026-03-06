@@ -1,5 +1,4 @@
 ﻿#nullable enable
-
 using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
@@ -58,8 +57,15 @@ namespace YotsubaEngine.YTB_Toolkit
             EventManager.Instance.Publish(new StopEvents());
 
             YTBGame game = (YTBGame)YTBGame.Instance;
+
+            string lastSceneName = game.SceneManager.CurrentScene.SceneName;
             Scene? newScene = game.SceneManager.Scenes._ytb
                 .FirstOrDefault(x => x.SceneName == sceneName);
+
+            Scene lasteScene = game.SceneManager.Scenes._ytb
+                .FirstOrDefault(x => x.SceneName == lastSceneName)!;
+
+            lasteScene.Clear();
 
             if (newScene == null)
                 return false;
@@ -73,11 +79,11 @@ namespace YotsubaEngine.YTB_Toolkit
                 game.SceneManager.CurrentScene = newScene;
                 newScene.Initialize(YTBFileToGameData.ContentManager);
                 EventManager.StopEvents = false;
-//-:cnd:noEmit
+                //-:cnd:noEmit
 #if YTB
                 EventManager.Instance.Publish(new OnShowGameUIHiddeEngineEditor(true, false));
 #endif
-//+:cnd:noEmit
+                //+:cnd:noEmit
             };
 
             EventManager.Instance.EventManagerWasPaused += handler;
