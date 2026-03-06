@@ -30,6 +30,10 @@ namespace YotsubaEngine.Core.System.YTBDragAndDrop
         private int? _draggedFontEntityId = null;
         private Vector2 _dragOffset = Vector2.Zero;
 
+        public void Dispose()
+        {
+        }
+
         /// <summary>
         /// Inicializa el sistema de arrastre de fuentes con el administrador de entidades.
         /// <para>Initializes the font drag system with the entity manager.</para>
