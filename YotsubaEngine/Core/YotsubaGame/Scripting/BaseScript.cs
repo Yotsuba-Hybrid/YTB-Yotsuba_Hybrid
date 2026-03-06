@@ -856,5 +856,21 @@ namespace YotsubaEngine.Core.YotsubaGame.Scripting
         {
             EngineUISystem.SendLog(message, color);
         }
+
+        /// <summary>
+        /// Obtiene el escena actual del juego.
+        /// </summary>
+        /// <returns></returns>
+        public Scene GetCurrentScene()
+        {
+            var scene = YTBGlobalState.Game.SceneManager.CurrentScene;
+            return scene;
+        }
+
+        public string GetCurrentSceneName()
+        {
+            var scene = YTBGlobalState.Game.SceneManager.CurrentScene;
+            return scene.SceneName;
+        }
     }
 }

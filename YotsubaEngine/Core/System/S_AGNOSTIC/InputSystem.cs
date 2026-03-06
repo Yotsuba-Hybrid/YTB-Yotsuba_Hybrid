@@ -472,5 +472,9 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
             /// </summary>
             XButton2
         }
+
+        public void Dispose()
+        {
+        }
     }
 }
