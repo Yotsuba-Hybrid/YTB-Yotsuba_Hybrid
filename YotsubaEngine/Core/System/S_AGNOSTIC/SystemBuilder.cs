@@ -35,6 +35,7 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
 
         public void InitializeSystem(EntityManager entities)
         {
+            SystemsInstances.Clear();
             foreach (ref var system in Systems.AsSpan())
             {
                 SystemsInstances.Add(system());
@@ -85,6 +86,7 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         {
             foreach (ref var system in SystemsInstances.AsSpan())
                 system.Dispose();
+            SystemsInstances.Clear();
         }
 
     }
