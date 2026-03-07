@@ -340,6 +340,15 @@ namespace YotsubaEngine.Core.YotsubaGame
         {
             ScriptSystem.Clear();
             SystemBuilder.Dispose();
+            AnimationSystem2D.Dispose();
+            ButtonSystem2D.Dispose();
+            PhysicsSystem2D.Dispose();
+            GumUISystem2D.Dispose();
+            RenderSystem3D.Dispose();
+            CameraSystem.Dispose();
+            InputSystem.Dispose();
+            DragAndDropSystem.Dispose();
+            FontSystem2D.Dispose();
         }
 
         public void Dispose()
