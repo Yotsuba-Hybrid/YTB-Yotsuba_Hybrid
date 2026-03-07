@@ -23,7 +23,7 @@ namespace YotsubaEngine.Core.YotsubaGame
         private void OnStopEvents(StopEvents events)
         {
             StopEvents = true;
-            if(events.ignoreEventsInProccess)
+            if (events.ignoreEventsInProccess)
             {
                 EventObjects.Clear();
                 NextEventObjects.Clear();
@@ -67,6 +67,7 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// Diccionario que almacena las subscripciones a eventos
         /// </summary>
         private Dictionary<Type, List<Action<object>>> EventResponses = new();
+        private Dictionary<(Type, Delegate), Action<object>> _wrapperMap = new();
 
         /// <summary>
         /// Flag que indica si el EventManager está en proceso de resolver eventos.
@@ -102,7 +103,9 @@ namespace YotsubaEngine.Core.YotsubaGame
             if (!EventResponses.TryGetValue(typeof(T), out var list))
                 EventResponses[typeof(T)] = list = new List<Action<object>>();
 
-            list.Add(obj => { listener((T)obj); });
+            var wrapper = new Action<object>(obj => { listener((T)obj); });
+            _wrapperMap[(typeof(T), listener)] = wrapper;
+            list.Add(wrapper);
         }
 
 
@@ -114,12 +117,12 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// <param name="action">Acción a desuscribir. <para>Action to remove.</para></param>
         public void Unsubscribe<T>(Action<T> action)
         {
-            if(EventResponses.TryGetValue(typeof(T), out var list))
+            var key = (typeof(T), (Delegate)action);
+            if (_wrapperMap.TryGetValue(key, out var wrapper))
             {
-                list.RemoveAll(a =>
-                {
-                    return a.Target == action.Target && a.Method == action.Method;
-                });
+                if (EventResponses.TryGetValue(typeof(T), out var list))
+                    list.Remove(wrapper);
+                _wrapperMap.Remove(key);
             }
         }
 
@@ -146,7 +149,7 @@ namespace YotsubaEngine.Core.YotsubaGame
             }
             EventObjects.Clear();
             isResolving = false;
-                
+
             foreach (var (type, events) in NextEventObjects)
             {
                 if (!EventResponses.TryGetValue(type, out var listeners)) continue;
