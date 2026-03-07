@@ -201,3 +201,5 @@ website/.angular/
 
 # Angular cache
 website/.cache/
+
+.gemini/
