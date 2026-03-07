@@ -1,9 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
+using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.Contract;
 using YotsubaEngine.Core.YotsubaGame;
+using YotsubaEngine.Graphics;
 
 namespace SandBoxGame.Core.Systems
 {
@@ -14,7 +15,8 @@ namespace SandBoxGame.Core.Systems
     public class CustomExampleSystem : IRenderSystem
     {
         public EntityManager EntityManager { get; private set; }
-
+        private Graphics3D _graphics3D = null!;
+         
         /// <summary>
         /// Este es el primer metodo que se llama y se ejecuta una sola vez en todo el ciclo de vida del sistema.
         /// </summary>
@@ -23,6 +25,7 @@ namespace SandBoxGame.Core.Systems
         public void InitializeSystem(EntityManager entities)
         {
             EntityManager = entities;
+            _graphics3D = new Graphics3D();
         }
 
         /// <summary>
@@ -42,6 +45,8 @@ namespace SandBoxGame.Core.Systems
         /// <exception cref="NotImplementedException"></exception>
         public void SharedEntityInitialize(ref Yotsuba Entidad)
         {
+            
+
             //throw new NotImplementedException();
         }
 
@@ -75,6 +80,30 @@ namespace SandBoxGame.Core.Systems
         }
 
         public void Render3D(GameTime gameTime)
+        {
+            CameraComponent3D camera = EntityManager.Camera;
+            if (camera is null) return;
+
+            camera.Update();
+
+            System.Span<Yotsuba> entities = EntityManager.YotsubaEntities.AsSpan();
+            System.Span<TransformComponent> transforms = EntityManager.TransformComponents.AsSpan();
+
+            foreach (ref Yotsuba entity in entities)
+            {
+                if (entity.HasNotComponent(YTBComponent.Transform)) continue;
+
+                ref TransformComponent transform = ref transforms[entity.Id];
+                _graphics3D.DrawBox(
+                    transform.Position,
+                    transform.Size,
+                    transform.Color,
+                    camera.ViewMatrix,
+                    camera.ProjectionMatrix);
+            }
+        }
+
+        public void Dispose()
         {
             //throw new NotImplementedException();
         }
