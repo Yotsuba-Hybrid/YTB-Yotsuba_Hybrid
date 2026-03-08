@@ -72,9 +72,11 @@ namespace YotsubaEngine.Core.System.S_3D
             Span<Yotsuba> entities = EntityManager.YotsubaEntities.AsSpan();
             Span<ModelComponent3D> Models = EntityManager.ModelComponents3D.AsSpan();
             Span<TransformComponent> transformComponents = EntityManager.TransformComponents.AsSpan();
+            Span<YTBModelComponent3D> ytb3DComponents = EntityManager.YtbModelComponents.AsSpan();
+
             // TODO: 3D rendering is currently incomplete (Coming Soon)
             // Skip if no 3D models are loaded to avoid errors
-            if (Models.Length is 0) return;
+            if (Models.Length is 0 && ytb3DComponents.Length is 0) return;
 
             CameraComponent3D camera = EntityManager.Camera;
             camera.Update();
@@ -103,12 +105,15 @@ namespace YotsubaEngine.Core.System.S_3D
 
                     float closestDistance = float.MaxValue;
                     int closestEntityId = -1;
-
+                    
                     foreach (ref Yotsuba entity in entities)
                     {
-                        if (entity.HasNotComponent(YTBComponent.Model3D)) continue;
-                        ref ModelComponent3D model = ref Models[entity.Id];
+
+                        if (entity.HasNotComponent(YTBComponent.Model3D)  || entity.HasNotComponent(YTBComponent.Transform)) continue;
                         ref TransformComponent transform = ref transformComponents[entity.Id];
+
+                        ref ModelComponent3D model = ref Models[entity.Id];
+                        
 
                         float sphereRadius = model.RadiusSphere;
                         foreach (ModelMesh mesh in model.Model.Meshes)
@@ -159,26 +164,35 @@ namespace YotsubaEngine.Core.System.S_3D
             //+:cnd:noEmit
 
             Span<ShaderComponent> shaderComponents = EntityManager.ShaderComponents.AsSpan();
-
-            foreach (ref Yotsuba entity in entities)
-            {
-                if (entity.HasNotComponent(YTBComponent.Model3D)) continue;
-                ref var model = ref Models[entity.Id];
-                camera.DrawModel(model, ref transformComponents[entity.Id],
-                    entity.HasComponent(YTBComponent.Shader) ? shaderComponents[entity.Id] : null,
-                    entity.Id);
-            }
-
             Span<SpriteComponent2D> spriteComponent2Ds = EntityManager.Sprite2DComponents.AsSpan();
 
+
             foreach (ref Yotsuba entity in entities)
             {
+                if(entity.HasNotComponent(YTBComponent.Transform)) continue;
+
+                ref TransformComponent transform = ref transformComponents[entity.Id];
+
+                if (entity.HasComponent(YTBComponent.Model3D))
+                {
+                    ref var model = ref Models[entity.Id];
+                    camera.DrawModel(model, ref transform,
+                        entity.HasComponent(YTBComponent.Shader) ? shaderComponents[entity.Id] : null,
+                        entity.Id);
+                }
+
+                if (entity.HasComponent(YTBComponent.YTBModel3D))
+                {
+                    ref YTBModelComponent3D obj3D = ref ytb3DComponents[entity.Id];
+                    if (!obj3D.IsVisible) continue;
+                    Graphics3D.DrawBox(transform.Position, transform.Size, transform.Color, camera.ViewMatrix, camera.ProjectionMatrix);
+                }
+
                 if (!entity.HasComponent(YTBComponent.Sprite)) continue;
 
                 ref SpriteComponent2D sprite = ref spriteComponent2Ds[entity.Id];
                 if (!sprite.Is2_5D) continue;
 
-                ref TransformComponent transform = ref transformComponents[entity.Id];
                 Graphics3D.DrawSprite2_5D(ref sprite, transform.Position, transform.Color, camera.ViewMatrix, camera.ProjectionMatrix, transform.Rotation);
             }
         }

@@ -246,5 +246,16 @@ namespace YotsubaEngine.HighestPerformanceTypes
             Capacity = 0;
             Array.Clear(_arr, 0, Capacity);
         }
+
+        T DefaultValue = default(T);
+        public ref T Find(Predicate<T> predicate)
+        {
+            int index = Array.FindIndex(_arr, 0, Count, predicate);
+            if (index == -1)
+            {
+                return ref DefaultValue;
+            }
+            return ref _arr[index];
+        }
     }
 }

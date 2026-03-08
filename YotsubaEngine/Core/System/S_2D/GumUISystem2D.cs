@@ -25,7 +25,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <para>Initializes the GumUI system by clearing all existing UI elements.</para>
         /// </summary>
         /// <param name="entities">Instancia del gestor de entidades. <para>The entity manager instance.</para></param>
-        public void InitializeSystem(EntityManager entities)
+        public override void InitializeSystem(EntityManager entities)
         {
             YTBGum.Clear();
         }
@@ -35,7 +35,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <para>Updates the GumUI system logic each frame.</para>
         /// </summary>
         /// <param name="gameTime">Instantánea de valores de tiempo. <para>Snapshot of timing values.</para></param>
-        public void UpdateSystem(GameTime gameTime)
+        public override void UpdateSystem(GameTime gameTime)
         {
             YTBGum.Update(gameTime);
         }
@@ -66,7 +66,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// </summary>
         /// <param name="Entidad">Entidad a actualizar. <para>The entity to update.</para></param>
         /// <param name="time">Información de tiempo del juego. <para>Game timing information.</para></param>
-        public void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time)
+        public override void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time)
         {
         }
 
@@ -75,11 +75,11 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <para>Per-entity initialization callback (not used by GumUI system).</para>
         /// </summary>
         /// <param name="Entidad">Entidad a inicializar. <para>The entity to initialize.</para></param>
-        public void SharedEntityInitialize(ref Yotsuba Entidad)
+        public override void SharedEntityInitialize(ref Yotsuba Entidad)
         {
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
         }
     }
