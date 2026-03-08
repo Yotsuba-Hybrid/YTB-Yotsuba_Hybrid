@@ -4,6 +4,7 @@ using System;
 using YotsubaEngine.Core.Component.C_2D;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;
+using YotsubaEngine.Core.System.Contract;
 using YotsubaEngine.Core.System.YotsubaEngineUI;
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Events.YTBEvents;
@@ -16,7 +17,7 @@ namespace YotsubaEngine.Core.System.S_2D
     /// Sistema de renderizado 2D ejecutado después de actualizar el estado del juego.
     /// <para>2D rendering system executed after game state updates.</para>
     /// </summary>
-    public class RenderSystem2D
+    public class RenderSystem2D : IRenderSystem
     {
 
 //-:cnd:noEmit
@@ -58,12 +59,6 @@ namespace YotsubaEngine.Core.System.S_2D
         /// </summary>
         private EventManager EventManager { get; set; }
 
-        /// <summary>
-        /// Entity manager reference.
-        /// Referencia al administrador de entidades.
-        /// </summary>
-        private EntityManager EntityManager { get; set; }
-
         // Example of loading an effect
         //Effect exampleEffect;
 
@@ -72,7 +67,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <para>Initializes the render system and subscriptions.</para>
         /// </summary>
         /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
-        public void InitializeSystem(EntityManager entities)
+        public override void InitializeSystem(EntityManager entities)
         {
             //exampleEffect = YTBGlobalState.ContentManager.Load<Effect>("grayscaleEffect");
 //-:cnd:noEmit
@@ -156,7 +151,7 @@ namespace YotsubaEngine.Core.System.S_2D
             // Rectángulo que representa el área del mundo que la cámara está viendo actualmente.
             Rectangle cameraWorldBounds = Rectangle.Empty;
 
-            Span<TransformComponent> transformComponents = entityManager.TransformComponents.AsSpan();
+            Span<TransformComponent> transformComponents = GetTransformComponentsAsSpan();
 
             if (cameraEntity != null)
             {

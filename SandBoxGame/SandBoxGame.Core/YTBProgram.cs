@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using YotsubaEngine;
+using YotsubaEngine.ActionFiles.YTB_Files;
 using YotsubaEngine.Audio;
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Graphics;
@@ -86,6 +87,12 @@ namespace SandBoxGame.Core
         {
             _graphics = new(this);
 
+//-:cnd:noEmit
+#if !YTB
+            YTBFileToGameData.GameDataProvider = GameDataRegistry.GetGameData;
+#endif
+//+:cnd:noEmit
+
             SetScriptManager(new ScriptRegistry());
             SetModelRegistry(new ModelRegistry());
 
@@ -102,7 +109,7 @@ namespace SandBoxGame.Core
             // Configure screen orientations.
             _graphics.SupportedOrientations = DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight;
             //-:cnd:noEmit
-#if YTB || DEBUG
+#if YTB
             System.Console.WriteLine("[SandBoxGameGame] Constructor start");
 #endif
             //+:cnd:noEmit
@@ -142,7 +149,7 @@ namespace SandBoxGame.Core
 
 
             //-:cnd:noEmit
-#if YTB || DEBUG
+#if YTB
             System.Console.WriteLine("[SandBoxGameGame] _graphics created");
 #endif
             //+:cnd:noEmit
@@ -161,12 +168,11 @@ namespace SandBoxGame.Core
             InitializeGraphicsDevice(_graphics, GraphicsDevice, WINDOW_WIDTH, WINDOW_HEIGHT, IS_FULLSCREEN);
 
             // Precarga de texturas y fuentes generadas por el builder
-            YotsubaGraphicsManager.InitializeAssets(AssetRegister.TextureAssets, AssetRegister.FontAssets);
 
             base.SetConfig();
 
             //-:cnd:noEmit
-#if YTB || DEBUG
+#if YTB
             System.Console.WriteLine("[SandBoxGameGame] InitializeGraphicsDevice called from ctor");
 #endif
             //+:cnd:noEmit
@@ -200,6 +206,8 @@ namespace SandBoxGame.Core
         /// </summary>
         protected override void LoadContent()
         {
+            YotsubaGraphicsManager.InitializeAssets(AssetRegister.TextureAssets, AssetRegister.FontAssets);
+
             base.LoadContent();
         }
 

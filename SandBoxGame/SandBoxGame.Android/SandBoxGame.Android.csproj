@@ -11,16 +11,24 @@
     <Configurations>Debug;Release;YTB</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
+    <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
     <RunAOTCompilation>False</RunAOTCompilation>
+    <AndroidEnableSGenConcurrent>False</AndroidEnableSGenConcurrent>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <RunAOTCompilation>False</RunAOTCompilation>
-    <PublishTrimmed>True</PublishTrimmed>
+    <RunAOTCompilation>false</RunAOTCompilation>
+    <PublishTrimmed>false</PublishTrimmed>
+    <AndroidEnableSGenConcurrent>False</AndroidEnableSGenConcurrent>
+    <Optimize>True</Optimize>
+    <AndroidPackageFormat>apk</AndroidPackageFormat>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='YTB|AnyCPU'">
     <RunAOTCompilation>False</RunAOTCompilation>
-    <PublishTrimmed>True</PublishTrimmed>
+    <PublishTrimmed>false</PublishTrimmed>
+    <AndroidEnableSGenConcurrent>False</AndroidEnableSGenConcurrent>
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>portable</DebugType>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\SandBoxGame.Core\SandBoxGame.Core.csproj" />

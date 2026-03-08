@@ -32,17 +32,11 @@ namespace YotsubaEngine.Core.System.S_2D
         private EventManager EventManager { get; set; }
 
         /// <summary>
-        /// Entity manager reference.
-        /// Referencia al administrador de entidades.
-        /// </summary>
-        private EntityManager EntityManager { get; set; }
-
-        /// <summary>
         /// Inicializa el sistema de física.
         /// <para>Initializes the physics system.</para>
         /// </summary>
         /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
-        public void InitializeSystem(EntityManager @entities)
+        public override void InitializeSystem(EntityManager @entities)
         {
 //-:cnd:noEmit
 #if YTB
@@ -59,7 +53,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <para>Updates physics and moves entities.</para>
         /// </summary>
         /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
-        public void UpdateSystem(GameTime gameTime)
+        public override void UpdateSystem(GameTime gameTime)
         {
 //-:cnd:noEmit
 #if YTB
@@ -72,9 +66,9 @@ namespace YotsubaEngine.Core.System.S_2D
 //+:cnd:noEmit
 
 			if (EntityManager == null) return;
-            Span<Yotsuba> entities = EntityManager.YotsubaEntities.AsSpan();
-            Span<TransformComponent> transformComponents = EntityManager.TransformComponents.AsSpan();
-            Span<RigidBodyComponent2D> rigidbodyComponents = EntityManager.Rigidbody2DComponents.AsSpan();
+            Span<Yotsuba> entities = GetEntitiesAsSpan();
+            Span<TransformComponent> transformComponents = GetTransformComponentsAsSpan();
+            Span<RigidBodyComponent2D> rigidbodyComponents = GetRigidBodyComponentsAsSpan();
 
             // First apply gravity and physics for Platform mode entities
             ApplyPlatformPhysics(entities, rigidbodyComponents, gameTime);
@@ -441,7 +435,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// </summary>
         /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
         /// <param name="time">Tiempo de juego. <para>Game time.</para></param>
-        public void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time)
+        public override void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time)
         {
             //throw new NotImplementedException();
         }
@@ -451,12 +445,12 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <para>Shared entity initialization hook (unused in this system).</para>
         /// </summary>
         /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
-        public void SharedEntityInitialize(ref Yotsuba Entidad)
+        public override void SharedEntityInitialize(ref Yotsuba Entidad)
         {
             //throw new NotImplementedException();
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
         }
     }

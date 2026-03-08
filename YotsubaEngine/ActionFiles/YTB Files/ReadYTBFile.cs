@@ -55,257 +55,226 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 		/// </summary>
 		private static string CompiledConfigPath => Path.Combine(YTBGlobalState.CompiledAssetsPath, GameConfigFolder);
 
-		/// <summary>
-		/// Reads the game and configuration files, creating defaults when needed.
-		/// Método para Leer los archivos del juego.
-		/// Cubre casos donde no existe la carpeta GameConfig o los archivos .ytb.
-		/// </summary>
-		/// <param name="recompilar">Whether to force recompilation. Si se debe forzar la recompilación.</param>
-		/// <returns>Tuple with game info and config. Tupla con datos del juego y configuración.</returns>
-		internal static async Task<(YTBGameInfo, YTBConfig)> ReadYTBFiles(bool recompilar = false)
-		{
-			try
-			{
-				// Verificar y crear archivos si no existen (solo en Windows/desarrollo)
-				if (OperatingSystem.IsWindows())
-				{
-					// Asegurar que existen los archivos necesarios antes de leerlos
-					if (!Directory.Exists(DevelopmentConfigPath) || 
-					    !File.Exists(Path.Combine(DevelopmentConfigPath, JSONGameName)) ||
-					    !File.Exists(Path.Combine(DevelopmentConfigPath, JSONGameConfigName)))
-					{
-						EngineUISystem.SendLog("[ReadYTBFiles] Archivos .ytb no encontrados. Creando archivos por defecto...");
-						WriteYTBFile.CreateYTBGameFile();
-					}
-				}
+        /// <summary>
+        /// Reads the game and configuration files, creating defaults when needed.
+        /// Método para Leer los archivos del juego.
+        /// Cubre casos donde no existe la carpeta GameConfig o los archivos .ytb.
+        /// </summary>
+        /// <param name="recompilar">Whether to force recompilation. Si se debe forzar la recompilación.</param>
+        /// <returns>Tuple with game info and config. Tupla con datos del juego y configuración.</returns>
+        internal static async Task<(YTBGameInfo, YTBConfig)> ReadYTBFiles(bool recompilar = false)
+        {
+            try
+            {
+                // Verificar y crear archivos si no existen (solo en Windows/desarrollo)
+                if (OperatingSystem.IsWindows())
+                {
+                    if (!Directory.Exists(DevelopmentConfigPath) ||
+                        !File.Exists(Path.Combine(DevelopmentConfigPath, JSONGameName)) ||
+                        !File.Exists(Path.Combine(DevelopmentConfigPath, JSONGameConfigName)))
+                    {
+                        EngineUISystem.SendLog("[ReadYTBFiles] Archivos .ytb no encontrados. Creando archivos por defecto...");
+                        WriteYTBFile.CreateYTBGameFile();
+                    }
+                }
 
-				if (recompilar)
-				{
-					// La recompilación solo funciona en Windows donde hay acceso al sistema de archivos
-					if (!OperatingSystem.IsWindows())
-					{
-//-:cnd:noEmit
+                if (recompilar)
+                {
+                    if (!OperatingSystem.IsWindows())
+                    {
+                        //-:cnd:noEmit
 #if YTB
 						EngineUISystem.SendLog("Recompilación no disponible en esta plataforma");
 #endif
-//+:cnd:noEmit
-					}
-					else
-					{
-						string ytbFile = Path.Combine(DevelopmentConfigPath, JSONGameName);
-						string destinyFile = Path.Combine(CompiledConfigPath, JSONGameName);
+                        //+:cnd:noEmit
+                    }
+                    else
+                    {
+                        string ytbFile = Path.Combine(DevelopmentConfigPath, JSONGameName);
+                        string destinyFile = Path.Combine(CompiledConfigPath, JSONGameName);
 
-						// Fix: Read the entire file content and deserialize/serialize to minify
-						// This properly handles pretty-printed JSON with whitespace and newlines
-						string jsonContent = await File.ReadAllTextAsync(ytbFile);
-						
-						// Deserialize and re-serialize without indentation to create minified JSON
-						try
-						{
-							var gameData = JsonSerializer.Deserialize<YTBGameInfo>(jsonContent, YotsubaJsonContext.Default.YTBGameInfo);
-							string minifiedJson = JsonSerializer.Serialize(gameData, YotsubaJsonContext.Default.YTBGameInfo);
+                        try
+                        {
+                            // Optimización: Leer y escribir usando Streams para minificar
+                            using (var readStream = File.OpenRead(ytbFile))
+                            {
+                                var gameData = await JsonSerializer.DeserializeAsync<YTBGameInfo>(readStream, YotsubaJsonContext.Default.YTBGameInfo);
 
-							Directory.CreateDirectory(Path.GetDirectoryName(destinyFile));
-							await File.WriteAllTextAsync(destinyFile, minifiedJson);
-						}
-						catch (JsonException jsonEx)
-						{
-							EngineUISystem.SendLog($"[ReadYTBFiles] Error parsing YTB file '{ytbFile}': {jsonEx.Message}");
-							throw;
-						}
-					}
-				}
-			}
-			catch (Exception ex)
-			{
-//-:cnd:noEmit
+                                Directory.CreateDirectory(Path.GetDirectoryName(destinyFile));
+                                using (var writeStream = File.Create(destinyFile))
+                                {
+                                    await JsonSerializer.SerializeAsync(writeStream, gameData, YotsubaJsonContext.Default.YTBGameInfo);
+                                }
+                            }
+                        }
+                        catch (JsonException jsonEx)
+                        {
+                            EngineUISystem.SendLog($"[ReadYTBFiles] Error parsing YTB file '{ytbFile}': {jsonEx.Message}");
+                            throw;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //-:cnd:noEmit
 #if YTB
 				_= new GameWontRun(ex, YTBErrors.GameEngineCannotUpdateFiles);
 #endif
-//+:cnd:noEmit
-			}
+                //+:cnd:noEmit
+            }
 
-			Task<string> JSONGame;
-			Task<string> JSONGameConfig;
+            YTBGameInfo GameInfo = null;
+            YTBConfig GameConfig = null;
 
-			if (OperatingSystem.IsWindows())
-			{
-				var gameFilePath = Path.Combine(CompiledConfigPath, JSONGameName);
-				var configFilePath = Path.Combine(CompiledConfigPath, JSONGameConfigName);
-				
-				JSONGame = File.ReadAllTextAsync(gameFilePath);
-				JSONGameConfig = File.ReadAllTextAsync(configFilePath);
-			}
-			else // IMPLEMENTACIÓN ANDROID
-			{
-				// En Android, TitleContainer necesita rutas RELATIVAS desde la carpeta assets/
-				// No rutas absolutas del sistema de archivos
-				string gameFilePathRelative = Path.Combine(YTBGlobalState.CompiledAssetsFolderName, GameConfigFolder, JSONGameName);
-				string configFilePathRelative = Path.Combine(YTBGlobalState.CompiledAssetsFolderName, GameConfigFolder, JSONGameConfigName);
+            if (OperatingSystem.IsWindows())
+            {
+                var gameFilePath = Path.Combine(CompiledConfigPath, JSONGameName);
+                var configFilePath = Path.Combine(CompiledConfigPath, JSONGameConfigName);
 
-				// Función local para leer el stream del asset y convertirlo a string
-				/// <summary>
-				/// Reads a packaged asset into a string.
-				/// Lee un asset empaquetado y lo convierte en string.
-				/// </summary>
-				/// <param name="path">Asset path. Ruta del asset.</param>
-				/// <returns>Asset content. Contenido del asset.</returns>
-				string ReadAssetContent(string path)
-				{
-					//path = "Content" + path.Split("Content").LastOrDefault();
-					try
-					{
-						// TitleContainer busca dentro de 'assets/' en el APK.
-						// Normalizar los slashes a '/' para Android.
+                if (File.Exists(gameFilePath))
+                {
+                    using (var stream = File.OpenRead(gameFilePath))
+                        GameInfo = await JsonSerializer.DeserializeAsync<YTBGameInfo>(stream, YotsubaJsonContext.Default.YTBGameInfo);
+                }
 
-						string androidPath;
+                if (File.Exists(configFilePath))
+                {
+                    using (var stream = File.OpenRead(configFilePath))
+                        GameConfig = await JsonSerializer.DeserializeAsync<YTBConfig>(stream, YotsubaJsonContext.Default.YTBConfig);
+                }
+            }
+            else // IMPLEMENTACIÓN ANDROID SUPER OPTIMIZADA
+            {
+                string gameFilePathRelative = Path.Combine(YTBGlobalState.CompiledAssetsFolderName, GameConfigFolder, JSONGameName).Replace('\\', '/');
+                string configFilePathRelative = Path.Combine(YTBGlobalState.CompiledAssetsFolderName, GameConfigFolder, JSONGameConfigName).Replace('\\', '/');
 
-						if (path.Contains("\\"))
-							androidPath = path.Replace('\\', '/');
-						else
-							androidPath = path;
-//-:cnd:noEmit
+                /// <summary>
+                /// Lee un asset empaquetado y lo deserializa directamente sin crear strings en memoria.
+                /// </summary>
+                async Task<T> ReadAndDeserializeAssetAsync<T>(string path, System.Text.Json.Serialization.Metadata.JsonTypeInfo<T> typeInfo)
+                {
+                    try
+                    {
+                        //-:cnd:noEmit
 #if YTB
-							EngineUISystem.SendLog($"Android: Intentando leer asset en: {androidPath}");
+						EngineUISystem.SendLog($"Android: Intentando leer asset directo a objeto: {path}");
 #endif
-//+:cnd:noEmit
-
-						using (var stream = TitleContainer.OpenStream(androidPath))
-						using (var reader = new StreamReader(stream))
-						{
-							return reader.ReadToEnd();
-						}
-					}
-					catch (FileNotFoundException fnfEx)
-					{
-//-:cnd:noEmit
+                        //+:cnd:noEmit
+                        using (var stream = TitleContainer.OpenStream(path))
+                        {
+                            // Magia aquí: Pasa del Stream del ZIP directo al objeto C# usando Source Generators
+                            return await JsonSerializer.DeserializeAsync<T>(stream, typeInfo);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        //-:cnd:noEmit
 #if YTB
-						EngineUISystem.SendLog($"Android: Archivo no encontrado: {path} - {fnfEx.Message}");
+						EngineUISystem.SendLog($"Android: Error leyendo/deserializando asset {path}: {ex.Message}");
 #endif
-//+:cnd:noEmit
-						return string.Empty;
-					}
-					catch (Exception ex)
-					{
-//-:cnd:noEmit
+                        //+:cnd:noEmit
+                        return default;
+                    }
+                }
+
+                // Ejecutamos ambas lecturas de stream en paralelo
+                var gameTask = ReadAndDeserializeAssetAsync(gameFilePathRelative, YotsubaJsonContext.Default.YTBGameInfo);
+                var configTask = ReadAndDeserializeAssetAsync(configFilePathRelative, YotsubaJsonContext.Default.YTBConfig);
+
+                await Task.WhenAll(gameTask, configTask);
+
+                GameInfo = gameTask.Result;
+                GameConfig = configTask.Result;
+            }
+
+            // Verificación de nulidad (Reemplaza el antiguo String.IsNullOrEmpty)
+            if (GameInfo == null)
+            {
+                if (OperatingSystem.IsWindows())
+                {
+                    EngineUISystem.SendLog("[ReadYTBFiles] Archivo de juego vacío o no encontrado. Creando archivo por defecto...");
+
+                    var cameraEntity = new YTBEntity
+                    {
+                        Name = "Camera",
+                        Components = new List<YTBComponents> { EntityYTBXmlTemplate.CameraTemplate() }
+                    };
+
+                    var entityNameIndex = cameraEntity.Components[0].Propiedades.FindIndex(x => x.Item1 == "EntityName");
+                    if (entityNameIndex >= 0)
+                        cameraEntity.Components[0].Propiedades[entityNameIndex] = new Tuple<string, string>("EntityName", "Camera");
+                    else
+                        cameraEntity.Components[0].Propiedades.Add(new Tuple<string, string>("EntityName", "Camera"));
+
+                    var defaultEntity = EntityYTBXmlTemplate.GenerateNew();
+                    defaultEntity.Name = "First Entity";
+
+                    GameInfo = new YTBGameInfo
+                    {
+                        Scene = new List<YTBScene>
+                        {
+                            new YTBScene
+                            {
+                                Name = "First Scene",
+                                Entities = new List<YTBEntity> { cameraEntity, defaultEntity }
+                            }
+                        }
+                    };
+
+                    var gameFilePath = Path.Combine(CompiledConfigPath, JSONGameName);
+                    Directory.CreateDirectory(Path.GetDirectoryName(gameFilePath));
+
+                    using (var writeStream = File.Create(gameFilePath))
+                    {
+                        await JsonSerializer.SerializeAsync(writeStream, GameInfo, YotsubaJsonContext.Default.YTBGameInfo);
+                    }
+                }
+                else
+                {
+                    //-:cnd:noEmit
 #if YTB
-						EngineUISystem.SendLog($"Android: Error leyendo asset {path}: {ex.Message}");
+					EngineUISystem.SendLog($"Error Fatal: No se encontró o no se pudo leer el archivo del juego en el APK.");
 #endif
-//+:cnd:noEmit
-						return string.Empty;
-					}
-				}
+                    //+:cnd:noEmit
+                    throw new FileNotFoundException($"Es Android y no se encontró el archivo en los assets");
+                }
+            }
 
-				// Envolvemos la lectura síncrona en un Task para mantener compatibilidad
-				JSONGame = Task.Run(() => ReadAssetContent(gameFilePathRelative));
-				JSONGameConfig = Task.Run(() => ReadAssetContent(configFilePathRelative));
-			}
+            // Manejar configuración vacía o inexistente
+            if (GameConfig == null)
+            {
+                EngineUISystem.SendLog("[ReadYTBFiles] Archivo de configuración vacío o no encontrado. Creando configuración por defecto...");
 
-			await Task.WhenAll(JSONGame, JSONGameConfig);
+                GameConfig = new YTBConfig
+                {
+                    Author = "YourName",
+                    EngineVersion = "1.0",
+                    GameName = "YotsubaGame"
+                };
 
-			// Verificación de nulidad o vacío
-			if (String.IsNullOrEmpty(JSONGame.Result))
-			{
-				if (OperatingSystem.IsWindows())
-				{
-					EngineUISystem.SendLog("[ReadYTBFiles] Archivo de juego vacío o no encontrado. Creando archivo por defecto...");
-					
-					// Crear escena por defecto con cámara
-					var cameraEntity = new YTBEntity
-					{
-						Name = "Camera",
-						Components = new List<YTBComponents>
-						{
-							EntityYTBXmlTemplate.CameraTemplate()
-						}
-					};
-					
-					// Asegurar que la cámara tenga el EntityName correcto
-					var cameraComponent = cameraEntity.Components[0];
-					var entityNameIndex = cameraComponent.Propiedades.FindIndex(x => x.Item1 == "EntityName");
-					if (entityNameIndex >= 0)
-					{
-						cameraComponent.Propiedades[entityNameIndex] = new Tuple<string, string>("EntityName", "Camera");
-					}
-					else
-					{
-						cameraComponent.Propiedades.Add(new Tuple<string, string>("EntityName", "Camera"));
-					}
+                if (OperatingSystem.IsWindows())
+                {
+                    var configFilePath = Path.Combine(CompiledConfigPath, JSONGameConfigName);
+                    Directory.CreateDirectory(Path.GetDirectoryName(configFilePath));
 
-					var defaultEntity = EntityYTBXmlTemplate.GenerateNew();
-					defaultEntity.Name = "First Entity";
+                    using (var writeStream = File.Create(configFilePath))
+                    {
+                        await JsonSerializer.SerializeAsync(writeStream, GameConfig, YotsubaJsonContext.Default.YTBConfig);
+                    }
+                }
+            }
 
-					var defaultGameInfo = new YTBGameInfo
-					{
-						Scene = new List<YTBScene>
-						{
-							new YTBScene
-							{
-								Name = "First Scene",
-								Entities = new List<YTBEntity> { cameraEntity, defaultEntity }
-							}
-						}
-					};
+            EngineUISystem.SendLog("Archivos leídos correctamente...");
 
-					string defaultGameInfoJson = JsonSerializer.Serialize(defaultGameInfo, YotsubaJsonContext.Default.YTBGameInfo);
-					var gameFilePath = Path.Combine(CompiledConfigPath, JSONGameName);
-					var fullPath = gameFilePath;
-
-					Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
-					File.WriteAllText(fullPath, defaultGameInfoJson);
-
-					JSONGame = Task.FromResult(defaultGameInfoJson);
-				}
-				else
-				{
-//-:cnd:noEmit
-#if YTB
-					EngineUISystem.SendLog($"Error Fatal: No se encontró el archivo del juego en el APK.");
-#endif
-//+:cnd:noEmit
-					throw new FileNotFoundException($"Es Android y no se encontró el archivo en los assets");
-				}
-			}
-
-			YTBGameInfo GameInfo = JsonSerializer.Deserialize<YTBGameInfo>(JSONGame.Result, YotsubaJsonContext.Default.YTBGameInfo);
-
-			// Manejar configuración vacía o inexistente
-			YTBConfig GameConfig;
-			if (!String.IsNullOrEmpty(JSONGameConfig.Result))
-			{
-				GameConfig = JsonSerializer.Deserialize<YTBConfig>(JSONGameConfig.Result, YotsubaJsonContext.Default.YTBConfig);
-			}
-			else
-			{
-				EngineUISystem.SendLog("[ReadYTBFiles] Archivo de configuración vacío o no encontrado. Creando configuración por defecto...");
-				
-				GameConfig = new YTBConfig
-				{
-					Author = "YourName",
-					EngineVersion = "1.0",
-					GameName = "YotsubaGame"
-				};
-
-				// Guardar la configuración por defecto si estamos en Windows
-				if (OperatingSystem.IsWindows())
-				{
-					var configFilePath = Path.Combine(CompiledConfigPath, JSONGameConfigName);
-					Directory.CreateDirectory(Path.GetDirectoryName(configFilePath));
-					File.WriteAllText(configFilePath, JsonSerializer.Serialize(GameConfig, YotsubaJsonContext.Default.YTBConfig));
-				}
-			}
-
-			EngineUISystem.SendLog("Archivos leídos correctamente...");
-
-			return await Task.FromResult<(YTBGameInfo, YTBConfig)>((GameInfo, GameConfig));
-		}
-
-		/// <summary>
-		/// Reads only the game data file.
-		/// Método para leer solo el archivo del juego
-		/// </summary>
-		/// <returns>Game info. Información del juego.</returns>
-		internal static async Task<YTBGameInfo> ReadYTBGameFile()
+            return (GameInfo, GameConfig);
+        }
+        /// <summary>
+        /// Reads only the game data file.
+        /// Método para leer solo el archivo del juego
+        /// </summary>
+        /// <returns>Game info. Información del juego.</returns>
+        internal static async Task<YTBGameInfo> ReadYTBGameFile()
 		{
 			EngineUISystem.SendLog("Leyendo Archivos del juego...");
 			var gameFilePath = Path.Combine(DevelopmentConfigPath, JSONGameName);

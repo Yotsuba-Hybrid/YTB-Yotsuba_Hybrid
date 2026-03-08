@@ -37,7 +37,7 @@ public class Graphics3D
     /// <param name="color">Color base. <para>Base color.</para></param>
     /// <param name="view">Matriz de vista. <para>View matrix.</para></param>
     /// <param name="projection">Matriz de proyección. <para>Projection matrix.</para></param>
-    public void DrawBox(Vector3 center, Vector3 size, Color color, Matrix view, Matrix projection)
+    public void DrawBox(Vector3 center, Vector3 size, Color color, Matrix view, Matrix projection, float rotationX = 0f, float rotationY = 0)
     {
         // 1. Calcular las dimensiones medias para encontrar las esquinas
         float x = size.X / 2f;
@@ -122,7 +122,12 @@ public class Graphics3D
         vertices[i++] = new VertexPositionColor(TRF, sideColor);
 
         // 5. Configurar Effect y Dibujar
-        _basicEffect.World = Matrix.Identity;
+        float yaw = MathHelper.ToRadians(rotationX);
+        float xaw = MathHelper.ToRadians(rotationY);
+        Matrix world = Matrix.CreateRotationY(yaw)
+                       * Matrix.CreateRotationX(xaw);
+
+        _basicEffect.World = world;
         _basicEffect.View = view;
         _basicEffect.Projection = projection;
         _basicEffect.VertexColorEnabled = true;

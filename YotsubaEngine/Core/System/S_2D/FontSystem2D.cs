@@ -29,11 +29,6 @@ namespace YotsubaEngine.Core.System.S_2D
 
 #endif
 //+:cnd:noEmit
-        /// <summary>
-        /// Stores the entity manager reference for this system.
-        /// Almacena la referencia al administrador de entidades de este sistema.
-        /// </summary>
-        private EntityManager Entities;
 
         /// <summary>
         /// Obtiene la caché de fuentes sprite cargadas por nombre de recurso.
@@ -46,9 +41,9 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <para>Initializes the system with the shared entity manager.</para>
         /// </summary>
         /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
-        public void InitializeSystem(EntityManager entities)
+        public override void InitializeSystem(EntityManager entities)
         {
-            Entities = entities;
+            EntityManager = entities;
 
 //-:cnd:noEmit
 #if YTB
@@ -63,11 +58,11 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <para>Loads font assets for entities that include font components.</para>
         /// </summary>
         /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
-        public void SharedEntityInitialize(ref Yotsuba Entidad)
+        public override void SharedEntityInitialize(ref Yotsuba Entidad)
         {
 
                 if (Entidad.HasNotComponent(YTBComponent.Font)) return;
-                ref FontComponent2D fuenteComp = ref Entities.Font2DComponents[Entidad];
+                ref FontComponent2D fuenteComp = ref GetFontComponentsAsSpan()[Entidad.Id];
 
                 if (Fuentes.ContainsKey(fuenteComp.Font))
                 {
@@ -152,7 +147,7 @@ namespace YotsubaEngine.Core.System.S_2D
 
             if (cameraEntity != null)
             {
-                ref var camTransform = ref entityManager.TransformComponents[cameraEntity.EntityToFollow];
+                ref var camTransform = ref GetTransformComponentsAsSpan()[cameraEntity.EntityToFollow];
                 var viewport = brocha.GraphicsDevice.Viewport;
                 Vector2 screenCenter = new Vector2(viewport.Width / 2f, viewport.Height / 2f);
 
@@ -207,9 +202,9 @@ namespace YotsubaEngine.Core.System.S_2D
                 rasterizerState: RasterizerState.CullCounterClockwise
             );
 
-            Span<FontComponent2D> fontComponents = Entities.Font2DComponents.AsSpan();
-            Span<TransformComponent> transformComponents = Entities.TransformComponents.AsSpan();
-            foreach (ref Yotsuba entidad in Entities.YotsubaEntities.AsSpan())
+            Span<FontComponent2D> fontComponents = GetFontComponentsAsSpan();
+            Span<TransformComponent> transformComponents = GetTransformComponentsAsSpan();
+            foreach (ref Yotsuba entidad in GetEntitiesAsSpan())
             {
                 int entityID = entidad.Id;
 
@@ -242,7 +237,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// </summary>
         /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
         /// <param name="time">Tiempo de juego. <para>Game time.</para></param>
-        public void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time)
+        public override void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time)
         {
             // No per-entity update logic required for fonts
         }
@@ -253,12 +248,12 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <para>Updates the font system each frame.</para>
         /// </summary>
         /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
-        public void UpdateSystem(GameTime gameTime)
-        {
+        public override void UpdateSystem(GameTime gameTime)
+        { 
             // No system-level update logic required for fonts
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
         }
 

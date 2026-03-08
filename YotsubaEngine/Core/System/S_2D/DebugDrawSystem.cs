@@ -19,7 +19,6 @@ namespace YotsubaEngine.Core.System.S_2D
     public class DebugDrawSystem : ISystem
     {
         private Texture2D _pixel; // Textura de 1x1 para dibujar líneas y rectángulos
-        private EntityManager _entityManager;
         private FontSystem2D _fontSystem; // Referencia al sistema de fuentes para medir texto
         private const int GRID_SIZE = 100; // Tamaño de cada celda de la cuadrícula en píxeles
         private const int FONT_HANDLE_SIZE = 24; // Tamaño del recuadro de arrastre para texto
@@ -32,7 +31,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <param name="graphicsDevice">Dispositivo gráfico. <para>Graphics device.</para></param>
         public void InitializeSystem(EntityManager entityManager, GraphicsDevice graphicsDevice)
         {
-            _entityManager = entityManager;
+            EntityManager    = entityManager;
             YTBGame game = (YTBGame)YTBGame.Instance;
             _fontSystem = game.SceneManager.CurrentScene.FontSystem2D;
 
@@ -63,7 +62,7 @@ namespace YotsubaEngine.Core.System.S_2D
             Matrix effectiveViewMatrix = viewMatrix;
             Rectangle effectiveCameraBounds = cameraWorldBounds;
 
-            if (effectiveCameraBounds == Rectangle.Empty && _entityManager?.Camera != null)
+            if (effectiveCameraBounds == Rectangle.Empty && EntityManager?.Camera != null)
             {
 //-:cnd:noEmit
 #if YTB
@@ -103,11 +102,11 @@ namespace YotsubaEngine.Core.System.S_2D
 //+:cnd:noEmit
                     ;
 
-                ref var camTransform = ref _entityManager.TransformComponents[_entityManager.Camera.EntityToFollow];
+                ref var camTransform = ref GetTransformComponentsAsSpan()[EntityManager.Camera.EntityToFollow];
                 var viewport = spriteBatch.GraphicsDevice.Viewport;
                 Vector2 screenCenter = new Vector2(viewport.Width / 2f, viewport.Height / 2f);
 
-                effectiveViewMatrix = _entityManager.Camera.Get2DViewMatrix(
+                effectiveViewMatrix = EntityManager.Camera.Get2DViewMatrix(
                     new Vector2(camTransform.Position.X, camTransform.Position.Y) + offset,
                     screenCenter,
                     currentZoom,
@@ -207,9 +206,9 @@ namespace YotsubaEngine.Core.System.S_2D
         private void DrawEntityCollisions(SpriteBatch spriteBatch)
         {
 
-            Span<TransformComponent> transformComponents = _entityManager.TransformComponents.AsSpan();
-            Span<RigidBodyComponent2D> rigidBodyComponent2Ds = _entityManager.Rigidbody2DComponents.AsSpan();
-            foreach (ref Yotsuba entity in _entityManager.YotsubaEntities.AsSpan())
+            Span<TransformComponent> transformComponents = EntityManager.TransformComponents.AsSpan();
+            Span<RigidBodyComponent2D> rigidBodyComponent2Ds = EntityManager.Rigidbody2DComponents.AsSpan();
+            foreach (ref Yotsuba entity in GetEntitiesAsSpan())
             {
                 // Solo dibujar entidades con Transform y RigidBody
                 if (!entity.HasComponent(YTBComponent.Transform) || !entity.HasComponent(YTBComponent.Rigibody) || entity.HasComponent(YTBComponent.TileMap))
@@ -240,9 +239,9 @@ namespace YotsubaEngine.Core.System.S_2D
         /// </summary>
         private void DrawTilemapCollisions(SpriteBatch spriteBatch)
         {
-            Span<TileMapComponent2D> tileMapComponent2Ds = _entityManager.TileMapComponent2Ds.AsSpan();
-            Span<TransformComponent> transformComponents = _entityManager.TransformComponents.AsSpan();
-            foreach (ref Yotsuba entity in _entityManager.YotsubaEntities.AsSpan())
+            Span<TileMapComponent2D> tileMapComponent2Ds = GetTilemapComponentsAsSpan();
+            Span<TransformComponent> transformComponents = GetTransformComponentsAsSpan();
+            foreach (ref Yotsuba entity in GetEntitiesAsSpan())
             {
                 // Solo entidades con tilemap
                 if (!entity.HasComponent(YTBComponent.TileMap))
@@ -357,9 +356,9 @@ namespace YotsubaEngine.Core.System.S_2D
         {
             if (_fontSystem == null) return;
 
-            Span<FontComponent2D> fontComponent2Ds = _entityManager.Font2DComponents.AsSpan();
-            Span<TransformComponent> transformComponents = _entityManager.TransformComponents.AsSpan();
-            foreach (ref Yotsuba entity in _entityManager.YotsubaEntities.AsSpan())
+            Span<FontComponent2D> fontComponent2Ds = GetFontComponentsAsSpan();
+            Span<TransformComponent> transformComponents = GetTransformComponentsAsSpan();
+            foreach (ref Yotsuba entity in GetEntitiesAsSpan())
             {
                 // Solo entidades con FontComponent y Transform
                 if (!entity.HasComponent(YTBComponent.Font) || !entity.HasComponent(YTBComponent.Transform))
@@ -399,27 +398,27 @@ namespace YotsubaEngine.Core.System.S_2D
             }
         }
 
-        public void InitializeSystem(EntityManager entities)
+        public override void InitializeSystem(EntityManager entities)
         {
             throw new NotImplementedException();
         }
 
-        public void SharedEntityInitialize(ref Yotsuba Entidad)
+        public override void SharedEntityInitialize(ref Yotsuba Entidad)
         {
             throw new NotImplementedException();
         }
 
-        public void UpdateSystem(GameTime gameTime)
+        public override void UpdateSystem(GameTime gameTime)
         {
             throw new NotImplementedException();
         }
 
-        public void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time)
+        public override void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time)
         {
             throw new NotImplementedException();
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
         }
     }
