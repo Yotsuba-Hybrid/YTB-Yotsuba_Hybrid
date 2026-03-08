@@ -21,7 +21,6 @@ using YotsubaEngine.Events.YTBEvents.EngineEvents;
 using YotsubaEngine.Exceptions;
 using YotsubaEngine.Graphics;
 using YotsubaEngine.Graphics.Shaders;
-using YotsubaEngine.HighestPerformanceTypes;
 using YotsubaEngine.Templates;
 using static YotsubaEngine.Core.Component.C_AGNOSTIC.RigidBody;
 using static YotsubaEngine.Core.System.S_AGNOSTIC.InputSystem;
@@ -208,6 +207,14 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
         public static ContentManager ContentManager => YTBGlobalState.ContentManager;
 
         /// <summary>
+        /// Proveedor externo de datos del juego generados en tiempo de compilación.
+        /// Cuando está configurado, GenerateSceneManager lo usa en lugar de leer archivos .ytb.
+        /// <para>External game data provider generated at compile time.
+        /// When set, GenerateSceneManager uses it instead of reading .ytb files.</para>
+        /// </summary>
+        internal static Func<(YTBGameInfo, YTBConfig)> GameDataProvider { get; set; }
+
+        /// <summary>
         /// Actualiza el estado del administrador de escenas desde archivos YTB.
         /// <para>Updates the current scene manager state from YTB files.</para>
         /// </summary>
@@ -251,9 +258,14 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
         public static SceneManager GenerateSceneManager(GraphicsDeviceManager graphicsDeviceManager)
         {
             GraphicsDeviceManager = graphicsDeviceManager;
+#if YTB
             WriteYTBFile.RefactorYTBFile().GetAwaiter().GetResult();
-
-            var game = ReadYTBFile.ReadYTBFiles(false).GetAwaiter().GetResult();
+#endif
+            (YTBGameInfo, YTBConfig) game;
+            if (GameDataProvider != null)
+                game = GameDataProvider();
+            else
+                game = ReadYTBFile.ReadYTBFiles(false).GetAwaiter().GetResult();
 
             SceneManager sceneManager = new(graphicsDeviceManager);
             BuildSceneManager(sceneManager, game.Item1);

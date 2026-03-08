@@ -99,14 +99,9 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// Objetos 3D de la escena.
         /// <para>3D objects in the scene.</para>
         /// </summary>
-        public YTB<Object3D> Object3Ds = new YTB<Object3D>();
+        public YTB<YTBModelComponent3D> YtbModelComponents = new YTB<YTBModelComponent3D>();
 
-        /// <summary>
-        /// Colección de colecciones de objetos 3D.
-        /// <para>Collection of 3D object collections.</para>
-        /// </summary>
-        public YTB<ListObject3D> StorageObjectS3D = new YTB<ListObject3D>();
-
+        
         /// <summary>
         /// Crea un administrador de entidades vacío.
         /// <para>Creates an empty entity manager.</para>
@@ -203,16 +198,10 @@ namespace YotsubaEngine.Core.YotsubaGame
                     $"Componente: {typeof(ShaderComponent)}. " +
                     $"Index {Index} != {ComponentIndex}");
 
-            if (StorageObjectS3D.Add(default, out ComponentIndex) != Index)
+            if (YtbModelComponents.Add(default, out ComponentIndex) != Index)
                 throw new AddComponentInDiferentEntityIndexException(
                     $"Componente ingreso a un índice diferente al de su entidad asociada. " +
-                    $"Componente: {typeof(ListObject3D)}. " +
-                    $"Index {Index} != {ComponentIndex}");
-
-            if (Object3Ds.Add(default, out ComponentIndex) != Index)
-                throw new AddComponentInDiferentEntityIndexException(
-                    $"Componente ingreso a un índice diferente al de su entidad asociada. " +
-                    $"Componente: {typeof(Object3D)}. " +
+                    $"Componente: {typeof(YTBModelComponent3D)}. " +
                     $"Index {Index} != {ComponentIndex}");
         }
         /// <summary>
@@ -377,27 +366,15 @@ namespace YotsubaEngine.Core.YotsubaGame
         }
 
         /// <summary>
-        /// Agrega un objeto de almacenamiento 3D a la colección o escena.
-        /// <para>Adds a new 3D storage object to the collection or scene.</para>
-        /// </summary>
-        /// <param name="entity">Entidad objetivo. <para>Target entity.</para></param>
-        /// <param name="component">Componente de almacenamiento 3D. <para>3D storage component.</para></param>
-        public void AddStorageObject3D(Yotsuba entity, ListObject3D component)
-        {
-            YotsubaEntities[entity.Id].AddComponent(YTBComponent.StorageObjects3D);
-            StorageObjectS3D[(uint)entity.Id] = component;
-        }
-
-        /// <summary>
         /// Agrega un objeto 3D a la colección o escena.
         /// <para>Adds a new 3D object to the collection or scene.</para>
         /// </summary>
         /// <param name="entity">Entidad objetivo. <para>Target entity.</para></param>
         /// <param name="component">Componente de objeto 3D. <para>3D object component.</para></param>
-        public void AddObject3D(Yotsuba entity, Object3D component)
+        public void AddYTBObject3D(Yotsuba entity, YTBModelComponent3D component)
         {
-            YotsubaEntities[entity.Id].AddComponent(YTBComponent.Object3D);
-            Object3Ds[(uint)entity.Id] = component;
+            YotsubaEntities[entity.Id].AddComponent(YTBComponent.YTBModel3D);
+            YtbModelComponents[(uint)entity.Id] = component;
         }
     }
 }
