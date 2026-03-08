@@ -26,17 +26,11 @@ namespace YotsubaEngine.Core.System.S_2D
         private EventManager EventManager { get; set; }
 
         /// <summary>
-        /// Entity manager reference.
-        /// Referencia al EntityManager para manejar entidades y componentes.
-        /// </summary>
-        private EntityManager EntityManager { get; set; }
-
-        /// <summary>
         /// Inicializa el sistema de animaciones.
         /// <para>Initializes the animation system.</para>
         /// </summary>
         /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
-        public void InitializeSystem(EntityManager @entities)
+        public override void InitializeSystem(EntityManager @entities)
         {
 
 			EventManager = EventManager.Instance;
@@ -75,7 +69,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <para>Updates animations each frame.</para>
         /// </summary>
         /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
-        public void UpdateSystem(GameTime gameTime)
+        public override void UpdateSystem(GameTime gameTime)
         {
 //-:cnd:noEmit
 #if YTB
@@ -86,10 +80,10 @@ namespace YotsubaEngine.Core.System.S_2D
 #endif
             //+:cnd:noEmit
 
-            Span<AnimationComponent2D> animationsComponents = EntityManager.Animation2DComponents.AsSpan();
-            Span<SpriteComponent2D> spriteComponents = EntityManager.Sprite2DComponents.AsSpan();
+            Span<AnimationComponent2D> animationsComponents = GetAnimationComponentsAsSpan();
+            Span<SpriteComponent2D> spriteComponents = GetSpriteComponentsAsSpan();
             if (EntityManager == null) return;
-            foreach (ref Yotsuba entity in EntityManager.YotsubaEntities.AsSpan())
+            foreach (ref Yotsuba entity in GetEntitiesAsSpan())
             {
                 if (!entity.HasComponent(YTBComponent.Animation) || !entity.HasComponent(YTBComponent.Sprite)) continue;
                 ref AnimationComponent2D animationComponent = ref animationsComponents[entity.Id];
@@ -122,7 +116,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// </summary>
         /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
         /// <param name="time">Tiempo de juego. <para>Game time.</para></param>
-        public void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time)
+        public override void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time)
         {
             //throw new NotImplementedException();
         }
@@ -132,12 +126,12 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <para>Shared entity initialization hook (unused in this system).</para>
         /// </summary>
         /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
-        public void SharedEntityInitialize(ref Yotsuba Entidad)
+        public override void SharedEntityInitialize(ref Yotsuba Entidad)
         {
             //throw new NotImplementedException();
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
         }
     }

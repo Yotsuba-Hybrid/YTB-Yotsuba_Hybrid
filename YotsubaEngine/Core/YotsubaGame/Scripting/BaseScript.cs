@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using YotsubaEngine.Audio;
 using YotsubaEngine.Core.Component.C_2D;
+using YotsubaEngine.Core.Component.C_3D;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.YotsubaEngineUI;
@@ -518,6 +519,26 @@ namespace YotsubaEngine.Core.YotsubaGame.Scripting
         public ref ScriptComponent GetScriptComponent(Yotsuba entity) => ref EntityManager.ScriptComponents[entity.Id];
 
         /// <summary>
+        /// Obtiene componente de modelo 3D nativo del YTB para la entidad actual.
+        /// </summary>
+        /// <returns></returns>
+        public ref YTBModelComponent3D GetYTBModelComponent3D() => ref GetYTBModelComponent3D(Entity.Id);
+
+        /// <summary>
+        /// Obtiene el componente YTB de modelo 3D para un id de entidad específico.
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public ref YTBModelComponent3D GetYTBModelComponent3D(Yotsuba entity) => ref GetYTBModelComponent3D(entity.Id);
+
+        /// <summary>
+        /// Obtiene el componente YTB de modelo 3D para una entidad específica.
+        /// </summary>
+        /// <param name="entityId"></param>
+        /// <returns></returns>
+        public ref YTBModelComponent3D GetYTBModelComponent3D(int entityId) => ref EntityManager.YtbModelComponents[entityId];
+
+        /// <summary>
         /// Obtiene el componente de cámara activo.
         /// <para>Gets the active camera component.</para>
         /// </summary>
@@ -568,6 +589,40 @@ namespace YotsubaEngine.Core.YotsubaGame.Scripting
             }
 
             throw new EntityDoesNotExist("GetEntity", entityName);
+        }
+
+        /// <summary>
+        /// Retorna una referencia a la primera entidad cuyo nombre coincida, o <c>default</c> si no se encuentra ninguna.
+        /// A diferencia de <see cref="GetEntity(string)"/>, este método no lanza una excepción si la entidad no existe.
+        /// Usa <see cref="IsDefaultEntity"/> para verificar el resultado.
+        /// <para>Returns a reference to the first entity whose name matches, or <c>default</c> if none is found.
+        /// Unlike <see cref="GetEntity(string)"/>, this method does not throw if the entity does not exist.
+        /// Use <see cref="IsDefaultEntity"/> to validate the result.</para>
+        /// </summary>
+        /// <param name="name">Nombre de la entidad a buscar. <para>Name of the entity to look up.</para></param>
+        /// <returns>
+        /// Referencia a la entidad encontrada, o <c>default</c> si no existe ninguna con ese nombre.
+        /// <para>Reference to the found entity, or <c>default</c> if no entity with that name exists.</para>
+        /// </returns>
+        public ref Yotsuba GetEntityByNameOrDefault(string name)
+        {
+            return ref EntityManager.YotsubaEntities.Find(x => x.Name == name);
+        }
+
+        /// <summary>
+        /// Verifica si la entidad especificada es el valor <c>default</c>, es decir, si no fue encontrada o no fue inicializada.
+        /// Útil para validar el resultado de <see cref="GetEntityByNameOrDefault"/>.
+        /// <para>Checks whether the specified entity is the <c>default</c> value, meaning it was not found or not initialized.
+        /// Useful for validating the result of <see cref="GetEntityByNameOrDefault"/>.</para>
+        /// </summary>
+        /// <param name="entity">Entidad a verificar. <para>Entity to check.</para></param>
+        /// <returns>
+        /// <c>true</c> si la entidad es el valor por defecto; <c>false</c> en caso contrario.
+        /// <para><c>true</c> if the entity is the default value; <c>false</c> otherwise.</para>
+        /// </returns>
+        public static bool IsDefaultEntity(ref Yotsuba entity)
+        {
+            return entity.Equals(default(Yotsuba));
         }
 
         #endregion
@@ -867,6 +922,11 @@ namespace YotsubaEngine.Core.YotsubaGame.Scripting
             return scene;
         }
 
+        /// <summary>
+        /// Obtiene el nombre de la escena actual del juego.
+        /// <para>Gets the name of the current game scene.</para>
+        /// </summary>
+        /// <returns>Nombre de la escena activa. <para>Name of the active scene.</para></returns>
         public string GetCurrentSceneName()
         {
             var scene = YTBGlobalState.Game.SceneManager.CurrentScene;

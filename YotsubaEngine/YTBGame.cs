@@ -97,7 +97,11 @@ namespace YotsubaEngine
         /// <param name="isMouseVisible">Indica si el cursor del mouse es visible. <para>Whether the mouse cursor is visible.</para></param>
         public YTBGame(bool isMouseVisible = true) : base()
         {
-            Console.ResetColor();
+#if YTB
+if (IsDesktop)       
+     Console.ResetColor();
+#endif
+
             Instance = this;
             //_graphics = graphicsDeviceManager;
             // Configurar Content.RootDirectory con la carpeta de assets compilados
@@ -107,13 +111,14 @@ namespace YotsubaEngine
 
             Window.Title = "Yotsuba Engine";
             Window.AllowUserResizing = true;
-            Window.IsBorderless = false;
             YTBGlobalState.ContentManager = Content;
 
+#if YTB
             if (IsDesktop)
             {
                 Window.FileDrop += DragAndDropSystem.Window_FileDrop;
             }
+#endif
 
         }
 
@@ -163,7 +168,7 @@ namespace YotsubaEngine
             graphicsDeviceManager.PreferredBackBufferHeight = height; // Alto
             graphicsDeviceManager.IsFullScreen = fullScreen;
             graphicsDeviceManager.ApplyChanges();
-
+            GraphicsDevice = _graphics.GraphicsDevice;
             YTBGlobalState.GraphicsDevice = _graphics.GraphicsDevice;
         }
 
@@ -307,7 +312,7 @@ namespace YotsubaEngine
         {
             try
             {
-
+                YTBGlobalState.GraphicsDevice = GraphicsDevice;
                 _spriteBatch = new SpriteBatch(GraphicsDevice);
 
                 // Initialize the audio system

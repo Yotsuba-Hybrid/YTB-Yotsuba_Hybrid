@@ -134,15 +134,11 @@ namespace YotsubaEngine.Core.Entity
         /// <para>YTB UI element component.</para>
         /// </summary>
         YTBUIElement = 1 << 12,
-        /// <summary>
-        /// Componente de almacenamiento de objetos 3D.
-        /// <para>3D object storage component.</para>
-        /// </summary>
-        StorageObjects3D = 1 << 13,
+
         /// <summary>
         /// Componente de objeto 3D.
         /// <para>3D object component.</para>
         /// </summary>
-        Object3D = 1 << 14,
+        YTBModel3D = 1 << 14,
     }
 }

@@ -182,11 +182,12 @@ namespace YotsubaEngine.Core.YotsubaGame
             InputSystem.InitializeSystem(EntityManager);
             ScriptSystem.InitializeSystem(EntityManager);
             TilemapSystem.InitializeSystem(EntityManager);
-            DragAndDropSystem.InitializeSystem(EntityManager);
             FontSystem2D.InitializeSystem(EntityManager);
             SystemBuilder.InitializeSystem(EntityManager);
             //-:cnd:noEmit
 #if YTB
+            DragAndDropSystem.InitializeSystem(EntityManager);
+
             FontDragSystem.InitializeSystem(EntityManager);
             FontDragSystem.SetFontSystem(FontSystem2D); // Pasar la referencia del FontSystem2D
 #endif
