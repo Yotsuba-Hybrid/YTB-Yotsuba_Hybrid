@@ -25,6 +25,8 @@
 		
 		<PackageReference Include="Gum.MonoGame" Version="2026.2.23.1" />
 		
+		<PackageReference Include="Myra" Version="1.5.10" />
+		
 		<PackageReference Include="System.Drawing.Common" Version="10.0.3" />
 	</ItemGroup>
 	<ItemGroup>

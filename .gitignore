@@ -203,3 +203,4 @@ website/.angular/
 website/.cache/
 
 .gemini/
+.*/
