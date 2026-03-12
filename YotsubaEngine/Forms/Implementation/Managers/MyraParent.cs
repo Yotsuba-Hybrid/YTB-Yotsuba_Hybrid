@@ -1,12 +1,12 @@
 ﻿using Myra;
 using Myra.Graphics2D.UI;
 
-namespace YotsubaEngine.Forms.Implementation.Parents
+namespace YotsubaEngine.Forms.Implementation.Managers
 {
-    internal class MyraParent
+    internal class MyraManager
     {
         public static Desktop Desktop;
-        public MyraParent()
+        public MyraManager()
         {
             MyraEnvironment.Game = YTBGame.Instance;
             Desktop = new Desktop();

@@ -1,11 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using YotsubaEngine.Core.Component.C_3D;
-using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.Contract;
 using YotsubaEngine.Core.YotsubaGame;
-using YotsubaEngine.Graphics;
 
 namespace SandBoxGame.Core.Systems
 {

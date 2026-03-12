@@ -13,6 +13,7 @@ using YotsubaEngine.Core.System.YotsubaEngineUI.UI;
 using YotsubaEngine.Core.System.YTBDragAndDrop;
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Events.YTBEvents.EngineEvents;
+using YotsubaEngine.Forms.Implementation.Managers;
 using YotsubaEngine.Graphics;
 using YotsubaEngine.Graphics.ImGuiNet;
 using YotsubaEngine.Scripting;
@@ -24,6 +25,13 @@ namespace YotsubaEngine
     /// </summary>
     public class YTBGame : Game
     {
+
+
+        #region UI
+        //private MyraManager Myra = new();
+
+        #endregion
+
         /// <summary>
         /// Indica si el juego se está ejecutando en una plataforma móvil.
         /// <para>Indicates whether the game is running on a mobile platform.</para>
@@ -184,6 +192,9 @@ if (IsDesktop)
         /// </summary>
         protected override void Initialize()
         {
+
+            //Myra = new();
+            
 
             YTBGum.Initialize(this);
             if (YTBGlobalState.EngineEnabled && YTBGlobalState.IsDesktop)

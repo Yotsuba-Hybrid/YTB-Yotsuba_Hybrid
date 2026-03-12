@@ -1,35 +1,61 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 using YotsubaEngine.Forms.Contract;
-using MyraUi = Myra.Graphics2D.UI;
-using ImUi = ImGuiNET.ImGui;
+using YotsubaEngine.Forms.Contract.GumUI;
+using YotsubaEngine.Forms.Contract.ImGUI;
+using YotsubaEngine.Forms.Contract.Myra;
 using GumUi = Gum.Forms.Controls;
+using ImUi = ImGuiNET.ImGui;
+using MyraUi = Myra.Graphics2D.UI;
 
 namespace YotsubaEngine.Forms.Implementation
 {
-    public class Label : ILabel
+    public class Label : ILabel, IMyraLabel, IGumLabel, IImGuiLabel
     {
+
+        public Label()
+        {
+            ImGuIControl = () => { ImUi.Text(Text); return Text; };
+            GumControl = new() { Text = Text };
+            MyraControl = new(Text) { Tag = Text, Tooltip = Text };
+        }
+
         public string Text { get; set; }
         public Color Color { get; set; }
-        private MyraUi.Button MyraControl { get; set; }
-        private GumUi.Button GumControl { get; set; }
-        private void ImGuIControl() => ImUi.Text(Text);
+        private MyraUi.Label MyraControl { get; set; }
+        private GumUi.Label GumControl { get; set; }
 
+        private Func<string> ImGuIControl;
         public Vector2 Position { get ; set; }
 
 
-        public void DrawGumUI()
+        void IGum.DrawGumUI()
         {
-            
+            GumControl.UpdateState();
         }
 
-        public void DrawImGuI()
+        void IImGui.DrawImGuI()
         {
-            ImGuIControl();
+            ImGuIControl?.Invoke();
         }
 
-        public void DrawMyra()
+        void IMyra.DrawMyra()
         {
-            
+        }
+
+        MyraUi.Label IMyraLabel.GetMyraLabel()
+        {
+            return MyraControl;
+        }
+
+        GumUi.Label IGumLabel.GetGumLabel()
+        {
+            return GumControl;
+        }
+
+        Func<string> IImGuiLabel.GetImGuiLabelAsFunc()
+        {
+            return ImGuIControl;
         }
     }
 }
