@@ -1,22 +1,17 @@
 ﻿using Gum.Forms;
 using Gum.Forms.Controls;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Graphics;
+
 using MonoGameGum;
 using MonoGameGum.GueDeriving;
 using System;
-using System.Collections.Generic;
-using System.Text;
+
 using System.Threading.Tasks;
-using YotsubaEngine.Attributes;
 using YotsubaEngine.Audio;
-using YotsubaEngine.Core.Entity;
-using YotsubaEngine.Core.System.GumUI;
+
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Core.YotsubaGame.Scripting;
 using YotsubaEngine.Events.YTBEvents;
-using static YotsubaEngine.Audio.AudioAssets;
 
 namespace SandBoxGame.Core.Scripts.Screens
 {

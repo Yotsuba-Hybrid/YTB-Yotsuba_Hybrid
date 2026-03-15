@@ -79,10 +79,6 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// </summary>
         private RenderSystem2D RenderSystem2D;
 
-        /// <summary>
-        /// Sistema encargado de mostrar los botones de la libreria ImGui en pantalla
-        /// </summary>
-        private GumUISystem2D GumUISystem2D;
 
         /// <summary>
         /// Sistema que gestiona todo lo que se ve en pantalla y que sea 3D específicamente, renderizar modelos 3D.
@@ -121,6 +117,12 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// </summary>
         private DragAndDropSystem DragAndDropSystem;
 
+        /// <summary>
+        /// Sistema de formularios UI unificado para Myra, GumUI e ImGui.
+        /// <para>Unified UI forms system for Myra, GumUI, and ImGui.</para>
+        /// </summary>
+        private FormsSystem FormsSystem;
+
         //-:cnd:noEmit
 #if YTB
         /// <summary>
@@ -145,7 +147,6 @@ namespace YotsubaEngine.Core.YotsubaGame
             ButtonSystem2D = new ButtonSystem2D();
             PhysicsSystem2D = new PhysicsSystem2D();
             RenderSystem2D = new RenderSystem2D();
-            GumUISystem2D = new();
             RenderSystem3D = new RenderSystem3D();
             CameraSystem = new CameraSystem(_graphics);
             InputSystem = new InputSystem();
@@ -155,6 +156,7 @@ namespace YotsubaEngine.Core.YotsubaGame
             DragAndDropSystem = new();
             FontSystem2D = new();
             SystemBuilder = new SystemBuilder();
+            FormsSystem = new FormsSystem();
             //-:cnd:noEmit
 #if YTB
             FontDragSystem = new();
@@ -176,7 +178,6 @@ namespace YotsubaEngine.Core.YotsubaGame
             ButtonSystem2D.InitializeSystem(EntityManager);
             PhysicsSystem2D.InitializeSystem(EntityManager);
             RenderSystem2D.InitializeSystem(EntityManager);
-            GumUISystem2D.InitializeSystem(EntityManager);
             RenderSystem3D.InitializeSystem(EntityManager);
             CameraSystem.InitializeSystem(EntityManager);
             InputSystem.InitializeSystem(EntityManager);
@@ -184,6 +185,7 @@ namespace YotsubaEngine.Core.YotsubaGame
             TilemapSystem.InitializeSystem(EntityManager);
             FontSystem2D.InitializeSystem(EntityManager);
             SystemBuilder.InitializeSystem(EntityManager);
+            FormsSystem.InitializeSystem(EntityManager);
             //-:cnd:noEmit
 #if YTB
             DragAndDropSystem.InitializeSystem(EntityManager);
@@ -231,9 +233,9 @@ namespace YotsubaEngine.Core.YotsubaGame
             PhysicsSystem2D.UpdateSystem(gameTime);
             ButtonSystem2D.UpdateSystem(gameTime);
             AnimationSystem2D.UpdateSystem(gameTime);
-            GumUISystem2D.UpdateSystem(gameTime);
             CameraSystem.UpdateSystem(gameTime);
             SystemBuilder.UpdateSystem(gameTime);
+            FormsSystem.UpdateSystem(gameTime);
             try
             {
                 foreach (ref Yotsuba entity in EntityManager.YotsubaEntities.AsSpan())
@@ -286,7 +288,6 @@ namespace YotsubaEngine.Core.YotsubaGame
 
                 FontSystem2D.DrawSystem(gameTime, _spriteBatch);
 
-                GumUISystem2D.DrawSystem(gameTime);
 
 
                 Draw3D(gameTime);
@@ -300,7 +301,9 @@ namespace YotsubaEngine.Core.YotsubaGame
                 EngineUISystem.UpdateSystem(_spriteBatch, gameTime);
             }
 
-
+            FormsSystem.DrawSystem(gameTime);
+#else
+            FormsSystem.DrawSystem(gameTime);
 #endif
             //+:cnd:noEmit
         }
@@ -344,7 +347,6 @@ namespace YotsubaEngine.Core.YotsubaGame
             AnimationSystem2D.Dispose();
             ButtonSystem2D.Dispose();
             PhysicsSystem2D.Dispose();
-            GumUISystem2D.Dispose();
             RenderSystem3D.Dispose();
             CameraSystem.Dispose();
             InputSystem.Dispose();

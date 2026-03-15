@@ -1269,6 +1269,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
                 }
 
                 Messages.Add((Color, message));
+                Console.WriteLine(message);
             }
         }
 

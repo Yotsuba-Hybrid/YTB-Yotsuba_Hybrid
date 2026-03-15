@@ -2,12 +2,14 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.IO;
+using System.Linq;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.S_2D;
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Core.YotsubaGame.Scripting;
 using YotsubaEngine.Exceptions;
+using YotsubaEngine.Forms;
 
 namespace YotsubaEngine.Core.System.S_AGNOSTIC
 {
@@ -94,6 +96,15 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
                     BaseScript scriptCompilado = ScriptLoader.LoadScriptInstance(scriptPath);
                     scriptCompilado.EntityId = entity.Id;
                     scriptCompilado.EntityManager = EntityManager;
+
+                    var scriptAttribute = scriptCompilado.GetType().GetCustomAttributes(typeof(ScriptAttribute), false)
+                        .FirstOrDefault() as ScriptAttribute;
+
+                    if (scriptAttribute != null)
+                    {
+                        scriptCompilado.UISystem = scriptAttribute.UISystem;
+                    }
+
                     component.Scripts.Add(scriptCompilado);
 
                     scriptCompilado.Initialize();

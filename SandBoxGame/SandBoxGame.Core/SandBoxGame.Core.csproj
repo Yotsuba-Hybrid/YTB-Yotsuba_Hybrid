@@ -12,6 +12,10 @@
 		<HotReloadEnabled>true</HotReloadEnabled>
 	</PropertyGroup>
   <ItemGroup>
+    <!-- Exclude GameConfig sub-project files from this project's compilation -->
+    <Compile Remove="Assets\GameConfig\**" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="MonoGame.Framework.Native" Version="3.8.5-preview.*">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>

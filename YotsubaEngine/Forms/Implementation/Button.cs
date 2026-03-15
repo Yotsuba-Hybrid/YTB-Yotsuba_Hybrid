@@ -12,6 +12,7 @@ namespace YotsubaEngine.Forms.Implementation
 {
     public class Button : IButton, IMyraButton, IGumButton, IImGuiButton
     {
+        public IContainer Parent { get; set; }
 
         public Button()
         {

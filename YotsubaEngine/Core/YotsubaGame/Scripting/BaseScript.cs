@@ -11,6 +11,7 @@ using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.YotsubaEngineUI;
 using YotsubaEngine.Events.YTBEvents;
 using YotsubaEngine.Exceptions;
+using YotsubaEngine.Forms;
 using YotsubaEngine.Input;
 using YotsubaEngine.YTB_Toolkit;
 using static YotsubaEngine.Core.System.S_AGNOSTIC.InputSystem;
@@ -29,6 +30,31 @@ namespace YotsubaEngine.Core.YotsubaGame.Scripting
         /// Se pasa el id de la entidad
         /// </summary>
         internal int EntityId { get; set; }
+
+        /// <summary>
+        /// Sistema UI utilizado por este script. Se configura via [Script(UISystem = ...)].
+        /// <para>UI system used by this script. Configured via [Script(UISystem = ...)].</para>
+        /// </summary>
+        public UILibrary UISystem { get; internal set; } = UILibrary.GumUI;
+
+        /// <summary>
+        /// Helper de UI para crear controles con builder pattern.
+        /// <para>UI helper to create controls with builder pattern.</para>
+        /// </summary>
+        private UI _uiHelper;
+
+        /// <summary>
+        /// Acceso al helper de UI para crear controles.
+        /// <para>Access to the UI helper for creating controls.</para>
+        /// </summary>
+        public UI UI
+        {
+            get
+            {
+                _uiHelper ??= new UI(UISystem);
+                return _uiHelper;
+            }
+        }
 
         /// <summary>
         /// Ruta de este archivo.

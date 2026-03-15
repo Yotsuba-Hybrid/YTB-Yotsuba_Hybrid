@@ -16,6 +16,9 @@
 		<DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
 	</PropertyGroup>
 	<ItemGroup>
+		<InternalsVisibleTo Include="SandBoxGame.Core" />
+	</ItemGroup>
+	<ItemGroup>
 		<PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.5-preview.*">
 			<PrivateAssets>All</PrivateAssets>
 		</PackageReference>

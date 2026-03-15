@@ -1,6 +1,6 @@
 ﻿namespace YotsubaEngine.Forms.Contract
 {
-    public interface ILabel : ChildElement.Forms
+    public interface ILabel : IForm
     {
 
     }

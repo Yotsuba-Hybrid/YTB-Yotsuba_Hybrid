@@ -18,7 +18,8 @@ namespace YotsubaEngine.YTBContentBuilder.Scripting
 
             // Regex simple para detectar [Script] o [ScriptAttribute] y la definición de la clase
             // Nota: Para casos complejos, Roslyn es mejor, pero esto funciona para AOT simple.
-            var attrRegex = new Regex(@"\[Script(Attribute)?\]");
+            // Ahora también detecta [Script(UISystem = ...)] con parámetros
+            var attrRegex = new Regex(@"\[Script(Attribute)?(\s*\(.*?\))?\s*\]");
             var classRegex = new Regex(@"public\s+(?:sealed\s+)?class\s+(\w+)\s*:\s*BaseScript");
             var namespaceRegex = new Regex(@"namespace\s+([\w\.]+)");
 

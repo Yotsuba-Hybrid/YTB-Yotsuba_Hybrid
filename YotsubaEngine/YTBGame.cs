@@ -193,11 +193,7 @@ if (IsDesktop)
         protected override void Initialize()
         {
 
-            //Myra = new();
-            
-
-            YTBGum.Initialize(this);
-            if (YTBGlobalState.EngineEnabled && YTBGlobalState.IsDesktop)
+             if (YTBGlobalState.EngineEnabled && YTBGlobalState.IsDesktop)
             {
                 GuiRenderer = new ImGuiRenderer(this);
                 // ImGui setup (fonts, theme)

@@ -12,6 +12,7 @@ namespace YotsubaEngine.Forms.Implementation
 {
     public class Label : ILabel, IMyraLabel, IGumLabel, IImGuiLabel
     {
+        public IContainer Parent { get; set; }
 
         public Label()
         {

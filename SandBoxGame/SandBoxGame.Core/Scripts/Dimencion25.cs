@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using YotsubaEngine.Attributes;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.YotsubaGame.Scripting;
 using YotsubaEngine.Events.YTBEvents;

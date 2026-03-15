@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SandBoxGame.DesktopGL": {
+      "commandName": "Project",
+      "nativeDebugging": false
+    }
+  }
+}

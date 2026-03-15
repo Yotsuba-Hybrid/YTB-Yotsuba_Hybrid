@@ -19,6 +19,9 @@ namespace YotsubaEngine.Scripting
           Scripts.TryAdd("Background", () => new SandBoxGame.Core.Scripts.HomeScreen.Background() );
           Scripts.TryAdd("GroundScript", () => new SandBoxGame.Core.Scripts.ModelScreen.GroundScript() );
           Scripts.TryAdd("HomeScreen", () => new SandBoxGame.Core.Scripts.Screens.HomeScreen() );
+          Scripts.TryAdd("ImGuiTestScreen", () => new SandBoxGame.Core.Scripts.Screens.ImGuiTestScreen() );
+          Scripts.TryAdd("MyraTestScreen", () => new SandBoxGame.Core.Scripts.Screens.MyraTestScreen() );
+          Scripts.TryAdd("UITestScreen", () => new SandBoxGame.Core.Scripts.Screens.UITestScreen() );
         }
 
         public override BaseScript Create(string scriptName)

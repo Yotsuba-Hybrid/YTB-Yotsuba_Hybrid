@@ -18,9 +18,9 @@
 		<Optimize>false</Optimize>
 		<HotReloadEnabled>true</HotReloadEnabled>
 	</PropertyGroup>
-	<PropertyGroup>
+	<!--<PropertyGroup>
 		<DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
-	</PropertyGroup>
+	</PropertyGroup>-->
   <ItemGroup>
     <ProjectReference Include="..\SandBoxGame.Core\SandBoxGame.Core.csproj" />
   </ItemGroup>

@@ -2,7 +2,7 @@
 
 namespace YotsubaEngine.Forms.Contract
 {
-    public interface IButton : ChildElement.Forms
+    public interface IButton : IForm
     {
         
 
