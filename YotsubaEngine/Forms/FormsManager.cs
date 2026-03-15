@@ -91,7 +91,7 @@ namespace YotsubaEngine.Forms
         {
             if (!_isInitialized) return;
 
-            if (_managers.TryGetValue(_activeLibrary, out var manager))
+            if (_managers.TryGetValue(_activeLibrary, out var manager) && manager.IsReady)
             {
                 manager.Update(gameTime);
             }
@@ -101,16 +101,20 @@ namespace YotsubaEngine.Forms
         {
             if (!_isInitialized) return;
 
+            if (!_managers.TryGetValue(_activeLibrary, out var manager) || !manager.IsReady)
+                return;
+
+            // Para ImGui: abre el frame antes de dibujar controles
+            manager.PreDraw(gameTime);
+
             // Render all controls added to root
             foreach (var control in _rootControls)
             {
                 DrawControl(control);
             }
 
-            if (_managers.TryGetValue(_activeLibrary, out var manager))
-            {
-                manager.Draw(gameTime);
-            }
+            // Para ImGui: cierra el frame. Para Gum/Myra: renderiza
+            manager.Draw(gameTime);
         }
 
         private void DrawControl(IForm control)

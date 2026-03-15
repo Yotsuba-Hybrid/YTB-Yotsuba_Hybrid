@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using System;
 using YotsubaEngine.Forms.Contract;
 using YotsubaEngine.Forms.Contract.GumUI;
@@ -14,11 +14,17 @@ namespace YotsubaEngine.Forms.Implementation
     {
         public IContainer Parent { get; set; }
 
+        private string _text = string.Empty;
+        private Vector2 _position;
+
         public Button()
         {
-            ImGuIControl = () => ImUi.Button(Text);
-            GumControl = new() { Text = Text };
-            MyraControl = new(Text) { Tag = Text, Tooltip = Text };
+            GumControl = new GumUi.Button
+            {
+                Width = 100,
+                Height = 30
+            };
+            MyraControl = new MyraUi.Button(_text);
 
             GumControl.Click += GumControl_Click;
         }
@@ -28,24 +34,51 @@ namespace YotsubaEngine.Forms.Implementation
             OnClick?.Invoke();
         }
 
-        public string Text { get; set; }
+        public string Text
+        {
+            get => _text;
+            set
+            {
+                _text = value;
+                GumControl.Text = value;
+                // Note: Myra Button doesn't have a settable Text property after creation
+                // The text was set in the constructor
+            }
+        }
+
         public Color Color { get; set; }
-        public Vector2 Position { get; set; }
+
+        public Vector2 Position
+        {
+            get => _position;
+            set
+            {
+                _position = value;
+                GumControl.X = value.X;
+                GumControl.Y = value.Y;
+                MyraControl.Left = (int)value.X;
+                MyraControl.Top = (int)value.Y;
+            }
+        }
 
         public event Action OnClick;
 
         private MyraUi.Button MyraControl { get; set; }
         private GumUi.Button GumControl { get; set; }
 
-        private Func<bool> ImGuIControl;
+        private Func<bool> _imguiControl;
+
         void IGum.DrawGumUI()
         {
+            // Sync position before drawing
+            GumControl.X = _position.X;
+            GumControl.Y = _position.Y;
             GumControl.UpdateState();
         }
 
         void IImGui.DrawImGuI()
         {
-            if (ImGuIControl.Invoke())
+            if (ImUi.Button(_text))
             {
                 OnClick?.Invoke();
             }
@@ -53,6 +86,10 @@ namespace YotsubaEngine.Forms.Implementation
 
         void IMyra.DrawMyra()
         {
+            // Sync position before drawing
+            MyraControl.Left = (int)_position.X;
+            MyraControl.Top = (int)_position.Y;
+            
             if (MyraControl.IsPressed)
             {
                 OnClick?.Invoke();
@@ -71,7 +108,7 @@ namespace YotsubaEngine.Forms.Implementation
 
         Func<bool> IImGuiButton.GetImGuiButtonAsFunc()
         {
-            return ImGuIControl;
+            return () => ImUi.Button(Text);
         }
     }
 }

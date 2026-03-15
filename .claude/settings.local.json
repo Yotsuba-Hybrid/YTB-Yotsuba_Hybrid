@@ -11,7 +11,8 @@
       "mcp__ytb-game-config__get_scene",
       "mcp__ytb-game-config__get_available_components",
       "mcp__ytb-game-config__create_entities_batch",
-      "mcp__ytb-game-config__update_component"
+      "mcp__ytb-game-config__update_component",
+      "Bash(tree:*)"
     ]
   }
 }

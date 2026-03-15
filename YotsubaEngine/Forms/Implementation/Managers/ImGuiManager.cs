@@ -8,6 +8,7 @@ namespace YotsubaEngine.Forms.Implementation.Managers
     {
         private static bool _isInitialized;
         private static ImGuiRenderer _renderer;
+        public bool IsReady => _isInitialized;
 
         public void Initialize()
         {
@@ -26,6 +27,10 @@ namespace YotsubaEngine.Forms.Implementation.Managers
         }
 
         public void Update(GameTime gameTime)
+        {
+        }
+
+        public void PreDraw(GameTime gameTime)
         {
             if (!_isInitialized || _renderer == null) return;
             _renderer.BeginLayout(gameTime);

@@ -79,6 +79,8 @@ namespace YotsubaEngine.Forms.Implementation
 
         void IGum.DrawGumUI()
         {
+            GumControl.X = Position.X;
+            GumControl.Y = Position.Y;
             GumControl.UpdateState();
         }
 

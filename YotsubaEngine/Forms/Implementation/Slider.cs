@@ -79,7 +79,7 @@ namespace YotsubaEngine.Forms.Implementation
         public Slider()
         {
             MyraControl = new MyraUi.HorizontalSlider() { Tag = Text };
-            GumControl = new GumUi.Slider();
+            GumControl = new GumUi.Slider { Width = 200 };
 
             GumControl.ValueChanged += (_, _) =>
             {
@@ -124,6 +124,8 @@ namespace YotsubaEngine.Forms.Implementation
 
         void IGum.DrawGumUI()
         {
+            GumControl.X = Position.X;
+            GumControl.Y = Position.Y;
             GumControl.UpdateState();
         }
 

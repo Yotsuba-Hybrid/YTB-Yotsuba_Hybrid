@@ -353405,7 +353405,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                         ComponentName = "ScriptComponent",
                         Propiedades = new List<Tuple<string, string>>
                         {
-                            new Tuple<string, string>("Scripts", "CSHARP&:&UITestScreen&;&"),
+                            new Tuple<string, string>("Scripts", "CSHARP&:&ImGuiTestScreen&;&"),
                         }
                     },
                     new YTBComponents

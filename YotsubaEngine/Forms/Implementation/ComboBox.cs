@@ -57,7 +57,7 @@ namespace YotsubaEngine.Forms.Implementation
         public ComboBox()
         {
             MyraControl = new() { Tag = Text };
-            GumControl = new();
+            GumControl = new() { Width = 150 };
 
             GumControl.SelectionChanged += (_, _) =>
             {
@@ -137,6 +137,8 @@ namespace YotsubaEngine.Forms.Implementation
 
         void IGum.DrawGumUI()
         {
+            GumControl.X = Position.X;
+            GumControl.Y = Position.Y;
             GumControl.UpdateState();
         }
 

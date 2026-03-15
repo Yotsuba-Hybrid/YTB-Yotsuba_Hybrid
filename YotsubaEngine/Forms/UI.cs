@@ -9,6 +9,7 @@ namespace YotsubaEngine.Forms
         public UI(UILibrary library = UILibrary.GumUI)
         {
             _library = library;
+            FormsManager.Instance.SetActiveLibrary(library);
         }
 
         public ButtonBuilder CreateButton(string text = "")

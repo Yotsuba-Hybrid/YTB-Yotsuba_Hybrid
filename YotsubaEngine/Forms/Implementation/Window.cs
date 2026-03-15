@@ -57,7 +57,8 @@ namespace YotsubaEngine.Forms.Implementation
             MyraControl = new MyraUi.Window
             {
                 Title = _text,
-                Tag = _text
+                Tag = _text,
+                Content = new MyraUi.Panel()
             };
             MyraControl.Closed += (_, _) =>
             {
@@ -67,12 +68,16 @@ namespace YotsubaEngine.Forms.Implementation
 
             GumControl = new GumUi.Panel
             {
-                Name = _text
+                Name = _text,
+                Width = 400,
+                Height = 300
             };
         }
 
         void IGum.DrawGumUI()
         {
+            GumControl.X = Position.X;
+            GumControl.Y = Position.Y;
             GumControl.UpdateState();
         }
 

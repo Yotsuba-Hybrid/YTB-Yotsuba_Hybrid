@@ -9,6 +9,7 @@ namespace YotsubaEngine.Forms.Implementation.Managers
     {
         public static Desktop Desktop { get; private set; }
         private static bool _isInitialized;
+        public bool IsReady => _isInitialized;
 
         public void Initialize()
         {

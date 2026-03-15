@@ -50,7 +50,7 @@ namespace YotsubaEngine.Forms.Implementation
             UpdateBuffers();
 
             MyraControl = new() { Tag = Text, Tooltip = Text };
-            GumControl = new() { Text = Text };
+            GumControl = new() { Text = Text, Width = 200 };
 
             MyraControl.TextChanged += (_, _) =>
             {
@@ -95,6 +95,8 @@ namespace YotsubaEngine.Forms.Implementation
 
         void IGum.DrawGumUI()
         {
+            GumControl.X = Position.X;
+            GumControl.Y = Position.Y;
             GumControl.UpdateState();
         }
 

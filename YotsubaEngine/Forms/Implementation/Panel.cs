@@ -31,11 +31,17 @@ namespace YotsubaEngine.Forms.Implementation
         public Panel()
         {
             MyraControl = new MyraUi.Panel();
-            GumControl = new GumUi.Panel();
+            GumControl = new GumUi.Panel
+            {
+                Width = 400,
+                Height = 300
+            };
         }
 
         void IGum.DrawGumUI()
         {
+            GumControl.X = Position.X;
+            GumControl.Y = Position.Y;
             GumControl.UpdateState();
         }
 

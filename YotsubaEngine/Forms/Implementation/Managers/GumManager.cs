@@ -8,6 +8,7 @@ namespace YotsubaEngine.Forms.Implementation.Managers
     internal class GumManager : Contract.IUIManager
     {
         private static bool _isInitialized;
+        public bool IsReady => _isInitialized;
 
         public void Initialize()
         {

@@ -17,30 +17,30 @@ namespace YotsubaEngine.Forms.Implementation
 
             child.Parent = container;
 
-            switch (container)
+            if (container is IMyraContainer myraContainer && child is IMyra myraChild)
             {
-                case IMyraContainer myraContainer when child is IMyra myraChild:
-                    var myraWidget = GetMyraWidget(myraChild);
-                    if (myraWidget != null)
-                    {
-                        myraContainer.GetMyraContainer().AddChild(myraWidget);
-                    }
-                    break;
+                var myraWidget = GetMyraWidget(myraChild);
+                if (myraWidget != null)
+                {
+                    myraContainer.GetMyraContainer().AddChild(myraWidget);
+                }
+            }
 
-                case IGumContainer gumContainer when child is IGum gumChild:
-                    var gumElement = GetGumElement(gumChild);
-                    if (gumElement != null)
-                    {
-                        gumContainer.GetGumContainer().AddChild(gumElement);
-                    }
-                    break;
+            if (container is IGumContainer gumContainer && child is IGum gumChild)
+            {
+                var gumElement = GetGumElement(gumChild);
+                if (gumElement != null)
+                {
+                    gumContainer.GetGumContainer().AddChild(gumElement);
+                }
+            }
 
-                case IImGuiContainer imguiContainer when child is IImGui imguiChild:
-                    imguiContainer.AddChildDrawAction(() =>
-                    {
-                        imguiChild.DrawImGuI();
-                    });
-                    break;
+            if (container is IImGuiContainer imguiContainer && child is IImGui imguiChild)
+            {
+                imguiContainer.AddChildDrawAction(() =>
+                {
+                    imguiChild.DrawImGuI();
+                });
             }
 
             if (container is ContainerBase containerBase)
@@ -58,27 +58,27 @@ namespace YotsubaEngine.Forms.Implementation
 
             child.Parent = null;
 
-            switch (container)
+            if (container is IMyraContainer myraContainer && child is IMyra myraChild)
             {
-                case IMyraContainer myraContainer when child is IMyra myraChild:
-                    var myraWidget = GetMyraWidget(myraChild);
-                    if (myraWidget != null)
-                    {
-                        myraContainer.GetMyraContainer().RemoveChild(myraWidget);
-                    }
-                    break;
+                var myraWidget = GetMyraWidget(myraChild);
+                if (myraWidget != null)
+                {
+                    myraContainer.GetMyraContainer().RemoveChild(myraWidget);
+                }
+            }
 
-                case IGumContainer gumContainer when child is IGum gumChild:
-                    var gumElement = GetGumElement(gumChild);
-                    if (gumElement != null)
-                    {
-                        gumContainer.GetGumContainer().RemoveChild(gumElement);
-                    }
-                    break;
+            if (container is IGumContainer gumContainer && child is IGum gumChild)
+            {
+                var gumElement = GetGumElement(gumChild);
+                if (gumElement != null)
+                {
+                    gumContainer.GetGumContainer().RemoveChild(gumElement);
+                }
+            }
 
-                case IImGuiContainer imguiContainer when child is IImGui:
-                    imguiContainer.ClearChildDrawActions();
-                    break;
+            if (container is IImGuiContainer imguiContainer && child is IImGui)
+            {
+                imguiContainer.ClearChildDrawActions();
             }
 
             if (container is ContainerBase containerBase)
