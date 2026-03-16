@@ -127,14 +127,21 @@ namespace YotsubaEngine.Forms
             {
                 imguiControl.DrawImGuI();
             }
+            // Children are already drawn by ImGui containers via _imguiChildActions
+            // (set up by ChildManager.AddChildToContainer). No recursive traversal needed.
+        }
 
-            // Recursivamente dibujar hijos (solo para ImGui)
-            if (control is IContainer container)
+        /// <summary>
+        /// Draws user ImGui controls without managing the Begin/End frame.
+        /// Used by EngineUISystem to render user controls within the engine's ImGui frame.
+        /// </summary>
+        public void DrawImGuiControls()
+        {
+            if (!_isInitialized || _activeLibrary != UILibrary.ImGui) return;
+
+            foreach (var control in _rootControls)
             {
-                foreach (var child in container.Children)
-                {
-                    DrawImGuiControl(child);
-                }
+                DrawImGuiControl(control);
             }
         }
 

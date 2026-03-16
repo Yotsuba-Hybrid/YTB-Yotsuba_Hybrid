@@ -19,6 +19,7 @@ using YotsubaEngine.Events.YTBEvents.EngineEvents;
 using YotsubaEngine.Exceptions;
 using YotsubaEngine.Graphics;
 using YotsubaEngine.Graphics.ImGuiNet;
+using YotsubaEngine.Forms;
 using YotsubaEngine.HighestPerformanceTypes;
 using D = System.Drawing;
 using Num = System.Numerics;
@@ -318,7 +319,10 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
 
             // Renderizar alerta de cambio de modo Engine/Game
             RenderModeSwitchAlert(gameTime);
-            
+
+            // Draw user FormsManager ImGui controls within the engine's ImGui frame
+            // so they render alongside engine panels without a separate Begin/End Layout
+            FormsManager.Instance.DrawImGuiControls();
 
 #endif
             //+:cnd:noEmit

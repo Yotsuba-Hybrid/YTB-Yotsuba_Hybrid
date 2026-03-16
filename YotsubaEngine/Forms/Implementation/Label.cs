@@ -21,7 +21,17 @@ namespace YotsubaEngine.Forms.Implementation
             MyraControl = new(Text ?? string.Empty) { Tag = Text ?? string.Empty };
         }
 
-        public string Text { get; set; } = string.Empty;
+        private string _text = string.Empty;
+        public string Text
+        {
+            get => _text;
+            set
+            {
+                _text = value ?? string.Empty;
+                MyraControl.Text = _text;
+                GumControl.Text = _text;
+            }
+        }
         public Color Color { get; set; }
         private MyraUi.Label MyraControl { get; set; }
         private GumUi.Label GumControl { get; set; }
