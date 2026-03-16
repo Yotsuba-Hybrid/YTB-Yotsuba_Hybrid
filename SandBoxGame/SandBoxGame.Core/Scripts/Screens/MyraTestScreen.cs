@@ -12,7 +12,7 @@ namespace SandBoxGame.Core.Scripts.Screens
     /// Demuestra 20+ controles organizados en multiples paneles.
     /// <para>Extensive UI test using Myra as the underlying library.</para>
     /// </summary>
-    [Script(UISystem = UILibrary.Myra)]
+    [Script(UISystem = UILibrary.ImGui)]
     public class MyraTestScreen : BaseScript
     {
         // Windows
