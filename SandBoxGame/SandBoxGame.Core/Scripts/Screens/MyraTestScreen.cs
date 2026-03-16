@@ -4,6 +4,7 @@ using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Core.YotsubaGame.Scripting;
 using YotsubaEngine.Forms;
 using YotsubaEngine.Forms.Contract;
+using YotsubaEngine.Forms.Contract.Myra;
 
 namespace SandBoxGame.Core.Scripts.Screens
 {
@@ -18,6 +19,7 @@ namespace SandBoxGame.Core.Scripts.Screens
         private IPanel _panel;
         private IButton _button;
         private ILabel _label;
+        private ISlider _slider;
 
         public override void Initialize()
         {
@@ -31,21 +33,30 @@ namespace SandBoxGame.Core.Scripts.Screens
             _panel = UI.CreatePanel()
                 .WithPosition(10, 10)
                 .Build();
-            _panel.Text = "Test";
+            IMyraContainer mc = (IMyraContainer)_panel;
+            mc.GetMyraContainer().Height = 30;
+
+            //_panel = (IPanel)mc;
 
             _button = UI.CreateButton("Myra Button")
                 .WithText("Click Me")
-                .WithPosition(10, 10)
+                .WithPosition(10, 35)
                 .WithOnClick(() => SendLog("[MyraTestScreen] Button clicked!", Color.Cyan))
                 .Build();
 
             _label = UI.CreateLabel("Myra Label")
                 .WithText("This is a Myra label")
-                .WithPosition(10, 50)
+                .WithPosition(50, 150)
                 .WithColor(Color.White)
                 .Build();
 
+            _slider = UI.CreateSlider("MYSLIDER")
+                .WithPosition(new Vector2(100, 100))
+                .WithRange(0, 30)
+                .WithValue(15)
+                .Build();
 
+            _panel.AddChild(_slider);
             _panel.AddChild(_button);
             _panel.AddChild(_label);
             _window.AddChild(_panel);
