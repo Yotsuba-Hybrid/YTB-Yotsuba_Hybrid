@@ -119,7 +119,7 @@ namespace SandBoxGame.Core.Scripts.Screens
 
         private void CreateSlider()
         {
-            _slider = UI.CreateSlider()
+            _slider = UI.CreateSlider("MySlider")
                 .WithPosition(10, 170)
                 .WithRange(0, 100)
                 .WithValue(50)

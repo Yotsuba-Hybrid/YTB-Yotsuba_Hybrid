@@ -41,8 +41,6 @@ namespace YotsubaEngine.Forms.Implementation
             {
                 _text = value;
                 GumControl.Text = value;
-                // Note: Myra Button doesn't have a settable Text property after creation
-                // The text was set in the constructor
             }
         }
 
@@ -70,10 +68,8 @@ namespace YotsubaEngine.Forms.Implementation
 
         void IGum.DrawGumUI()
         {
-            // Sync position before drawing
             GumControl.X = _position.X;
             GumControl.Y = _position.Y;
-            GumControl.UpdateState();
         }
 
         void IImGui.DrawImGuI()
@@ -86,14 +82,6 @@ namespace YotsubaEngine.Forms.Implementation
 
         void IMyra.DrawMyra()
         {
-            // Sync position before drawing
-            MyraControl.Left = (int)_position.X;
-            MyraControl.Top = (int)_position.Y;
-            
-            if (MyraControl.IsPressed)
-            {
-                OnClick?.Invoke();
-            }
         }
 
         MyraUi.Button IMyraButton.GetMyraButton()

@@ -11,7 +11,7 @@ namespace SandBoxGame.Core.Scripts.Screens
     /// Ejemplo de UI usando Myra como librería subyacente.
     /// <para>UI example using Myra as the underlying library.</para>
     /// </summary>
-    [Script(UISystem = UILibrary.Myra)]
+    [Script(UISystem = UILibrary.ImGui)]
     public class MyraTestScreen : BaseScript
     {
         private IWindow _window;
@@ -31,6 +31,7 @@ namespace SandBoxGame.Core.Scripts.Screens
             _panel = UI.CreatePanel()
                 .WithPosition(10, 10)
                 .Build();
+            _panel.Text = "Test";
 
             _button = UI.CreateButton("Myra Button")
                 .WithText("Click Me")

@@ -22,7 +22,12 @@ namespace YotsubaEngine.Forms.Implementation
                 var myraWidget = GetMyraWidget(myraChild);
                 if (myraWidget != null)
                 {
-                    myraContainer.GetMyraContainer().AddChild(myraWidget);
+                    myraContainer.GetMyraContainer().Widgets.Add(myraWidget);
+                    System.Diagnostics.Debug.WriteLine($"[ChildManager] Added Myra child {child.GetType().Name} to container {container.GetType().Name}");
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"[ChildManager] WARNING: Could not get Myra widget for {child.GetType().Name}");
                 }
             }
 
@@ -32,6 +37,11 @@ namespace YotsubaEngine.Forms.Implementation
                 if (gumElement != null)
                 {
                     gumContainer.GetGumContainer().AddChild(gumElement);
+                    System.Diagnostics.Debug.WriteLine($"[ChildManager] Added Gum child {child.GetType().Name} to container {container.GetType().Name}");
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"[ChildManager] WARNING: Could not get Gum element for {child.GetType().Name}");
                 }
             }
 
@@ -41,6 +51,7 @@ namespace YotsubaEngine.Forms.Implementation
                 {
                     imguiChild.DrawImGuI();
                 });
+                System.Diagnostics.Debug.WriteLine($"[ChildManager] Added ImGui child draw action for {child.GetType().Name}");
             }
 
             if (container is ContainerBase containerBase)
@@ -63,7 +74,7 @@ namespace YotsubaEngine.Forms.Implementation
                 var myraWidget = GetMyraWidget(myraChild);
                 if (myraWidget != null)
                 {
-                    myraContainer.GetMyraContainer().RemoveChild(myraWidget);
+                    myraContainer.GetMyraContainer().Widgets.Remove(myraWidget);
                 }
             }
 
@@ -111,6 +122,7 @@ namespace YotsubaEngine.Forms.Implementation
                 IMyraSlider sld => sld.GetMyraSlider(),
                 IMyraComboBox cmb => cmb.GetMyraComboBox(),
                 IMyraWindow win => win.GetMyraWindow(),
+                IMyraContainer cnt => cnt.GetMyraContainer(),
                 _ => null
             };
         }
@@ -126,6 +138,7 @@ namespace YotsubaEngine.Forms.Implementation
                 IGumSlider sld => sld.GetGumSlider(),
                 IGumComboBox cmb => cmb.GetGumComboBox(),
                 IGumWindow win => win.GetGumPanel(),
+                IGumContainer cnt => cnt.GetGumContainer(),
                 _ => null
             };
         }

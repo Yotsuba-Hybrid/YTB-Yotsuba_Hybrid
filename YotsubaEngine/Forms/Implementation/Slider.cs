@@ -1,5 +1,7 @@
 using Microsoft.Xna.Framework;
 using System;
+using System.Linq;
+using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Forms.Contract;
 using YotsubaEngine.Forms.Contract.GumUI;
 using YotsubaEngine.Forms.Contract.ImGUI;
@@ -66,7 +68,7 @@ namespace YotsubaEngine.Forms.Implementation
             }
         }
 
-        public string Text { get; set; }
+        public string Text { get; set; } = string.Empty;
         public Color Color { get; set; }
         public Vector2 Position { get; set; }
 
@@ -74,7 +76,6 @@ namespace YotsubaEngine.Forms.Implementation
 
         private MyraUi.Slider MyraControl { get; set; }
         private GumUi.Slider GumControl { get; set; }
-        private Func<float, bool> ImGuIControl { get; set; }
 
         public Slider()
         {
@@ -85,19 +86,6 @@ namespace YotsubaEngine.Forms.Implementation
             {
                 _value = (float)GumControl.Value;
                 OnValueChanged?.Invoke(_value);
-            };
-
-            ImGuIControl = (value) =>
-            {
-                bool changed = _direction == SliderDirection.Horizontal
-                    ? ImUi.SliderFloat(Text, ref _value, _min, _max)
-                    : ImUi.VSliderFloat(Text, new System.Numerics.Vector2(150, 150), ref _value, _min, _max);
-
-                if (changed)
-                {
-                    OnValueChanged?.Invoke(_value);
-                }
-                return changed;
             };
         }
 
@@ -126,12 +114,19 @@ namespace YotsubaEngine.Forms.Implementation
         {
             GumControl.X = Position.X;
             GumControl.Y = Position.Y;
-            GumControl.UpdateState();
         }
 
         void IImGui.DrawImGuI()
         {
-            ImGuIControl.Invoke(_value);
+            string label = Text ?? string.Empty;
+            bool changed = _direction == SliderDirection.Horizontal
+                ? ImUi.SliderFloat(label, ref _value, _min, _max)
+                : ImUi.VSliderFloat(label, new System.Numerics.Vector2(150, 150), ref _value, _min, _max);
+
+            if (changed)
+            {
+                OnValueChanged?.Invoke(_value);
+            }
         }
 
         void IMyra.DrawMyra()
@@ -150,7 +145,14 @@ namespace YotsubaEngine.Forms.Implementation
 
         Func<float, bool> IImGuiSlider.GetImGuiSliderAsFunc()
         {
-            return ImGuIControl;
+            return (_) =>
+            {
+                string label = Text ?? string.Empty;
+                bool changed = _direction == SliderDirection.Horizontal
+                    ? ImUi.SliderFloat(label, ref _value, _min, _max)
+                    : ImUi.VSliderFloat(label, new System.Numerics.Vector2(150, 150), ref _value, _min, _max);
+                return changed;
+            };
         }
     }
 }

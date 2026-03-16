@@ -42,7 +42,7 @@ namespace YotsubaEngine.Forms.Implementation
         public string Text
         {
             get => _text;
-            set => _text = value;
+            set => _text = value ?? string.Empty;
         }
 
         public Color Color { get; set; }
@@ -52,11 +52,10 @@ namespace YotsubaEngine.Forms.Implementation
 
         private MyraUi.ComboBox MyraControl { get; set; }
         private GumUi.ComboBox GumControl { get; set; }
-        private Func<int, int> ImGuIControl { get; set; }
 
         public ComboBox()
         {
-            MyraControl = new() { Tag = Text };
+            MyraControl = new() { Tag = _text };
             GumControl = new() { Width = 150 };
 
             GumControl.SelectionChanged += (_, _) =>
@@ -64,33 +63,11 @@ namespace YotsubaEngine.Forms.Implementation
                 _selectedIndex = GumControl.SelectedIndex;
                 OnSelectionChanged?.Invoke(_selectedIndex);
             };
-
-            ImGuIControl = (selectedIndex) =>
-            {
-                if (ImUi.BeginCombo(Text, SelectedItem))
-                {
-                    for (int i =0; i < _items.Count; i++)
-                    {
-                        bool isSelected = i == _selectedIndex;
-                        if (ImUi.Selectable(_items[i], isSelected))
-                        {
-                            _selectedIndex = i;
-                            OnSelectionChanged?.Invoke(_selectedIndex);
-                        }
-                        if (isSelected)
-                        {
-                            ImUi.SetItemDefaultFocus();
-                        }
-                    }
-                    ImUi.EndCombo();
-                }
-                return _selectedIndex;
-            };
         }
 
         public void AddItem(string item)
         {
-            _items.Add(item);
+            _items.Add(item ?? string.Empty);
             UpdateMyraItems();
             UpdateGumItems();
         }
@@ -122,7 +99,7 @@ namespace YotsubaEngine.Forms.Implementation
             MyraControl.Items.Clear();
             foreach (var item in _items)
             {
-                MyraControl.Items.Add(new MyraUi.ListItem(item));
+                MyraControl.Items.Add(new MyraUi.ListItem(item ?? string.Empty));
             }
         }
 
@@ -131,7 +108,7 @@ namespace YotsubaEngine.Forms.Implementation
             GumControl.Items?.Clear();
             foreach (var item in _items)
             {
-                GumControl.Items.Add(item);
+                GumControl.Items.Add(item ?? string.Empty);
             }
         }
 
@@ -139,12 +116,31 @@ namespace YotsubaEngine.Forms.Implementation
         {
             GumControl.X = Position.X;
             GumControl.Y = Position.Y;
-            GumControl.UpdateState();
         }
 
         void IImGui.DrawImGuI()
         {
-            ImGuIControl.Invoke(_selectedIndex);
+            string label = _text ?? string.Empty;
+            string preview = SelectedItem ?? string.Empty;
+            
+            if (ImUi.BeginCombo(label, preview))
+            {
+                for (int i = 0; i < _items.Count; i++)
+                {
+                    bool isSelected = i == _selectedIndex;
+                    string itemText = _items[i] ?? string.Empty;
+                    if (ImUi.Selectable(itemText, isSelected))
+                    {
+                        _selectedIndex = i;
+                        OnSelectionChanged?.Invoke(_selectedIndex);
+                    }
+                    if (isSelected)
+                    {
+                        ImUi.SetItemDefaultFocus();
+                    }
+                }
+                ImUi.EndCombo();
+            }
         }
 
         void IMyra.DrawMyra()
@@ -163,7 +159,7 @@ namespace YotsubaEngine.Forms.Implementation
 
         Func<int, int> IImGuiComboBox.GetImGuiComboBoxAsFunc()
         {
-            return ImGuIControl;
+            return (idx) => _selectedIndex;
         }
     }
 }

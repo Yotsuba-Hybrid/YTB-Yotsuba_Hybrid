@@ -30,7 +30,11 @@ namespace YotsubaEngine.Forms.Implementation
 
         public Panel()
         {
-            MyraControl = new MyraUi.Panel();
+            MyraControl = new MyraUi.Panel
+            {
+                Width = 400,
+                Height = 300
+            };
             GumControl = new GumUi.Panel
             {
                 Width = 400,
@@ -42,7 +46,6 @@ namespace YotsubaEngine.Forms.Implementation
         {
             GumControl.X = Position.X;
             GumControl.Y = Position.Y;
-            GumControl.UpdateState();
         }
 
         void IImGui.DrawImGuI()

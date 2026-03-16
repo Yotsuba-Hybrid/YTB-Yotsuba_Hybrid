@@ -10,6 +10,7 @@ using YotsubaEngine.Core.System.S_AGNOSTIC;
 using YotsubaEngine.Core.System.YotsubaEngineUI;
 using YotsubaEngine.Core.System.YTBDragAndDrop;
 using YotsubaEngine.YTB_Toolkit;
+using YotsubaEngine.Forms.Contract;
 
 namespace YotsubaEngine.Core.YotsubaGame
 {
@@ -300,8 +301,12 @@ namespace YotsubaEngine.Core.YotsubaGame
             {
                 EngineUISystem.UpdateSystem(_spriteBatch, gameTime);
             }
-
-            FormsSystem.DrawSystem(gameTime);
+            // FormsSystem draws UI for non-ImGui libraries (Myra, Gum)
+            // ImGui is already drawn by EngineUISystem in DEBUG mode, so skip it
+            if (FormsManager.Instance.ActiveLibrary != Contract.UILibrary.ImGui)
+            {
+                FormsSystem.DrawSystem(gameTime);
+            }
 #else
             FormsSystem.DrawSystem(gameTime);
 #endif

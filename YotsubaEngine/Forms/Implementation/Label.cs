@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using System;
 using YotsubaEngine.Forms.Contract;
 using YotsubaEngine.Forms.Contract.GumUI;
@@ -16,25 +16,23 @@ namespace YotsubaEngine.Forms.Implementation
 
         public Label()
         {
-            ImGuIControl = () => { ImUi.Text(Text); return Text; };
-            GumControl = new() { Text = Text };
-            MyraControl = new(Text) { Tag = Text, Tooltip = Text };
+            ImGuIControl = () => { ImUi.Text(Text ?? string.Empty); return Text ?? string.Empty; };
+            GumControl = new() { Text = Text ?? string.Empty, Width = 200 };
+            MyraControl = new(Text ?? string.Empty) { Tag = Text ?? string.Empty };
         }
 
-        public string Text { get; set; }
+        public string Text { get; set; } = string.Empty;
         public Color Color { get; set; }
         private MyraUi.Label MyraControl { get; set; }
         private GumUi.Label GumControl { get; set; }
 
         private Func<string> ImGuIControl;
-        public Vector2 Position { get ; set; }
-
+        public Vector2 Position { get; set; }
 
         void IGum.DrawGumUI()
         {
             GumControl.X = Position.X;
             GumControl.Y = Position.Y;
-            GumControl.UpdateState();
         }
 
         void IImGui.DrawImGuI()

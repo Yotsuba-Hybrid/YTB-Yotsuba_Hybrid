@@ -1,6 +1,5 @@
 using Microsoft.Xna.Framework;
 using YotsubaEngine.Graphics.ImGuiNet;
-using ImGuiNET;
 
 namespace YotsubaEngine.Forms.Implementation.Managers
 {
@@ -30,16 +29,15 @@ namespace YotsubaEngine.Forms.Implementation.Managers
         {
         }
 
-        public void PreDraw(GameTime gameTime)
+        public void BeginFrame(GameTime gameTime)
         {
             if (!_isInitialized || _renderer == null) return;
             _renderer.BeginLayout(gameTime);
         }
 
-        public void Draw(GameTime gameTime)
+        public void EndFrame(GameTime gameTime)
         {
             if (!_isInitialized || _renderer == null) return;
-            ImGui.Render();
             _renderer.EndLayout();
         }
     }

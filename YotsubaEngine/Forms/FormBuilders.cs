@@ -10,15 +10,15 @@ namespace YotsubaEngine.Forms
         private readonly Button _button;
         private readonly UILibrary _library;
 
-        public ButtonBuilder(UILibrary library, string text = "")
+        public ButtonBuilder(UILibrary library, string text)
         {
             _library = library;
-            _button = new Button { Text = text };
+            _button = new Button { Text = text ?? string.Empty };
         }
 
         public ButtonBuilder WithText(string text)
         {
-            _button.Text = text;
+            _button.Text = text ?? string.Empty;
             return this;
         }
 
@@ -63,15 +63,15 @@ namespace YotsubaEngine.Forms
         private readonly Label _label;
         private readonly UILibrary _library;
 
-        public LabelBuilder(UILibrary library, string text = "")
+        public LabelBuilder(UILibrary library, string text)
         {
             _library = library;
-            _label = new Label { Text = text };
+            _label = new Label { Text = text ?? string.Empty };
         }
 
         public LabelBuilder WithText(string text)
         {
-            _label.Text = text;
+            _label.Text = text ?? string.Empty;
             return this;
         }
 
@@ -110,15 +110,15 @@ namespace YotsubaEngine.Forms
         private readonly CheckBox _checkBox;
         private readonly UILibrary _library;
 
-        public CheckBoxBuilder(UILibrary library, string text = "", bool isChecked = false)
+        public CheckBoxBuilder(UILibrary library, string text, bool isChecked = false)
         {
             _library = library;
-            _checkBox = new CheckBox { Text = text, IsChecked = isChecked };
+            _checkBox = new CheckBox { Text = text ?? string.Empty, IsChecked = isChecked };
         }
 
         public CheckBoxBuilder WithText(string text)
         {
-            _checkBox.Text = text;
+            _checkBox.Text = text ?? string.Empty;
             return this;
         }
 
@@ -172,12 +172,12 @@ namespace YotsubaEngine.Forms
         public TextBoxBuilder(UILibrary library, string text = "")
         {
             _library = library;
-            _textBox = new TextBox { Text = text };
+            _textBox = new TextBox { Text = text ?? string.Empty };
         }
 
         public TextBoxBuilder WithText(string text)
         {
-            _textBox.Text = text;
+            _textBox.Text = text ?? string.Empty;
             return this;
         }
 
@@ -228,10 +228,16 @@ namespace YotsubaEngine.Forms
         private readonly Slider _slider;
         private readonly UILibrary _library;
 
-        public SliderBuilder(UILibrary library)
+        public SliderBuilder(UILibrary library, string text)
         {
             _library = library;
-            _slider = new Slider();
+            _slider = new Slider { Text = text ?? string.Empty };
+        }
+
+        public SliderBuilder WithText(string text)
+        {
+            _slider.Text = text ?? string.Empty;
+            return this;
         }
 
         public SliderBuilder WithValue(float value)
@@ -294,10 +300,16 @@ namespace YotsubaEngine.Forms
         private readonly ComboBox _comboBox;
         private readonly UILibrary _library;
 
-        public ComboBoxBuilder(UILibrary library)
+        public ComboBoxBuilder(UILibrary library, string text = "ComboBox")
         {
             _library = library;
-            _comboBox = new ComboBox();
+            _comboBox = new ComboBox { Text = text ?? string.Empty };
+        }
+
+        public ComboBoxBuilder WithText(string text)
+        {
+            _comboBox.Text = text ?? string.Empty;
+            return this;
         }
 
         public ComboBoxBuilder WithPosition(float x, float y)
@@ -356,15 +368,15 @@ namespace YotsubaEngine.Forms
         private readonly Window _window;
         private readonly UILibrary _library;
 
-        public WindowBuilder(UILibrary library, string title = "Window")
+        public WindowBuilder(UILibrary library, string title)
         {
             _library = library;
-            _window = new Window { Text = title };
+            _window = new Window { Text = title ?? "Window" };
         }
 
         public WindowBuilder WithTitle(string title)
         {
-            _window.Text = title;
+            _window.Text = title ?? "Window";
             return this;
         }
 
@@ -421,10 +433,16 @@ namespace YotsubaEngine.Forms
         private readonly Panel _panel;
         private readonly UILibrary _library;
 
-        public PanelBuilder(UILibrary library)
+        public PanelBuilder(UILibrary library, string text = "Panel")
         {
             _library = library;
-            _panel = new Panel();
+            _panel = new Panel { Text = text ?? string.Empty };
+        }
+
+        public PanelBuilder WithText(string text)
+        {
+            _panel.Text = text ?? string.Empty;
+            return this;
         }
 
         public PanelBuilder WithPosition(float x, float y)

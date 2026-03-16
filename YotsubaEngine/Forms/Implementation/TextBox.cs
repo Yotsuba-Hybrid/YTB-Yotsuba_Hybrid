@@ -25,11 +25,11 @@ namespace YotsubaEngine.Forms.Implementation
             {
                 if (_text != value)
                 {
-                    _text = value;
+                    _text = value ?? string.Empty;
                     UpdateBuffers();
-                    GumControl.Text = value;
-                    MyraControl.Text = value;
-                    OnValueChanged?.Invoke(value);
+                    GumControl.Text = _text;
+                    MyraControl.Text = _text;
+                    OnValueChanged?.Invoke(_text);
                 }
             }
         }
@@ -42,53 +42,33 @@ namespace YotsubaEngine.Forms.Implementation
 
         private MyraUi.TextBox MyraControl { get; set; }
         private GumUi.TextBox GumControl { get; set; }
-        private Func<string> ImGuIControl { get; set; }
 
         public TextBox()
         {
             _imguiBuffer = new byte[MaxBufferLength];
             UpdateBuffers();
 
-            MyraControl = new() { Tag = Text, Tooltip = Text };
-            GumControl = new() { Text = Text, Width = 200 };
+            MyraControl = new() { Tag = _text, Tooltip = _text };
+            GumControl = new() { Text = _text, Width = 200 };
 
             MyraControl.TextChanged += (_, _) =>
             {
-                _text = MyraControl.Text;
+                _text = MyraControl.Text ?? string.Empty;
                 UpdateBuffers();
                 OnValueChanged?.Invoke(_text);
             };
 
             GumControl.TextChanged += (_, _) =>
             {
-                _text = GumControl.Text;
+                _text = GumControl.Text ?? string.Empty;
                 UpdateBuffers();
                 OnValueChanged?.Invoke(_text);
-            };
-
-            ImGuIControl = () =>
-            {
-                string currentText = _text;
-                if (ImUi.InputText(Text, _imguiBuffer, MaxBufferLength))
-                {
-                    currentText = Encoding.UTF8.GetString(_imguiBuffer).TrimEnd('\0');
-                    if (currentText != _text)
-                    {
-                        _text = currentText;
-                        OnValueChanged?.Invoke(_text);
-                    }
-                }
-                if (ImUi.IsItemDeactivatedAfterEdit())
-                {
-                    OnSubmit?.Invoke(_text);
-                }
-                return currentText;
             };
         }
 
         private void UpdateBuffers()
         {
-            var bytes = Encoding.UTF8.GetBytes(_text);
+            var bytes = Encoding.UTF8.GetBytes(_text ?? string.Empty);
             Array.Clear(_imguiBuffer, 0, _imguiBuffer.Length);
             Array.Copy(bytes, _imguiBuffer, Math.Min(bytes.Length, _imguiBuffer.Length - 1));
         }
@@ -97,12 +77,24 @@ namespace YotsubaEngine.Forms.Implementation
         {
             GumControl.X = Position.X;
             GumControl.Y = Position.Y;
-            GumControl.UpdateState();
         }
 
         void IImGui.DrawImGuI()
         {
-            ImGuIControl?.Invoke();
+            string label = Text ?? string.Empty;
+            if (ImUi.InputText(label, _imguiBuffer, MaxBufferLength))
+            {
+                string currentText = Encoding.UTF8.GetString(_imguiBuffer).TrimEnd('\0');
+                if (currentText != _text)
+                {
+                    _text = currentText;
+                    OnValueChanged?.Invoke(_text);
+                }
+            }
+            if (ImUi.IsItemDeactivatedAfterEdit())
+            {
+                OnSubmit?.Invoke(_text);
+            }
         }
 
         void IMyra.DrawMyra()
@@ -121,7 +113,7 @@ namespace YotsubaEngine.Forms.Implementation
 
         Func<string> IImGuiTextBox.GetImGuiTextBoxAsFunc()
         {
-            return ImGuIControl;
+            return () => _text ?? string.Empty;
         }
     }
 }

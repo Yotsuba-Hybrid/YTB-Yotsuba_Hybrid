@@ -13,7 +13,7 @@ namespace SandBoxGame.Core.Scripts.Screens
     /// <para>UI example using ImGui as the underlying library.</para>
     /// <para>Ideal for development tools and debugging.</para>
     /// </summary>
-    [Script(UISystem = UILibrary.ImGui)]
+    [Script(UISystem = UILibrary.GumUI)]
     public class ImGuiTestScreen : BaseScript
     {
         private IWindow _debugWindow;
@@ -55,6 +55,7 @@ namespace SandBoxGame.Core.Scripts.Screens
             _statsPanel = UI.CreatePanel()
                 .WithPosition(5, 5)
                 .Build();
+            _statsPanel.Text = "mypanel";
 
             _fpsLabel = UI.CreateLabel("FPS: 0")
                 .WithText("FPS: 0")
@@ -62,7 +63,8 @@ namespace SandBoxGame.Core.Scripts.Screens
                 .WithColor(Color.LightGreen)
                 .Build();
 
-            _speedSlider = UI.CreateSlider()
+
+            _speedSlider = UI.CreateSlider("myslider")
                 .WithPosition(5, 30)
                 .WithRange(0,100)
                 .WithValue(_speedValue)
@@ -78,7 +80,7 @@ namespace SandBoxGame.Core.Scripts.Screens
 
             _commandTextBox = UI.CreateTextBox("Enter command...")
                 .WithPosition(5, 110)
-                .WithText("")
+                .WithText("command")
                 .WithOnSubmit(OnCommandSubmit)
                 .Build();
 

@@ -32,7 +32,11 @@ namespace YotsubaEngine.Forms.Implementation.Managers
         {
         }
 
-        public void Draw(GameTime gameTime)
+        public void BeginFrame(GameTime gameTime)
+        {
+        }
+
+        public void EndFrame(GameTime gameTime)
         {
             if (!_isInitialized || Desktop == null) return;
             Desktop.Render();

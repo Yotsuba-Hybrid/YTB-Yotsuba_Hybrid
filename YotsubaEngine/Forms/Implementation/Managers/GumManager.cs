@@ -2,6 +2,8 @@ using Microsoft.Xna.Framework;
 using Gum.Forms.Controls;
 using MonoGameGum;
 using Gum.Forms;
+using Gum.Wireframe;
+using System;
 
 namespace YotsubaEngine.Forms.Implementation.Managers
 {
@@ -9,6 +11,8 @@ namespace YotsubaEngine.Forms.Implementation.Managers
     {
         private static bool _isInitialized;
         public bool IsReady => _isInitialized;
+
+        public static GraphicalUiElement Root => GumService.Default.Root;
 
         public void Initialize()
         {
@@ -21,13 +25,20 @@ namespace YotsubaEngine.Forms.Implementation.Managers
                 return;
             }
 
-            GumService.Default.Initialize(gameInstance, DefaultVisualsVersion.V3);
+            try
+            {
+                GumService.Default.Initialize(gameInstance, DefaultVisualsVersion.V3);
 
-            FrameworkElement.KeyboardsForUiControl.Add(GumService.Default.Keyboard);
-            FrameworkElement.GamePadsForUiControl.AddRange(GumService.Default.Gamepads);
+                FrameworkElement.KeyboardsForUiControl.Add(GumService.Default.Keyboard);
+                FrameworkElement.GamePadsForUiControl.AddRange(GumService.Default.Gamepads);
 
-            _isInitialized = true;
-            System.Diagnostics.Debug.WriteLine("[GumManager] Initialized successfully");
+                _isInitialized = true;
+                System.Diagnostics.Debug.WriteLine($"[GumManager] Initialized successfully. Root is null: {Root == null}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[GumManager] Error initializing Gum: {ex.Message}");
+            }
         }
 
         public void Update(GameTime gameTime)
@@ -36,7 +47,11 @@ namespace YotsubaEngine.Forms.Implementation.Managers
             GumService.Default.Update(gameTime);
         }
 
-        public void Draw(GameTime gameTime)
+        public void BeginFrame(GameTime gameTime)
+        {
+        }
+
+        public void EndFrame(GameTime gameTime)
         {
             if (!_isInitialized) return;
             GumService.Default.Draw();

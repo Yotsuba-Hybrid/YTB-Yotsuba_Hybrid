@@ -35,9 +35,9 @@ namespace YotsubaEngine.Forms.Implementation
             get => _text;
             set
             {
-                _text = value;
-                MyraControl.Text = value;
-                GumControl.Text = value;
+                _text = value ?? string.Empty;
+                MyraControl.Text = _text;
+                GumControl.Text = _text;
             }
         }
 
@@ -48,12 +48,11 @@ namespace YotsubaEngine.Forms.Implementation
 
         private MyraUi.CheckBox MyraControl { get; set; }
         private GumUi.CheckBox GumControl { get; set; }
-        private Func<bool, bool> ImGuIControl { get; set; }
 
         public CheckBox()
         {
-            MyraControl = new() { Tag = Text };
-            GumControl = new() { Text = Text };
+            MyraControl = new() { Tag = _text };
+            GumControl = new() { Text = _text };
 
             GumControl.Checked += (_, _) =>
             {
@@ -65,28 +64,22 @@ namespace YotsubaEngine.Forms.Implementation
                 _isChecked = false;
                 OnCheckedChanged?.Invoke(false);
             };
-
-            ImGuIControl = (value) =>
-            {
-                bool changed = ImUi.Checkbox(Text, ref _isChecked);
-                if (changed)
-                {
-                    OnCheckedChanged?.Invoke(_isChecked);
-                }
-                return changed;
-            };
         }
 
         void IGum.DrawGumUI()
         {
             GumControl.X = Position.X;
             GumControl.Y = Position.Y;
-            GumControl.UpdateState();
         }
 
         void IImGui.DrawImGuI()
         {
-            ImGuIControl.Invoke(_isChecked);
+            string label = _text ?? string.Empty;
+            bool changed = ImUi.Checkbox(label, ref _isChecked);
+            if (changed)
+            {
+                OnCheckedChanged?.Invoke(_isChecked);
+            }
         }
 
         void IMyra.DrawMyra()
@@ -105,7 +98,12 @@ namespace YotsubaEngine.Forms.Implementation
 
         Func<bool, bool> IImGuiCheckBox.GetImGuiCheckBoxAsFunc()
         {
-            return ImGuIControl;
+            return (_) =>
+            {
+                string label = _text ?? string.Empty;
+                bool changed = ImUi.Checkbox(label, ref _isChecked);
+                return changed;
+            };
         }
     }
 }

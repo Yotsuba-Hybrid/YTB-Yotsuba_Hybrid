@@ -104,51 +104,36 @@ namespace YotsubaEngine.Forms
             if (!_managers.TryGetValue(_activeLibrary, out var manager) || !manager.IsReady)
                 return;
 
-            // Para ImGui: abre el frame antes de dibujar controles
-            manager.PreDraw(gameTime);
+            // BeginFrame: Para ImGui abre el frame, para Myra/Gum no hace nada
+            manager.BeginFrame(gameTime);
 
-            // Render all controls added to root
-            foreach (var control in _rootControls)
+            // Solo ImGui necesita dibujar controles manualmente (immediate mode)
+            // Myra y Gum son retained mode: los widgets ya están en la jerarquía
+            if (_activeLibrary == UILibrary.ImGui)
             {
-                DrawControl(control);
+                foreach (var control in _rootControls)
+                {
+                    DrawImGuiControl(control);
+                }
             }
 
-            // Para ImGui: cierra el frame. Para Gum/Myra: renderiza
-            manager.Draw(gameTime);
+            // EndFrame: Para ImGui cierra el frame, para Myra/Gum hace el Render/Draw
+            manager.EndFrame(gameTime);
         }
 
-        private void DrawControl(IForm control)
+        private void DrawImGuiControl(IForm control)
         {
-            switch (_activeLibrary)
+            if (control is IImGui imguiControl)
             {
-                case UILibrary.Myra:
-                    if (control is IMyra myraControl)
-                    {
-                        myraControl.DrawMyra();
-                    }
-                    break;
-
-                case UILibrary.GumUI:
-                    if (control is IGum gumControl)
-                    {
-                        gumControl.DrawGumUI();
-                    }
-                    break;
-
-                case UILibrary.ImGui:
-                    if (control is IImGui imguiControl)
-                    {
-                        imguiControl.DrawImGuI();
-                    }
-                    break;
+                imguiControl.DrawImGuI();
             }
 
-            // Recursively draw children if it's a container
+            // Recursivamente dibujar hijos (solo para ImGui)
             if (control is IContainer container)
             {
                 foreach (var child in container.Children)
                 {
-                    DrawControl(child);
+                    DrawImGuiControl(child);
                 }
             }
         }
@@ -243,7 +228,7 @@ namespace YotsubaEngine.Forms
 
         private void ConnectToGum(IForm control)
         {
-            var root = GumService.Default.Root;
+            var root = GumManager.Root;
             if (root == null)
             {
                 Console.WriteLine("[FormsManager] Warning: Gum Root is null");
@@ -254,7 +239,6 @@ namespace YotsubaEngine.Forms
             var gumElement = GetGumElement(control);
             if (gumElement != null)
             {
-                // FrameworkElement has a .Visual property that is GraphicalUiElement
                 root.Children.Add(gumElement.Visual);
                 Console.WriteLine($"[FormsManager] Added Gum element to Root: {gumElement.GetType().Name}");
                 System.Diagnostics.Debug.WriteLine($"[FormsManager] Added Gum element to Root: {gumElement.GetType().Name}");
