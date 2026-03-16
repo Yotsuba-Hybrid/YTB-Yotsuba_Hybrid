@@ -41,7 +41,7 @@ namespace YotsubaEngine.Forms.Implementation
             {
                 _text = value;
                 GumControl.Text = value;
-                MyraControl.Text = value;
+                MyraControl.Tooltip = value;
             }
         }
 

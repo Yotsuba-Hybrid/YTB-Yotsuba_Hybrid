@@ -11,6 +11,7 @@ using YotsubaEngine.Core.System.YotsubaEngineUI;
 using YotsubaEngine.Core.System.YTBDragAndDrop;
 using YotsubaEngine.YTB_Toolkit;
 using YotsubaEngine.Forms.Contract;
+using YotsubaEngine.Forms;
 
 namespace YotsubaEngine.Core.YotsubaGame
 {
@@ -303,7 +304,7 @@ namespace YotsubaEngine.Core.YotsubaGame
             }
             // FormsSystem draws UI for non-ImGui libraries (Myra, Gum)
             // ImGui is already drawn by EngineUISystem in DEBUG mode, so skip it
-            if (FormsManager.Instance.ActiveLibrary != Contract.UILibrary.ImGui)
+            if (FormsManager.Instance.ActiveLibrary != UILibrary.ImGui)
             {
                 FormsSystem.DrawSystem(gameTime);
             }
