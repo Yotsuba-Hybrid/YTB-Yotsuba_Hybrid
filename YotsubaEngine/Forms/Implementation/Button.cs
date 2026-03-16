@@ -16,6 +16,7 @@ namespace YotsubaEngine.Forms.Implementation
 
         private string _text = string.Empty;
         private Vector2 _position;
+        private MyraUi.Label _myraLabel;
 
         public Button()
         {
@@ -24,7 +25,9 @@ namespace YotsubaEngine.Forms.Implementation
                 Width = 100,
                 Height = 30
             };
-            MyraControl = new MyraUi.Button(_text);
+
+            _myraLabel = new MyraUi.Label { Text = _text };
+            MyraControl = new MyraUi.Button { Content = _myraLabel };
 
             GumControl.Click += GumControl_Click;
         }
@@ -41,7 +44,7 @@ namespace YotsubaEngine.Forms.Implementation
             {
                 _text = value;
                 GumControl.Text = value;
-                MyraControl.Tooltip = value;
+                _myraLabel.Text = value;
             }
         }
 

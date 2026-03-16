@@ -37,7 +37,17 @@ namespace YotsubaEngine.Forms.Implementation
         private GumUi.Label GumControl { get; set; }
 
         private Func<string> ImGuIControl;
-        public Vector2 Position { get; set; }
+        private Vector2 _position;
+        public Vector2 Position
+        {
+            get => _position;
+            set
+            {
+                _position = value;
+                MyraControl.Left = (int)value.X;
+                MyraControl.Top = (int)value.Y;
+            }
+        }
 
         void IGum.DrawGumUI()
         {
