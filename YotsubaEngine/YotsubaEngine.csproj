@@ -31,6 +31,7 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="ActionFiles\ImGuiEditor\" />
+	  <Folder Include="Graphics\Multiplatform\UI\" />
 	</ItemGroup>
 	<ItemGroup>
 	  <None Update="ActionFiles\ImGuiEditor\imgui.ini">
