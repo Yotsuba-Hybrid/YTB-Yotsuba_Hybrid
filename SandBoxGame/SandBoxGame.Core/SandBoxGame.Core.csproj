@@ -21,4 +21,10 @@
   <ItemGroup>
     <ProjectReference Include="..\..\YotsubaEngine\YotsubaEngine.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Gum\**\*">
+      <Link>Content\Gum\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

@@ -20,9 +20,6 @@
   <ItemGroup>
     <ProjectReference Include="..\SandBoxGame.Core\SandBoxGame.Core.csproj" />
   </ItemGroup>
-	<PropertyGroup>
-		<DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
-	</PropertyGroup>
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.Native" Version="3.8.5-preview.*" />
     <PackageReference Include="MonoGame.Runtime.Windows.Vulkan" Version="3.8.5-preview.*" />
