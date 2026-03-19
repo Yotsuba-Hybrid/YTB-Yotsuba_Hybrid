@@ -66,8 +66,8 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
         {
             try
             {
-                // Verificar y crear archivos si no existen (solo en Windows/desarrollo)
-                if (OperatingSystem.IsWindows())
+                // Verificar y crear archivos si no existen (solo en Desktop/desarrollo)
+                if (YTBGlobalState.IsDesktop)
                 {
                     if (!Directory.Exists(DevelopmentConfigPath) ||
                         !File.Exists(Path.Combine(DevelopmentConfigPath, JSONGameName)) ||
@@ -80,7 +80,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 
                 if (recompilar)
                 {
-                    if (!OperatingSystem.IsWindows())
+                    if (!YTBGlobalState.IsDesktop)
                     {
                         //-:cnd:noEmit
 #if YTB
@@ -127,7 +127,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
             YTBGameInfo GameInfo = null;
             YTBConfig GameConfig = null;
 
-            if (OperatingSystem.IsWindows())
+            if (YTBGlobalState.IsDesktop)
             {
                 var gameFilePath = Path.Combine(CompiledConfigPath, JSONGameName);
                 var configFilePath = Path.Combine(CompiledConfigPath, JSONGameConfigName);
@@ -144,7 +144,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                         GameConfig = await JsonSerializer.DeserializeAsync<YTBConfig>(stream, YotsubaJsonContext.Default.YTBConfig);
                 }
             }
-            else // IMPLEMENTACIÓN ANDROID SUPER OPTIMIZADA
+            else // IMPLEMENTACIÓN MÓVIL (Android/iOS)
             {
                 string gameFilePathRelative = Path.Combine(YTBGlobalState.CompiledAssetsFolderName, GameConfigFolder, JSONGameName).Replace('\\', '/');
                 string configFilePathRelative = Path.Combine(YTBGlobalState.CompiledAssetsFolderName, GameConfigFolder, JSONGameConfigName).Replace('\\', '/');
@@ -191,7 +191,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
             // Verificación de nulidad (Reemplaza el antiguo String.IsNullOrEmpty)
             if (GameInfo == null)
             {
-                if (OperatingSystem.IsWindows())
+                if (YTBGlobalState.IsDesktop)
                 {
                     EngineUISystem.SendLog("[ReadYTBFiles] Archivo de juego vacío o no encontrado. Creando archivo por defecto...");
 
@@ -253,7 +253,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                     GameName = "YotsubaGame"
                 };
 
-                if (OperatingSystem.IsWindows())
+                if (YTBGlobalState.IsDesktop)
                 {
                     var configFilePath = Path.Combine(CompiledConfigPath, JSONGameConfigName);
                     Directory.CreateDirectory(Path.GetDirectoryName(configFilePath));

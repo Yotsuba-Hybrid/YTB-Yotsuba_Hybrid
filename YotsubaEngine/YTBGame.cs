@@ -120,6 +120,7 @@ if (IsDesktop)
             }
 #endif
 
+SetConfig();
         }
 
         protected virtual void SetConfig()

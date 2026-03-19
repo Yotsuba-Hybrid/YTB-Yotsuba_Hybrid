@@ -206,8 +206,6 @@ namespace SandBoxGame.Core
         /// </summary>
         protected override void LoadContent()
         {
-            YotsubaGraphicsManager.InitializeAssets(AssetRegister.TextureAssets, AssetRegister.FontAssets);
-
             base.LoadContent();
         }
 
