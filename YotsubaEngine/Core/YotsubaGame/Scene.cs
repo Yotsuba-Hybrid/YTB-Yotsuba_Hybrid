@@ -80,11 +80,6 @@ namespace YotsubaEngine.Core.YotsubaGame
         private RenderSystem2D RenderSystem2D;
 
         /// <summary>
-        /// Sistema encargado de mostrar los botones de la libreria ImGui en pantalla
-        /// </summary>
-        private GumUISystem2D GumUISystem2D;
-
-        /// <summary>
         /// Sistema que gestiona todo lo que se ve en pantalla y que sea 3D específicamente, renderizar modelos 3D.
         /// </summary>
         private RenderSystem3D RenderSystem3D;
@@ -145,7 +140,6 @@ namespace YotsubaEngine.Core.YotsubaGame
             ButtonSystem2D = new ButtonSystem2D();
             PhysicsSystem2D = new PhysicsSystem2D();
             RenderSystem2D = new RenderSystem2D();
-            GumUISystem2D = new();
             RenderSystem3D = new RenderSystem3D();
             CameraSystem = new CameraSystem(_graphics);
             InputSystem = new InputSystem();
@@ -176,7 +170,6 @@ namespace YotsubaEngine.Core.YotsubaGame
             ButtonSystem2D.InitializeSystem(EntityManager);
             PhysicsSystem2D.InitializeSystem(EntityManager);
             RenderSystem2D.InitializeSystem(EntityManager);
-            GumUISystem2D.InitializeSystem(EntityManager);
             RenderSystem3D.InitializeSystem(EntityManager);
             CameraSystem.InitializeSystem(EntityManager);
             InputSystem.InitializeSystem(EntityManager);
@@ -194,7 +187,7 @@ namespace YotsubaEngine.Core.YotsubaGame
             //+:cnd:noEmit
             //-:cnd:noEmit
 #if YTB
-            if (OperatingSystem.IsWindows())
+            if (YTBGlobalState.IsDesktop)
             {
                 EngineUISystem.InitializeSystem(EntityManager, content);
             }
@@ -231,7 +224,6 @@ namespace YotsubaEngine.Core.YotsubaGame
             PhysicsSystem2D.UpdateSystem(gameTime);
             ButtonSystem2D.UpdateSystem(gameTime);
             AnimationSystem2D.UpdateSystem(gameTime);
-            GumUISystem2D.UpdateSystem(gameTime);
             CameraSystem.UpdateSystem(gameTime);
             SystemBuilder.UpdateSystem(gameTime);
             try
@@ -286,7 +278,6 @@ namespace YotsubaEngine.Core.YotsubaGame
 
                 FontSystem2D.DrawSystem(gameTime, _spriteBatch);
 
-                GumUISystem2D.DrawSystem(gameTime);
 
 
                 Draw3D(gameTime);
@@ -295,7 +286,7 @@ namespace YotsubaEngine.Core.YotsubaGame
             }
             //-:cnd:noEmit
 #if YTB
-            if (isWindows)
+            if (YTBGlobalState.IsDesktop)
             {
                 EngineUISystem.UpdateSystem(_spriteBatch, gameTime);
             }
@@ -344,7 +335,6 @@ namespace YotsubaEngine.Core.YotsubaGame
             AnimationSystem2D.Dispose();
             ButtonSystem2D.Dispose();
             PhysicsSystem2D.Dispose();
-            GumUISystem2D.Dispose();
             RenderSystem3D.Dispose();
             CameraSystem.Dispose();
             InputSystem.Dispose();

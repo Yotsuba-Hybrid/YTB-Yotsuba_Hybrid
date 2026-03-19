@@ -131,9 +131,9 @@ namespace YotsubaEngine.Core.System.YTBDragAndDrop
             {
 //-:cnd:noEmit
 #if YTB
-                bool canRenderUIElements = RenderSystem2D.IsGameActive || !OperatingSystem.IsWindows();
+                bool canRenderUIElements = RenderSystem2D.IsGameActive || !YTBGlobalState.IsDesktop;
 #else
-                bool canRenderUIElements = !OperatingSystem.IsWindows();
+                bool canRenderUIElements = !YTBGlobalState.IsDesktop;
 #endif
 //+:cnd:noEmit
 

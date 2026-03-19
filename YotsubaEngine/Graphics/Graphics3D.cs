@@ -153,7 +153,7 @@ public class Graphics3D
     /// <param name="rotation">Rotación en grados. <para>Rotation in degrees.</para></param>
     public void Draw3DRectangle(Vector3 center, float width, float height, Color color, Matrix view, Matrix projection, float rotation = 0f)
     {
-        
+
         float halfWidth = width * 0.5f;
         float halfHeight = height * 0.5f;
 
@@ -192,7 +192,7 @@ public class Graphics3D
     /// <param name="view">Matriz de vista. <para>View matrix.</para></param>
     /// <param name="projection">Matriz de proyección. <para>Projection matrix.</para></param>
     /// <param name="rotation">Rotación en grados. <para>Rotation in degrees.</para></param>
-    public void DrawSquare(Vector3 center, float size, Color color, Matrix view, Matrix projection, float rotation = 0f) 
+    public void DrawSquare(Vector3 center, float size, Color color, Matrix view, Matrix projection, float rotation = 0f)
         => Draw3DRectangle(center, size, size, color, view, projection, rotation);
 
 
@@ -216,7 +216,7 @@ public class Graphics3D
         float halfHeight = height * 0.5f;
 
         VertexPositionColorTexture[] vertices = new VertexPositionColorTexture[4];
-        
+
         vertices[0] = new VertexPositionColorTexture(
            new Vector3(-halfWidth, 0, 0),
            color,

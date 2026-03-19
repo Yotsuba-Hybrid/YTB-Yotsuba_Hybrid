@@ -1,0 +1,545 @@
+{
+  "UserEvents": {
+    "63614ffde2d350df40e2c69689693d0612835b1370e0e2037d4d198939bb5184": [
+      {
+        "NewName": "TitleScreen",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 0,
+        "TimestampUtc": "2026-03-18T15:22:44.849016Z"
+      },
+      {
+        "NewName": "TitleScreen.ButtonStandardInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T15:23:13.7117518Z"
+      },
+      {
+        "NewName": null,
+        "OldName": "TitleScreen.Controls/ButtonStandard ButtonStandardInstance in TitleScreen",
+        "ElementType": "Screens",
+        "EventType": 6,
+        "TimestampUtc": "2026-03-18T15:23:23.3147795Z"
+      },
+      {
+        "NewName": "TitleScreen.ButtonStandardInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T15:23:28.6221611Z"
+      },
+      {
+        "NewName": "TitleScreen.ButtonStandardInstance1",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T15:23:55.5069034Z"
+      },
+      {
+        "NewName": null,
+        "OldName": "TitleScreen.Controls/ButtonStandard ButtonStandardInstance in TitleScreen",
+        "ElementType": "Screens",
+        "EventType": 6,
+        "TimestampUtc": "2026-03-18T15:55:04.1795215Z"
+      },
+      {
+        "NewName": null,
+        "OldName": "TitleScreen.Controls/ButtonStandard ButtonStandardInstance1 in TitleScreen",
+        "ElementType": "Screens",
+        "EventType": 6,
+        "TimestampUtc": "2026-03-18T15:55:13.3314521Z"
+      },
+      {
+        "NewName": "TitleScreen.StackPanelInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T15:55:31.3303742Z"
+      },
+      {
+        "NewName": "TitleScreen.LabelInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T15:56:10.908739Z"
+      },
+      {
+        "NewName": "TitleScreen.ButtonStandardInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T16:06:21.8855232Z"
+      },
+      {
+        "NewName": "TitleScreen.CheckBoxInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T16:08:50.8692989Z"
+      },
+      {
+        "NewName": null,
+        "OldName": "TitleScreen.Controls/CheckBox CheckBoxInstance in TitleScreen",
+        "ElementType": "Screens",
+        "EventType": 6,
+        "TimestampUtc": "2026-03-18T16:09:57.4928736Z"
+      },
+      {
+        "NewName": "TitleScreen.CheckBoxInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T16:10:03.2480126Z"
+      },
+      {
+        "NewName": null,
+        "OldName": "TitleScreen.Controls/CheckBox CheckBoxInstance in TitleScreen",
+        "ElementType": "Screens",
+        "EventType": 6,
+        "TimestampUtc": "2026-03-18T16:10:18.2560371Z"
+      },
+      {
+        "NewName": "TitleScreen.CheckBoxInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T16:10:24.8536883Z"
+      },
+      {
+        "NewName": "TitleScreen.ComboBoxInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T16:20:02.4516412Z"
+      },
+      {
+        "NewName": "TitleScreen.MenuItemInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T16:24:45.131075Z"
+      },
+      {
+        "NewName": "TitleScreen.MenuInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T16:24:54.5108991Z"
+      },
+      {
+        "NewName": "TitleScreen.DialogBoxInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T16:26:33.2880288Z"
+      },
+      {
+        "NewName": null,
+        "OldName": "TitleScreen.Controls/DialogBox DialogBoxInstance in TitleScreen",
+        "ElementType": "Screens",
+        "EventType": 6,
+        "TimestampUtc": "2026-03-18T16:26:36.2165208Z"
+      },
+      {
+        "NewName": "Controls/OrangeButton",
+        "OldName": null,
+        "ElementType": "Components",
+        "EventType": 0,
+        "TimestampUtc": "2026-03-18T16:39:04.1303046Z"
+      },
+      {
+        "NewName": null,
+        "OldName": "Controls/OrangeButton",
+        "ElementType": "Components",
+        "EventType": 1,
+        "TimestampUtc": "2026-03-18T17:07:23.8618526Z"
+      },
+      {
+        "NewName": "Controls/OrangeButton",
+        "OldName": null,
+        "ElementType": "Components",
+        "EventType": 0,
+        "TimestampUtc": "2026-03-18T17:07:36.379967Z"
+      },
+      {
+        "NewName": null,
+        "OldName": "Controls/OrangeButton",
+        "ElementType": "Components",
+        "EventType": 1,
+        "TimestampUtc": "2026-03-18T17:09:10.815241Z"
+      },
+      {
+        "NewName": "Controls/OrangeButton",
+        "OldName": null,
+        "ElementType": "Components",
+        "EventType": 0,
+        "TimestampUtc": "2026-03-18T17:09:42.9874378Z"
+      },
+      {
+        "NewName": null,
+        "OldName": "Controls/OrangeButton",
+        "ElementType": "Components",
+        "EventType": 1,
+        "TimestampUtc": "2026-03-18T17:09:56.8780492Z"
+      },
+      {
+        "NewName": "Controls/OrangeButton",
+        "OldName": null,
+        "ElementType": "Components",
+        "EventType": 0,
+        "TimestampUtc": "2026-03-18T17:10:10.9142942Z"
+      },
+      {
+        "NewName": "TitleScreen.OrangeButtonInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T17:11:32.2425962Z"
+      },
+      {
+        "NewName": null,
+        "OldName": "TitleScreen.Controls/OrangeButton OrangeButtonInstance in TitleScreen",
+        "ElementType": "Screens",
+        "EventType": 6,
+        "TimestampUtc": "2026-03-18T17:15:55.094797Z"
+      },
+      {
+        "NewName": null,
+        "OldName": "TitleScreen.Controls/ButtonStandard ButtonStandardInstance in TitleScreen",
+        "ElementType": "Screens",
+        "EventType": 6,
+        "TimestampUtc": "2026-03-18T17:16:09.5387284Z"
+      },
+      {
+        "NewName": null,
+        "OldName": "TitleScreen.Controls/CheckBox CheckBoxInstance in TitleScreen",
+        "ElementType": "Screens",
+        "EventType": 6,
+        "TimestampUtc": "2026-03-18T17:16:09.5617032Z"
+      },
+      {
+        "NewName": null,
+        "OldName": "TitleScreen.Controls/ComboBox ComboBoxInstance in TitleScreen",
+        "ElementType": "Screens",
+        "EventType": 6,
+        "TimestampUtc": "2026-03-18T17:16:09.5840174Z"
+      },
+      {
+        "NewName": null,
+        "OldName": "TitleScreen.Controls/Label LabelInstance in TitleScreen",
+        "ElementType": "Screens",
+        "EventType": 6,
+        "TimestampUtc": "2026-03-18T17:16:09.6110913Z"
+      },
+      {
+        "NewName": null,
+        "OldName": "TitleScreen.Controls/MenuItem MenuItemInstance in TitleScreen",
+        "ElementType": "Screens",
+        "EventType": 6,
+        "TimestampUtc": "2026-03-18T17:16:09.6357627Z"
+      },
+      {
+        "NewName": null,
+        "OldName": "TitleScreen.Controls/Menu MenuInstance in TitleScreen",
+        "ElementType": "Screens",
+        "EventType": 6,
+        "TimestampUtc": "2026-03-18T17:16:09.6634615Z"
+      },
+      {
+        "NewName": null,
+        "OldName": "TitleScreen.Controls/StackPanel StackPanelInstance in TitleScreen",
+        "ElementType": "Screens",
+        "EventType": 6,
+        "TimestampUtc": "2026-03-18T17:16:09.6893826Z"
+      },
+      {
+        "NewName": "TitleScreen.OrangeButtonInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T17:16:13.2049269Z"
+      },
+      {
+        "NewName": null,
+        "OldName": "TitleScreen.Controls/OrangeButton OrangeButtonInstance in TitleScreen",
+        "ElementType": "Screens",
+        "EventType": 6,
+        "TimestampUtc": "2026-03-18T17:16:23.547083Z"
+      },
+      {
+        "NewName": "TitleScreen.ButtonDenyInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T17:16:30.3697952Z"
+      },
+      {
+        "NewName": "TitleScreen.ButtonCloseInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T17:16:37.9579441Z"
+      },
+      {
+        "NewName": "TitleScreen.DialogBoxInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T17:17:01.1573878Z"
+      },
+      {
+        "NewName": "TitleScreen.OrangeButtonInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T17:18:03.9296882Z"
+      },
+      {
+        "NewName": null,
+        "OldName": "Controls/OrangeButton",
+        "ElementType": "Components",
+        "EventType": 1,
+        "TimestampUtc": "2026-03-18T17:18:20.4923274Z"
+      },
+      {
+        "NewName": null,
+        "OldName": "TitleScreen.Controls/OrangeButton OrangeButtonInstance in TitleScreen",
+        "ElementType": "Screens",
+        "EventType": 6,
+        "TimestampUtc": "2026-03-18T17:18:25.0837345Z"
+      },
+      {
+        "NewName": "Editor",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 0,
+        "TimestampUtc": "2026-03-18T17:23:44.7586042Z"
+      },
+      {
+        "NewName": "Editor.ComboBoxInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T17:24:01.8269994Z"
+      },
+      {
+        "NewName": null,
+        "OldName": "Editor.Controls/ComboBox ComboBoxInstance in Editor",
+        "ElementType": "Screens",
+        "EventType": 6,
+        "TimestampUtc": "2026-03-18T17:24:09.3628992Z"
+      },
+      {
+        "NewName": "Editor.ListBoxInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T17:24:24.4788383Z"
+      },
+      {
+        "NewName": "Editor.ScrollViewerInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T17:24:54.4534922Z"
+      },
+      {
+        "NewName": "Editor.PanelInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T17:25:02.2363203Z"
+      },
+      {
+        "NewName": null,
+        "OldName": "Editor.Controls/ScrollViewer ScrollViewerInstance in Editor",
+        "ElementType": "Screens",
+        "EventType": 6,
+        "TimestampUtc": "2026-03-18T17:25:11.7934644Z"
+      },
+      {
+        "NewName": null,
+        "OldName": "Editor.Controls/Panel PanelInstance in Editor",
+        "ElementType": "Screens",
+        "EventType": 6,
+        "TimestampUtc": "2026-03-18T17:27:56.9913315Z"
+      },
+      {
+        "NewName": "Editor.ButtonTabInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T17:28:40.8146016Z"
+      },
+      {
+        "NewName": "Editor.ButtonTabInstance1",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T17:28:53.2742187Z"
+      },
+      {
+        "NewName": "Editor.DividerHorizontalInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T17:34:08.8807207Z"
+      },
+      {
+        "NewName": "Editor.RectangleInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T18:07:45.6259103Z"
+      },
+      {
+        "NewName": "Editor.ContainerInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T18:09:18.0187068Z"
+      },
+      {
+        "NewName": "Editor.CircleInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T18:09:45.9777182Z"
+      },
+      {
+        "NewName": "MyScreen",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 0,
+        "TimestampUtc": "2026-03-18T18:11:35.7806462Z"
+      },
+      {
+        "NewName": "Controls/TreeNode",
+        "OldName": null,
+        "ElementType": "Components",
+        "EventType": 0,
+        "TimestampUtc": "2026-03-18T18:16:50.5749485Z"
+      },
+      {
+        "NewName": "Controls/TreeNode (Container).TreeViewInstance",
+        "OldName": null,
+        "ElementType": "Components",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T18:17:19.7832102Z"
+      },
+      {
+        "NewName": "Controls/TreeNode (Container).TreeViewItemInstance",
+        "OldName": null,
+        "ElementType": "Components",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T18:17:28.6462622Z"
+      },
+      {
+        "NewName": "Controls/TreeNode (Container).TreeViewToggleInstance",
+        "OldName": null,
+        "ElementType": "Components",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T18:17:50.2096695Z"
+      },
+      {
+        "NewName": "MyScreen.TreeNodeInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T18:19:16.1281611Z"
+      },
+      {
+        "NewName": "TreeNode (Container).ColoredRectangleInstance",
+        "OldName": null,
+        "ElementType": "Components",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T18:23:18.6316616Z"
+      },
+      {
+        "NewName": null,
+        "OldName": "TreeNode",
+        "ElementType": "Components",
+        "EventType": 1,
+        "TimestampUtc": "2026-03-18T18:24:03.5046561Z"
+      },
+      {
+        "NewName": null,
+        "OldName": "MyScreen",
+        "ElementType": "Screens",
+        "EventType": 1,
+        "TimestampUtc": "2026-03-18T18:24:10.6309098Z"
+      },
+      {
+        "NewName": null,
+        "OldName": "MyScreen",
+        "ElementType": "Screens",
+        "EventType": 1,
+        "TimestampUtc": "2026-03-18T19:13:59.3845005Z"
+      },
+      {
+        "NewName": "Test",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 0,
+        "TimestampUtc": "2026-03-18T19:14:05.2872697Z"
+      },
+      {
+        "NewName": "Test.TreeNodeInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T19:14:12.6844801Z"
+      },
+      {
+        "NewName": null,
+        "OldName": "Test",
+        "ElementType": "Screens",
+        "EventType": 1,
+        "TimestampUtc": "2026-03-18T19:17:07.8077106Z"
+      },
+      {
+        "NewName": null,
+        "OldName": "Controls/TreeNode",
+        "ElementType": "Components",
+        "EventType": 1,
+        "TimestampUtc": "2026-03-18T19:17:17.4251253Z"
+      },
+      {
+        "NewName": "YTBTEST",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 0,
+        "TimestampUtc": "2026-03-18T22:26:31.9918615Z"
+      },
+      {
+        "NewName": "YTBTEST.MenuInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T22:27:03.5558332Z"
+      },
+      {
+        "NewName": "YTBTEST.MenuItemInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T22:28:01.0618061Z"
+      },
+      {
+        "NewName": "YTBTEST.WindowInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T22:30:48.8160087Z"
+      },
+      {
+        "NewName": "YTBTEST.LabelInstance",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 5,
+        "TimestampUtc": "2026-03-18T22:31:18.7316682Z"
+      }
+    ]
+  }
+}

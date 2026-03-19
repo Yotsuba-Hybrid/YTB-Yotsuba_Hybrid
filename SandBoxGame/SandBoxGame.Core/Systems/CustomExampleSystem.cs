@@ -1,5 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGameGum;
 using YotsubaEngine.Core.Component.C_3D;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;
@@ -15,10 +16,23 @@ namespace SandBoxGame.Core.Systems
     /// </summary>
     public class CustomExampleSystem : IRenderSystem
     {
-         
+        GumService GumUI => GumService.Default;
+
+        public CustomExampleSystem()
+        {
+        }
         public override void InitializeSystem(EntityManager entities)
         {
             EntityManager = entities;
+
+           // var gumProject = GumUI.Initialize(YTBGlobalState.Game,
+           //// This is relative to Content:
+           //"Gum/GumProject.gumx");
+
+
+           // var screen = new YTBTESTRuntime();
+           // screen.AddToRoot();
+
         }
 
         
@@ -38,7 +52,7 @@ namespace SandBoxGame.Core.Systems
 
         public override void UpdateSystem(GameTime gameTime)
         {
-            
+            //GumUI.Update(gameTime);
 
         }
 
@@ -46,6 +60,7 @@ namespace SandBoxGame.Core.Systems
         #region Los metodos de renderizado se ejecutan una vez por frame y despues de todos los demas metodos
         public override void Render2D(SpriteBatch spriteBatch, GameTime gameTime)
         {
+            //GumUI.Draw();
             //throw new NotImplementedException();
         }
 
