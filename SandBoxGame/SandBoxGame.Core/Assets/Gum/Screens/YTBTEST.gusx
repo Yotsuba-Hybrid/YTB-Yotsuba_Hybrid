@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScreenSave xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>YTBTEST</Name>
+  <State>
+    <Name>Default</Name>
+    <Variable Type="HorizontalAlignment" Name="LabelInstance.HorizontalAlignment" SetsValue="true">
+      <Value xsi:type="xsd:int">0</Value>
+    </Variable>
+    <Variable Type="string" Name="LabelInstance.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">WindowInstance</Value>
+    </Variable>
+    <Variable Type="string" Name="LabelInstance.Text" SetsValue="true">
+      <Value xsi:type="xsd:string">SCENES VIEWER</Value>
+    </Variable>
+    <Variable Type="VerticalAlignment" Name="LabelInstance.VerticalAlignment" SetsValue="true">
+      <Value xsi:type="xsd:int">0</Value>
+    </Variable>
+    <Variable Type="float" Name="LabelInstance.X" SetsValue="true">
+      <Value xsi:type="xsd:float">-56</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="LabelInstance.XUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">6</Value>
+    </Variable>
+    <Variable Type="float" Name="LabelInstance.Y" SetsValue="true">
+      <Value xsi:type="xsd:float">7</Value>
+    </Variable>
+    <Variable Type="float" Name="MenuInstance.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">30</Value>
+    </Variable>
+    <Variable Type="string" Name="MenuInstance.Parent" SetsValue="true" />
+    <Variable Type="float" Name="MenuInstance.X" SetsValue="true">
+      <Value xsi:type="xsd:float">0</Value>
+    </Variable>
+    <Variable Type="HorizontalAlignment" Name="MenuInstance.XOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="MenuInstance.XUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">6</Value>
+    </Variable>
+    <Variable Type="float" Name="MenuInstance.Y" SetsValue="true">
+      <Value xsi:type="xsd:float">0</Value>
+    </Variable>
+    <Variable Type="VerticalAlignment" Name="MenuInstance.YOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">0</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="MenuInstance.YUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="string" Name="MenuItemInstance.Header" SetsValue="true">
+      <Value xsi:type="xsd:string">File</Value>
+    </Variable>
+    <Variable Type="float" Name="MenuItemInstance.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">0</Value>
+    </Variable>
+    <Variable Type="string" Name="MenuItemInstance.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">MenuInstance.InnerPanelInstance</Value>
+    </Variable>
+    <Variable Type="float" Name="MenuItemInstance.X" SetsValue="true">
+      <Value xsi:type="xsd:float">7</Value>
+    </Variable>
+    <Variable Type="float" Name="MenuItemInstance.Y" SetsValue="true">
+      <Value xsi:type="xsd:float">7</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="MenuItemInstance.YUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="float" Name="WindowInstance.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">687</Value>
+    </Variable>
+    <Variable Type="float" Name="WindowInstance.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">302</Value>
+    </Variable>
+    <Variable Type="float" Name="WindowInstance.X" SetsValue="true">
+      <Value xsi:type="xsd:float">3</Value>
+    </Variable>
+    <Variable Type="float" Name="WindowInstance.Y" SetsValue="true">
+      <Value xsi:type="xsd:float">29</Value>
+    </Variable>
+  </State>
+  <Instance Name="LabelInstance" BaseType="Controls/Label" />
+  <Instance Name="MenuItemInstance" BaseType="Controls/MenuItem" />
+  <Instance Name="WindowInstance" BaseType="Controls/Window" />
+  <Instance Name="MenuInstance" BaseType="Controls/Menu" />
+  <Behaviors />
+</ScreenSave>

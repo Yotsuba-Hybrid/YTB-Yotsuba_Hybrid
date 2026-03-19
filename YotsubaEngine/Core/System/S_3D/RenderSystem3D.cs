@@ -64,7 +64,7 @@ namespace YotsubaEngine.Core.System.S_3D
 
             //-:cnd:noEmit
 #if YTB
-            if (OperatingSystem.IsWindows())
+            if (YTBGlobalState.IsDesktop)
                 if (GameWontRun.GameWontRunByException) return;
 #endif
             //+:cnd:noEmit

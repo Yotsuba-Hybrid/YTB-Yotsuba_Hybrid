@@ -120,6 +120,7 @@ if (IsDesktop)
             }
 #endif
 
+SetConfig();
         }
 
         protected virtual void SetConfig()
@@ -185,7 +186,7 @@ if (IsDesktop)
         protected override void Initialize()
         {
 
-            YTBGum.Initialize(this);
+           
             if (YTBGlobalState.EngineEnabled && YTBGlobalState.IsDesktop)
             {
                 GuiRenderer = new ImGuiRenderer(this);

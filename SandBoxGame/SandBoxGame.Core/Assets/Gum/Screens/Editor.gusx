@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScreenSave xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>Editor</Name>
+  <State>
+    <Name>Default</Name>
+    <Variable Type="float" Name="ButtonTabInstance.X" SetsValue="true">
+      <Value xsi:type="xsd:float">94</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="ButtonTabInstance.XUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">0</Value>
+    </Variable>
+    <Variable Type="float" Name="ButtonTabInstance.Y" SetsValue="true">
+      <Value xsi:type="xsd:float">61</Value>
+    </Variable>
+    <Variable Type="float" Name="ButtonTabInstance1.X" SetsValue="true">
+      <Value xsi:type="xsd:float">-234</Value>
+    </Variable>
+    <Variable Type="float" Name="ButtonTabInstance1.Y" SetsValue="true">
+      <Value xsi:type="xsd:float">60</Value>
+    </Variable>
+    <Variable Type="int" Name="CircleInstance.Blue" SetsValue="true">
+      <Value xsi:type="xsd:int">53</Value>
+    </Variable>
+    <Variable Type="int" Name="CircleInstance.Green" SetsValue="true">
+      <Value xsi:type="xsd:int">167</Value>
+    </Variable>
+    <Variable Type="int" Name="CircleInstance.Red" SetsValue="true">
+      <Value xsi:type="xsd:int">37</Value>
+    </Variable>
+    <Variable Type="float" Name="CircleInstance.X" SetsValue="true">
+      <Value xsi:type="xsd:float">463.21835</Value>
+    </Variable>
+    <Variable Type="float" Name="CircleInstance.Y" SetsValue="true">
+      <Value xsi:type="xsd:float">458.62067</Value>
+    </Variable>
+    <Variable Type="float" Name="ContainerInstance.X" SetsValue="true">
+      <Value xsi:type="xsd:float">454.02298</Value>
+    </Variable>
+    <Variable Type="float" Name="ContainerInstance.Y" SetsValue="true">
+      <Value xsi:type="xsd:float">212.64368</Value>
+    </Variable>
+    <Variable Type="float" Name="DividerHorizontalInstance.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">-125</Value>
+    </Variable>
+    <Variable Type="float" Name="DividerHorizontalInstance.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">792</Value>
+    </Variable>
+    <Variable Type="float" Name="DividerHorizontalInstance.X" SetsValue="true">
+      <Value xsi:type="xsd:float">7.654043E-15</Value>
+    </Variable>
+    <Variable Type="float" Name="DividerHorizontalInstance.Y" SetsValue="true">
+      <Value xsi:type="xsd:float">125</Value>
+    </Variable>
+    <Variable Type="float" Name="ListBoxInstance.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">255</Value>
+    </Variable>
+    <Variable Type="string" Name="ListBoxInstance.Parent" SetsValue="true" />
+    <Variable Type="float" Name="ListBoxInstance.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">240</Value>
+    </Variable>
+    <Variable Type="float" Name="ListBoxInstance.X" SetsValue="true">
+      <Value xsi:type="xsd:float">4.531193E-15</Value>
+    </Variable>
+    <Variable Type="HorizontalAlignment" Name="ListBoxInstance.XOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">0</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="ListBoxInstance.XUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">0</Value>
+    </Variable>
+    <Variable Type="float" Name="ListBoxInstance.Y" SetsValue="true">
+      <Value xsi:type="xsd:float">-15</Value>
+    </Variable>
+    <Variable Type="VerticalAlignment" Name="ListBoxInstance.YOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="ListBoxInstance.YUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">7</Value>
+    </Variable>
+    <Variable Type="int" Name="RectangleInstance.Blue" SetsValue="true">
+      <Value xsi:type="xsd:int">34</Value>
+    </Variable>
+    <Variable Type="int" Name="RectangleInstance.Green" SetsValue="true">
+      <Value xsi:type="xsd:int">195</Value>
+    </Variable>
+    <Variable Type="float" Name="RectangleInstance.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">41</Value>
+    </Variable>
+    <Variable Type="int" Name="RectangleInstance.Red" SetsValue="true">
+      <Value xsi:type="xsd:int">39</Value>
+    </Variable>
+    <Variable Type="float" Name="RectangleInstance.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">787</Value>
+    </Variable>
+    <Variable Type="float" Name="RectangleInstance.X" SetsValue="true">
+      <Value xsi:type="xsd:float">0</Value>
+    </Variable>
+    <Variable Type="float" Name="RectangleInstance.Y" SetsValue="true">
+      <Value xsi:type="xsd:float">90</Value>
+    </Variable>
+  </State>
+  <Instance Name="ListBoxInstance" BaseType="Controls/ListBox" />
+  <Instance Name="ButtonTabInstance" BaseType="Controls/ButtonTab" />
+  <Instance Name="ButtonTabInstance1" BaseType="Controls/ButtonTab" />
+  <Instance Name="DividerHorizontalInstance" BaseType="Elements/DividerHorizontal" />
+  <Instance Name="RectangleInstance" BaseType="Rectangle" />
+  <Instance Name="ContainerInstance" BaseType="Container" />
+  <Instance Name="CircleInstance" BaseType="Circle" />
+  <Behaviors />
+</ScreenSave>
