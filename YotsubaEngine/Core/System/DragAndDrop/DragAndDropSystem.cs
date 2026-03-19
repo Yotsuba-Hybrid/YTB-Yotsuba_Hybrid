@@ -37,12 +37,6 @@ namespace YotsubaEngine.Core.System.YTBDragAndDrop
         public static Point DropPosition { get; private set; }
 
         /// <summary>
-        /// Holds the current entity manager reference.
-        /// Contiene la referencia actual del administrador de entidades.
-        /// </summary>
-        EntityManager EntityManager;
-
-        /// <summary>
         /// Caches the event manager instance.
         /// Almacena en caché la instancia del administrador de eventos.
         /// </summary>
@@ -53,7 +47,7 @@ namespace YotsubaEngine.Core.System.YTBDragAndDrop
         /// <para>Initializes the drag-and-drop system with entity context.</para>
         /// </summary>
         /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
-        public void InitializeSystem(EntityManager entities)
+        public override void InitializeSystem(EntityManager entities)
         {
             EntityManager = entities;
             EventManager = EventManager.Instance;
@@ -65,7 +59,7 @@ namespace YotsubaEngine.Core.System.YTBDragAndDrop
         /// </summary>
         /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
         /// <param name="time">Tiempo de juego. <para>Game time.</para></param>
-        public void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time)
+        public override void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time)
         {
 #if YTB
             EntityDrag(ref Entidad);
@@ -77,7 +71,7 @@ namespace YotsubaEngine.Core.System.YTBDragAndDrop
         /// <para>Initializes per-entity state when needed.</para>
         /// </summary>
         /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
-        public void SharedEntityInitialize(ref Yotsuba Entidad)
+        public override void SharedEntityInitialize(ref Yotsuba Entidad)
         {
             // Drag-and-drop initialization is handled in InitializeSystem
         }
@@ -87,7 +81,7 @@ namespace YotsubaEngine.Core.System.YTBDragAndDrop
         /// <para>Updates the system each frame.</para>
         /// </summary>
         /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
-        public void UpdateSystem(GameTime gameTime)
+        public override void UpdateSystem(GameTime gameTime)
         {
             // Per-entity update logic is handled in SharedEntityForEachUpdate
         }
@@ -123,7 +117,7 @@ namespace YotsubaEngine.Core.System.YTBDragAndDrop
 
             if (!entity.HasComponent(YTBComponent.Transform) || entity.HasComponent(YTBComponent.TileMap)) return;
 
-            Span<TransformComponent> transformComponentsSpan = EntityManager.TransformComponents.AsSpan();
+            Span<TransformComponent> transformComponentsSpan = GetTransformComponentsAsSpan();
             ref TransformComponent transform = ref transformComponentsSpan[entity.Id];
 
             // RenderSystem2D.IsGameActive is only defined in DEBUG builds.

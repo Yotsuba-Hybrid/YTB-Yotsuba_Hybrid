@@ -14,7 +14,11 @@
       "mcp__ytb-game-config__update_component",
       "Bash(find C:YTBEngineYotsubaHybridYotsubaEngine -name *.AssemblyAttributes.cs)",
       "Bash(find C:YTBEngineYotsubaHybrid -path */obj -prune -o -path */.git -prune -o -type f -name *.cs -print0)",
-      "Bash(xargs -0 grep -l [assembly:)"
+      "Bash(xargs -0 grep -l [assembly:)",
+      "Bash(find /c/YTBEngine/YotsubaHybrid -maxdepth 4 -name *YTBContentBuilder.cs -exec cat {})",
+      "Bash(2)",
+      "Read(//c/Users/Usuario/.nuget/packages/imgui.net/1.91.6.1/**)",
+      "Read(//c/Users/Usuario/.nuget/packages/imgui.net/1.91.6.1/runtimes/**)"
     ]
   }
 }

@@ -154,7 +154,7 @@ namespace SandBoxGame.Core
 #endif
             //+:cnd:noEmit
             // Share _graphics as a service.
-            Services.AddService(typeof(GraphicsDeviceManager), _graphics);
+            Services.AddService<GraphicsDeviceManager>(_graphics);
 
             //Window.Title = "SandBoxGame - Yotsuba Engine";
             // Configurar la ruta ra�z del Content Manager para que apunte a los assets compilados

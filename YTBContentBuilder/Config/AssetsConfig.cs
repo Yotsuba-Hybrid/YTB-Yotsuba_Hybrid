@@ -24,7 +24,7 @@ namespace YotsubaEngine.YTBContentBuilder
             contentCollection.IncludeCopy<RegexRule>(".cs");   // Scripts del juego
             contentCollection.IncludeCopy<RegexRule>(".tmx");  // Mapas de Tiled
             contentCollection.IncludeCopy<RegexRule>(".xml");  // Mapas de Tiled
-
+            contentCollection.IncludeCopy<RegexRule>("Gum/*");
 
 
             // exclude bin / obj paths

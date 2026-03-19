@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScreenSave xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>TitleScreen</Name>
+  <State>
+    <Name>Default</Name>
+    <Variable Type="float" Name="ButtonCloseInstance.X" SetsValue="true">
+      <Value xsi:type="xsd:float">0</Value>
+    </Variable>
+    <Variable Type="float" Name="ButtonCloseInstance.Y" SetsValue="true">
+      <Value xsi:type="xsd:float">0</Value>
+    </Variable>
+    <Variable Type="float" Name="ButtonDenyInstance.X" SetsValue="true">
+      <Value xsi:type="xsd:float">485</Value>
+    </Variable>
+    <Variable Type="float" Name="ButtonDenyInstance.Y" SetsValue="true">
+      <Value xsi:type="xsd:float">41</Value>
+    </Variable>
+    <Variable Type="float" Name="DialogBoxInstance.X" SetsValue="true">
+      <Value xsi:type="xsd:float">227</Value>
+    </Variable>
+    <Variable Type="float" Name="DialogBoxInstance.Y" SetsValue="true">
+      <Value xsi:type="xsd:float">234</Value>
+    </Variable>
+  </State>
+  <Instance Name="ButtonDenyInstance" BaseType="Controls/ButtonDeny" />
+  <Instance Name="ButtonCloseInstance" BaseType="Controls/ButtonClose" />
+  <Instance Name="DialogBoxInstance" BaseType="Controls/DialogBox" />
+  <Behaviors />
+</ScreenSave>
