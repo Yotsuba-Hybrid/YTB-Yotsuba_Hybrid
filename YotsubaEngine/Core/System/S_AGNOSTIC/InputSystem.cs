@@ -157,7 +157,7 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
                         YTBGlobalState.OffsetCamera += new Vector2(0f, 10f);
                 }
 
-                if (OperatingSystem.IsWindows())
+                if (YTBGlobalState.IsDesktop)
                     if (!RenderSystem2D.IsGameActive) return;
 
                 if (KeyboardState.WasKeyJustPressed(Keys.OemPlus))

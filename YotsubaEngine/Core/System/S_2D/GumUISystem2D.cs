@@ -53,7 +53,7 @@ namespace YotsubaEngine.Core.System.S_2D
         {
 //-:cnd:noEmit
 #if YTB
-            if (OperatingSystem.IsWindows())
+            if (YTBGlobalState.IsDesktop)
                 if (!RenderSystem2D.IsGameActive) return;
 #endif
 //+:cnd:noEmit

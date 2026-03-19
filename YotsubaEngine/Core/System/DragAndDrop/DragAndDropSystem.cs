@@ -124,9 +124,9 @@ namespace YotsubaEngine.Core.System.YTBDragAndDrop
             // In Release builds, consider only platform when deciding UI rendering.
             //-:cnd:noEmit
 #if YTB
-            bool canRenderUIElements = RenderSystem2D.IsGameActive || !OperatingSystem.IsWindows();
+            bool canRenderUIElements = RenderSystem2D.IsGameActive || !YTBGlobalState.IsDesktop;
 #else
-            bool canRenderUIElements = !OperatingSystem.IsWindows();
+            bool canRenderUIElements = !YTBGlobalState.IsDesktop;
 #endif
             //+:cnd:noEmit
 

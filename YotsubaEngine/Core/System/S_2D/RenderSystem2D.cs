@@ -132,8 +132,8 @@ namespace YotsubaEngine.Core.System.S_2D
 
             // FEATURE: Skip UI elements rendering in Editor mode to avoid overlapping with editor tools
             // UI elements use absolute screen coordinates and would interfere with Inspector/Hierarchy panels
-            // On non-Windows platforms, UI always renders since Editor mode is Windows-only
-            bool canRenderUIElements = IsGameActive || !OperatingSystem.IsWindows();
+            // On mobile platforms, UI always renders since Editor mode is desktop-only
+            bool canRenderUIElements = IsGameActive || !YTBGlobalState.IsDesktop;
 #endif
 //+:cnd:noEmit
 
