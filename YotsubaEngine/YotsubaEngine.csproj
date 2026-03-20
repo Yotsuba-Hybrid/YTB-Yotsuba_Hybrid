@@ -30,14 +30,11 @@
 	  <Folder Include="ActionFiles\ImGuiEditor\" />
 	  <Folder Include="Graphics\Multiplatform\UI\" />
 	</ItemGroup>
+	<ItemGroup Condition="'$(Configuration)' == 'YTB'">
+		<None Update="imgui.ini">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 	<ItemGroup>
-	  <None Update="ActionFiles\ImGuiEditor\imgui.ini">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="imgui.ini">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	</ItemGroup>
 	<ItemGroup>
 	  <!-- Ensure any font files placed under the engine's Fonts folder are copied to build output -->
 	  <None Include="Fonts\**\*.*">
