@@ -35,6 +35,7 @@ jobs:
           ITEMS_TO_SYNC=(
             "YotsubaEngine"
             "YTBContentBuilder"
+            "ImGui.NET-1.91.6.1"
           )
           # -----------------------------------------------
 
@@ -87,6 +88,7 @@ jobs:
             **Componentes actualizados:**
             * `YotsubaEngine` (Core)
             * `YTBContentBuilder` (Tools)
+            * `ImGui.NET-1.91.6.1` (ImGui bindings)
             * `.github/workflows/update-engine.yaml` (Lógica de actualización)
             
             ⚠️ *Se han reemplazado estos elementos con la versión oficial. Revisa los cambios antes de aceptar.*
