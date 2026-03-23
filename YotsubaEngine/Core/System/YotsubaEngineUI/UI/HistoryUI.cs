@@ -516,12 +516,6 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
                 {
                     _cachedHistory = ReadYTBFile.ReadYTBGameFileHistory();
                     _lastCacheUpdate = DateTime.Now;
-
-                    // Log solo la primera vez que se abre
-                    if (_cachedHistory != null)
-                    {
-                        EngineUISystem.SendLog($"Historial cargado: {_cachedHistory.Count} versiones");
-                    }
                 }
                 catch (Exception ex)
                 {
