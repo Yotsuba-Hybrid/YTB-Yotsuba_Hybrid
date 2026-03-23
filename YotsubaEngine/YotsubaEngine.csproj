@@ -2,29 +2,25 @@
 	<PropertyGroup>
 			<TargetFramework>net10.0</TargetFramework>
 			<OutputType>Library</OutputType>
-			<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 			<Configurations>Debug;Release;YTB</Configurations>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 <PropertyGroup Condition="'$(Configuration)' == 'YTB'">
   <DefineConstants>$(DefineConstants);YTB;DEBUG;YOTSUBA</DefineConstants>
-  <DebugType>portable</DebugType>
-  <DebugSymbols>true</DebugSymbols>
-  <Optimize>false</Optimize>
-  <HotReloadEnabled>true</HotReloadEnabled>
 </PropertyGroup>
-	<PropertyGroup>
-		<DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
-	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.5-preview.*">
 			<PrivateAssets>All</PrivateAssets>
 		</PackageReference>
 		
-		
-		<ProjectReference Include="..\ImGui.NET-1.91.6.1\src\ImGui.NET\ImGui.NET.csproj" />
-		
+	
 		<PackageReference Include="Gum.MonoGame" Version="2026.2.23.1" />		
 		<PackageReference Include="System.Drawing.Common" Version="10.0.3" />
+</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui\Hexa.NET.ImGui.csproj" />
+		<ProjectReference Include="..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImNodes\Hexa.NET.ImNodes.csproj" />
+		<ProjectReference Include="..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImPlot\Hexa.NET.ImPlot.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="ActionFiles\ImGuiEditor\" />
@@ -34,53 +30,13 @@
 		<None Update="imgui.ini">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
-	<ItemGroup>
+	</ItemGroup>
 	<ItemGroup>
 	  <!-- Ensure any font files placed under the engine's Fonts folder are copied to build output -->
 	  <None Include="Fonts\**\*.*">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>
-	<ItemGroup>
-	</ItemGroup>
 
-	<!-- Native DLL copy logic para ImGui.NET (reemplaza el .targets de NuGet con rutas correctas al source local) -->
-	<PropertyGroup>
-		<_ImGui_IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</_ImGui_IsWindows>
-		<_ImGui_IsMacOS Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">true</_ImGui_IsMacOS>
-		<_ImGui_IsLinux Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">true</_ImGui_IsLinux>
-	</PropertyGroup>
-	<ItemGroup>
-		<!-- Windows x86 -->
-		<None Condition="'$(_ImGui_IsWindows)' == 'true' And ('$(Prefer32Bit)' == 'true' Or '$(PlatformTarget)' == 'x86')" Include="..\ImGui.NET-1.91.6.1\deps\cimgui\win-x86\cimgui.dll">
-			<Link>cimgui.dll</Link>
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-			<Visible>False</Visible>
-		</None>
-		<!-- Windows x64 (default AnyCPU en 64-bit) -->
-		<None Condition="'$(_ImGui_IsWindows)' == 'true' And '$(Prefer32Bit)' != 'true' And '$(PlatformTarget)' != 'x86' And '$(PlatformTarget)' != 'ARM64'" Include="..\ImGui.NET-1.91.6.1\deps\cimgui\win-x64\cimgui.dll">
-			<Link>cimgui.dll</Link>
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-			<Visible>False</Visible>
-		</None>
-		<!-- Windows ARM64 -->
-		<None Condition="'$(_ImGui_IsWindows)' == 'true' And '$(PlatformTarget)' == 'ARM64'" Include="..\ImGui.NET-1.91.6.1\deps\cimgui\win-arm64\cimgui.dll">
-			<Link>cimgui.dll</Link>
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-			<Visible>False</Visible>
-		</None>
-		<!-- Linux x64 -->
-		<None Condition="'$(_ImGui_IsLinux)' == 'true'" Include="..\ImGui.NET-1.91.6.1\deps\cimgui\linux-x64\cimgui.so">
-			<Link>libcimgui.so</Link>
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-			<Visible>False</Visible>
-		</None>
-		<!-- macOS (universal binary) -->
-		<None Condition="'$(_ImGui_IsMacOS)' == 'true'" Include="..\ImGui.NET-1.91.6.1\deps\cimgui\osx\cimgui.dylib">
-			<Link>libcimgui.dylib</Link>
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-			<Visible>False</Visible>
-		</None>
-	</ItemGroup>
 
 </Project>

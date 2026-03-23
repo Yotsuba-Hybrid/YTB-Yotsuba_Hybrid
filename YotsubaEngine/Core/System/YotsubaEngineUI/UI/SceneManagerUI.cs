@@ -1,4 +1,4 @@
-﻿using ImGuiNET;
+﻿using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -36,6 +36,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
         private YTBScene? _sourceSceneForEntity = null;
         private bool _isMovingEntity = false; // true = mover, false = duplicar
         private string _moveOrDuplicatePopupTitle = string.Empty;
+        private bool _triggerMoveOrDuplicate = false;
         internal SceneManagerUI(YTBGameInfo gameInfo, Action<YTBEntity> onSelectEntity, Action<YTBScene> onSelectScene)
         {
             _gameInfo = gameInfo;
@@ -72,6 +73,8 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
             ImGui.TextColored(new Num.Vector4(0.45f, 0.8f, 1f, 1f), "Escenas del proyecto");
             ImGui.Separator();
             ImGui.Checkbox("Eliminar Entidad", ref deleteEntities);
+            if (ImGui.IsItemHovered())
+                ImGui.SetTooltip("Al marcar esta opcion, puede darle click a multiples entidades\npara seleccionar varias, y posteriormente confirmar su eliminacion.");
 
             // Lógica de eliminación masiva de entidades
             if (SceneAndEntityForDelete.Count > 0)
@@ -103,13 +106,35 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
             ImGui.Spacing();
 
             int id = 0;
-            string[] options = ["Reproducir escena", "Vista previa", "Agregar entidad", "Renombrar escena", "Eliminar escena"];
 
             // --- recorrer escenas ---
             foreach (var scene in _gameInfo.Scene.ToImmutableArray())
             {
                 if (scene.Entities == null) scene.Entities = [];
                 bool open = ImGui.CollapsingHeader($"{scene.Name} ({scene.EntitiesCount} entidades)", ImGuiTreeNodeFlags.DefaultOpen);
+
+                // Menú contextual (click derecho) sobre el header de la escena
+                if (ImGui.BeginPopupContextItem($"SceneContext_{scene.Name}"))
+                {
+                    if (ImGui.MenuItem("Reproducir escena"))
+                        SystemCall.ChangeScene(scene.Name);
+                    if (ImGui.MenuItem("Vista previa"))
+                        SystemCall.ChangeScenePreview(scene.Name);
+                    if (ImGui.MenuItem("Agregar entidad"))
+                        CreateNewEntity(scene);
+                    if (ImGui.MenuItem("Renombrar escena"))
+                    {
+                        _sceneToRename = scene;
+                        _nuevoNombreEscena = scene.Name;
+                        _triggerRenameScene = true;
+                    }
+                    if (ImGui.MenuItem("Eliminar escena"))
+                    {
+                        _sceneToDelete = scene.Name;
+                        _triggerDeleteScene = true;
+                    }
+                    ImGui.EndPopup();
+                }
 
                 if (open)
                 {
@@ -148,13 +173,21 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
                             // Menú contextual entidad
                             if (ImGui.BeginPopupContextItem($"EntityContextMenu_{scene.Name}_{entity.Name}"))
                             {
+                                if (ImGui.MenuItem("Duplicar"))
+                                {
+                                    var clone = CloneEntity(entity);
+                                    clone.Name = GenerateUniqueName($"{entity.Name} - Copia", scene);
+                                    scene.Entities.Add(clone);
+                                    WriteYTBFile.EditYTBGameFile(_gameInfo);
+                                }
+
                                 if (ImGui.MenuItem("Mover a otra escena..."))
                                 {
                                     _entityToMoveOrDuplicate = entity;
                                     _sourceSceneForEntity = scene;
                                     _isMovingEntity = true;
                                     _moveOrDuplicatePopupTitle = $"Mover entidad '{entity.Name}'";
-                                    ImGui.OpenPopup("Mover o duplicar entidad");
+                                    _triggerMoveOrDuplicate = true;
                                 }
 
                                 if (ImGui.MenuItem("Duplicar en otra escena..."))
@@ -163,7 +196,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
                                     _sourceSceneForEntity = scene;
                                     _isMovingEntity = false;
                                     _moveOrDuplicatePopupTitle = $"Duplicar entidad '{entity.Name}'";
-                                    ImGui.OpenPopup("Mover o duplicar entidad");
+                                    _triggerMoveOrDuplicate = true;
                                 }
                                 ImGui.EndPopup();
                             }
@@ -199,42 +232,6 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 
                     ImGui.Spacing();
 
-                  
-
-                    // --- MENU DE OPCIONES ---
-                    if (ImGui.BeginMenu("Opciones ##" + scene.Name))
-                    {
-                        foreach (string option in options)
-                        {
-                            if (ImGui.MenuItem(option))
-                            {
-                                switch (option)
-                                {
-                                    case "Reproducir escena":
-                                        SystemCall.ChangeScene(scene.Name);
-                                        break;
-                                    case "Vista previa":
-                                        SystemCall.ChangeScenePreview(scene.Name);
-                                        break;
-                                    case "Agregar entidad":
-                                        CreateNewEntity(scene);
-                                        break;
-                                    case "Renombrar escena":
-                                        // CORRECCIÓN AQUÍ TAMBIÉN:
-                                        _sceneToRename = scene;
-                                        _nuevoNombreEscena = scene.Name;
-                                        _triggerRenameScene = true; // Activar bandera
-                                        break;
-                                    case "Eliminar escena":
-                                        _sceneToDelete = scene.Name;
-                                        _triggerDeleteScene = true;
-                                        break;
-                                }
-                            }
-                        }
-                        ImGui.EndMenu();
-                    }
-
                     ImGui.Unindent(10);
                 }
             } // Fin del foreach de escenas
@@ -250,11 +247,18 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
                 _triggerDeleteScene = false;
             }
 
-            // 2. Trigger para Renombrar (NUEVO)
+            // 2. Trigger para Renombrar
             if (_triggerRenameScene)
             {
                 ImGui.OpenPopup("Renombrar Escena");
                 _triggerRenameScene = false;
+            }
+
+            // 3. Trigger para Mover/Duplicar entidad
+            if (_triggerMoveOrDuplicate)
+            {
+                ImGui.OpenPopup("Mover o duplicar entidad");
+                _triggerMoveOrDuplicate = false;
             }
 
 
@@ -371,12 +375,33 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
             // --- Popup para mover/duplicar entidad ---
             if (ImGui.BeginPopupModal("Mover o duplicar entidad", ImGuiWindowFlags.AlwaysAutoResize))
             {
-                // ... (Tu código de mover entidad tal cual) ...
                 ImGui.TextColored(new Num.Vector4(0.45f, 0.8f, 1f, 1f), _moveOrDuplicatePopupTitle);
                 ImGui.Separator();
-                // ...
-                if (ImGui.Button("Cancelar", new Num.Vector2(250, 0))) ImGui.CloseCurrentPopup();
-                // ...
+                ImGui.Text("Selecciona la escena destino:");
+                ImGui.Spacing();
+
+                foreach (var targetScene in _gameInfo.Scene)
+                {
+                    if (targetScene == _sourceSceneForEntity) continue;
+
+                    if (ImGui.Button(targetScene.Name, new Num.Vector2(ImGui.GetContentRegionAvail().X, 0)))
+                    {
+                        if (_entityToMoveOrDuplicate != null && _sourceSceneForEntity != null)
+                        {
+                            if (_isMovingEntity)
+                                MoveEntityToScene(_entityToMoveOrDuplicate, _sourceSceneForEntity, targetScene);
+                            else
+                                DuplicateEntityToScene(_entityToMoveOrDuplicate, targetScene);
+                        }
+                        ImGui.CloseCurrentPopup();
+                    }
+                }
+
+                ImGui.Spacing();
+                ImGui.Separator();
+                if (ImGui.Button("Cancelar", new Num.Vector2(ImGui.GetContentRegionAvail().X, 0)))
+                    ImGui.CloseCurrentPopup();
+
                 ImGui.EndPopup();
             }
 
