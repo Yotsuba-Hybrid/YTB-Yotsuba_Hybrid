@@ -61,6 +61,11 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
         bool deleteEntities = false;
         string deleteName = "";
 
+        // Variables para eliminar entidad individual
+        private YTBEntity? _entityToDelete = null;
+        private YTBScene? _sceneOfEntityToDelete = null;
+        private bool _triggerDeleteEntity = false;
+
         /// <summary>
         /// Renderiza la interfaz del administrador de escenas.
         /// <para>Renders the scene manager UI.</para>
@@ -198,28 +203,17 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
                                     _moveOrDuplicatePopupTitle = $"Duplicar entidad '{entity.Name}'";
                                     _triggerMoveOrDuplicate = true;
                                 }
-                                ImGui.EndPopup();
-                            }
 
-                            // Modal eliminar entidad individual
-                            if (ImGui.BeginPopupModal($"Confirma la eliminación de la entidad (irreversible)", ImGuiWindowFlags.AlwaysAutoResize))
-                            {
-                                ImGui.InputText($"Escribe el nombre de la entidad ({entity.Name})", ref deleteName, 100);
-                                bool eliminarPressed = false;
-                                if (deleteName == entity.Name) eliminarPressed = ImGui.Button("Eliminar");
-
-                                if (eliminarPressed)
+                                ImGui.Separator();
+                                if (ImGui.MenuItem("Eliminar"))
                                 {
-                                    var ytbScene = _gameInfo.Scene.FirstOrDefault(s => s.Entities.Contains(entity));
-                                    ytbScene.Entities.Remove(ytbScene.Entities.FirstOrDefault(f => f.Name == entity.Name));
-                                    WriteYTBFile.EditYTBGameFile(_gameInfo);
-                                    deleteName = "";
-                                    ImGui.CloseCurrentPopup();
+                                    _entityToDelete = entity;
+                                    _sceneOfEntityToDelete = scene;
+                                    _triggerDeleteEntity = true;
                                 }
-
-                                if (ImGui.Button("Cerrar")) ImGui.CloseCurrentPopup();
                                 ImGui.EndPopup();
                             }
+
 
                             ImGui.PopID();
                             id++;
@@ -262,9 +256,57 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
             }
 
 
+            // 4. Trigger para Eliminar entidad
+            if (_triggerDeleteEntity)
+            {
+                ImGui.OpenPopup("Confirmar Eliminar Entidad");
+                _triggerDeleteEntity = false;
+            }
+
             // =========================================================================================
             // DEFINICIÓN DE MODALES
             // =========================================================================================
+
+            // Modal Eliminar Entidad
+            if (ImGui.BeginPopupModal("Confirmar Eliminar Entidad", ImGuiWindowFlags.AlwaysAutoResize))
+            {
+                string entityName = _entityToDelete?.Name ?? "";
+                ImGui.TextColored(new Num.Vector4(1f, 0.6f, 0.6f, 1f), "¿Seguro que deseas eliminar esta entidad?");
+                ImGui.Text(entityName);
+                ImGui.Separator();
+                ImGui.Text("Escribe el nombre de la entidad para confirmar:");
+                ImGui.InputText("##confirmarEliminarEntidad", ref deleteName, 128);
+                ImGui.Spacing();
+
+                bool nombreCoincide = deleteName == entityName;
+                if (!nombreCoincide) ImGui.BeginDisabled();
+
+                if (ImGui.Button("Eliminar", new Num.Vector2(110, 0)))
+                {
+                    if (_sceneOfEntityToDelete != null && _entityToDelete != null)
+                    {
+                        _sceneOfEntityToDelete.Entities.Remove(_entityToDelete);
+                        WriteYTBFile.EditYTBGameFile(_gameInfo);
+                    }
+                    deleteName = "";
+                    _entityToDelete = null;
+                    _sceneOfEntityToDelete = null;
+                    ImGui.CloseCurrentPopup();
+                }
+
+                if (!nombreCoincide) ImGui.EndDisabled();
+
+                ImGui.SameLine();
+                if (ImGui.Button("Cancelar", new Num.Vector2(110, 0)))
+                {
+                    deleteName = "";
+                    _entityToDelete = null;
+                    _sceneOfEntityToDelete = null;
+                    ImGui.CloseCurrentPopup();
+                }
+
+                ImGui.EndPopup();
+            }
 
             // Modal Eliminar Escena
             if (ImGui.BeginPopupModal("Confirmar Eliminar Escena", ImGuiWindowFlags.AlwaysAutoResize))
