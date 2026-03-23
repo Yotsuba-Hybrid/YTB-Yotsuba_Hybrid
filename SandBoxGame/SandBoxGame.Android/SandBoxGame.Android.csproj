@@ -9,6 +9,8 @@
     <AssemblyName>SandBoxGame</AssemblyName>
     <MonoGamePlatform>Android</MonoGamePlatform>
     <Configurations>Debug;Release;YTB</Configurations>
+    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
