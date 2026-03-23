@@ -1,6 +1,6 @@
 ﻿//-:cnd:noEmit
 #if YTB
-using ImGuiNET;
+using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -51,7 +51,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
                 var windowSize = ImGui.GetWindowSize();
                 if (windowSize.X < MinWindowWidth || windowSize.Y < MinWindowHeight)
                 {
-                    ImGui.SetWindowSize(new Num.Vector2(
+                    ImGuiP.SetWindowSize(new Num.Vector2(
                         Math.Max(windowSize.X, MinWindowWidth),
                         Math.Max(windowSize.Y, MinWindowHeight)
                     ));
@@ -310,7 +310,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
             }
 
             // Doble click para restaurar (con confirmación)
-            if (!isCurrent && ImGui.IsItemHovered() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
+            if (!isCurrent && ImGui.IsItemHovered() && ImGuiP.IsMouseDoubleClicked(ImGuiMouseButton.Left))
             {
                 _selectedIndex = index;
                 _previewVersion = version;
@@ -516,12 +516,6 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
                 {
                     _cachedHistory = ReadYTBFile.ReadYTBGameFileHistory();
                     _lastCacheUpdate = DateTime.Now;
-
-                    // Log solo la primera vez que se abre
-                    if (_cachedHistory != null)
-                    {
-                        EngineUISystem.SendLog($"Historial cargado: {_cachedHistory.Count} versiones");
-                    }
                 }
                 catch (Exception ex)
                 {

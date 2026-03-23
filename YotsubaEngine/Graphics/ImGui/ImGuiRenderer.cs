@@ -1,4 +1,4 @@
-﻿using ImGuiNET;
+﻿using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -40,10 +40,10 @@ namespace YotsubaEngine.Graphics.ImGuiNet
         private int _indexBufferSize;
 
         // Textures
-        private Dictionary<IntPtr, Texture2D> _loadedTextures;
+        private Dictionary<ImTextureID, Texture2D> _loadedTextures = new Dictionary<ImTextureID, Texture2D>();
 
         private int _textureId;
-        private IntPtr? _fontTextureId;
+        private ImTextureID _fontTextureId;
 
         // Input
         private int _scrollWheelValue;
@@ -64,7 +64,7 @@ namespace YotsubaEngine.Graphics.ImGuiNet
             _game = game ?? throw new ArgumentNullException(nameof(game));
             _graphicsDevice = game.GraphicsDevice;
 
-            _loadedTextures = new Dictionary<IntPtr, Texture2D>();
+            _loadedTextures = new Dictionary<ImTextureID, Texture2D>();
 
             _rasterizerState = new RasterizerState()
             {
@@ -89,25 +89,27 @@ namespace YotsubaEngine.Graphics.ImGuiNet
         {
             // Get font texture from ImGui
             var io = ImGui.GetIO();
-            io.Fonts.GetTexDataAsRGBA32(out byte* pixelData, out int width, out int height, out int bytesPerPixel);
+            byte* pixelData;
+            int width, height, bytesPerPixel;
+            io.Fonts.GetTexDataAsRGBA32(&pixelData, &width, &height, &bytesPerPixel);
 
             // Copy the data to a managed array
             var pixels = new byte[width * height * bytesPerPixel];
-            unsafe { Marshal.Copy(new IntPtr(pixelData), pixels, 0, pixels.Length); }
+            Marshal.Copy(new IntPtr(pixelData), pixels, 0, pixels.Length);
 
             // Create and register the texture as an XNA texture
             var tex2d = new Texture2D(_graphicsDevice, width, height, false, SurfaceFormat.Color);
             tex2d.SetData(pixels);
 
             // Should a texture already have been build previously, unbind it first so it can be deallocated
-            if (_fontTextureId.HasValue) UnbindTexture(_fontTextureId.Value);
+            if (!_fontTextureId.IsNull) UnbindTexture(_fontTextureId);
 
             // Bind the new texture to an ImGui-friendly id
             _fontTextureId = BindTexture(tex2d);
 
             // Let ImGui know where to find the texture
-            io.Fonts.SetTexID(_fontTextureId.Value);
-            io.Fonts.ClearTexData(); // Clears CPU side texture data
+            io.Fonts.SetTexID(_fontTextureId);
+            io.Fonts.ClearTexData();
         }
 
         /// <summary>
@@ -116,9 +118,9 @@ namespace YotsubaEngine.Graphics.ImGuiNet
         /// </summary>
         /// <param name="texture">Textura a registrar. <para>Texture to register.</para></param>
         /// <returns>Identificador de textura para ImGui. <para>Texture identifier for ImGui.</para></returns>
-        public virtual IntPtr BindTexture(Texture2D texture)
+        public virtual ImTextureID BindTexture(Texture2D texture)
         {
-            var id = new IntPtr(_textureId++);
+            var id = new ImTextureID(_textureId++);
 
             _loadedTextures.Add(id, texture);
 
@@ -130,7 +132,7 @@ namespace YotsubaEngine.Graphics.ImGuiNet
         /// <para>Removes a previously created texture pointer and releases its reference.</para>
         /// </summary>
         /// <param name="textureId">Identificador de textura a liberar. <para>Texture identifier to unbind.</para></param>
-        public virtual void UnbindTexture(IntPtr textureId)
+        public virtual void UnbindTexture(ImTextureID textureId)
         {
             _loadedTextures.Remove(textureId);
         }
@@ -276,7 +278,7 @@ namespace YotsubaEngine.Graphics.ImGuiNet
                 Keys.PrintScreen => ImGuiKey.PrintScreen,
                 Keys.Insert => ImGuiKey.Insert,
                 Keys.Delete => ImGuiKey.Delete,
-                >= Keys.D0 and <= Keys.D9 => ImGuiKey._0 + (key - Keys.D0),
+                >= Keys.D0 and <= Keys.D9 => ImGuiKey.Key0 + (key - Keys.D0),
                 >= Keys.A and <= Keys.Z => ImGuiKey.A + (key - Keys.A),
                 >= Keys.NumPad0 and <= Keys.NumPad9 => ImGuiKey.Keypad0 + (key - Keys.NumPad0),
                 Keys.Multiply => ImGuiKey.KeypadMultiply,
@@ -377,8 +379,8 @@ namespace YotsubaEngine.Graphics.ImGuiNet
                 fixed (void* vtxDstPtr = &_vertexData[vtxOffset * DrawVertDeclaration.Size])
                 fixed (void* idxDstPtr = &_indexData[idxOffset * sizeof(ushort)])
                 {
-                    Buffer.MemoryCopy((void*)cmdList.VtxBuffer.Data, vtxDstPtr, _vertexData.Length, cmdList.VtxBuffer.Size * DrawVertDeclaration.Size);
-                    Buffer.MemoryCopy((void*)cmdList.IdxBuffer.Data, idxDstPtr, _indexData.Length, cmdList.IdxBuffer.Size * sizeof(ushort));
+                    Buffer.MemoryCopy(cmdList.VtxBuffer.Data, vtxDstPtr, _vertexData.Length, cmdList.VtxBuffer.Size * DrawVertDeclaration.Size);
+                    Buffer.MemoryCopy(cmdList.IdxBuffer.Data, idxDstPtr, _indexData.Length, cmdList.IdxBuffer.Size * sizeof(ushort));
                 }
 
                 vtxOffset += cmdList.VtxBuffer.Size;
@@ -404,7 +406,7 @@ namespace YotsubaEngine.Graphics.ImGuiNet
 
                 for (int cmdi = 0; cmdi < cmdList.CmdBuffer.Size; cmdi++)
                 {
-                    ImDrawCmdPtr drawCmd = cmdList.CmdBuffer[cmdi];
+                    ref ImDrawCmd drawCmd = ref cmdList.CmdBuffer.Data[cmdi];
 
                     if (drawCmd.ElemCount == 0)
                     {

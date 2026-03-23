@@ -1,5 +1,5 @@
 ﻿
-using ImGuiNET;
+using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework;
 using System.Linq;
 using System.Xml.Linq;
@@ -51,7 +51,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
                 return;
             }
 
-			if (!ImGui.IsPopupOpen("Errores de Parseo"))
+			if (!ImGuiP.IsPopupOpen("Errores de Parseo"))
 				ImGui.OpenPopup("Errores de Parseo");
 
 
@@ -108,7 +108,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 		{
 			if (GameWontRun.HasError(YTBErrors.GameWithoutScenes))
 			{
-				if (!ImGui.IsPopupOpen(nameof(YTBErrors.GameWithoutScenes)))
+				if (!ImGuiP.IsPopupOpen(nameof(YTBErrors.GameWithoutScenes)))
 					ImGui.OpenPopup(nameof(YTBErrors.GameWithoutScenes));
 			}
 
@@ -136,7 +136,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 		{
 			if (GameWontRun.HasError(YTBErrors.GameSceneWithoutEntities))
 			{
-				if (!ImGui.IsPopupOpen(nameof(YTBErrors.GameSceneWithoutEntities)))
+				if (!ImGuiP.IsPopupOpen(nameof(YTBErrors.GameSceneWithoutEntities)))
 					ImGui.OpenPopup(nameof(YTBErrors.GameSceneWithoutEntities));
 			}
 

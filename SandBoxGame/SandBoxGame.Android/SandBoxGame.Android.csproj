@@ -9,6 +9,8 @@
     <AssemblyName>SandBoxGame</AssemblyName>
     <MonoGamePlatform>Android</MonoGamePlatform>
     <Configurations>Debug;Release;YTB</Configurations>
+    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
@@ -31,6 +33,7 @@
     <Optimize>false</Optimize>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\YotsubaEngine\YotsubaEngine.csproj" />
     <ProjectReference Include="..\SandBoxGame.Core\SandBoxGame.Core.csproj" />
   </ItemGroup>
   <ItemGroup>

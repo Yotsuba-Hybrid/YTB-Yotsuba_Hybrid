@@ -8,7 +8,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
     /// Modelo del archivo del juego que contiene escenas y entidades.
     /// <para>Represents the game file model containing scenes and entities.</para>
     /// </summary>
-    internal class YTBGameInfo
+    public class YTBGameInfo
     {
         [JsonPropertyName("scene")]
         /// <summary>
@@ -30,7 +30,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
     /// Representa una escena en el archivo del juego.
     /// <para>Represents a scene entry in the game file.</para>
     /// </summary>
-    internal class YTBScene
+    public class YTBScene
     {
         [JsonPropertyName("name")]
         /// <summary>
@@ -58,7 +58,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
     /// Representa una entidad en el archivo del juego.
     /// <para>Represents an entity entry in the game file.</para>
     /// </summary>
-    internal class YTBEntity
+    public class YTBEntity
     {
         [JsonPropertyName("name")]
         /// <summary>
