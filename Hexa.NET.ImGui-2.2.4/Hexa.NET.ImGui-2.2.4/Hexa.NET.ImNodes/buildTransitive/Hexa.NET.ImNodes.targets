@@ -1,0 +1,40 @@
+<Project>
+    <PropertyGroup>
+        <_IsAndroid Condition="$(TargetFramework.StartsWith('net')) And $(TargetFramework.Contains('-android'))">true</_IsAndroid>
+        <_IsiOS Condition="$(TargetFramework.StartsWith('net')) And $(TargetFramework.Contains('-ios'))">true</_IsiOS>
+        <_IsDesktop Condition="$(TargetFramework.StartsWith('net')) And !$(TargetFramework.Contains('-android')) And !$(TargetFramework.Contains('-ios'))">true</_IsDesktop>
+    </PropertyGroup>
+    
+    <ItemGroup Condition="'$(_IsAndroid)' == 'true'">
+        <AndroidNativeLibrary Include="$(MSBuildThisFileDirectory)..\native\android-arm64\cimnodes.so">
+            <Abi>arm64-v8a</Abi>
+        </AndroidNativeLibrary>
+        <AndroidNativeLibrary Include="$(MSBuildThisFileDirectory)..\native\android-x64\cimnodes.so">
+            <Abi>x86_64</Abi>
+        </AndroidNativeLibrary>
+    </ItemGroup>
+    
+    <Target Name="CopyImNodesNativeLibsToOutput" AfterTargets="Build" Condition="'$(_IsDesktop)' == 'true'">
+        <PropertyGroup>
+            <_ImNodesNativeRuntime Condition="'$(RuntimeIdentifier)' == 'win-x64'">win-x64</_ImNodesNativeRuntime>
+            <_ImNodesNativeRuntime Condition="'$(RuntimeIdentifier)' == 'win-x86'">win-x86</_ImNodesNativeRuntime>
+            <_ImNodesNativeRuntime Condition="'$(RuntimeIdentifier)' == 'win-arm64'">win-arm64</_ImNodesNativeRuntime>
+            <_ImNodesNativeRuntime Condition="'$(RuntimeIdentifier)' == 'linux-x64'">linux-x64</_ImNodesNativeRuntime>
+            <_ImNodesNativeRuntime Condition="'$(RuntimeIdentifier)' == 'linux-arm64'">linux-arm64</_ImNodesNativeRuntime>
+            <_ImNodesNativeRuntime Condition="'$(RuntimeIdentifier)' == 'osx-x64'">osx-x64</_ImNodesNativeRuntime>
+            <_ImNodesNativeRuntime Condition="'$(RuntimeIdentifier)' == 'osx-arm64'">osx-arm64</_ImNodesNativeRuntime>
+            <_ImNodesNativeRuntime Condition="'$(_ImNodesNativeRuntime)' == '' And '$(OS)' == 'Windows_NT'">win-x64</_ImNodesNativeRuntime>
+            <_ImNodesNativeRuntime Condition="'$(_ImNodesNativeRuntime)' == '' And '$(OS)' == 'Linux'">linux-x64</_ImNodesNativeRuntime>
+            <_ImNodesNativeRuntime Condition="'$(_ImNodesNativeRuntime)' == '' And '$(OS)' == 'Darwin'">osx-arm64</_ImNodesNativeRuntime>
+        </PropertyGroup>
+        <Copy Condition="'$(_ImNodesNativeRuntime)' != '' And $(_ImNodesNativeRuntime.StartsWith('win'))"
+            SourceFiles="$(MSBuildThisFileDirectory)..\native\$(_ImNodesNativeRuntime)\cimnodes.dll"
+            DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+        <Copy Condition="'$(_ImNodesNativeRuntime)' != '' And $(_ImNodesNativeRuntime.StartsWith('linux'))"
+            SourceFiles="$(MSBuildThisFileDirectory)..\native\$(_ImNodesNativeRuntime)\cimnodes.so"
+            DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+        <Copy Condition="'$(_ImNodesNativeRuntime)' != '' And $(_ImNodesNativeRuntime.StartsWith('osx'))"
+            SourceFiles="$(MSBuildThisFileDirectory)..\native\$(_ImNodesNativeRuntime)\cimnodes.dylib"
+            DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+    </Target>
+</Project>
