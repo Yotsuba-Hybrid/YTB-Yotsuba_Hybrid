@@ -41,7 +41,7 @@ namespace SandBoxGame.Core
 //-:cnd:noEmit
 #if YTB
             // Para el editor visual
-            false
+            true
 #else
             // Para el juego
             true
