@@ -4,6 +4,7 @@
 			<OutputType>Library</OutputType>
 			<Configurations>Debug;Release;YTB</Configurations>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
 	</PropertyGroup>
 <PropertyGroup Condition="'$(Configuration)' == 'YTB'">
   <DefineConstants>$(DefineConstants);YTB;DEBUG;YOTSUBA</DefineConstants>

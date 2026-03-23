@@ -18,7 +18,8 @@
       "Bash(find /c/YTBEngine/YotsubaHybrid -maxdepth 4 -name *YTBContentBuilder.cs -exec cat {})",
       "Bash(2)",
       "Read(//c/Users/Usuario/.nuget/packages/imgui.net/1.91.6.1/**)",
-      "Read(//c/Users/Usuario/.nuget/packages/imgui.net/1.91.6.1/runtimes/**)"
+      "Read(//c/Users/Usuario/.nuget/packages/imgui.net/1.91.6.1/runtimes/**)",
+      "Bash(echo \"exit: $?\")"
     ]
   }
 }

@@ -270,36 +270,24 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
             // Modal Eliminar Entidad
             if (ImGui.BeginPopupModal("Confirmar Eliminar Entidad", ImGuiWindowFlags.AlwaysAutoResize))
             {
-                string entityName = _entityToDelete?.Name ?? "";
                 ImGui.TextColored(new Num.Vector4(1f, 0.6f, 0.6f, 1f), "¿Seguro que deseas eliminar esta entidad?");
-                ImGui.Text(entityName);
+                ImGui.Text(_entityToDelete?.Name ?? "");
                 ImGui.Separator();
-                ImGui.Text("Escribe el nombre de la entidad para confirmar:");
-                ImGui.InputText("##confirmarEliminarEntidad", ref deleteName, 128);
-                ImGui.Spacing();
 
-                bool nombreCoincide = deleteName == entityName;
-                if (!nombreCoincide) ImGui.BeginDisabled();
-
-                if (ImGui.Button("Eliminar", new Num.Vector2(110, 0)))
+                if (ImGui.Button("Sí, eliminar", new Num.Vector2(110, 0)))
                 {
                     if (_sceneOfEntityToDelete != null && _entityToDelete != null)
                     {
                         _sceneOfEntityToDelete.Entities.Remove(_entityToDelete);
                         WriteYTBFile.EditYTBGameFile(_gameInfo);
                     }
-                    deleteName = "";
                     _entityToDelete = null;
                     _sceneOfEntityToDelete = null;
                     ImGui.CloseCurrentPopup();
                 }
-
-                if (!nombreCoincide) ImGui.EndDisabled();
-
                 ImGui.SameLine();
                 if (ImGui.Button("Cancelar", new Num.Vector2(110, 0)))
                 {
-                    deleteName = "";
                     _entityToDelete = null;
                     _sceneOfEntityToDelete = null;
                     ImGui.CloseCurrentPopup();
