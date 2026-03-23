@@ -1,4 +1,4 @@
-﻿using ImGuiNET;
+﻿using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -136,7 +136,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
         /// <param name="titulo">Título del popup. <para>Popup title.</para></param>
         public static void DispararModal(string titulo)
         {
-            if (!ImGui.IsPopupOpen(titulo))
+            if (!ImGuiP.IsPopupOpen(titulo))
             {
                 ImGui.OpenPopup(titulo);
             }
