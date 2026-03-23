@@ -187,7 +187,7 @@ if (IsDesktop)
         protected override void Initialize()
         {
 
-           if(YTBGlobalState.IsDesktop && YTBGlobalState.EngineEnabled)
+           //if(YTBGlobalState.IsDesktop && YTBGlobalState.EngineEnabled)
             {
                 GuiRenderer = new ImGuiRenderer(this);
                 // ImGui setup (fonts, theme)
