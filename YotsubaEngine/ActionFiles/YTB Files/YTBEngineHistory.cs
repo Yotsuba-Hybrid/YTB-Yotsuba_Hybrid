@@ -22,6 +22,6 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
         /// Gets or sets the game development version data.
         /// Obtiene o establece los datos de versión de desarrollo del juego.
         /// </summary>
-        internal YTBGameInfo GameDevelopVersion { get; set; }
+        public YTBGameInfo GameDevelopVersion { get; set; }
     }
 }

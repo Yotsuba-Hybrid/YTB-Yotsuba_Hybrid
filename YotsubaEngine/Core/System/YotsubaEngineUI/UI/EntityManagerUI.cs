@@ -1,4 +1,4 @@
-﻿using ImGuiNET;
+﻿using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework;
 using RenderingLibrary.Graphics;
 using System;
@@ -200,23 +200,38 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 				{
 					if (EntityYTBXmlTemplate.GenerateNew().Components.Any(x => x.Equals(component))) continue;
 
-					// Botón para eliminar el componente
-					// Se coloca ANTES del CollapsingHeader para mejor layout
-					// NOTA: Eliminación inmediata sin confirmación para mantener flujo de trabajo rápido.
-					// El componente puede recuperarse usando "Añadir Componente".
-					if (ImGui.SmallButton($"X##{component.ComponentName}_delete"))
-					{
-						DeleteComponent(component);
-					}
-					if (ImGui.IsItemHovered())
-					{
-						ImGui.SetTooltip("Eliminar componente");
-					}
+					//// Botón para eliminar el componente
+					//// Se coloca ANTES del CollapsingHeader para mejor layout
+					//// NOTA: Eliminación inmediata sin confirmación para mantener flujo de trabajo rápido.
+					//// El componente puede recuperarse usando "Añadir Componente".
+					//if (ImGui.SmallButton($"X##{component.ComponentName}_delete"))
+					//{
+					//	DeleteComponent(component);
+					//}
+					//if (ImGui.IsItemHovered())
+					//{
+					//	ImGui.SetTooltip("Eliminar componente");
+					//}
 					
-					// Colocar el CollapsingHeader en la misma línea
-					ImGui.SameLine();
-					
-					if (ImGui.CollapsingHeader(TraduceComponentName(component.ComponentName), ImGuiTreeNodeFlags.DefaultOpen))
+					//// Colocar el CollapsingHeader en la misma línea
+					//ImGui.SameLine();
+
+                    // 1. Guardamos el estado del header (abierto o cerrado)
+                    bool isHeaderOpen = ImGui.CollapsingHeader(TraduceComponentName(component.ComponentName), ImGuiTreeNodeFlags.DefaultOpen);
+
+                    // 2. Definimos el menú contextual justo debajo del Header
+                    // Al darle clic derecho al Header, se abrirá este popup
+                    if (ImGui.BeginPopupContextItem($"Context_{component.ComponentName}"))
+                    {
+                        if (ImGui.MenuItem("Eliminar Componente"))
+                        {
+                            DeleteComponent(component);
+                        }
+                        // Aquí puedes agregar más opciones en el futuro, como "Copiar", "Resetear", etc.
+
+                        ImGui.EndPopup();
+                    }
+                    if (isHeaderOpen)
 					{
 						ImGui.Indent(15);
 
@@ -283,6 +298,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 
 						ImGui.Unindent(15);
 					}
+
 				}
 			}
 			ImGui.Separator();

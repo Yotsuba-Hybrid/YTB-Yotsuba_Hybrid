@@ -33,7 +33,7 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
             Systems.Add(() => (ISystem)new T()); 
         }
 
-        public void InitializeSystem(EntityManager entities)
+        public override void InitializeSystem(EntityManager entities)
         {
             SystemsInstances.Clear();
             foreach (ref var system in Systems.AsSpan())
@@ -46,25 +46,25 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
 
         }
 
-        public void SharedEntityInitialize(ref Yotsuba Entidad)
+        public override void SharedEntityInitialize(ref Yotsuba Entidad)
         {
             foreach (ref var system in SystemsInstances.AsSpan())
                 system.SharedEntityInitialize(ref Entidad);
         }
 
-        public void UpdateSystem(GameTime gameTime)
+        public override void UpdateSystem(GameTime gameTime)
         {
             foreach (ref var system in SystemsInstances.AsSpan())
                 system.UpdateSystem(gameTime);
         }
 
-        public void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time)
+        public override void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time)
         {
             foreach (ref var system in SystemsInstances.AsSpan())
                 system.SharedEntityForEachUpdate(ref Entidad, time);
         }
 
-        public void Render2D(SpriteBatch spriteBatch, GameTime gameTime)
+        public override void Render2D(SpriteBatch spriteBatch, GameTime gameTime)
         {
             foreach (ref var s in SystemsInstances.AsSpan())
             {
@@ -73,7 +73,7 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
             }
         }
 
-        public void Render3D(GameTime gameTime)
+        public override void Render3D(GameTime gameTime)
         {
             foreach (ref var s in SystemsInstances.AsSpan())
             {
@@ -82,7 +82,7 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
             }
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             foreach (ref var system in SystemsInstances.AsSpan())
                 system.Dispose();

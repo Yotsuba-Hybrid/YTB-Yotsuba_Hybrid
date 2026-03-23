@@ -1,4 +1,4 @@
-﻿using ImGuiNET;
+﻿using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -57,7 +57,7 @@ namespace YotsubaEngine.Graphics.ImGuiNet
             ImGui.SameLine();
 
             // Registrar la textura y obtener Id válido para ImGui
-            IntPtr texId = renderer.BindTexture(tex);
+            ImTextureID texId = renderer.BindTexture(tex);
 
             // Calcular UVs para la subregion (0..1)
             Num.Vector2 uv0 = new Num.Vector2(src.X / (float)tex.Width, src.Y / (float)tex.Height);

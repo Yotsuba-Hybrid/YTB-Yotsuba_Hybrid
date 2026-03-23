@@ -1,4 +1,4 @@
-﻿using ImGuiNET;
+﻿using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -159,7 +159,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
 //+:cnd:noEmit
 
             // Al inicializar (seguro)
-            if (ImGui.GetCurrentContext() == IntPtr.Zero)
+            if (ImGui.GetCurrentContext() == ImGuiContextPtr.Null)
                 ImGui.CreateContext();
 
 
@@ -193,11 +193,13 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
             InitializeShowTextureImages();
 
             ImGui.StyleColorsClassic();
+            ImGuiThemeColors.AplicarTemaCompleto();
+
 #endif
-//+:cnd:noEmit
+            //+:cnd:noEmit
         }
 
-//-:cnd:noEmit
+        //-:cnd:noEmit
 #if YTB
         private void OnHiddeORShowUIEngineEditorFunc(OnShowGameUIHiddeEngineEditor editor)
         {
@@ -566,7 +568,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
 
         // Variables para rastrear texture region siendo arrastrada
         private string _draggedRegionName = null;
-        private IntPtr _draggedTexturePtr = IntPtr.Zero;
+        private ImTextureID _draggedTexturePtr = ImTextureID.Null;
         private TextureRegion _draggedRegion;
 
         /// <summary>
@@ -654,7 +656,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
                 foreach (var (regionKey, textureRegion) in YotsubaGraphicsManager.PreloadedTextureRegions)
                 {
                     // Bind de la textura para obtener el IntPtr
-                    IntPtr texturaId = GuiRenderer.BindTexture(textureRegion.Texture);
+                    ImTextureID texturaId = GuiRenderer.BindTexture(textureRegion.Texture);
                     
                     // Tamaño del thumbnail
                     float thumbnailSize = 100f;
@@ -749,10 +751,10 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
                 ImGui.End();
                 
                 // Detectar clic para soltar la región
-                if (ImGui.IsMouseClicked(ImGuiMouseButton.Left))
+                if (ImGuiP.IsMouseClicked(ImGuiMouseButton.Left))
                 {
                     _draggedRegionName = null;
-                    _draggedTexturePtr = IntPtr.Zero;
+                    _draggedTexturePtr = ImTextureID.Null;
                     _draggedRegion = default;
                 }
             }
@@ -1183,6 +1185,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
 
             ImGui.PushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
             ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 1.0f);
+            ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Num.Vector2.Zero);
             ImGui.PushStyleColor(ImGuiCol.WindowBg, new Num.Vector4(0, 0, 0, 0));
 
             ImGuiWindowFlags windowFlags =
@@ -1195,7 +1198,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
                 ImGuiWindowFlags.MenuBar;
 
             ImGui.Begin("DockSpaceRoot", windowFlags);
-            ImGui.PopStyleVar(2);
+            ImGui.PopStyleVar(3);
             ImGui.PopStyleColor();
 
             // Barra de menú delegada

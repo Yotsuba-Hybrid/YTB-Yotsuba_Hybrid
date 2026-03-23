@@ -1,4 +1,6 @@
-﻿using ImGuiNET;
+﻿using Hexa.NET.ImGui;
+using Hexa.NET.ImNodes;
+using Hexa.NET.ImPlot;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -120,7 +122,6 @@ if (IsDesktop)
             }
 #endif
 
-SetConfig();
         }
 
         protected virtual void SetConfig()
@@ -186,8 +187,7 @@ SetConfig();
         protected override void Initialize()
         {
 
-           
-            if (YTBGlobalState.EngineEnabled && YTBGlobalState.IsDesktop)
+           if(YTBGlobalState.IsDesktop && YTBGlobalState.EngineEnabled)
             {
                 GuiRenderer = new ImGuiRenderer(this);
                 // ImGui setup (fonts, theme)
@@ -220,27 +220,22 @@ SetConfig();
 #endif
 
                     // 2. Crear la configuración para la fuente de íconos
-                    ImFontConfigPtr config = ImGuiNative.ImFontConfig_ImFontConfig();
-                    config.MergeMode = true;  // ¡Esto fusiona los íconos con la fuente principal!
-                    config.PixelSnapH = true; // Alinea los íconos a los píxeles para mayor nitidez
+                    ImFontConfigPtr config = ImGui.ImFontConfig();
+                    config.MergeMode = true;
+                    config.PixelSnapH = true;
 
                     // 3. Definir el rango de caracteres para Nerd Fonts.
-                    // El rango 0xE000 a 0xF8FF cubre casi todos los íconos de programación 
-                    // (FontAwesome, Devicons, Material, etc.) que vienen en NerdFonts.
                     ushort[] iconRanges = new ushort[]
                     {
         0xE000, 0xF8FF,
-        0 // El array SIEMPRE debe terminar en 0
+        0
                     };
 
                     fixed (ushort* rangePtr = iconRanges)
                     {
-                        // 4. Cargar la fuente de íconos con el config de Merge y el rango especial
-                        // Puedes ajustar el tamaño (20.0f) si sientes que los íconos se ven muy grandes o pequeños respecto al texto
-                        io.Fonts.AddFontFromFileTTF(fuenteIconos, 20.0f, config, (IntPtr)rangePtr);
+                        io.Fonts.AddFontFromFileTTF(fuenteIconos, 20.0f, config, (uint*)rangePtr);
                     }
 
-                    // 5. Destruir el objeto de configuración nativo para evitar fugas de memoria (C++)
                     config.Destroy();
                 }
 
@@ -254,9 +249,13 @@ SetConfig();
                 // GuiRenderer.RebuildFontAtlas();
                 ImGuiThemeColors.AplicarTemaCompleto();
                 GuiRenderer.RebuildFontAtlas();
+                ImPlot.CreateContext();
+                ImPlot.SetImGuiContext(ImGui.GetCurrentContext());
 
+                ImNodes.CreateContext();
+                ImNodes.SetImGuiContext(ImGui.GetCurrentContext());
                 WriteYTBFile.CreateYTBGameFile();
-
+                
                 // Configurar el título de la ventana desde YTBConfig
                 try
                 {

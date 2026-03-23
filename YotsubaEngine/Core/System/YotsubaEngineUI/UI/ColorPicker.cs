@@ -1,5 +1,5 @@
 ﻿
-using ImGuiNET;
+using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
@@ -184,83 +184,101 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
             return new Num.Vector4(r / 255f, g / 255f, b / 255f, 1f);
         }
 
-        // 🧩 Aplicación completa del tema
         /// <summary>
-        /// Aplica la paleta completa del tema ImGui.
-        /// <para>Applies the complete ImGui theme palette.</para>
+        /// Aplica la paleta completa del tema ImGui con un acabado moderno y premium.
+        /// <para>Applies the complete ImGui theme palette with a modern, premium finish.</para>
         /// </summary>
         public static void AplicarTemaCompleto()
         {
             var style = ImGui.GetStyle();
             var colors = style.Colors;
 
-            // Fondos
+            // 1. COLORES BASE
+            // Fondos principales
             colors[(int)ImGuiCol.WindowBg] = GRIS_OSCURO;
-            colors[(int)ImGuiCol.FrameBg] = new Num.Vector4(GRIS_MEDIO.X, GRIS_MEDIO.Y, GRIS_MEDIO.Z, 0.95f);
-            colors[(int)ImGuiCol.FrameBgHovered] = new Num.Vector4(PRIMARY_LIGHT.X, PRIMARY_LIGHT.Y, PRIMARY_LIGHT.Z, 0.25f);
-            colors[(int)ImGuiCol.FrameBgActive] = new Num.Vector4(PRIMARY_BASE.X, PRIMARY_BASE.Y, PRIMARY_BASE.Z, 0.35f);
+            // Un ligero tinte oscuro para paneles hijos le da profundidad
+            colors[(int)ImGuiCol.ChildBg] = new Num.Vector4(GRIS_OSCURO.X - 0.02f, GRIS_OSCURO.Y - 0.02f, GRIS_OSCURO.Z - 0.02f, 1.0f);
+            colors[(int)ImGuiCol.PopupBg] = new Num.Vector4(GRIS_OSCURO.X + 0.04f, GRIS_OSCURO.Y + 0.04f, GRIS_OSCURO.Z + 0.04f, 0.98f);
+
+            // Headers & Títulos
+            colors[(int)ImGuiCol.TitleBg] = GRIS_OSCURO;
+            colors[(int)ImGuiCol.TitleBgActive] = GRIS_MEDIO;
+            colors[(int)ImGuiCol.TitleBgCollapsed] = new Num.Vector4(GRIS_OSCURO.X, GRIS_OSCURO.Y, GRIS_OSCURO.Z, 0.7f);
+            colors[(int)ImGuiCol.Header] = new Num.Vector4(PRIMARY_BASE.X, PRIMARY_BASE.Y, PRIMARY_BASE.Z, 0.4f);
+            colors[(int)ImGuiCol.HeaderHovered] = new Num.Vector4(PRIMARY_LIGHT.X, PRIMARY_LIGHT.Y, PRIMARY_LIGHT.Z, 0.8f);
+            colors[(int)ImGuiCol.HeaderActive] = new Num.Vector4(PRIMARY_DARK.X, PRIMARY_DARK.Y, PRIMARY_DARK.Z, 1.0f);
+
+            // Inputs, Comboboxes y Frames (Fondos de elementos interactivos)
+            colors[(int)ImGuiCol.FrameBg] = new Num.Vector4(GRIS_MEDIO.X, GRIS_MEDIO.Y, GRIS_MEDIO.Z, 0.5f);
+            colors[(int)ImGuiCol.FrameBgHovered] = new Num.Vector4(PRIMARY_LIGHT.X, PRIMARY_LIGHT.Y, PRIMARY_LIGHT.Z, 0.3f);
+            colors[(int)ImGuiCol.FrameBgActive] = new Num.Vector4(PRIMARY_BASE.X, PRIMARY_BASE.Y, PRIMARY_BASE.Z, 0.4f);
 
             // Botones
-            colors[(int)ImGuiCol.Button] = new Num.Vector4(GRIS_CLARO.X, GRIS_CLARO.Y, GRIS_CLARO.Z, 0.85f);
-            colors[(int)ImGuiCol.ButtonHovered] = new Num.Vector4(PRIMARY_LIGHT.X, PRIMARY_LIGHT.Y, PRIMARY_LIGHT.Z, 0.95f);
-            colors[(int)ImGuiCol.ButtonActive] = new Num.Vector4(PRIMARY_DARK.X, PRIMARY_DARK.Y, PRIMARY_DARK.Z, 1.0f);
-
-            // Headers
-            colors[(int)ImGuiCol.Header] = new Num.Vector4(GRIS_CLARO.X, GRIS_CLARO.Y, GRIS_CLARO.Z, 0.8f);
-            colors[(int)ImGuiCol.HeaderHovered] = new Num.Vector4(PRIMARY_BASE.X, PRIMARY_BASE.Y, PRIMARY_BASE.Z, 0.95f);
-            colors[(int)ImGuiCol.HeaderActive] = new Num.Vector4(PRIMARY_DARK.X, PRIMARY_DARK.Y, PRIMARY_DARK.Z, 1.0f);
+            colors[(int)ImGuiCol.Button] = PRIMARY_BASE; // El botón normal suele usar el color primario
+            colors[(int)ImGuiCol.ButtonHovered] = PRIMARY_LIGHT;
+            colors[(int)ImGuiCol.ButtonActive] = PRIMARY_DARK;
 
             // Texto
             colors[(int)ImGuiCol.Text] = BLANCO;
             colors[(int)ImGuiCol.TextDisabled] = new Num.Vector4(GRIS_CLARO.X, GRIS_CLARO.Y, GRIS_CLARO.Z, 0.6f);
 
-            // Bordes y separadores
-            colors[(int)ImGuiCol.Border] = new Num.Vector4(PRIMARY_BASE.X, PRIMARY_BASE.Y, PRIMARY_BASE.Z, 0.25f);
-            colors[(int)ImGuiCol.Separator] = new Num.Vector4(GRIS_CLARO.X, GRIS_CLARO.Y, GRIS_CLARO.Z, 0.2f);
-            colors[(int)ImGuiCol.SeparatorHovered] = new Num.Vector4(PRIMARY_LIGHT.X, PRIMARY_LIGHT.Y, PRIMARY_LIGHT.Z, 0.35f);
+            // Bordes y separadores (Clave para el aspecto premium: sutiles, no invasivos)
+            colors[(int)ImGuiCol.Border] = new Num.Vector4(1.0f, 1.0f, 1.0f, 0.1f); // Borde blanco muy transparente
+            colors[(int)ImGuiCol.BorderShadow] = new Num.Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+            colors[(int)ImGuiCol.Separator] = new Num.Vector4(1.0f, 1.0f, 1.0f, 0.15f);
+            colors[(int)ImGuiCol.SeparatorHovered] = new Num.Vector4(PRIMARY_LIGHT.X, PRIMARY_LIGHT.Y, PRIMARY_LIGHT.Z, 0.5f);
+            colors[(int)ImGuiCol.SeparatorActive] = PRIMARY_BASE;
 
             // Tabs
-            colors[(int)ImGuiCol.Tab] = new Num.Vector4(GRIS_MEDIO.X, GRIS_MEDIO.Y, GRIS_MEDIO.Z, 0.85f);
-            colors[(int)ImGuiCol.TabHovered] = new Num.Vector4(PRIMARY_LIGHT.X, PRIMARY_LIGHT.Y, PRIMARY_LIGHT.Z, 0.95f);
-            colors[(int)ImGuiCol.TabSelected] = new Num.Vector4(PRIMARY_BASE.X, PRIMARY_BASE.Y, PRIMARY_BASE.Z, 1.0f);
-            //colors[(int)ImGuiCol.TabUnfocused] = new Num.Vector4(GRIS_MEDIO.X, GRIS_MEDIO.Y, GRIS_MEDIO.Z, 0.6f);
-            //colors[(int)ImGuiCol.TabUnfocusedActive] = new Num.Vector4(PRIMARY_BASE.X, PRIMARY_BASE.Y, PRIMARY_BASE.Z, 0.7f);
+            colors[(int)ImGuiCol.Tab] = new Num.Vector4(GRIS_MEDIO.X, GRIS_MEDIO.Y, GRIS_MEDIO.Z, 0.8f);
+            colors[(int)ImGuiCol.TabHovered] = PRIMARY_LIGHT;
+            colors[(int)ImGuiCol.TabSelected] = PRIMARY_BASE;
+            colors[(int)ImGuiCol.TabDimmed] = new Num.Vector4(GRIS_MEDIO.X, GRIS_MEDIO.Y, GRIS_MEDIO.Z, 0.5f);
+            colors[(int)ImGuiCol.TabDimmedSelected] = new Num.Vector4(GRIS_MEDIO.X, GRIS_MEDIO.Y, GRIS_MEDIO.Z, 0.8f);
 
             // Menús
-            colors[(int)ImGuiCol.MenuBarBg] = new Num.Vector4(GRIS_MEDIO.X, GRIS_MEDIO.Y, GRIS_MEDIO.Z, 0.98f);
-            colors[(int)ImGuiCol.Separator] = PRIMARY_BASE;
+            colors[(int)ImGuiCol.MenuBarBg] = GRIS_OSCURO;
 
             // Scrollbars
-            colors[(int)ImGuiCol.ScrollbarBg] = GRIS_OSCURO;
-            colors[(int)ImGuiCol.ScrollbarGrab] = new Num.Vector4(GRIS_CLARO.X, GRIS_CLARO.Y, GRIS_CLARO.Z, 0.7f);
-            colors[(int)ImGuiCol.ScrollbarGrabHovered] = PRIMARY_LIGHT;
+            colors[(int)ImGuiCol.ScrollbarBg] = new Num.Vector4(0.0f, 0.0f, 0.0f, 0.0f); // Transparente queda más limpio
+            colors[(int)ImGuiCol.ScrollbarGrab] = new Num.Vector4(GRIS_CLARO.X, GRIS_CLARO.Y, GRIS_CLARO.Z, 0.5f);
+            colors[(int)ImGuiCol.ScrollbarGrabHovered] = new Num.Vector4(GRIS_CLARO.X, GRIS_CLARO.Y, GRIS_CLARO.Z, 0.8f);
             colors[(int)ImGuiCol.ScrollbarGrabActive] = PRIMARY_BASE;
 
-            colors[(int)ImGuiCol.TextDisabled] = PRIMARY_DARK;
-            // Titles
-            colors[(int)ImGuiCol.TitleBg] = GRIS_MEDIO;
-            colors[(int)ImGuiCol.TitleBgActive] = PRIMARY_DARK;
-            colors[(int)ImGuiCol.TitleBgCollapsed] = new Num.Vector4(GRIS_MEDIO.X, GRIS_MEDIO.Y, GRIS_MEDIO.Z, 0.7f);
-
-            // Popups / tooltips
-            colors[(int)ImGuiCol.PopupBg] = new Num.Vector4(GRIS_OSCURO.X + 0.04f, GRIS_OSCURO.Y + 0.04f, GRIS_OSCURO.Z + 0.04f, 0.96f);
-
-            // Estados (éxito, advertencia, error)
+            // Sliders & Checkboxes
+            colors[(int)ImGuiCol.CheckMark] = BLANCO; // El check en blanco resalta mejor sobre el fondo primario
+            colors[(int)ImGuiCol.SliderGrab] = PRIMARY_LIGHT;
+            colors[(int)ImGuiCol.SliderGrabActive] = BLANCO;
             colors[(int)ImGuiCol.DragDropTarget] = SUCCESS;
-            colors[(int)ImGuiCol.CheckMark] = PRIMARY_LIGHT;
-            colors[(int)ImGuiCol.SliderGrab] = PRIMARY_BASE;
-            colors[(int)ImGuiCol.SliderGrabActive] = PRIMARY_DARK;
 
-            // Configuración de estilo moderno
+            // 2. CONFIGURACIÓN DE ESTILO (Geometría y Espaciado)
+
+            // Redondeo consistente en toda la UI
             style.WindowRounding = 8.0f;
+            style.ChildRounding = 6.0f;
             style.FrameRounding = 6.0f;
-            style.ScrollbarRounding = 6.0f;
-            style.GrabRounding = 5.0f;
-            style.PopupRounding = 6.0f;
+            style.PopupRounding = 8.0f;
+            style.ScrollbarRounding = 8.0f;
+            style.GrabRounding = 6.0f;
+            style.TabRounding = 6.0f;
 
-            style.ItemSpacing = new Num.Vector2(8, 6);
-            style.ItemInnerSpacing = new Num.Vector2(6, 6);
-            style.WindowPadding = new Num.Vector2(10, 10);
+            // Bordes (1 pixel da una separación limpia tipo macOS/Windows 11)
+            style.WindowBorderSize = 1.0f;
+            style.ChildBorderSize = 1.0f;
+            style.PopupBorderSize = 1.0f;
+            style.FrameBorderSize = 1.0f; // Importante para que los inputs no floten
+            style.TabBorderSize = 0.0f;
+
+            // Espaciado y Padding (El secreto mejor guardado)
+            style.WindowPadding = new Num.Vector2(16, 16);      // Más aire en los bordes de la ventana
+            style.FramePadding = new Num.Vector2(12, 8);        // Botones e inputs más altos y cómodos
+            style.ItemSpacing = new Num.Vector2(12, 10);        // Separación entre elementos
+            style.ItemInnerSpacing = new Num.Vector2(8, 6);     // Separación interna (ej. icono y texto)
+            style.IndentSpacing = 20.0f;                        // Indentación de árboles/listas
+
+            // Alineación
+            style.WindowTitleAlign = new Num.Vector2(0.5f, 0.5f); // Centra el título de las ventanas
+            style.ButtonTextAlign = new Num.Vector2(0.5f, 0.5f);  // Centra el texto de los botones
         }
     }
 

@@ -1,5 +1,5 @@
 ﻿
-using ImGuiNET;
+using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -68,8 +68,6 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
         /// </summary>
         public async Task RenderMenuBarAsync()
         {
-            ImGui.SeparatorText("YTB");
-
             //https://www.leshylabs.com/apps/sstool/
             if (ImGui.BeginMenu("Archivos"))
             {
@@ -106,7 +104,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
             }
             ImGui.Separator();
 
-            if (ImGui.Button("Historial"))
+            if (ImGui.MenuItem("Historial"))
             {
 //-:cnd:noEmit
 #if YTB
@@ -136,7 +134,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
             //    ImGui.EndMenu();
             //}
 
-            if (ImGui.Button("Recompilar Assets"))
+            if (ImGui.MenuItem("Recompilar Assets"))
             {
                 YTBContentBuilder.Rebuild(async () =>
                 {
@@ -144,7 +142,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
                 });
             }
 
-            if (ImGui.Button("Recompilar y Ejecutar"))
+            if (ImGui.MenuItem("Recompilar y Ejecutar"))
             {
 //-:cnd:noEmit
 #if YTB
@@ -160,7 +158,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 //+:cnd:noEmit
             }
             ImGui.Separator();
-            if (ImGui.Button("Reproducir"))
+            if (ImGui.MenuItem("Reproducir"))
             {
 //-:cnd:noEmit
 #if YTB
@@ -170,7 +168,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 //+:cnd:noEmit
             }
             ImGui.SameLine();
-            if (ImGui.Button("Pausar")) 
+            if (ImGui.MenuItem("Pausar"))
             {
 //-:cnd:noEmit
 #if YTB

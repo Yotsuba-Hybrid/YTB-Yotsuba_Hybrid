@@ -9,6 +9,8 @@
     <AssemblyName>SandBoxGame</AssemblyName>
     <MonoGamePlatform>DesktopGL</MonoGamePlatform>
     <Configurations>Debug;Release;YTB</Configurations>
+    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+
   </PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)' == 'YTB'">
 		<DefineConstants>DEBUG;YOTSUBA</DefineConstants>
@@ -18,6 +20,7 @@
 		<HotReloadEnabled>true</HotReloadEnabled>
 	</PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\YotsubaEngine\YotsubaEngine.csproj" />
     <ProjectReference Include="..\SandBoxGame.Core\SandBoxGame.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
