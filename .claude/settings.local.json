@@ -23,7 +23,20 @@
       "mcp__claude_ai_Excalidraw__read_me",
       "WebSearch",
       "WebFetch(domain:github.com)",
-      "Bash(find C:/YTBEngine/YotsubaHybrid/Hexa.NET.ImGui-2.2.4 -name libImGuiImpl* -o -name ImGuiImpl.dll)"
+      "Bash(find C:/YTBEngine/YotsubaHybrid/Hexa.NET.ImGui-2.2.4 -name libImGuiImpl* -o -name ImGuiImpl.dll)",
+      "Bash(find /c/YTBEngine/YotsubaHybrid -type f \\\\\\(-name *.cpp -o -name *.h -o -name *.hpp \\\\\\))",
+      "Bash(find /c/YTBEngine/YotsubaHybrid -type d -name *Source* -o -name *src*)",
+      "Bash(find /c/YTBEngine/YotsubaHybrid -path */.opencode -prune -o -path */node_modules -prune -o -path */bin -prune -o -path */obj -prune -o -type f \\\\\\(-name *.cpp -o -name *.h -o -name *.hpp \\\\\\) -print)",
+      "Bash(find /c/YTBEngine/YotsubaHybrid/YotsubaEngine -type f \\\\\\(-name *.cpp -o -name *.h -o -name *.hpp \\\\\\))",
+      "Bash(find /c/YTBEngine/YotsubaHybrid/YotsubaEngine/Core -type f -name *.cs)",
+      "Bash(find /c/YTBEngine/YotsubaHybrid/YotsubaEngine -type f -name *.cs)",
+      "Bash(find /c/YTBEngine/YotsubaHybrid -type f -name *ImGui* -o -name *Window* -o -name *Platform*)",
+      "Bash(find /c/YTBEngine/YotsubaHybrid -type f \\\\\\(-name *.cs \\\\\\) -path *MonoGame* -o -name *Platform* -type f)",
+      "Bash(find /c/YTBEngine/YotsubaHybrid -type f -name *ImGuiRenderer* -o -name *ImGuiNet*)",
+      "Bash(find /c/YTBEngine/YotsubaHybrid -type f -name *.cs -exec grep -l \"mouse\\\\.X\\\\|mouse\\\\.Y\\\\|AddMousePos\" {})",
+      "Bash(find /c/YTBEngine/YotsubaHybrid -type f -name *Win32* -o -name *ImGuiImplWin32*)",
+      "Bash(find /c/YTBEngine/YotsubaHybrid/Hexa.NET.ImGui-2.2.4 -type f -path *Windows* -name *.cs)",
+      "Bash(find /c/YTBEngine/YotsubaHybrid -type f -name *.md)"
     ]
   }
 }

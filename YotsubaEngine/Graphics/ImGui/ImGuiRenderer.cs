@@ -279,7 +279,17 @@ namespace YotsubaEngine.Graphics.ImGuiNet
             var mouse = Mouse.GetState();
             var keyboard = Keyboard.GetState();
 
-            io.AddMousePosEvent(mouse.X, mouse.Y);
+            var clientBounds = _game.Window.ClientBounds;
+            if (clientBounds.Width > 0 && clientBounds.Height > 0)
+            {
+                float scaleX = io.DisplaySize.X / clientBounds.Width;
+                float scaleY = io.DisplaySize.Y / clientBounds.Height;
+                io.AddMousePosEvent(mouse.X * scaleX, mouse.Y * scaleY);
+            }
+            else
+            {
+                io.AddMousePosEvent(mouse.X, mouse.Y);
+            }
             io.AddMouseButtonEvent(0, mouse.LeftButton == ButtonState.Pressed);
             io.AddMouseButtonEvent(1, mouse.RightButton == ButtonState.Pressed);
             io.AddMouseButtonEvent(2, mouse.MiddleButton == ButtonState.Pressed);
