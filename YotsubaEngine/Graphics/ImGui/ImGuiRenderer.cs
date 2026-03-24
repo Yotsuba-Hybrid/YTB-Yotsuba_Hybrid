@@ -1,9 +1,14 @@
 ﻿using Hexa.NET.ImGui;
+using Hexa.NET.ImGui.Backends.OpenGL3;
+using Hexa.NET.ImNodes;
+using Hexa.NET.ImPlot;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 
@@ -50,6 +55,9 @@ namespace YotsubaEngine.Graphics.ImGuiNet
         private int _horizontalScrollWheelValue;
         private readonly float WHEEL_DELTA = 120;
         private Keys[] _allKeys = Enum.GetValues<Keys>();
+
+        // Native backend (Android)
+        private bool _useNativeBackend;
 
         /// <summary>
         /// Inicializa el renderizador de ImGui.
@@ -113,6 +121,20 @@ namespace YotsubaEngine.Graphics.ImGuiNet
         }
 
         /// <summary>
+        /// Initializes the native ImGui OpenGL3 backend for Android rendering.
+        /// Must be called after fonts are configured but instead of RebuildFontAtlas().
+        /// </summary>
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public void InitNativeBackend()
+        {
+            _useNativeBackend = true;
+            var context = ImGui.GetCurrentContext();
+            ImGuiImplOpenGL3.SetCurrentContext(context);
+            ImGuiImplOpenGL3.Init("#version 300 es");
+            ImGuiImplOpenGL3.CreateFontsTexture();
+        }
+
+        /// <summary>
         /// Crea un puntero a una textura para usarlo con ImGui (por ejemplo, <see cref="ImGui.Image" />).
         /// <para>Creates a texture pointer for ImGui calls (for example, <see cref="ImGui.Image" />).</para>
         /// </summary>
@@ -148,6 +170,17 @@ namespace YotsubaEngine.Graphics.ImGuiNet
 
             UpdateInput();
 
+            if (_useNativeBackend)
+            {
+                // Each native .so (cimgui, cimnodes, cimplot, libImGuiImpl) has ImGui
+                // statically linked with its own GImGui global. Re-sync every frame
+                // to ensure all libraries point to the same context.
+                var ctx = ImGui.GetCurrentContext();
+                ImGuiImplOpenGL3.SetCurrentContext(ctx);
+                ImNodes.SetImGuiContext(ctx);
+                ImPlot.SetImGuiContext(ctx);
+                ImGuiImplOpenGL3.NewFrame();
+            }
             ImGui.NewFrame();
         }
 
@@ -159,7 +192,14 @@ namespace YotsubaEngine.Graphics.ImGuiNet
         {
             ImGui.Render();
 
-            unsafe { RenderDrawData(ImGui.GetDrawData()); }
+            if (_useNativeBackend)
+            {
+                ImGuiImplOpenGL3.RenderDrawData(ImGui.GetDrawData());
+            }
+            else
+            {
+                unsafe { RenderDrawData(ImGui.GetDrawData()); }
+            }
         }
 
         #endregion ImGuiRenderer
@@ -171,25 +211,23 @@ namespace YotsubaEngine.Graphics.ImGuiNet
         /// </summary>
         protected virtual void SetupInput()
         {
-            var io = ImGui.GetIO();
+            if (!OperatingSystem.IsAndroid())
+            {
+                SetupDesktopTextInput();
+            }
+        }
 
-            // MonoGame-specific //////////////////////
+        // Isolated in a separate method so the JIT never resolves the TextInput
+        // member on Android, where GameWindow.TextInput does not exist.
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private void SetupDesktopTextInput()
+        {
+            var io = ImGui.GetIO();
             _game.Window.TextInput += (s, a) =>
             {
                 if (a.Character == '\t') return;
                 io.AddInputCharacter(a.Character);
             };
-
-            ///////////////////////////////////////////
-
-            // FNA-specific ///////////////////////////
-            //TextInputEXT.TextInput += c =>
-            //{
-            //    if (c == '\t') return;
-
-            //    ImGui.GetIO().AddInputCharacter(c);
-            //};
-            ///////////////////////////////////////////
         }
 
         /// <summary>
@@ -216,10 +254,28 @@ namespace YotsubaEngine.Graphics.ImGuiNet
         /// </summary>
         protected virtual void UpdateInput()
         {
-            if (!_game.IsActive) return;
-
             var io = ImGui.GetIO();
 
+            // Always set display size — must not be gated by IsActive
+            io.DisplaySize = new System.Numerics.Vector2(
+                _graphicsDevice.PresentationParameters.BackBufferWidth,
+                _graphicsDevice.PresentationParameters.BackBufferHeight);
+            io.DisplayFramebufferScale = new System.Numerics.Vector2(1f, 1f);
+
+            if (!_game.IsActive) return;
+
+            if (OperatingSystem.IsAndroid())
+            {
+                UpdateAndroidInput(io);
+            }
+            else
+            {
+                UpdateDesktopInput(io);
+            }
+        }
+
+        private void UpdateDesktopInput(ImGuiIOPtr io)
+        {
             var mouse = Mouse.GetState();
             var keyboard = Keyboard.GetState();
 
@@ -243,9 +299,26 @@ namespace YotsubaEngine.Graphics.ImGuiNet
                     io.AddKeyEvent(imguikey, keyboard.IsKeyDown(key));
                 }
             }
+        }
 
-            io.DisplaySize = new System.Numerics.Vector2(_graphicsDevice.PresentationParameters.BackBufferWidth, _graphicsDevice.PresentationParameters.BackBufferHeight);
-            io.DisplayFramebufferScale = new System.Numerics.Vector2(1f, 1f);
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private void UpdateAndroidInput(ImGuiIOPtr io)
+        {
+            var touchState = TouchPanel.GetState();
+
+            if (touchState.Count > 0)
+            {
+                var touch = touchState[0];
+                io.AddMousePosEvent(touch.Position.X, touch.Position.Y);
+
+                bool isPressed = touch.State == TouchLocationState.Pressed
+                              || touch.State == TouchLocationState.Moved;
+                io.AddMouseButtonEvent(0, isPressed);
+            }
+            else
+            {
+                io.AddMouseButtonEvent(0, false);
+            }
         }
 
         private bool TryMapKeys(Keys key, out ImGuiKey imguikey)
@@ -368,7 +441,9 @@ namespace YotsubaEngine.Graphics.ImGuiNet
                 _indexData = new byte[_indexBufferSize * sizeof(ushort)];
             }
 
-            // Copy ImGui's vertices and indices to a set of managed byte arrays
+            // Copy ImGui's vertices and indices to a set of managed byte arrays.
+            // Index values are pre-offset by vtxOffset so that baseVertex is not needed
+            // at draw time — OpenGL ES < 3.2 does not support glDrawElementsBaseVertex.
             int vtxOffset = 0;
             int idxOffset = 0;
 
@@ -377,10 +452,18 @@ namespace YotsubaEngine.Graphics.ImGuiNet
                 ImDrawListPtr cmdList = drawData.CmdLists[n];
 
                 fixed (void* vtxDstPtr = &_vertexData[vtxOffset * DrawVertDeclaration.Size])
-                fixed (void* idxDstPtr = &_indexData[idxOffset * sizeof(ushort)])
                 {
                     Buffer.MemoryCopy(cmdList.VtxBuffer.Data, vtxDstPtr, _vertexData.Length, cmdList.VtxBuffer.Size * DrawVertDeclaration.Size);
-                    Buffer.MemoryCopy(cmdList.IdxBuffer.Data, idxDstPtr, _indexData.Length, cmdList.IdxBuffer.Size * sizeof(ushort));
+                }
+
+                fixed (void* idxDstPtr = &_indexData[idxOffset * sizeof(ushort)])
+                {
+                    ushort* srcPtr = (ushort*)cmdList.IdxBuffer.Data;
+                    ushort* dstPtr = (ushort*)idxDstPtr;
+                    for (int i = 0; i < cmdList.IdxBuffer.Size; i++)
+                    {
+                        dstPtr[i] = (ushort)(srcPtr[i] + vtxOffset);
+                    }
                 }
 
                 vtxOffset += cmdList.VtxBuffer.Size;
@@ -431,16 +514,12 @@ namespace YotsubaEngine.Graphics.ImGuiNet
                     {
                         pass.Apply();
 
-#pragma warning disable CS0618 // // FNA does not expose an alternative method.
                         _graphicsDevice.DrawIndexedPrimitives(
-                            primitiveType: PrimitiveType.TriangleList,
-                            baseVertex: (int)drawCmd.VtxOffset + vtxOffset,
-                            minVertexIndex: 0,
-                            numVertices: cmdList.VtxBuffer.Size,
-                            startIndex: (int)drawCmd.IdxOffset + idxOffset,
-                            primitiveCount: (int)drawCmd.ElemCount / 3
+                            PrimitiveType.TriangleList,
+                            (int)drawCmd.VtxOffset,
+                            (int)drawCmd.IdxOffset + idxOffset,
+                            (int)drawCmd.ElemCount / 3
                         );
-#pragma warning restore CS0618
                     }
                 }
 

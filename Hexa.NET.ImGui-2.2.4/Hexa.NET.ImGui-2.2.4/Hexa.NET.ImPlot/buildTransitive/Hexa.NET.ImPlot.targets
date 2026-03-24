@@ -1,0 +1,40 @@
+<Project>
+    <PropertyGroup>
+        <_IsAndroid Condition="$(TargetFramework.StartsWith('net')) And $(TargetFramework.Contains('-android'))">true</_IsAndroid>
+        <_IsiOS Condition="$(TargetFramework.StartsWith('net')) And $(TargetFramework.Contains('-ios'))">true</_IsiOS>
+        <_IsDesktop Condition="$(TargetFramework.StartsWith('net')) And !$(TargetFramework.Contains('-android')) And !$(TargetFramework.Contains('-ios'))">true</_IsDesktop>
+    </PropertyGroup>
+    
+    <ItemGroup Condition="'$(_IsAndroid)' == 'true'">
+        <AndroidNativeLibrary Include="$(MSBuildThisFileDirectory)..\native\android-arm64\cimplot.so">
+            <Abi>arm64-v8a</Abi>
+        </AndroidNativeLibrary>
+        <AndroidNativeLibrary Include="$(MSBuildThisFileDirectory)..\native\android-x64\cimplot.so">
+            <Abi>x86_64</Abi>
+        </AndroidNativeLibrary>
+    </ItemGroup>
+    
+    <Target Name="CopyImPlotNativeLibsToOutput" AfterTargets="Build" Condition="'$(_IsDesktop)' == 'true'">
+        <PropertyGroup>
+            <_ImPlotNativeRuntime Condition="'$(RuntimeIdentifier)' == 'win-x64'">win-x64</_ImPlotNativeRuntime>
+            <_ImPlotNativeRuntime Condition="'$(RuntimeIdentifier)' == 'win-x86'">win-x86</_ImPlotNativeRuntime>
+            <_ImPlotNativeRuntime Condition="'$(RuntimeIdentifier)' == 'win-arm64'">win-arm64</_ImPlotNativeRuntime>
+            <_ImPlotNativeRuntime Condition="'$(RuntimeIdentifier)' == 'linux-x64'">linux-x64</_ImPlotNativeRuntime>
+            <_ImPlotNativeRuntime Condition="'$(RuntimeIdentifier)' == 'linux-arm64'">linux-arm64</_ImPlotNativeRuntime>
+            <_ImPlotNativeRuntime Condition="'$(RuntimeIdentifier)' == 'osx-x64'">osx-x64</_ImPlotNativeRuntime>
+            <_ImPlotNativeRuntime Condition="'$(RuntimeIdentifier)' == 'osx-arm64'">osx-arm64</_ImPlotNativeRuntime>
+            <_ImPlotNativeRuntime Condition="'$(_ImPlotNativeRuntime)' == '' And '$(OS)' == 'Windows_NT'">win-x64</_ImPlotNativeRuntime>
+            <_ImPlotNativeRuntime Condition="'$(_ImPlotNativeRuntime)' == '' And '$(OS)' == 'Linux'">linux-x64</_ImPlotNativeRuntime>
+            <_ImPlotNativeRuntime Condition="'$(_ImPlotNativeRuntime)' == '' And '$(OS)' == 'Darwin'">osx-arm64</_ImPlotNativeRuntime>
+        </PropertyGroup>
+        <Copy Condition="'$(_ImPlotNativeRuntime)' != '' And $(_ImPlotNativeRuntime.StartsWith('win'))"
+            SourceFiles="$(MSBuildThisFileDirectory)..\native\$(_ImPlotNativeRuntime)\cimplot.dll"
+            DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+        <Copy Condition="'$(_ImPlotNativeRuntime)' != '' And $(_ImPlotNativeRuntime.StartsWith('linux'))"
+            SourceFiles="$(MSBuildThisFileDirectory)..\native\$(_ImPlotNativeRuntime)\cimplot.so"
+            DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+        <Copy Condition="'$(_ImPlotNativeRuntime)' != '' And $(_ImPlotNativeRuntime.StartsWith('osx'))"
+            SourceFiles="$(MSBuildThisFileDirectory)..\native\$(_ImPlotNativeRuntime)\cimplot.dylib"
+            DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+    </Target>
+</Project>
