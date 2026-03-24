@@ -1,4 +1,5 @@
 ﻿using Hexa.NET.ImGui;
+using Hexa.NET.ImGuizmo;
 using Hexa.NET.ImNodes;
 using Hexa.NET.ImPlot;
 using Microsoft.Xna.Framework;
@@ -187,14 +188,39 @@ if (IsDesktop)
         protected override void Initialize()
         {
 
-           if(YTBGlobalState.IsDesktop && YTBGlobalState.EngineEnabled)
+           //if(YTBGlobalState.IsDesktop && YTBGlobalState.EngineEnabled)
             {
                 GuiRenderer = new ImGuiRenderer(this);
                 // ImGui setup (fonts, theme)
                 var io = ImGui.GetIO();
-                io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
+                if (!IsMobile)
+                {
+                    io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
+                }
 
-                string outputFontsDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Fonts");
+                string outputFontsDir;
+                if (IsMobile)
+                {
+                    // On Android, assets are inside the APK and can't be accessed via file paths.
+                    // Extract fonts to a writable temp directory using MonoGame's TitleContainer.
+                    outputFontsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Fonts");
+                    Directory.CreateDirectory(outputFontsDir);
+                    foreach (var fontName in new[] { "GeistPixel-Square.ttf", "NerdFontsSymbolsOnly.ttf" })
+                    {
+                        string destPath = Path.Combine(outputFontsDir, fontName);
+                        if (!File.Exists(destPath))
+                        {
+                            using var stream = TitleContainer.OpenStream(Path.Combine("Fonts", fontName));
+                            using var fs = File.Create(destPath);
+                            stream.CopyTo(fs);
+                        }
+                    }
+                }
+                else
+                {
+                    outputFontsDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Fonts");
+                }
+
                 string fuentePrincipal = Path.Combine(outputFontsDir, "GeistPixel-Square.ttf");
                 string fuenteIconos = Path.Combine(outputFontsDir, "NerdFontsSymbolsOnly.ttf");
 
@@ -248,12 +274,32 @@ if (IsDesktop)
                 // interno para actualizar la textura en la GPU. Si no ves las fuentes, puede que necesites:
                 // GuiRenderer.RebuildFontAtlas();
                 ImGuiThemeColors.AplicarTemaCompleto();
-                GuiRenderer.RebuildFontAtlas();
-                ImPlot.CreateContext();
-                ImPlot.SetImGuiContext(ImGui.GetCurrentContext());
+                if (IsMobile)
+                {
+                    GuiRenderer.InitNativeBackend();
+                }
+                else
+                {
+                    GuiRenderer.RebuildFontAtlas();
+                }
+                var guiContext = ImGui.GetCurrentContext();
 
-                ImNodes.CreateContext();
-                ImNodes.SetImGuiContext(ImGui.GetCurrentContext());
+                ImPlot.SetImGuiContext(guiContext);
+                var plotContext = ImPlot.CreateContext();
+                ImPlot.SetCurrentContext(plotContext);
+
+                ImNodes.SetImGuiContext(guiContext);
+                var nodesContext = ImNodes.CreateContext();
+                ImNodes.SetCurrentContext(nodesContext);
+                var editorCtx = ImNodes.EditorContextCreate();
+                ImNodes.EditorContextSet(editorCtx);
+                ImNodes.StyleColorsDark(ImNodes.GetStyle());
+
+                // Le pasamos el contexto principal de ImGui a ImGuizmo para que sepa dónde dibujar
+                ImGuizmo.SetImGuiContext(guiContext);
+
+                // Nota: ImGuizmo normalmente NO requiere un "CreateContext()" ni "SetCurrentContext()".
+                if(!YTBGlobalState.IsMobile)
                 WriteYTBFile.CreateYTBGameFile();
                 
                 // Configurar el título de la ventana desde YTBConfig

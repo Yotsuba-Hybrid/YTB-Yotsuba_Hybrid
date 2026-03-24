@@ -1,6 +1,46 @@
-﻿<Project>
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net8.0-android' OR '$(TargetFramework)' == 'net8.0-android34.0' ">
-		<NativeLibrary Include="$(MSBuildThisFileDirectory)../runtimes/android-arm64/native/*.so" />
-		<NativeLibrary Include="$(MSBuildThisFileDirectory)../runtimes/android-x64/native/*.so" />
-	</ItemGroup>
+<Project>
+    <PropertyGroup>
+        <_IsAndroid Condition="$(TargetFramework.StartsWith('net')) And $(TargetFramework.Contains('-android'))">true</_IsAndroid>
+        <_IsiOS Condition="$(TargetFramework.StartsWith('net')) And $(TargetFramework.Contains('-ios'))">true</_IsiOS>
+        <_IsDesktop Condition="$(TargetFramework.StartsWith('net')) And !$(TargetFramework.Contains('-android')) And !$(TargetFramework.Contains('-ios'))">true</_IsDesktop>
+    </PropertyGroup>
+    
+    <ItemGroup Condition="'$(_IsAndroid)' == 'true'">
+        <AndroidNativeLibrary Include="$(MSBuildThisFileDirectory)..\native\android-arm64\cimgui.so">
+            <Abi>arm64-v8a</Abi>
+        </AndroidNativeLibrary>
+        <AndroidNativeLibrary Include="$(MSBuildThisFileDirectory)..\native\android-arm64\libc++_shared.so">
+            <Abi>arm64-v8a</Abi>
+        </AndroidNativeLibrary>
+        <AndroidNativeLibrary Include="$(MSBuildThisFileDirectory)..\native\android-x64\cimgui.so">
+            <Abi>x86_64</Abi>
+        </AndroidNativeLibrary>
+        <AndroidNativeLibrary Include="$(MSBuildThisFileDirectory)..\native\android-x64\libc++_shared.so">
+            <Abi>x86_64</Abi>
+        </AndroidNativeLibrary>
+    </ItemGroup>
+    
+    <Target Name="CopyImGuiNativeLibsToOutput" AfterTargets="Build" Condition="'$(_IsDesktop)' == 'true'">
+        <PropertyGroup>
+            <_ImGuiNativeRuntime Condition="'$(RuntimeIdentifier)' == 'win-x64'">win-x64</_ImGuiNativeRuntime>
+            <_ImGuiNativeRuntime Condition="'$(RuntimeIdentifier)' == 'win-x86'">win-x86</_ImGuiNativeRuntime>
+            <_ImGuiNativeRuntime Condition="'$(RuntimeIdentifier)' == 'win-arm64'">win-arm64</_ImGuiNativeRuntime>
+            <_ImGuiNativeRuntime Condition="'$(RuntimeIdentifier)' == 'linux-x64'">linux-x64</_ImGuiNativeRuntime>
+            <_ImGuiNativeRuntime Condition="'$(RuntimeIdentifier)' == 'linux-arm64'">linux-arm64</_ImGuiNativeRuntime>
+            <_ImGuiNativeRuntime Condition="'$(RuntimeIdentifier)' == 'osx-x64'">osx-x64</_ImGuiNativeRuntime>
+            <_ImGuiNativeRuntime Condition="'$(RuntimeIdentifier)' == 'osx-arm64'">osx-arm64</_ImGuiNativeRuntime>
+            <_ImGuiNativeRuntime Condition="'$(_ImGuiNativeRuntime)' == '' And '$(OS)' == 'Windows_NT'">win-x64</_ImGuiNativeRuntime>
+            <_ImGuiNativeRuntime Condition="'$(_ImGuiNativeRuntime)' == '' And '$(OS)' == 'Linux'">linux-x64</_ImGuiNativeRuntime>
+            <_ImGuiNativeRuntime Condition="'$(_ImGuiNativeRuntime)' == '' And '$(OS)' == 'Darwin'">osx-arm64</_ImGuiNativeRuntime>
+        </PropertyGroup>
+        <Copy Condition="'$(_ImGuiNativeRuntime)' != '' And $(_ImGuiNativeRuntime.StartsWith('win'))"
+            SourceFiles="$(MSBuildThisFileDirectory)..\native\$(_ImGuiNativeRuntime)\cimgui.dll"
+            DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+        <Copy Condition="'$(_ImGuiNativeRuntime)' != '' And $(_ImGuiNativeRuntime.StartsWith('linux'))"
+            SourceFiles="$(MSBuildThisFileDirectory)..\native\$(_ImGuiNativeRuntime)\cimgui.so"
+            DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+        <Copy Condition="'$(_ImGuiNativeRuntime)' != '' And $(_ImGuiNativeRuntime.StartsWith('osx'))"
+            SourceFiles="$(MSBuildThisFileDirectory)..\native\$(_ImGuiNativeRuntime)\cimgui.dylib"
+            DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+    </Target>
 </Project>

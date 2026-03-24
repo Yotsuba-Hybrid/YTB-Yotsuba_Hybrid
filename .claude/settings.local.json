@@ -19,7 +19,11 @@
       "Bash(2)",
       "Read(//c/Users/Usuario/.nuget/packages/imgui.net/1.91.6.1/**)",
       "Read(//c/Users/Usuario/.nuget/packages/imgui.net/1.91.6.1/runtimes/**)",
-      "Bash(echo \"exit: $?\")"
+      "Bash(echo \"exit: $?\")",
+      "mcp__claude_ai_Excalidraw__read_me",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "Bash(find C:/YTBEngine/YotsubaHybrid/Hexa.NET.ImGui-2.2.4 -name libImGuiImpl* -o -name ImGuiImpl.dll)"
     ]
   }
 }

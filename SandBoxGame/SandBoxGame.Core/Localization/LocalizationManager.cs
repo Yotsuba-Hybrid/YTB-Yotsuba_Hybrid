@@ -33,23 +33,20 @@ internal class LocalizationManager
     /// </remarks>
     public static List<CultureInfo> GetSupportedCultures()
     {
-        // Create a list to hold supported cultures
+        // Only check cultures for which we have .resx files.
+        // Iterating ALL CultureInfo.GetCultures() generates hundreds of
+        // FileNotFoundException on Android and severely impacts startup.
+        string[] knownCultures = { "es-ES", "fr-FR" };
+
         List<CultureInfo> supportedCultures = new List<CultureInfo>();
-
-        // Get the current assembly
         Assembly assembly = Assembly.GetExecutingAssembly();
-
-        // Resource manager for your Resources.resx
         ResourceManager resourceManager = new ResourceManager("SandBoxGame.Core.Localization.Resources", assembly);
 
-        // Get all cultures defined in the satellite assemblies
-        CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
-
-        foreach (CultureInfo culture in cultures)
+        foreach (string code in knownCultures)
         {
             try
             {
-                // Try to get the resource set for this culture
+                var culture = new CultureInfo(code);
                 var resourceSet = resourceManager.GetResourceSet(culture, true, false);
                 if (resourceSet != null)
                 {
@@ -58,7 +55,6 @@ internal class LocalizationManager
             }
             catch (MissingManifestResourceException)
             {
-                // This exception is thrown when there is no .resx for the culture, ignore it
             }
         }
 
