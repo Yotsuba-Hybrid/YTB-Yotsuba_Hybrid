@@ -42,7 +42,17 @@
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
+    <!-- ImGui font files (accessed via TitleContainer.OpenStream on Android) -->
+    <AndroidAsset Include="..\..\YotsubaEngine\Fonts\GeistPixel-Square.ttf">
+      <Link>Fonts\GeistPixel-Square.ttf</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\..\YotsubaEngine\Fonts\NerdFontsSymbolsOnly.ttf">
+      <Link>Fonts\NerdFontsSymbolsOnly.ttf</Link>
+    </AndroidAsset>
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="MonoGame.Framework.Android" Version="3.8.5-preview.*" />
   </ItemGroup>
   <Import Project="..\SandBoxGame.Content\BuildContent.targets" />
+  <Import Project="..\..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\CopyAllImGuiNatives.targets" />
 </Project>

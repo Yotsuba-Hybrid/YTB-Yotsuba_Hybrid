@@ -18,6 +18,9 @@ using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Graphics;
 using MonoGameGum;
 using YotsubaEngine.Core.System.YotsubaEngineUI.UI;
+using System.Diagnostics;
+using Hexa.NET.ImGuizmo;
+using Hexa.NET.ImPlot;
 
 namespace SandBoxGame.Core.Systems
 {
@@ -84,19 +87,21 @@ namespace SandBoxGame.Core.Systems
             //GumUI.Update(gameTime);
         }
 
+        string button = "Haz clic aquí";
+
         #region Renderizado
+
+        // Matrices simuladas para el ejemplo
+        private System.Numerics.Matrix4x4 viewMat = System.Numerics.Matrix4x4.CreateLookAt(new System.Numerics.Vector3(5, 5, 5), System.Numerics.Vector3.Zero, System.Numerics.Vector3.UnitY);
+        private System.Numerics.Matrix4x4 projMat = System.Numerics.Matrix4x4.CreatePerspectiveFieldOfView((float)Math.PI / 4f, 16f / 9f, 0.1f, 100f);
+        private System.Numerics.Matrix4x4 objectMat = System.Numerics.Matrix4x4.Identity; // Objeto en el centro (0,0,0)
+
+        // Operación actual del Gizmo (Trasladar, Rotar, Escalar)
+        private ImGuizmoOperation currentOperation = ImGuizmoOperation.Translate; // (O TRANSLATE en mayúsculas)
         public override void Render2D(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            //YTBGame.GuiRenderer.BeginLayout(gameTime);
-
-            //ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Num.Vector2(0, 0));
-
-            //// Renderizamos el editor avanzado con el estilo PixiEditor
-            //_advancedEditor.Draw();
-
-            //ImGui.PopStyleVar();
-
-            //YTBGame.GuiRenderer.EndLayout();
+            YTBGame.GuiRenderer.BeginLayout(gameTime);
+            YTBGame.GuiRenderer.EndLayout();
             //GumUI.Draw();
         }
 
