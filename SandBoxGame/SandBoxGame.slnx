@@ -5,6 +5,9 @@
     <BuildType Name="YTB" />
   </Configurations>
   <Folder Name="/Dependencies/">
+    <Project Path="../Hexa.NET.ImGui-2.2.4/Hexa.NET.ImGui-2.2.4/Hexa.NET.ImGui.Backends/Hexa.NET.ImGui.Backends.csproj">
+      <BuildType Solution="YTB|*" Project="Release" />
+    </Project>
     <Project Path="../Hexa.NET.ImGui-2.2.4/Hexa.NET.ImGui-2.2.4/Hexa.NET.ImGui/Hexa.NET.ImGui.csproj">
       <BuildType Solution="YTB|*" Project="Release" />
     </Project>

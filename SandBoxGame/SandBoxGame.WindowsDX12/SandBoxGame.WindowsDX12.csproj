@@ -29,4 +29,5 @@
     <PackageReference Include="MonoGame.Runtime.Windows.DX12" Version="3.8.5-preview.*" />
   </ItemGroup>
   <Import Project="..\SandBoxGame.Content\BuildContent.targets" />
+  <Import Project="..\..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\CopyAllImGuiNatives.targets" />
 </Project>

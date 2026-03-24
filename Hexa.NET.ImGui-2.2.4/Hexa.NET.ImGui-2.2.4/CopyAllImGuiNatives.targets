@@ -1,0 +1,64 @@
+<Project>
+  <!--
+    Shared targets file that copies all Hexa.NET ImGui native libraries
+    (cimgui, cimguizmo, cimnodes, cimplot) to the output directory.
+
+    Supports: Windows (x64/x86/arm64), Linux (x64/arm64), macOS (x64/arm64).
+
+    Import from any platform .csproj:
+      <Import Project="..\..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\CopyAllImGuiNatives.targets" />
+  -->
+
+  <PropertyGroup>
+    <_HexaNativeDir>$(MSBuildThisFileDirectory)native\</_HexaNativeDir>
+    <_HexaBackendsNativeDir>$(MSBuildThisFileDirectory)Hexa.NET.ImGui.Backends\native\</_HexaBackendsNativeDir>
+    <_IsAndroidTarget Condition="$(TargetFramework.Contains('-android'))">true</_IsAndroidTarget>
+    <_IsiOSTarget Condition="$(TargetFramework.Contains('-ios'))">true</_IsiOSTarget>
+    <_IsDesktopTarget Condition="'$(_IsAndroidTarget)' != 'true' And '$(_IsiOSTarget)' != 'true'">true</_IsDesktopTarget>
+  </PropertyGroup>
+
+  <!-- Android: bundle native .so libraries into the APK -->
+  <ItemGroup Condition="'$(_IsAndroidTarget)' == 'true'">
+    <!-- arm64-v8a -->
+    <AndroidNativeLibrary Include="$(_HexaNativeDir)android-arm64\cimgui.so">    <Abi>arm64-v8a</Abi></AndroidNativeLibrary>
+    <AndroidNativeLibrary Include="$(_HexaNativeDir)android-arm64\libc++_shared.so"><Abi>arm64-v8a</Abi></AndroidNativeLibrary>
+    <AndroidNativeLibrary Include="$(_HexaNativeDir)android-arm64\cimguizmo.so"> <Abi>arm64-v8a</Abi></AndroidNativeLibrary>
+    <AndroidNativeLibrary Include="$(_HexaNativeDir)android-arm64\cimnodes.so">  <Abi>arm64-v8a</Abi></AndroidNativeLibrary>
+    <AndroidNativeLibrary Include="$(_HexaNativeDir)android-arm64\cimplot.so">   <Abi>arm64-v8a</Abi></AndroidNativeLibrary>
+    <!-- x86_64 (emulators) -->
+    <AndroidNativeLibrary Include="$(_HexaNativeDir)android-x64\cimgui.so">     <Abi>x86_64</Abi></AndroidNativeLibrary>
+    <AndroidNativeLibrary Include="$(_HexaNativeDir)android-x64\libc++_shared.so"><Abi>x86_64</Abi></AndroidNativeLibrary>
+    <AndroidNativeLibrary Include="$(_HexaNativeDir)android-x64\cimguizmo.so">  <Abi>x86_64</Abi></AndroidNativeLibrary>
+    <AndroidNativeLibrary Include="$(_HexaNativeDir)android-x64\cimnodes.so">   <Abi>x86_64</Abi></AndroidNativeLibrary>
+    <AndroidNativeLibrary Include="$(_HexaNativeDir)android-x64\cimplot.so">    <Abi>x86_64</Abi></AndroidNativeLibrary>
+    <!-- ImGui native backend (libImGuiImpl) for OpenGL3 rendering -->
+    <AndroidNativeLibrary Include="$(_HexaBackendsNativeDir)android-arm64\libImGuiImpl.so"><Abi>arm64-v8a</Abi></AndroidNativeLibrary>
+    <AndroidNativeLibrary Include="$(_HexaBackendsNativeDir)android-x64\libImGuiImpl.so"> <Abi>x86_64</Abi></AndroidNativeLibrary>
+  </ItemGroup>
+
+  <!-- Desktop: copy the correct platform-specific native libraries to OutDir after build -->
+  <Target Name="_CopyAllHexaImGuiNatives" AfterTargets="Build" Condition="'$(_IsDesktopTarget)' == 'true'">
+    <PropertyGroup>
+      <!-- Use RuntimeIdentifier if explicitly set (e.g. dotnet publish -r win-x64) -->
+      <_HexaRID Condition="'$(RuntimeIdentifier)' == 'win-x64'">win-x64</_HexaRID>
+      <_HexaRID Condition="'$(RuntimeIdentifier)' == 'win-x86'">win-x86</_HexaRID>
+      <_HexaRID Condition="'$(RuntimeIdentifier)' == 'win-arm64'">win-arm64</_HexaRID>
+      <_HexaRID Condition="'$(RuntimeIdentifier)' == 'linux-x64'">linux-x64</_HexaRID>
+      <_HexaRID Condition="'$(RuntimeIdentifier)' == 'linux-arm64'">linux-arm64</_HexaRID>
+      <_HexaRID Condition="'$(RuntimeIdentifier)' == 'osx-x64'">osx-x64</_HexaRID>
+      <_HexaRID Condition="'$(RuntimeIdentifier)' == 'osx-arm64'">osx-arm64</_HexaRID>
+      <!-- Fallback: detect from build host OS -->
+      <_HexaRID Condition="'$(_HexaRID)' == '' And '$(OS)' == 'Windows_NT'">win-x64</_HexaRID>
+      <_HexaRID Condition="'$(_HexaRID)' == '' And '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">linux-x64</_HexaRID>
+      <_HexaRID Condition="'$(_HexaRID)' == '' And '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">osx-arm64</_HexaRID>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_HexaNativeFiles Include="$(_HexaNativeDir)$(_HexaRID)\*" />
+      <_HexaNativeFiles Include="$(_HexaBackendsNativeDir)$(_HexaRID)\*" />
+    </ItemGroup>
+
+    <Message Importance="normal" Text="Copying Hexa.NET ImGui natives from $(_HexaNativeDir)$(_HexaRID) to $(OutDir)" />
+    <Copy SourceFiles="@(_HexaNativeFiles)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+  </Target>
+</Project>
