@@ -100,8 +100,8 @@ namespace SandBoxGame.Core.Systems
         private ImGuizmoOperation currentOperation = ImGuizmoOperation.Translate; // (O TRANSLATE en mayúsculas)
         public override void Render2D(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            YTBGame.GuiRenderer.BeginLayout(gameTime);
-            YTBGame.GuiRenderer.EndLayout();
+            //YTBGame.GuiRenderer.BeginLayout(gameTime);
+            //YTBGame.GuiRenderer.EndLayout();
             //GumUI.Draw();
         }
 
