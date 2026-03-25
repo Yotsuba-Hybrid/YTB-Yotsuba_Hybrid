@@ -12,6 +12,7 @@ using YotsubaEngine.Core.System.YotsubaEngineUI;
 using YotsubaEngine.Events.YTBEvents;
 using YotsubaEngine.Exceptions;
 using YotsubaEngine.Input;
+using YotsubaEngine.Web;
 using YotsubaEngine.YTB_Toolkit;
 using static YotsubaEngine.Core.System.S_AGNOSTIC.InputSystem;
 
@@ -898,6 +899,112 @@ namespace YotsubaEngine.Core.YotsubaGame.Scripting
         {
             return YTBGlobalState.ContentManager.LoadLocalized<T>(path);
         }
+        #endregion
+
+        #region WebView Methods
+
+        /// <summary>
+        /// Crea una nueva instancia de web view con la URL, posición y tamaño especificados.
+        /// <para>Creates a new web view instance with the specified URL, position, and size.</para>
+        /// </summary>
+        /// <param name="url">URL a cargar. <para>URL to load.</para></param>
+        /// <param name="position">Posición en pantalla. <para>Screen position.</para></param>
+        /// <param name="width">Ancho en píxeles. <para>Width in pixels.</para></param>
+        /// <param name="height">Alto en píxeles. <para>Height in pixels.</para></param>
+        /// <param name="id">Identificador opcional. <para>Optional identifier.</para></param>
+        /// <returns>Identificador de la instancia creada. <para>Created instance identifier.</para></returns>
+        public string CreateWebView(string url, Vector2 position, int width, int height, string id = null)
+            => YTBWebView.Create(url, position, width, height, id);
+
+        /// <summary>
+        /// Destruye una instancia de web view y libera sus recursos.
+        /// <para>Destroys a web view instance and releases its resources.</para>
+        /// </summary>
+        /// <param name="id">Identificador de la instancia. <para>Instance identifier.</para></param>
+        public void DestroyWebView(string id)
+            => YTBWebView.Destroy(id);
+
+        /// <summary>
+        /// Navega una instancia de web view a una nueva URL.
+        /// <para>Navigates a web view instance to a new URL.</para>
+        /// </summary>
+        /// <param name="id">Identificador de la instancia. <para>Instance identifier.</para></param>
+        /// <param name="url">URL destino. <para>Target URL.</para></param>
+        public void NavigateWebView(string id, string url)
+            => YTBWebView.Navigate(id, url);
+
+        /// <summary>
+        /// Ejecuta código JavaScript en una instancia de web view.
+        /// <para>Executes JavaScript code in a web view instance.</para>
+        /// </summary>
+        /// <param name="id">Identificador de la instancia. <para>Instance identifier.</para></param>
+        /// <param name="script">Código JavaScript. <para>JavaScript code.</para></param>
+        public void ExecuteWebScript(string id, string script)
+            => YTBWebView.ExecuteScript(id, script);
+
+        /// <summary>
+        /// Establece la visibilidad de una instancia de web view.
+        /// <para>Sets the visibility of a web view instance.</para>
+        /// </summary>
+        /// <param name="id">Identificador de la instancia. <para>Instance identifier.</para></param>
+        /// <param name="visible">True para mostrar, false para ocultar. <para>True to show, false to hide.</para></param>
+        public void SetWebViewVisible(string id, bool visible)
+            => YTBWebView.SetVisible(id, visible);
+
+        /// <summary>
+        /// Establece una instancia como la que recibe el foco de entrada.
+        /// <para>Sets an instance as the one receiving input focus.</para>
+        /// </summary>
+        /// <param name="id">Identificador de la instancia. <para>Instance identifier.</para></param>
+        public void SetWebViewFocused(string id)
+            => YTBWebView.SetFocused(id);
+
+        /// <summary>
+        /// Establece la posición en pantalla de una instancia de web view.
+        /// <para>Sets the screen position of a web view instance.</para>
+        /// </summary>
+        /// <param name="id">Identificador de la instancia. <para>Instance identifier.</para></param>
+        /// <param name="position">Nueva posición. <para>New position.</para></param>
+        public void SetWebViewPosition(string id, Vector2 position)
+            => YTBWebView.SetPosition(id, position);
+
+        /// <summary>
+        /// Redimensiona una instancia de web view.
+        /// <para>Resizes a web view instance.</para>
+        /// </summary>
+        /// <param name="id">Identificador de la instancia. <para>Instance identifier.</para></param>
+        /// <param name="width">Nuevo ancho. <para>New width.</para></param>
+        /// <param name="height">Nuevo alto. <para>New height.</para></param>
+        public void SetWebViewSize(string id, int width, int height)
+            => YTBWebView.SetSize(id, width, height);
+
+        /// <summary>
+        /// Obtiene la URL actual de una instancia de web view.
+        /// <para>Gets the current URL of a web view instance.</para>
+        /// </summary>
+        /// <param name="id">Identificador de la instancia. <para>Instance identifier.</para></param>
+        /// <returns>URL actual o null. <para>Current URL or null.</para></returns>
+        public string GetWebViewUrl(string id)
+            => YTBWebView.GetCurrentUrl(id);
+
+        /// <summary>
+        /// Obtiene la textura actual de una instancia para dibujo manual.
+        /// <para>Gets the current texture of an instance for manual drawing.</para>
+        /// </summary>
+        /// <param name="id">Identificador de la instancia. <para>Instance identifier.</para></param>
+        /// <returns>Textura del web view o null. <para>Web view texture or null.</para></returns>
+        public Texture2D GetWebViewTexture(string id)
+            => YTBWebView.GetTexture(id);
+
+        /// <summary>
+        /// Habilita o deshabilita la entrada de usuario para una instancia de web view.
+        /// <para>Enables or disables user input for a web view instance.</para>
+        /// </summary>
+        /// <param name="id">Identificador de la instancia. <para>Instance identifier.</para></param>
+        /// <param name="enabled">True para habilitar, false para deshabilitar. <para>True to enable, false to disable.</para></param>
+        public void SetWebViewInputEnabled(string id, bool enabled)
+            => YTBWebView.SetInputEnabled(id, enabled);
+
         #endregion
 
 

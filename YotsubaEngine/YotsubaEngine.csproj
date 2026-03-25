@@ -17,6 +17,7 @@
 	
 		<PackageReference Include="Gum.MonoGame" Version="2026.2.23.1" />		
 		<PackageReference Include="System.Drawing.Common" Version="10.0.3" />
+		<PackageReference Include="CefSharp.OffScreen.NETCore" Version="131.*" />
 </ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGuizmo\Hexa.NET.ImGuizmo.csproj" />
