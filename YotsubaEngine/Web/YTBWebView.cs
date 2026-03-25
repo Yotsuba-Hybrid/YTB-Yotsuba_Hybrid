@@ -36,21 +36,38 @@ namespace YotsubaEngine.Web
         /// </summary>
         public static void Initialize()
         {
+            Console.WriteLine($"[YTBWebView] Initialize() called. _cefInitialized={_cefInitialized}");
             if (_cefInitialized) return;
 
+            Console.WriteLine($"[YTBWebView] IsDesktop={YTBGlobalState.IsDesktop}, IsMacOS={YTBGlobalState.IsMacOS}");
             if (!YTBGlobalState.IsDesktop || YTBGlobalState.IsMacOS)
             {
                 Console.WriteLine("[YTBWebView] Web views are only supported on Windows and Linux.");
                 return;
             }
 
-            if (!Cef.IsInitialized)
+            try
             {
-                var settings = new CefSettings();
-                Cef.Initialize(settings);
-            }
+                Console.WriteLine($"[YTBWebView] Cef.IsInitialized={Cef.IsInitialized}");
+                if (Cef.IsInitialized is false)
+                {
+                    var settings = new CefSettings();
+                    Console.WriteLine("[YTBWebView] Calling Cef.Initialize()...");
+                    Cef.Initialize(settings);
+                    Console.WriteLine("[YTBWebView] Cef.Initialize() succeeded.");
+                }
 
-            _cefInitialized = true;
+                _cefInitialized = true;
+                Console.WriteLine("[YTBWebView] CEF initialized OK.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[YTBWebView] Failed to initialize CEF: {ex.Message}");
+                Console.WriteLine($"[YTBWebView] Stack trace: {ex.StackTrace}");
+                if (ex.InnerException != null)
+                    Console.WriteLine($"[YTBWebView] Inner: {ex.InnerException.Message}");
+                return;
+            }
 
             // Registrar el shutdown de CEF al salir del juego
             YTBGlobalState.Game.Exiting += OnGameExiting;
@@ -64,7 +81,7 @@ namespace YotsubaEngine.Web
         {
             DestroyAll();
 
-            if (_cefInitialized && Cef.IsInitialized)
+            if (_cefInitialized is true && Cef.IsInitialized is true)
             {
                 Cef.Shutdown();
             }
@@ -93,7 +110,12 @@ namespace YotsubaEngine.Web
         /// <returns>Identificador de la instancia creada. <para>Created instance identifier.</para></returns>
         public static string Create(string url, Vector2 position, int width, int height, string id = null)
         {
-            if (!_cefInitialized) return null;
+            Console.WriteLine($"[YTBWebView] Create() called. _cefInitialized={_cefInitialized}, url={url}, id={id}");
+            if (!_cefInitialized)
+            {
+                Console.WriteLine("[YTBWebView] Create() aborted: CEF not initialized.");
+                return null;
+            }
 
             if (id == null)
             {

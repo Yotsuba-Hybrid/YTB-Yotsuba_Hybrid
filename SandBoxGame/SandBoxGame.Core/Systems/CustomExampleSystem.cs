@@ -99,10 +99,9 @@ namespace SandBoxGame.Core.Systems
             //GumUI.Update(gameTime);
 
             // Actualizar texturas y entrada del web view cada frame
-            if (_docsWebViewCreated)
-            {
+
                 YTBWebView.UpdateAll();
-            }
+            //
         }
 
         string button = "Haz clic aquí";
@@ -123,10 +122,9 @@ namespace SandBoxGame.Core.Systems
             //GumUI.Draw();
 
             // Dibujar el web view de documentación
-            if (_docsWebViewCreated)
-            {
+            spriteBatch.Begin();
                 YTBWebView.DrawAll(spriteBatch);
-            }
+            spriteBatch.End();
         }
 
         public override void Render3D(GameTime gameTime) { }

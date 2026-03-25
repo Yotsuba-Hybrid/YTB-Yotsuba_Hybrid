@@ -103,7 +103,7 @@ namespace YotsubaEngine.Web
             _height = height;
             _position = position;
 
-            _webTexture = new Texture2D(graphicsDevice, width, height, false, SurfaceFormat.Bgra32);
+            _webTexture = new Texture2D(graphicsDevice, width, height, false, SurfaceFormat.Color);
             _pixelBuffer = new byte[width * height * 4];
 
             _browser = new ChromiumWebBrowser(url);
@@ -134,6 +134,13 @@ namespace YotsubaEngine.Web
 
             lock (_bufferLock)
             {
+                // CefSharp renders BGRA, but SurfaceFormat.Color is RGBA — swap B and R channels
+                for (int i = 0; i < _pixelBuffer.Length; i += 4)
+                {
+                    byte b = _pixelBuffer[i];
+                    _pixelBuffer[i] = _pixelBuffer[i + 2];
+                    _pixelBuffer[i + 2] = b;
+                }
                 _webTexture.SetData(_pixelBuffer);
                 _needsTextureUpdate = false;
             }
@@ -212,8 +219,7 @@ namespace YotsubaEngine.Web
             {
                 Type = KeyEventType.Char,
                 WindowsKeyCode = character,
-                Character = character,
-                UnmodifiedCharacter = character
+                
             };
 
             _browser.GetBrowserHost().SendKeyEvent(keyEvent);
@@ -314,7 +320,7 @@ namespace YotsubaEngine.Web
             _height = height;
 
             _webTexture?.Dispose();
-            _webTexture = new Texture2D(graphicsDevice, width, height, false, SurfaceFormat.Bgra32);
+            _webTexture = new Texture2D(graphicsDevice, width, height, false, SurfaceFormat.Color);
 
             lock (_bufferLock)
             {

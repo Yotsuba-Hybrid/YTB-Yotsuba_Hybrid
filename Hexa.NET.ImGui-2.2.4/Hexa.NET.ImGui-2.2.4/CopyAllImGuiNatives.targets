@@ -61,4 +61,28 @@
     <Message Importance="normal" Text="Copying Hexa.NET ImGui natives from $(_HexaNativeDir)$(_HexaRID) to $(OutDir)" />
     <Copy SourceFiles="@(_HexaNativeFiles)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
   </Target>
+
+  <!-- Desktop: copy native libraries to PublishDir after publish -->
+  <Target Name="_CopyAllHexaImGuiNativesPublish" AfterTargets="Publish" Condition="'$(_IsDesktopTarget)' == 'true'">
+    <PropertyGroup>
+      <_HexaRID Condition="'$(RuntimeIdentifier)' == 'win-x64'">win-x64</_HexaRID>
+      <_HexaRID Condition="'$(RuntimeIdentifier)' == 'win-x86'">win-x86</_HexaRID>
+      <_HexaRID Condition="'$(RuntimeIdentifier)' == 'win-arm64'">win-arm64</_HexaRID>
+      <_HexaRID Condition="'$(RuntimeIdentifier)' == 'linux-x64'">linux-x64</_HexaRID>
+      <_HexaRID Condition="'$(RuntimeIdentifier)' == 'linux-arm64'">linux-arm64</_HexaRID>
+      <_HexaRID Condition="'$(RuntimeIdentifier)' == 'osx-x64'">osx-x64</_HexaRID>
+      <_HexaRID Condition="'$(RuntimeIdentifier)' == 'osx-arm64'">osx-arm64</_HexaRID>
+      <_HexaRID Condition="'$(_HexaRID)' == '' And '$(OS)' == 'Windows_NT'">win-x64</_HexaRID>
+      <_HexaRID Condition="'$(_HexaRID)' == '' And '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">linux-x64</_HexaRID>
+      <_HexaRID Condition="'$(_HexaRID)' == '' And '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">osx-arm64</_HexaRID>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_HexaNativeFilesPublish Include="$(_HexaNativeDir)$(_HexaRID)\*" />
+      <_HexaNativeFilesPublish Include="$(_HexaBackendsNativeDir)$(_HexaRID)\*" />
+    </ItemGroup>
+
+    <Message Importance="high" Text="Copying Hexa.NET ImGui natives from $(_HexaNativeDir)$(_HexaRID) to $(PublishDir)" />
+    <Copy SourceFiles="@(_HexaNativeFilesPublish)" DestinationFolder="$(PublishDir)" SkipUnchangedFiles="true" />
+  </Target>
 </Project>
