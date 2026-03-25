@@ -16,6 +16,7 @@ using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.Contract;
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Graphics;
+using YotsubaEngine.Web;
 using MonoGameGum;
 using YotsubaEngine.Core.System.YotsubaEngineUI.UI;
 using System.Diagnostics;
@@ -55,6 +56,10 @@ namespace SandBoxGame.Core.Systems
         // Instancia del editor avanzado (Pixi Style)
         private YTBHybrid_IDE.VisualProgramming.AdvancedNodeEditor _advancedEditor;
 
+        // WebView de documentación
+        private const string DocsWebViewId = "docs_webview";
+        private bool _docsWebViewCreated;
+
         public CustomExampleSystem()
         {
             _nodes.Add(new SimpleNode
@@ -74,9 +79,16 @@ namespace SandBoxGame.Core.Systems
         public override void InitializeSystem(EntityManager entities)
         {
             EntityManager = entities;
-            //var gumProject = GumUI.Initialize(YTBGlobalState.Game, "Gum/GumProject.gumx");
-            //var screen = new YTBTESTRuntime();
-            //screen.AddToRoot();
+
+            // Inicializar YTBWebView y crear un web view con la documentación de YTB-Hybrid
+            YTBWebView.Initialize();
+            string id = YTBWebView.Create(
+                "https://yotsuba-hybrid.github.io/YTB-Hybrid-Docs/",
+                new Vector2(20, 20),
+                1024, 600,
+                DocsWebViewId
+            );
+            _docsWebViewCreated = id != null;
         }
 
         public override void SharedEntityInitialize(ref Yotsuba Entidad) { }
@@ -85,6 +97,12 @@ namespace SandBoxGame.Core.Systems
         public override void UpdateSystem(GameTime gameTime)
         {
             //GumUI.Update(gameTime);
+
+            // Actualizar texturas y entrada del web view cada frame
+            if (_docsWebViewCreated)
+            {
+                YTBWebView.UpdateAll();
+            }
         }
 
         string button = "Haz clic aquí";
@@ -103,10 +121,25 @@ namespace SandBoxGame.Core.Systems
             //YTBGame.GuiRenderer.BeginLayout(gameTime);
             //YTBGame.GuiRenderer.EndLayout();
             //GumUI.Draw();
+
+            // Dibujar el web view de documentación
+            if (_docsWebViewCreated)
+            {
+                YTBWebView.DrawAll(spriteBatch);
+            }
         }
 
         public override void Render3D(GameTime gameTime) { }
-        public override void Dispose() { }
+
+        public override void Dispose()
+        {
+            // Liberar las instancias de web view al cerrar la escena
+            if (_docsWebViewCreated)
+            {
+                YTBWebView.Destroy(DocsWebViewId);
+                _docsWebViewCreated = false;
+            }
+        }
         #endregion
     }
 }
