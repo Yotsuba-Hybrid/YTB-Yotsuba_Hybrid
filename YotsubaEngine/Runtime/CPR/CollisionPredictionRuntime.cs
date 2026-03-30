@@ -12,7 +12,6 @@ namespace YotsubaEngine.Runtime.CPR
 {
     public class Collision_Prediction_Runtime : YTB_Runtime
     {
-
         private static bool DistanceIsSetted = false;
         /// <summary>
         /// Distancia que se utiliza pn muchas entidades.
@@ -29,13 +28,14 @@ namespace YotsubaEngine.Runtime.CPR
                 unPhysicalCollisionDistance = value;
             }
         }
+        private GenericObjectPool<YTB<int>> SpatialGridStorage;
 
         public Dictionary<Point, YTB<int>> SpatialHashGrid;
         private Dictionary<int, Point> EntityPoint;
         private static int unPhysicalCollisionDistance;
         public override void InitializeSystem(EntityManager entityManager)
         {
-
+            SpatialGridStorage = new(150);
             SpatialHashGrid = new Dictionary<Point, YTB<int>>();
             EntityPoint = new Dictionary<int, Point>();
 
@@ -53,7 +53,7 @@ namespace YotsubaEngine.Runtime.CPR
                     Point point = GetSpatialHash(ref transform);
                     if (!SpatialHashGrid.TryGetValue(point, out YTB<int> list))
                     {
-                        list = new YTB<int>();
+                        list = SpatialGridStorage.Rent();
                         SpatialHashGrid.Add(point, list);
                     }
                     list.Add(entity.Id);
@@ -66,23 +66,35 @@ namespace YotsubaEngine.Runtime.CPR
             EventManager.Instance.Subscribe<OnEntityTransformIsAdded>(EntityAdd);
         }
 
-        public bool IsPhysicalPossibleCollide(ref TransformComponent transformComponent, int entityId)
+        public YTB<int> IsPhysicalPossibleCollide(ref TransformComponent transformComponent, int entityId, YTB<int> entitiesCanCollide)
         {
+            entitiesCanCollide.Clear();
             Point point = GetSpatialHash(ref transformComponent);
             Point lastPoint = EntityPoint[entityId];
 
             if(point != lastPoint)
             { 
-               SpatialHashGrid[lastPoint].Remove(entityId);
-                if (SpatialHashGrid.TryGetValue(point, out var list))
+                if (SpatialHashGrid.TryGetValue(lastPoint, out YTB<int> list))
                 {
-                    list.Add(entityId);
+                    list.RemoveFast(entityId);
+
+                    if(list.Count == 0)
+                    {
+                        SpatialHashGrid.Remove(lastPoint);
+                        list.Clear();
+                        SpatialGridStorage.Return(list);
+                    }
+                }
+                
+                if(SpatialHashGrid.TryGetValue(point, out var newList))
+                {
+                    newList.Add(entityId);
                 }
                 else
                 {
-                    list = new YTB<int>();
-                    list.Add(entityId);
-                    SpatialHashGrid.Add(point, list);
+                    newList = SpatialGridStorage.Rent();
+                    newList.Add(entityId);
+                    SpatialHashGrid.Add(point, newList);
                 }
                EntityPoint[entityId] = point;
             }
@@ -99,24 +111,21 @@ namespace YotsubaEngine.Runtime.CPR
 
                     // Le preguntamos al Diccionario: "¿Existe esta celda vecina en la cuadrícula?"
                     // Usamos TryGetValue porque es muy probable que la celda vecina esté vacía (no exista en el diccionario).
-                    if (SpatialHashGrid.TryGetValue(neighborCell, out YTB<int> neighborList))
+                    if (SpatialHashGrid.TryGetValue(neighborCell, out YTB<int> posibleCollision))
                     {
-                        // Si la celda existe, comprobamos si tiene al menos 1 entidad dentro
-                        if (neighborList.Count > 0)
+                        Span<int> span = posibleCollision.AsSpan();
+                        for (int en = 0; en < span.Length; en++)
                         {
-                            if(x == 0 && y == 0)
+                            if (span[en] != entityId)
                             {
-                                if (neighborList.Count > 1) return true;
+                                entitiesCanCollide.Add(span[en]);
                             }
-                            // ¡Peligro! Hay alguien en una celda contigua.
-                            // Podríamos chocar en los bordes, así que devolvemos true.
-                            else return true;
                         }
                     }
                 }
             }
 
-            return false;
+            return entitiesCanCollide;
         }
 
 
@@ -145,7 +154,7 @@ namespace YotsubaEngine.Runtime.CPR
             Point point = GetSpatialHash(ref transform);
             if (!SpatialHashGrid.TryGetValue(point, out YTB<int> list))
             {
-                list = new YTB<int>();
+                list = SpatialGridStorage.Rent();
                 SpatialHashGrid.Add(point, list);
             }
             list.Add(entityId);

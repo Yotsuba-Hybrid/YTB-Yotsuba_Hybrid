@@ -26,6 +26,8 @@ namespace YotsubaEngine.Core.System.S_2D
     public class PhysicsSystem2D : ISystem
     {
 
+
+        private YTB<int> _potentialColliders = new(); // LA ÚNICA INSTANCIA TEMPORAL
         /// <summary>
         /// Event manager reference.
         /// Referencia al administrador de eventos.
@@ -39,9 +41,9 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
         public override void InitializeSystem(EntityManager @entities)
         {
-//-:cnd:noEmit
+            //-:cnd:noEmit
 #if YTB
-			if (GameWontRun.GameWontRunByException) return;
+            if (GameWontRun.GameWontRunByException) return;
 #endif
 //+:cnd:noEmit
 			EventManager = EventManager.Instance;
