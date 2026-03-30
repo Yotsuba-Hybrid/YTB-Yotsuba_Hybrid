@@ -13,8 +13,9 @@ using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Events.YTBEvents;
 using YotsubaEngine.Exceptions;
 using YotsubaEngine.HighestPerformanceTypes;
-using static YotsubaEngine.Core.Component.C_AGNOSTIC.RigidBody;
 using YotsubaEngine.YTBMath;
+using YotsubaEngine.Physics;
+using YotsubaEngine.Physics.RigidBody;
 
 namespace YotsubaEngine.Core.System.S_2D
 {
@@ -25,6 +26,8 @@ namespace YotsubaEngine.Core.System.S_2D
     public class PhysicsSystem2D : ISystem
     {
 
+
+        private YTB<int> _potentialColliders = new(); // LA ÚNICA INSTANCIA TEMPORAL
         /// <summary>
         /// Event manager reference.
         /// Referencia al administrador de eventos.
@@ -38,9 +41,9 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
         public override void InitializeSystem(EntityManager @entities)
         {
-//-:cnd:noEmit
+            //-:cnd:noEmit
 #if YTB
-			if (GameWontRun.GameWontRunByException) return;
+            if (GameWontRun.GameWontRunByException) return;
 #endif
 //+:cnd:noEmit
 			EventManager = EventManager.Instance;
@@ -118,7 +121,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <param name="gameTime">Game time. Tiempo de juego.</param>
         private void MoveEntities(Span<Yotsuba> entities, Span<TransformComponent> transformComponents, Span<RigidBodyComponent2D> rigibodyComponents, GameTime gameTime)
         {
-            foreach (ref Yotsuba entity in entities)
+            foreach (ref Yotsuba entity in entities[..^1])
             {
                 if (!entity.HasComponent(YTBComponent.Transform) || !entity.HasComponent(YTBComponent.Rigibody)) continue;
                 
@@ -145,10 +148,10 @@ namespace YotsubaEngine.Core.System.S_2D
 
                 bool sizeZero = transform.Size == Vector3.Zero;
 
+
                 // Check collisions with other entities
-                foreach (ref Yotsuba otherEntity in entities)
+                foreach (ref Yotsuba otherEntity in entities[(entity.Id + 1)..])
                 {
-                    if (otherEntity.Id == entity.Id) continue;
                     if (!otherEntity.HasComponent(YTBComponent.Transform) || !otherEntity.HasComponent(YTBComponent.Rigibody)) continue;
 
                     ref RigidBodyComponent2D otherRigidBody = ref rigibodyComponents[otherEntity.Id];
