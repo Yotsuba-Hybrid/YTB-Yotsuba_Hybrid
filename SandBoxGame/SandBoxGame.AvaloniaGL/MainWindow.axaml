@@ -1,0 +1,36 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:monoGame="clr-namespace:AvaloniaInside.MonoGame;assembly=AvaloniaInside.MonoGame"
+        xmlns:vm="using:SandBoxGame.AvaloniaGL"
+        x:Class="SandBoxGame.AvaloniaGL.MainWindow"
+        x:DataType="vm:MainViewModel"
+        UseLayoutRounding="True"
+        Title="Avalonia.Multiplatform"
+        WindowStartupLocation="CenterScreen">
+
+
+	<Grid ColumnDefinitions="*, 350">
+
+		<Border Grid.Column="0" x:Name="GameViewContainer" Background="#20284E">
+
+			<LayoutTransformControl x:Name="GameScaleContainer">
+				<monoGame:MonoGameControl Game="{Binding CurrentGame}"
+                                          x:Name="MyGameControl"
+                                          Focusable="True" />
+			</LayoutTransformControl>
+
+		</Border>
+
+		<Border Grid.Column="1" Background="#2D2D30" Padding="10">
+			<StackPanel Spacing="10">
+				<TextBlock Text="Inspector de Propiedades" Foreground="White" FontWeight="Bold" FontSize="16"/>
+				<Button Content="Botón de Prueba 1" HorizontalAlignment="Stretch"/>
+				<Button Content="Botón de Prueba 2" HorizontalAlignment="Stretch"/>
+				<TextBox Watermark="Nombre de la entidad..."/>
+			</StackPanel>
+		</Border>
+
+	</Grid>
+</Window>

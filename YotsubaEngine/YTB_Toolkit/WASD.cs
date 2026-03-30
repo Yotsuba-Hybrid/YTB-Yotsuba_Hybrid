@@ -10,6 +10,7 @@ using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Events.YTBEvents;
 using YotsubaEngine.Exceptions;
 using YotsubaEngine.HighestPerformanceTypes;
+using YotsubaEngine.Physics;
 using static YotsubaEngine.Exceptions.GameWontRun;
 
 namespace YotsubaEngine.YTB_Toolkit

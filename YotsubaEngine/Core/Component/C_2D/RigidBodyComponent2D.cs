@@ -1,9 +1,11 @@
 ﻿
 using Microsoft.Xna.Framework;
-using static YotsubaEngine.Core.Component.C_AGNOSTIC.RigidBody;
+using YotsubaEngine.Physics;
+using YotsubaEngine.Physics.RigidBody;
 
 namespace YotsubaEngine.Core.Component.C_2D
 {
+
     /// <summary>
     /// Componente que añade la funcionalidad de física básica a un objeto 2D.
     /// <para>Component that adds basic 2D physics behavior.</para>
@@ -12,6 +14,11 @@ namespace YotsubaEngine.Core.Component.C_2D
     /// <param name="mass">Nivel de masa del cuerpo.<para>Mass level for the body.</para></param>
     public struct RigidBodyComponent2D(GameType gameType, MassLevel mass)
     {
+        /// <summary>
+        /// Capa de colisión de la entidad (solo colisionara con entidades en su misma capa, o que su capa sea "All")
+        /// </summary>
+        public CollisionLayer CollisionLayer { get; set; } = CollisionLayer.Main;
+
         /// <summary>
         /// Velocidad base del objeto.
         /// <para>Base movement speed.</para>
@@ -97,23 +104,5 @@ namespace YotsubaEngine.Core.Component.C_2D
         /// <para>Direction the entity last faced (-1 left, 1 right). Used for animations.</para>
         /// </summary>
         public int FacingDirection { get; set; } = 1;
-    }
-
-    /// <summary>
-    /// Tipo de juego para determinar el comportamiento de la física.
-    /// <para>Game type used to determine physics behavior.</para>
-    /// </summary>
-    public enum GameType
-    {
-        /// <summary>
-        /// Para videojuegos con vista de arriba hacia abajo (top-down).
-        /// <para>Top-down game behavior.</para>
-        /// </summary>
-        TopDown,
-        /// <summary>
-        /// Para videojuegos con vista lateral, plataformas, etc.
-        /// <para>Side-scroller/platformer behavior.</para>
-        /// </summary>
-        Platform
     }
 }

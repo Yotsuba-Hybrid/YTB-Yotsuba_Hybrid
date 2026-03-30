@@ -7,9 +7,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using YotsubaEngine.Core.YotsubaGame;
 
 
 
@@ -55,6 +57,25 @@ namespace YotsubaEngine.Graphics.ImGuiNet
         private int _horizontalScrollWheelValue;
         private readonly float WHEEL_DELTA = 120;
         private Keys[] _allKeys = Enum.GetValues<Keys>();
+
+        // Avalonia input injection
+        public System.Numerics.Vector2? AvaloniaMouseOverride { get; set; }
+        /// <summary>Rendered size of the MonoGameControl in Avalonia (logical pixels). Set each frame from the Avalonia side.</summary>
+        public System.Numerics.Vector2 AvaloniaControlSize { get; set; }
+        public bool AvaloniaMouseLeft { get; set; }
+        public bool AvaloniaMouseRight { get; set; }
+        public bool AvaloniaMouseMiddle { get; set; }
+        public bool ForceActive { get; set; }
+
+        private readonly ConcurrentQueue<(ImGuiKey key, bool down)> _pendingKeyEvents = new();
+        private readonly ConcurrentQueue<char> _pendingChars = new();
+        private float _pendingWheelX;
+        private float _pendingWheelY;
+        private readonly object _wheelLock = new();
+
+        public void InjectKeyEvent(ImGuiKey key, bool down) => _pendingKeyEvents.Enqueue((key, down));
+        public void InjectChar(char c) => _pendingChars.Enqueue(c);
+        public void InjectMouseWheel(float x, float y) { lock (_wheelLock) { _pendingWheelX += x; _pendingWheelY += y; } }
 
         // Native backend (Android)
         private bool _useNativeBackend;
@@ -262,7 +283,7 @@ namespace YotsubaEngine.Graphics.ImGuiNet
                 _graphicsDevice.PresentationParameters.BackBufferHeight);
             io.DisplayFramebufferScale = new System.Numerics.Vector2(1f, 1f);
 
-            if (!_game.IsActive) return;
+            if (!_game.IsActive && !ForceActive) return;
 
             if (OperatingSystem.IsAndroid())
             {
@@ -277,38 +298,75 @@ namespace YotsubaEngine.Graphics.ImGuiNet
         private void UpdateDesktopInput(ImGuiIOPtr io)
         {
             var mouse = Mouse.GetState();
-            var keyboard = Keyboard.GetState();
+            bool isAvalonia = YTBGlobalState.Platform is Platforms.Avalonia_GL;
 
-            var clientBounds = _game.Window.ClientBounds;
-            if (clientBounds.Width > 0 && clientBounds.Height > 0)
+            // Mouse position: use Avalonia-injected coords when available.
+            // Coords are control-relative (0..controlW, 0..controlH) — scale up to ImGui/backbuffer space.
+            if (AvaloniaMouseOverride.HasValue)
             {
-                float scaleX = io.DisplaySize.X / clientBounds.Width;
-                float scaleY = io.DisplaySize.Y / clientBounds.Height;
-                io.AddMousePosEvent(mouse.X * scaleX, mouse.Y * scaleY);
+                float cx = AvaloniaControlSize.X > 0 ? AvaloniaControlSize.X : io.DisplaySize.X;
+                float cy = AvaloniaControlSize.Y > 0 ? AvaloniaControlSize.Y : io.DisplaySize.Y;
+                float scaleX = io.DisplaySize.X / cx;
+                float scaleY = io.DisplaySize.Y / cy;
+                io.AddMousePosEvent(AvaloniaMouseOverride.Value.X * scaleX, AvaloniaMouseOverride.Value.Y * scaleY);
             }
             else
             {
-                io.AddMousePosEvent(mouse.X, mouse.Y);
-            }
-            io.AddMouseButtonEvent(0, mouse.LeftButton == ButtonState.Pressed);
-            io.AddMouseButtonEvent(1, mouse.RightButton == ButtonState.Pressed);
-            io.AddMouseButtonEvent(2, mouse.MiddleButton == ButtonState.Pressed);
-            io.AddMouseButtonEvent(3, mouse.XButton1 == ButtonState.Pressed);
-            io.AddMouseButtonEvent(4, mouse.XButton2 == ButtonState.Pressed);
-
-            io.AddMouseWheelEvent(
-                (mouse.HorizontalScrollWheelValue - _horizontalScrollWheelValue) / WHEEL_DELTA,
-                (mouse.ScrollWheelValue - _scrollWheelValue) / WHEEL_DELTA);
-            _scrollWheelValue = mouse.ScrollWheelValue;
-            _horizontalScrollWheelValue = mouse.HorizontalScrollWheelValue;
-
-            foreach (var key in _allKeys)
-            {
-                if (TryMapKeys(key, out ImGuiKey imguikey))
+                var clientBounds = _game.Window.ClientBounds;
+                if (clientBounds.Width > 0 && clientBounds.Height > 0)
                 {
-                    io.AddKeyEvent(imguikey, keyboard.IsKeyDown(key));
+                    float scaleX = io.DisplaySize.X / clientBounds.Width;
+                    float scaleY = io.DisplaySize.Y / clientBounds.Height;
+                    io.AddMousePosEvent(mouse.X * scaleX, mouse.Y * scaleY);
+                }
+                else
+                {
+                    io.AddMousePosEvent(mouse.X, mouse.Y);
                 }
             }
+
+            // Mouse buttons: use Avalonia-injected state on Avalonia (SDL may not have OS focus)
+            io.AddMouseButtonEvent(0, isAvalonia ? AvaloniaMouseLeft : mouse.LeftButton == ButtonState.Pressed);
+            io.AddMouseButtonEvent(1, isAvalonia ? AvaloniaMouseRight : mouse.RightButton == ButtonState.Pressed);
+            io.AddMouseButtonEvent(2, isAvalonia ? AvaloniaMouseMiddle : mouse.MiddleButton == ButtonState.Pressed);
+            if (!isAvalonia)
+            {
+                io.AddMouseButtonEvent(3, mouse.XButton1 == ButtonState.Pressed);
+                io.AddMouseButtonEvent(4, mouse.XButton2 == ButtonState.Pressed);
+            }
+
+            if (isAvalonia)
+            {
+                float wx, wy;
+                lock (_wheelLock) { wx = _pendingWheelX; wy = _pendingWheelY; _pendingWheelX = 0; _pendingWheelY = 0; }
+                if (wx != 0 || wy != 0)
+                    io.AddMouseWheelEvent(wx, wy);
+            }
+            else
+            {
+                io.AddMouseWheelEvent(
+                    (mouse.HorizontalScrollWheelValue - _horizontalScrollWheelValue) / WHEEL_DELTA,
+                    (mouse.ScrollWheelValue - _scrollWheelValue) / WHEEL_DELTA);
+                _scrollWheelValue = mouse.ScrollWheelValue;
+                _horizontalScrollWheelValue = mouse.HorizontalScrollWheelValue;
+            }
+
+            // Keyboard: skip SDL polling for Avalonia — SDL doesn't receive OS keyboard focus
+            if (!isAvalonia)
+            {
+                var keyboard = Keyboard.GetState();
+                foreach (var key in _allKeys)
+                {
+                    if (TryMapKeys(key, out ImGuiKey imguikey))
+                        io.AddKeyEvent(imguikey, keyboard.IsKeyDown(key));
+                }
+            }
+
+            // Drain Avalonia-injected key events and characters
+            while (_pendingKeyEvents.TryDequeue(out var evt))
+                io.AddKeyEvent(evt.key, evt.down);
+            while (_pendingChars.TryDequeue(out var ch))
+                io.AddInputCharacter(ch);
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]

@@ -167,7 +167,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
             //GuiRenderer = new ImGuiRenderer(YTBGame.Instance);
 
             // CAMBIO 2: Esperar el resultado de la tarea de forma síncrona
-            GameInfo = ReadYTBFile.ReadYTBGameFile().GetAwaiter().GetResult();
+            GameInfo = YTBGlobalState.GameData.Item1;
 
             // Esta línea ahora se ejecutará de forma segura antes del primer Update
 
