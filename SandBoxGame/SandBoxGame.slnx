@@ -25,6 +25,9 @@
     <Project Path="SandBoxGame.Android/SandBoxGame.Android.csproj">
       <Deploy />
     </Project>
+    <Project Path="SandBoxGame.AvaloniaGL/SandBoxGame.AvaloniaGL.csproj">
+      <BuildType Solution="YTB|*" Project="Release" />
+    </Project>
     <Project Path="SandBoxGame.DesktopGL/SandBoxGame.DesktopGL.csproj" />
     <Project Path="SandBoxGame.DesktopVK/SandBoxGame.DesktopVK.csproj" />
     <Project Path="SandBoxGame.iOS/SandBoxGame.iOS.csproj">

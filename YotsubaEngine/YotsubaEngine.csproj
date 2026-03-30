@@ -32,6 +32,7 @@
 	<ItemGroup>
 	  <Folder Include="ActionFiles\ImGuiEditor\" />
 	  <Folder Include="Graphics\Multiplatform\UI\" />
+	  <Folder Include="Physics\Collision Prediction Runtime %28CPR%29\" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(Configuration)' == 'YTB'">
 		<None Update="imgui.ini">
