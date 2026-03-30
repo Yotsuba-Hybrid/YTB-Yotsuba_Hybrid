@@ -5,6 +5,7 @@ using YotsubaEngine.Core.Component.C_2D;
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Core.YotsubaGame.Scripting;
 using YotsubaEngine.Events.YTBEvents;
+using YotsubaEngine.Physics;
 
 namespace SandBoxGame.Core.Scripts
 {

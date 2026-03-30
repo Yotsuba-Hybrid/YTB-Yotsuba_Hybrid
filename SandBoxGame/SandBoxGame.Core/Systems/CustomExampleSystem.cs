@@ -74,9 +74,9 @@ namespace SandBoxGame.Core.Systems
         public override void InitializeSystem(EntityManager entities)
         {
             EntityManager = entities;
-            //var gumProject = GumUI.Initialize(YTBGlobalState.Game, "Gum/GumProject.gumx");
-            //var screen = new YTBTESTRuntime();
-            //screen.AddToRoot();
+            var gumProject = GumUI.Initialize(YTBGlobalState.Game, "Gum/GumProject.gumx");
+            var screen = new YTBTESTRuntime();
+            screen.AddToRoot();
         }
 
         public override void SharedEntityInitialize(ref Yotsuba Entidad) { }
@@ -84,7 +84,7 @@ namespace SandBoxGame.Core.Systems
 
         public override void UpdateSystem(GameTime gameTime)
         {
-            //GumUI.Update(gameTime);
+            GumUI.Update(gameTime);
         }
 
         string button = "Haz clic aquí";
@@ -102,7 +102,7 @@ namespace SandBoxGame.Core.Systems
         {
             //YTBGame.GuiRenderer.BeginLayout(gameTime);
             //YTBGame.GuiRenderer.EndLayout();
-            //GumUI.Draw();
+            GumUI.Draw();
         }
 
         public override void Render3D(GameTime gameTime) { }

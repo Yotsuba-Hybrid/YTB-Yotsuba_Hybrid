@@ -13,6 +13,8 @@
     <PackageReference Include="MonoGame.Framework.Native" Version="3.8.5-preview.*">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
+	  <PackageReference Include="AvaloniaInside.MonoGame" Version="1.0.2" />
+
   </ItemGroup>
   <ItemGroup>
 	  <ProjectReference Include="..\..\YotsubaEngine\YotsubaEngine.csproj" />

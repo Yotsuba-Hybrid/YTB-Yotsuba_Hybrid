@@ -22,9 +22,10 @@ using YotsubaEngine.Exceptions;
 using YotsubaEngine.Graphics;
 using YotsubaEngine.Graphics.Shaders;
 using YotsubaEngine.Templates;
-using static YotsubaEngine.Core.Component.C_AGNOSTIC.RigidBody;
 using static YotsubaEngine.Core.System.S_AGNOSTIC.InputSystem;
 using static YotsubaEngine.Exceptions.GameWontRun;
+using YotsubaEngine.Physics;
+using YotsubaEngine.Physics.RigidBody;
 
 namespace YotsubaEngine.ActionFiles.YTB_Files
 {
@@ -259,13 +260,10 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
         {
             GraphicsDeviceManager = graphicsDeviceManager;
 #if YTB
-            WriteYTBFile.RefactorYTBFile().GetAwaiter().GetResult();
+            Task.Run(() => _ = WriteYTBFile.RefactorYTBFile());
 #endif
-            (YTBGameInfo, YTBConfig) game;
-            if (GameDataProvider != null)
-                game = GameDataProvider();
-            else
-                game = ReadYTBFile.ReadYTBFiles(false).GetAwaiter().GetResult();
+            (YTBGameInfo, YTBConfig) game = YTBGlobalState.GameData;
+
 
             SceneManager sceneManager = new(graphicsDeviceManager);
             BuildSceneManager(sceneManager, game.Item1);

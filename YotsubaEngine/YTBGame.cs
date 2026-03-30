@@ -3,11 +3,12 @@ using Hexa.NET.ImGuizmo;
 using Hexa.NET.ImNodes;
 using Hexa.NET.ImPlot;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.IO;
+using System.Text;
+using System.Threading.Tasks;
 using YotsubaEngine.ActionFiles.YTB_Files;
 using YotsubaEngine.Audio;
 using YotsubaEngine.Core.System.GumUI;
@@ -98,22 +99,41 @@ namespace YotsubaEngine
         /// <para>Creates a new Yotsuba game host instance.</para>
         /// </summary>
         /// <param name="isMouseVisible">Indica si el cursor del mouse es visible. <para>Whether the mouse cursor is visible.</para></param>
-        public YTBGame(bool isMouseVisible = true) : base()
+        public YTBGame(Platforms platform, bool isMouseVisible) : base()
         {
+            YTBGlobalState.Platform = platform;
 #if YTB
-if (IsDesktop)       
-     Console.ResetColor();
+            if (IsDesktop)
+                Console.ResetColor();
 #endif
 
+
             Instance = this;
+            IsMouseVisible = isMouseVisible;
             //_graphics = graphicsDeviceManager;
             // Configurar Content.RootDirectory con la carpeta de assets compilados
             // Por defecto es "Content", pero puede cambiarse antes de crear la instancia del juego
             Content.RootDirectory = YTBGlobalState.CompiledAssetsFolderName;
-            IsMouseVisible = isMouseVisible;
 
-            Window.Title = "Yotsuba Engine";
-            Window.AllowUserResizing = true;
+            (YTBGameInfo, YTBConfig) game;
+            if (YTBFileToGameData.GameDataProvider != null)
+            {
+                game = YTBFileToGameData.GameDataProvider();
+                YTBGlobalState.GameData = game;
+
+            }
+            else
+            {
+                Task.Run(async () =>
+                {
+
+                    game = await ReadYTBFile.ReadYTBFiles(false);
+                    YTBGlobalState.GameData = game;
+
+                });
+            }
+            //Window.Title = "Yotsuba Engine";
+            //Window.AllowUserResizing = true;
             YTBGlobalState.ContentManager = Content;
 
 #if YTB
@@ -172,6 +192,7 @@ if (IsDesktop)
             graphicsDeviceManager.IsFullScreen = fullScreen;
             graphicsDeviceManager.ApplyChanges();
             GraphicsDevice = _graphics.GraphicsDevice;
+            YTBGlobalState.GraphicsDeviceManager = graphicsDeviceManager;
             YTBGlobalState.GraphicsDevice = _graphics.GraphicsDevice;
         }
 
@@ -188,11 +209,15 @@ if (IsDesktop)
         protected override void Initialize()
         {
 
-           //if(YTBGlobalState.IsDesktop && YTBGlobalState.EngineEnabled)
+            YTBGlobalState.GraphicsDevice = GraphicsDevice;
+
+
+            //if(YTBGlobalState.IsDesktop && YTBGlobalState.EngineEnabled)
             {
                 GuiRenderer = new ImGuiRenderer(this);
                 // ImGui setup (fonts, theme)
                 var io = ImGui.GetIO();
+                ImGui.GetIO().BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
                 if (!IsMobile)
                 {
                     io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
@@ -221,7 +246,7 @@ if (IsDesktop)
                     outputFontsDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Fonts");
                 }
 
-                string fuentePrincipal = Path.Combine(outputFontsDir, "GeistPixel-Square.ttf");
+                string fuentePrincipal = Path.Combine(outputFontsDir, "LibertinusMath-Regular.ttf");
                 string fuenteIconos = Path.Combine(outputFontsDir, "NerdFontsSymbolsOnly.ttf");
 
                 // ¡Validación de seguridad para evitar crashes de ImGui C++!
@@ -234,15 +259,16 @@ if (IsDesktop)
                     throw new FileNotFoundException($"¡CRÍTICO! ImGui no encontró los íconos en: {fuenteIconos}");
                 }
 
+                Platforms platforms = YTBGlobalState.Platform;
                 unsafe
                 {
 
 #if !YTB
-                    io.Fonts.AddFontFromFileTTF(fuentePrincipal, 24.0f, null, io.Fonts.GetGlyphRangesDefault());
+                    io.Fonts.AddFontFromFileTTF(fuentePrincipal, platforms == Platforms.Avalonia_GL ? 20.0f : 24.0f, null, io.Fonts.GetGlyphRangesDefault());
 #else
                     // 1. Cargar la fuente principal (texto)
                     // Usamos GetGlyphRangesDefault() para que cargue el alfabeto normal (ASCII).
-                    io.Fonts.AddFontFromFileTTF(fuentePrincipal, 20.0f, null, io.Fonts.GetGlyphRangesDefault());
+                    io.Fonts.AddFontFromFileTTF(fuentePrincipal, platforms == Platforms.Avalonia_GL ? 20.0f : 24.0f, null, io.Fonts.GetGlyphRangesDefault());
 #endif
 
                     // 2. Crear la configuración para la fuente de íconos
@@ -251,21 +277,29 @@ if (IsDesktop)
                     config.PixelSnapH = true;
 
                     // 3. Definir el rango de caracteres para Nerd Fonts.
-                    ushort[] iconRanges = new ushort[]
+                    uint[] iconRanges = new uint[]
                     {
-        0xE000, 0xF8FF,
-        0
+                        0xE000, 0xF8FF,
+                        0
                     };
 
-                    fixed (ushort* rangePtr = iconRanges)
+                    fixed (uint* rangePtr = iconRanges)
                     {
-                        io.Fonts.AddFontFromFileTTF(fuenteIconos, 20.0f, config, (uint*)rangePtr);
+                        byte[] fuenteBytes = Encoding.UTF8.GetBytes(fuenteIconos);
+
+                        fixed (byte* fb = fuenteBytes)
+                        {
+
+
+                            // Pass rangePtr instead of GetGlyphRangesDefault()
+                            io.Fonts.AddFontFromFileTTF(fb, platforms == Platforms.Avalonia_GL ? 20.0f : 24.0f, config, rangePtr);
+                        }
                     }
 
                     config.Destroy();
                 }
 
-                io.FontGlobalScale = 1.0f;
+                io.FontGlobalScale = 1;
 
                 // 6. Construir la textura final (Obligatorio después de añadir fuentes)
                 io.Fonts.Build();
@@ -274,11 +308,14 @@ if (IsDesktop)
                 // interno para actualizar la textura en la GPU. Si no ves las fuentes, puede que necesites:
                 // GuiRenderer.RebuildFontAtlas();
                 ImGuiThemeColors.AplicarTemaCompleto();
-                if (IsMobile)
+
+                var style = ImGui.GetStyle();
+
+                if (YTBGlobalState.IsAndroid)
                 {
                     GuiRenderer.InitNativeBackend();
                 }
-                else
+                else if (!YTBGlobalState.IsIOS)
                 {
                     GuiRenderer.RebuildFontAtlas();
                 }
@@ -299,13 +336,14 @@ if (IsDesktop)
                 ImGuizmo.SetImGuiContext(guiContext);
 
                 // Nota: ImGuizmo normalmente NO requiere un "CreateContext()" ni "SetCurrentContext()".
-                if(!YTBGlobalState.IsMobile)
-                WriteYTBFile.CreateYTBGameFile();
-                
+                if (!YTBGlobalState.IsMobile)
+                {
+                    WriteYTBFile.CreateYTBGameFile();
+                }
                 // Configurar el título de la ventana desde YTBConfig
                 try
                 {
-                    var config = ReadYTBFile.ReadYTBGameConfigFile().ConfigureAwait(false).GetAwaiter().GetResult();
+                    YTBConfig config = YTBGlobalState.GameData.Item2;
 
                     if (!string.IsNullOrWhiteSpace(config?.GameName))
                     {
@@ -403,14 +441,13 @@ if (IsDesktop)
         /// </summary>
         protected override void Draw(GameTime gameTime)
         {
-            base.Draw(gameTime);
 
             //GraphicsDevice.Clear(Color.DarkOrange);
             //GraphicsDevice.Clear(Color.BlanchedAlmond);
             GraphicsDevice.Clear(YTBGlobalState.EngineBackground);
-
             SceneManager.CurrentScene.Draw(gameTime, _spriteBatch);
 
+            base.Draw(gameTime);
 
 
         }

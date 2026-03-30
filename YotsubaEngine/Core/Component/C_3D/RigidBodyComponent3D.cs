@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
-using static YotsubaEngine.Core.Component.C_AGNOSTIC.RigidBody;
+using YotsubaEngine.Physics;
+using YotsubaEngine.Physics.RigidBody;
 
 namespace YotsubaEngine.Core.Component.C_3D
 {
@@ -11,6 +12,8 @@ namespace YotsubaEngine.Core.Component.C_3D
     /// <param name="mass">Nivel de masa del cuerpo.<para>Mass level for the body.</para></param>
     public struct RigidBodyComponent3D(BoundingSphere sphere, MassLevel mass)
     {
+
+        public CollisionLayer CollisionLayer { get; set; } = CollisionLayer.Main;
         /// <summary>
         /// Cuerpo 3D del componente.
         /// <para>Bounding sphere used for collisions.</para>
