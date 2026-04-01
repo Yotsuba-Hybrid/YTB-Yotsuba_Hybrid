@@ -44,7 +44,7 @@ namespace YotsubaEngine.Runtime.CPR
             Span<TransformComponent> transformComponents = GetTransformComponentsAsSpan();
             foreach(ref Yotsuba entity in GetEntitiesAsSpan())
             {
-                if (entity.HasComponent(YTBComponent.Rigibody) && entity.HasComponent(YTBComponent.Transform))
+                if (entity.HasComponent(YTBComponent.Rigibody) && entity.HasComponent(YTBComponent.Transform) && entity.HasNotComponent(YTBComponent.TileMap))
                 {
                     Entities.Add(entity.Id);
                     ref TransformComponent transform = ref transformComponents[entity.Id];
@@ -164,7 +164,7 @@ namespace YotsubaEngine.Runtime.CPR
 
         private void EntityAdd(OnEntityRigidBodyIsAdded added)
         {
-            if (added.Entity.HasComponent(YTBComponent.Transform))
+            if (added.Entity.HasComponent(YTBComponent.Transform) && added.Entity.HasNotComponent(YTBComponent.TileMap))
             {
                 RegisterEntity(added.Entity.Id);
             }
@@ -172,7 +172,7 @@ namespace YotsubaEngine.Runtime.CPR
 
         private void EntityAdd(OnEntityTransformIsAdded added)
         {
-            if (added.Entity.HasComponent(YTBComponent.Rigibody))
+            if (added.Entity.HasComponent(YTBComponent.Rigibody) && added.Entity.HasNotComponent(YTBComponent.TileMap))
             {
                 RegisterEntity(added.Entity.Id);
             }
