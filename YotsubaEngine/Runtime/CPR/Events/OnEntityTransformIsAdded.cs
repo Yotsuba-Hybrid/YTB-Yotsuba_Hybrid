@@ -5,8 +5,8 @@ using YotsubaEngine.Core.Entity;
 
 namespace YotsubaEngine.Runtime.CPR.Events
 {
-    public readonly struct OnEntityTransformIsAdded(Yotsuba entity)
+    public struct OnEntityTransformIsAdded(Yotsuba entity)
     {
-        public readonly Yotsuba Entity { get; } = entity;
+        public Yotsuba Entity { get; } = entity;
     }
 }

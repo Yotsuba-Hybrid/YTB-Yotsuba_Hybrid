@@ -38,7 +38,7 @@ namespace YotsubaEngine.Runtime.CPR
             SpatialGridStorage = new(150);
             SpatialHashGrid = new Dictionary<Point, YTB<int>>();
             EntityPoint = new Dictionary<int, Point>();
-
+            Entities = new();
             EntityManager = entityManager;
 
             Span<TransformComponent> transformComponents = GetTransformComponentsAsSpan();
