@@ -6,6 +6,7 @@ using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Exceptions;
 using YotsubaEngine.Graphics;
 using YotsubaEngine.HighestPerformanceTypes;
+using YotsubaEngine.Runtime.CPR.Events;
 
 namespace YotsubaEngine.Core.YotsubaGame
 {
@@ -227,6 +228,7 @@ namespace YotsubaEngine.Core.YotsubaGame
         {
             YotsubaEntities[entity.Id].AddComponent(YTBComponent.Transform);
             TransformComponents[(uint)entity.Id] = component;
+            EventManager.Instance.Publish<OnEntityTransformIsAdded>(new(YotsubaEntities[entity.Id]));
         }
 
         /// <summary>
@@ -278,6 +280,7 @@ namespace YotsubaEngine.Core.YotsubaGame
         {
             YotsubaEntities[entity.Id].AddComponent(YTBComponent.Rigibody);
             Rigidbody2DComponents[(uint)entity.Id] = component;
+            EventManager.Instance.Publish<OnEntityRigidBodyIsAdded>(new(YotsubaEntities[entity.Id]));
         }
 
 

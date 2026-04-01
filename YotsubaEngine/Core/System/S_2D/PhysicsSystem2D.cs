@@ -8,14 +8,13 @@ using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.Contract;
 using YotsubaEngine.Core.System.YotsubaEngineUI;
-using YotsubaEngine.Core.System.YotsubaEngineUI.UI;
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Events.YTBEvents;
-using YotsubaEngine.Exceptions;
 using YotsubaEngine.HighestPerformanceTypes;
-using YotsubaEngine.YTBMath;
 using YotsubaEngine.Physics;
 using YotsubaEngine.Physics.RigidBody;
+using YotsubaEngine.Runtime.CPR;
+using YotsubaEngine.YTBMath;
 
 namespace YotsubaEngine.Core.System.S_2D
 {
@@ -26,6 +25,7 @@ namespace YotsubaEngine.Core.System.S_2D
     public class PhysicsSystem2D : ISystem
     {
 
+        private Collision_Prediction_Runtime Collision_Prediction_Runtime;
 
         private YTB<int> _potentialColliders = new(); // LA ÚNICA INSTANCIA TEMPORAL
         /// <summary>
@@ -40,13 +40,16 @@ namespace YotsubaEngine.Core.System.S_2D
         /// </summary>
         /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
         public override void InitializeSystem(EntityManager @entities)
-        {
+        {            
             //-:cnd:noEmit
 #if YTB
             if (GameWontRun.GameWontRunByException) return;
 #endif
-//+:cnd:noEmit
-			EventManager = EventManager.Instance;
+            //+:cnd:noEmit
+
+            Collision_Prediction_Runtime = new();
+            Collision_Prediction_Runtime.InitializeSystem(entities);
+            EventManager = EventManager.Instance;
             EntityManager = @entities;
             EngineUISystem.SendLog(typeof(PhysicsSystem2D).Name + " Se inicio correctamente");
         }
@@ -121,18 +124,36 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <param name="gameTime">Game time. Tiempo de juego.</param>
         private void MoveEntities(Span<Yotsuba> entities, Span<TransformComponent> transformComponents, Span<RigidBodyComponent2D> rigibodyComponents, GameTime gameTime)
         {
-            foreach (ref Yotsuba entity in entities[..^1])
+            Span<int> EntitiesWithPhysics = Collision_Prediction_Runtime.Entities.AsSpan();
+            Span<int> tilemaps = stackalloc int[100];
+            int tilemapIndex = 0;
+            foreach(ref Yotsuba entity in entities)
+            {   
+                if (entity.HasComponent(YTBComponent.TileMap) && tilemapIndex < tilemaps.Length)
+                {
+                    tilemaps[tilemapIndex++] = entity.Id;
+                }
+            }
+
+            Span<int> validTilemaps = tilemaps.Slice(0, tilemapIndex);
+
+            foreach (int entityId in EntitiesWithPhysics)
             {
-                if (!entity.HasComponent(YTBComponent.Transform) || !entity.HasComponent(YTBComponent.Rigibody)) continue;
-                
+                ref TransformComponent transform = ref transformComponents[entityId];
+
+
+                Collision_Prediction_Runtime.IsPhysicalPossibleCollide(ref transform, entityId, _potentialColliders);
+
+                if (_potentialColliders.Count == 0 && validTilemaps.Length == 0) continue;
+
+                ref Yotsuba entity = ref entities[entityId];
                 // Collision flags for each direction
                 bool collisionBottom = false;
                 bool collisionTop = false;
                 bool collisionLeft = false;
                 bool collisionRight = false;
 
-                ref RigidBodyComponent2D rigidBody = ref rigibodyComponents[entity.Id];
-                ref TransformComponent transform = ref transformComponents[entity.Id];
+                ref RigidBodyComponent2D rigidBody = ref rigibodyComponents[entityId];
 
                 bool wasGrounded = rigidBody.IsGrounded;
 
@@ -149,32 +170,38 @@ namespace YotsubaEngine.Core.System.S_2D
                 bool sizeZero = transform.Size == Vector3.Zero;
 
 
+                Span<int> colliders = _potentialColliders.AsSpan();
                 // Check collisions with other entities
-                foreach (ref Yotsuba otherEntity in entities[(entity.Id + 1)..])
+                foreach (int otherEntityId in colliders)
                 {
-                    if (!otherEntity.HasComponent(YTBComponent.Transform) || !otherEntity.HasComponent(YTBComponent.Rigibody)) continue;
+                    ref Yotsuba otherEntity = ref entities[otherEntityId];
+                    if (otherEntityId == entityId) continue;
 
                     ref RigidBodyComponent2D otherRigidBody = ref rigibodyComponents[otherEntity.Id];
                     ref TransformComponent otherTransform = ref transformComponents[otherEntity.Id];
 
-                    // Handle TileMap collisions
-                    if (otherEntity.HasComponent(YTBComponent.TileMap))
-                    {
-                        CheckTileMapCollision(
-                            ref entity, ref otherEntity, ref rigidBody, ref otherRigidBody, 
-                            ref transform, ref otherTransform, entityRect, sizeZero, gameTime,
-                            ref collisionBottom, ref collisionTop, ref collisionLeft, ref collisionRight);
-                    }
-                    else
-                    {
                         // Regular entity collision
                         CheckEntityCollision(
                             ref entity, ref otherEntity, ref rigidBody, ref otherRigidBody,
                             ref transform, ref otherTransform, entityRect, sizeZero, gameTime,
                             ref collisionBottom, ref collisionTop, ref collisionLeft, ref collisionRight);
-                    }
+                    
                 }
 
+                foreach (ref int tileEntityID in validTilemaps)
+                {
+                    ref Yotsuba tileEntity = ref entities[tileEntityID];
+                    if (tileEntity.HasComponent(YTBComponent.TileMap))
+                    {
+                        ref RigidBodyComponent2D tileRigidBody = ref rigibodyComponents[tileEntity.Id];
+                        ref TransformComponent tileTransform = ref transformComponents[tileEntity.Id];
+
+                        CheckTileMapCollision(
+                            ref entity, ref tileEntity, ref rigidBody, ref tileRigidBody,
+                            ref transform, ref tileTransform, entityRect, sizeZero, gameTime,
+                            ref collisionBottom, ref collisionTop, ref collisionLeft, ref collisionRight);
+                    }
+                }
                 // Apply movement based on collision results
                 ApplyMovement(entity.Id, ref rigidBody, ref transform, collisionBottom, collisionTop, collisionLeft, collisionRight, wasGrounded, gameTime);
             }
@@ -197,10 +224,24 @@ namespace YotsubaEngine.Core.System.S_2D
             float originOffsetX = otherTransform.Size.X * 0.5f * otherTransform.Scale;
             float originOffsetY = otherTransform.Size.Y * 0.5f * otherTransform.Scale;
 
+            if(otherTransform.Size != Vector3.Zero)
+            {
+                Rectangle tilemapRect = new Rectangle(
+                    (int)(otherTransform.Position.X - originOffsetX),
+                    (int)(otherTransform.Position.Y - originOffsetY),
+                    (int)(otherTransform.Size.X * otherTransform.Scale),
+                    (int)(otherTransform.Size.Y * otherTransform.Scale)
+                );
+
+                if (!tilemapRect.Intersects(entityRect))
+                {
+                    return;
+                }
+            }
+
             foreach (ref TileLayer layer in tilemap.TileLayers.AsSpan())
             {
                 bool isCollisionLayer = layer.Name.Contains("Collision", StringComparison.OrdinalIgnoreCase) || layer.Name.Contains("Collider", StringComparison.OrdinalIgnoreCase);
-
                 for (int i = 0; i < layer.Data.Length; i++)
                 {
                     int gid = layer.Data[i];
