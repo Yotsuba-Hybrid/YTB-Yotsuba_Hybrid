@@ -11,14 +11,4 @@
     <MSBuild Projects="$(MSBuildThisFileDirectory)SandBoxGame.Content.csproj" Targets="Build" RemoveProperties="TargetFramework;RuntimeIdentifier;RuntimeIdentifiers" />
     <Exec Command="$(ContentCommand) $(ContentArgs)" WorkingDirectory="$(MSBuildThisFileDirectory)..\" CustomErrorRegularExpression="\[E\] .+" CustomWarningRegularExpression="\[W\] .+" />
    </Target>
-
-	<Target Name="_CopyContentToPublish" AfterTargets="Publish">
-		<ItemGroup>
-			<_ContentFiles Include="$(OutDir)Content\**\*" />
-		</ItemGroup>
-
-		<Message Importance="high" Text="Copying Content folder to publish dir: $(PublishDir)Content\" />
-		<Copy SourceFiles="@(_ContentFiles)" DestinationFolder="$(PublishDir)Content\%(RecursiveDir)"
-	SkipUnchangedFiles="true" />
-	</Target>
 </Project>
