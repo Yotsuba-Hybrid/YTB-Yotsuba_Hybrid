@@ -30,7 +30,7 @@ namespace YotsubaEngine.Core.System.YTBDragAndDrop
         private int? _draggedFontEntityId = null;
         private Vector2 _dragOffset = Vector2.Zero;
 
-        public void Dispose()
+        public override void Dispose()
         {
         }
 

@@ -1,4 +1,4 @@
-﻿using Hexa.NET.ImGui;
+using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -20,7 +20,6 @@ using YotsubaEngine.Exceptions;
 using YotsubaEngine.Graphics;
 using YotsubaEngine.Graphics.ImGuiNet;
 using YotsubaEngine.HighestPerformanceTypes;
-using D = System.Drawing;
 using Num = System.Numerics;
 namespace YotsubaEngine.Core.System.YotsubaEngineUI
 {
@@ -167,7 +166,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
             //GuiRenderer = new ImGuiRenderer(YTBGame.Instance);
 
             // CAMBIO 2: Esperar el resultado de la tarea de forma síncrona
-            GameInfo = ReadYTBFile.ReadYTBGameFile().GetAwaiter().GetResult();
+            GameInfo = YTBGlobalState.GameData.Item1;
 
             // Esta línea ahora se ejecutará de forma segura antes del primer Update
 
@@ -472,7 +471,8 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
 
                                 try
                                 {
-                                    TexturePacker.UpdateAtlas(xml, images);
+                                    
+                                    TexturePacker.UpdateAtlas(xml.Replace(@"\\", "/"), images);
                                 }
                                 catch (Exception ex)
                                 {
@@ -1220,14 +1220,14 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI
 
 
         /// <summary>
-        /// Convierte un Vector4 RGBA a un color de System.Drawing.
-        /// <para>Converts an RGBA Vector4 to a System.Drawing color.</para>
+        /// Convierte un Vector4 RGBA a un color de Microsoft.XNA.Framework
+        /// <para>Converts an RGBA Vector4 to a Microsoft.XNA.Framework color.</para>
         /// </summary>
         /// <param name="v">Vector RGBA en rango 0-1. <para>RGBA vector in the 0-1 range.</para></param>
         /// <returns>Color convertido. <para>Converted color.</para></returns>
-        public static D.Color Vector4ToColor(Vector4 v)
+        public static Color Vector4ToColor(Vector4 v)
         {
-            return D.Color.FromArgb(
+            return new Color(
                 (int)(v.W * 255f),   // Alpha
                 (int)(v.X * 255f),   // Red
                 (int)(v.Y * 255f),   // Green

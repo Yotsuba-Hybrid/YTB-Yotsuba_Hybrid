@@ -42,7 +42,7 @@ namespace SandBoxGame.Android
         {
             base.OnCreate(bundle);
 
-            _game = new YTBProgram();
+            _game = new YTBProgram(YotsubaEngine.Core.YotsubaGame.Platforms.Android);
             _view = _game.Services.GetService(typeof(View)) as View;
 
             SetContentView(_view);

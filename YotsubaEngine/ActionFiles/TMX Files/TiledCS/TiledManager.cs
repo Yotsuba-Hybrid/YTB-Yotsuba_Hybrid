@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -57,8 +57,8 @@ namespace YotsubaEngine.ActionFiles.TMX_Files.TiledCS
             // Carga el documento XML en memoria
 
             string relative = tmxPath.TrimStart('\\', '/');
-            if (relative.StartsWith(_contentPath + "/", StringComparison.OrdinalIgnoreCase) ||
-                relative.StartsWith(_contentPath + "\\", StringComparison.OrdinalIgnoreCase))
+            if (relative.StartsWith(_contentPath + "/") ||
+                relative.StartsWith(_contentPath + "\\"))
             {
                 relative = relative.Substring(_contentPath.Length + 1);
             }
