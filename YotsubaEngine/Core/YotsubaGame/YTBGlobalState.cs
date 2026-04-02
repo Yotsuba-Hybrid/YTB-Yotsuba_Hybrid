@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using YotsubaEngine.ActionFiles.YTB_Files;
 using YotsubaEngine.YTB_Toolkit;
 
 
@@ -16,6 +17,9 @@ namespace YotsubaEngine.Core.YotsubaGame
     public class YTBGlobalState 
     {
 
+        public static Platforms Platform { get; internal set; }
+        public static (YTBGameInfo, YTBConfig) GameData { get; set; }
+        public static GraphicsDeviceManager GraphicsDeviceManager { get; internal set; }
 
         /// <summary>
         /// Indica si el juego se está ejecutando en una plataforma móvil.

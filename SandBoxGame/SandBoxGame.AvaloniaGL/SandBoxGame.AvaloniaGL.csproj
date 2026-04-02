@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+	  <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.3.11" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.3.11" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.11" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.11" />
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Include="Avalonia.Diagnostics" Version="11.3.11">
+      <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
+      <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
+    </PackageReference>
+	  <PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />  
+	  <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
+
+	  <PackageReference Include="AvaloniaInside.MonoGame" Version="1.0.2" />
+	 <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.5-preview.*" />
+	 <PackageReference Include="ReactiveUI" Version="23.1.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SandBoxGame.Core\SandBoxGame.Core.csproj" />
+  </ItemGroup>
+
+	<Import Project="..\SandBoxGame.Content\BuildContent.targets" />
+	<Import Project="..\..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\CopyAllImGuiNatives.targets" />
+</Project>

@@ -16,7 +16,7 @@ namespace YotsubaEngine.HighestPerformanceTypes
         /// <summary>
         /// Tamaños predeterminados para recalcular el tamaño de YTB.
         /// </summary>
-        private readonly int[] _predetSizesOfYTB = [500, 1000, 5000, 10_000, 50_000, 100_000, 500_000, 1_000_000, 5_000_000, 10_000_000, 20_000_000, 30_000_000, 40_000_000 ,50_000_000];
+        private static int[] _predetSizesOfYTB = [500, 1000, 5000, 10_000, 50_000, 100_000, 500_000, 1_000_000, 5_000_000, 10_000_000, 20_000_000, 30_000_000, 40_000_000 ,50_000_000];
 
         /// <summary>
         /// Almacena el índice actual en el arreglo de tamaños predeterminados.
@@ -138,6 +138,20 @@ namespace YotsubaEngine.HighestPerformanceTypes
         }
 
         /// <summary>
+        /// Elimina la primera ocurrencia de un elemento especificado del YTB. Pero puede alterar el orden de los elementos.
+        /// <para>Removes the first occurrence of the specified element from the YTB.</para>
+        /// </summary>
+        /// <param name="item">El elemento a eliminar del YTB. <para>The element to remove from the YTB.</para></param>
+        /// <remarks>Si el elemento no se encuentra, el YTB permanece sin cambios. <para>If the element is not found, the YTB remains unchanged.</para></remarks>
+        /// <returns>Retorna true si el elemento fue encontrado y eliminado; de lo contrario, false. <para>Returns true if the element was found and removed; otherwise, false.</para></returns>
+        public void RemoveFast(T item)
+        {
+            int index = Array.IndexOf(_arr, item, 0, Count);
+            _arr[index] = _arr[--Count];
+            _arr[Count] = default!;
+        }
+
+        /// <summary>
         /// Obtiene una referencia del objeto en la posición indicada.
         /// <para>Gets a reference to the object at the specified position.</para>
         /// </summary>
@@ -242,9 +256,9 @@ namespace YotsubaEngine.HighestPerformanceTypes
         /// </summary>
         public void Clear()
         {
+            Array.Clear(_arr, 0, Capacity);
             Count = 0;
             Capacity = 0;
-            Array.Clear(_arr, 0, Capacity);
         }
 
         T DefaultValue = default(T);

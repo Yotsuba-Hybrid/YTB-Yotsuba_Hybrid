@@ -35,6 +35,7 @@ namespace SandBoxGame.Core
             "Icon",
             "icon-1024",
             "splash",
+            "Spritesheets/SpriteSheet",
         };
 
         public static readonly List<string> FontAssets = new List<string>

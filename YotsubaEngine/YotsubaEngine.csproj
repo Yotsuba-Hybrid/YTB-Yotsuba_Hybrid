@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 			<TargetFramework>net10.0</TargetFramework>
 			<OutputType>Library</OutputType>
@@ -15,8 +15,10 @@
 		</PackageReference>
 		
 	
-		<PackageReference Include="Gum.MonoGame" Version="2026.2.23.1" />		
-		<PackageReference Include="System.Drawing.Common" Version="10.0.3" />
+		<PackageReference Include="Gum.MonoGame" Version="2026.2.23.1" />
+		
+	
+		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
 </ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGuizmo\Hexa.NET.ImGuizmo.csproj" />
@@ -32,6 +34,7 @@
 	<ItemGroup>
 	  <Folder Include="ActionFiles\ImGuiEditor\" />
 	  <Folder Include="Graphics\Multiplatform\UI\" />
+	  <Folder Include="Physics\Collision Prediction Runtime %28CPR%29\" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(Configuration)' == 'YTB'">
 		<None Update="imgui.ini">

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -24,7 +24,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
         {
             try
             {
-                var config = ReadYTBFile.ReadYTBGameConfigFile().ConfigureAwait(false).GetAwaiter().GetResult();
+                var config = YTBGlobalState.GameData.Item2;
                 
                 if (!string.IsNullOrWhiteSpace(config?.GameName))
                 {
@@ -44,12 +44,12 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
         /// </summary>
         private static string GetMonoGamePlatform()
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                return "DesktopGL"; // O "WindowsDX" si prefieres DirectX
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                return "DesktopGL";
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                return "DesktopGL";
+            //if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+              //  return "WindowsDX12"; // O "WindowsDX" si prefieres DirectX
+            //if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+             //   return "DesktopVK";
+            //if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+              //  return "DesktopVK";
             
             // Fallback
             return "DesktopGL";
@@ -215,13 +215,13 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
             string targetFramework = "net10.0"; // Asegúrate de que coincida con tu .csproj
 
             // 2. Construir la ruta al ejecutable (La herramienta MGCB compilada)
-            // MSBuild: $(MSBuildThisFileDirectory)bin\$(Configuration)\net10.0\SandBoxGame.Content.exe
+            // MSBuild: $(MSBuildThisFileDirectory)bin\$(Configuration)\net10.0\SandBoxGame.Content.dll
             string executablePath = Path.Combine(
                 projectBaseDir,
                 "bin",
                 configuration,
                 targetFramework,
-                "SandBoxGame.Content.exe" // Ojo: En Linux/Mac no lleva .exe
+                "SandBoxGame.Content.dll"
             );
 
             // Validación de seguridad
@@ -239,7 +239,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
 
             // 4. Definir Rutas de Argumentos
             // Source: Relativo al Working Directory
-            string sourceDirectory = "SandBoxGame.Core/Assets";
+            string sourceDirectory = Path.Combine("SandBoxGame.Core", "Assets");
 
             // Output: Donde está corriendo ESTE juego ahora mismo
             string outputDirectory = AppDomain.CurrentDomain.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
@@ -258,8 +258,8 @@ namespace YotsubaEngine.Core.System.YotsubaEngineCore
 
             var info = new ProcessStartInfo
             {
-                FileName = executablePath,
-                Arguments = arguments,
+                FileName = "dotnet",
+                Arguments = $"exec \"{executablePath}\" {arguments}",
                 WorkingDirectory = workingDirectory,
                 CreateNoWindow = true,
                 UseShellExecute = false,

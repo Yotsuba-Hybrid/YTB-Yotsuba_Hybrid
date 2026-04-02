@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -113,7 +113,7 @@ namespace YotsubaEngine.Core.System.S_2D
             //if (OperatingSystem.IsWindows())
                 //if (!IsGameActive) return;
             if (GameWontRun.GameWontRunByException) return;
-            bool canRenderUIElements = IsGameActive || !OperatingSystem.IsWindows();
+            bool canRenderUIElements = IsGameActive || !YTBGlobalState.IsDesktop;
 
 #endif
 //+:cnd:noEmit

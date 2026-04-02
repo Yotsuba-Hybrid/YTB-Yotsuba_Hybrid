@@ -15,7 +15,7 @@ namespace SandBoxGame.iOS
         /// </summary>
         internal static void RunGame()
         {
-            _game = new YTBProgram();
+            _game = new YTBProgram(YotsubaEngine.Core.YotsubaGame.Platforms.IOS);
             _game.Run();
         }
 

@@ -1,21 +1,21 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Runtime.Versioning;
 using System.Xml.Linq;
 using YotsubaEngine.ActionFiles.YTB_Files;
 using YotsubaEngine.Core.System.YotsubaEngineCore;
 using YotsubaEngine.Core.YotsubaGame;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 
 namespace YotsubaEngine.ActionFiles.XML_SpriteSheet_Files
 {
     /// <summary>
-    /// Construye y actualiza atlas de sprite sheets y metadatos XML (solo Windows por System.Drawing).
-    /// <para>Builds and updates sprite sheet atlases and XML metadata (Windows-only due to System.Drawing).</para>
+    /// Construye y actualiza atlas de sprite sheets y metadatos XML
+    /// <para>Builds and updates sprite sheet atlases and XML metadata</para>
     /// </summary>
-    [SupportedOSPlatform("windows")]
     public class TexturePacker
     {
         /// <summary>
@@ -26,10 +26,9 @@ namespace YotsubaEngine.ActionFiles.XML_SpriteSheet_Files
         /// <returns>Metadatos de sprites. <para>Sprite metadata.</para></returns>
         public static IEnumerable<SpriteInfo> GetImages(params string[] images)
         {
-            EnsureWindowsSupport();
             foreach (var path in images)
             {
-                using var image = Image.FromFile(path);
+                using Image image = Image.Load(path);
 
                 SpriteInfo info = new SpriteInfo()
                 {
@@ -53,7 +52,6 @@ namespace YotsubaEngine.ActionFiles.XML_SpriteSheet_Files
         /// <param name="finalAtlasHeight">Alto final calculado. <para>Calculated final height.</para></param>
         public static void CalculatePositions(List<SpriteInfo> sprites, int maxAtlasWidth, out int finalAtlasWidth, out int finalAtlasHeight)
         {
-            EnsureWindowsSupport();
             sprites.Sort((s1, s2) => s2.Height.CompareTo(s1.Height));
 
             int currentX = 0;
@@ -94,27 +92,27 @@ namespace YotsubaEngine.ActionFiles.XML_SpriteSheet_Files
         /// <param name="outputPath">Ruta de salida del atlas. <para>Atlas output path.</para></param>
         public static void GenerateAtlas(List<SpriteInfo> sprites, int width, int height, string outputPath)
         {
-            EnsureWindowsSupport();
-            using (var atlasBitmap = new Bitmap(width, height))
+            using (Image<Rgba32> atlasImage = new (width, height))
             {
-                using (var g = System.Drawing.Graphics.FromImage(atlasBitmap))
-                {
-                    g.Clear(Color.Transparent);
 
                     // 3. Recorrer cada sprite info
                     foreach (var sprite in sprites)
                     {
                         // Cargar la imagen original desde el disco
                         // IMPORTANTE: Usamos 'using' para liberarla apenas la pintemos
-                        using (var currentImage = Image.FromFile(sprite.Path))
+                        using (Image currentImage = Image.Load(sprite.Path))
                         {
-                            g.DrawImage(currentImage, sprite.X, sprite.Y, sprite.Width, sprite.Height);
+                        	if(currentImage.Width != sprite.Width || currentImage.Height != sprite.Height)
+                        	{
+                        			currentImage.Mutate(x => x.Resize(sprite.Width, sprite.Height));
+                        	}
+                        
+                        	atlasImage.Mutate(m => m.DrawImage(currentImage, new Point(sprite.X, sprite.Y), 1f));
                         }
-                    }
+                    
                 }
 
-                outputPath = outputPath.Replace("/","\\");
-                atlasBitmap.Save(outputPath, System.Drawing.Imaging.ImageFormat.Png);
+                atlasImage.SaveAsPng(outputPath);
             }
         }
 
@@ -126,46 +124,46 @@ namespace YotsubaEngine.ActionFiles.XML_SpriteSheet_Files
         /// <param name="atlasFileName">Nombre del atlas. <para>Atlas file name.</para></param>
         /// <param name="xmlOutputPath">Ruta de salida del XML. <para>XML output path.</para></param>
         /// <param name="imageName">Nombre de la imagen. <para>Image name.</para></param>
-        public static void ExportXML(List<SpriteInfo> sprites, string atlasFileName, string xmlOutputPath, string imageName)
-        {
-            EnsureWindowsSupport();
-            string animationContent = string.Empty;
-            if (File.Exists(xmlOutputPath))
-            {
-                string xml = File.ReadAllText(xmlOutputPath);
-                int animationIndex = xml.IndexOf("<animation", StringComparison.OrdinalIgnoreCase);
-                if (animationIndex >= 0)
-                {
-                    animationContent = xml.Substring(animationIndex);
-                }
-            }
-
-            string normalizedImageName = imageName.Replace('\\', '/');
-            normalizedImageName = Path.ChangeExtension(normalizedImageName, null);
-
-            XElement root = new XElement("textureatlas", new XAttribute("imagepath", normalizedImageName));
-
-            foreach (var sprite in sprites)
-            {
-                XElement subtexture = new XElement("subtexture");
-                subtexture.Add(new XAttribute("name", sprite.Name)); 
-                subtexture.Add(new XAttribute("x", sprite.X)); 
-                subtexture.Add(new XAttribute("y", sprite.Y));
-                subtexture.Add(new XAttribute("width", sprite.Width)); 
-                subtexture.Add(new XAttribute("height", sprite.Height)); 
-                root.Add(subtexture);
-            }
-
-            XDocument doc = new XDocument(root);
-            doc.Save(xmlOutputPath);
-            if (!string.IsNullOrWhiteSpace(animationContent))
-            {
-                string newContent = File.ReadAllText(xmlOutputPath);
-                newContent = newContent.Replace("</textureatlas>", "");
-                string finalContent = newContent + animationContent;
-                File.WriteAllText(xmlOutputPath, finalContent);
-            }
-        }
+     public static void ExportXML(List<SpriteInfo> sprites, string atlasFileName, string xmlOutputPath, string imageName)
+	{
+	    string normalizedImageName = imageName;
+	    normalizedImageName = Path.ChangeExtension(normalizedImageName, null);
+	
+	    XElement root = new XElement("textureatlas", new XAttribute("imagepath", normalizedImageName));
+	
+	    foreach (var sprite in sprites)
+	    {
+	        XElement subtexture = new XElement("subtexture",
+	            new XAttribute("name", sprite.Name),
+	            new XAttribute("x", sprite.X),
+	            new XAttribute("y", sprite.Y),
+	            new XAttribute("width", sprite.Width),
+	            new XAttribute("height", sprite.Height)
+	        );
+	        root.Add(subtexture);
+	    }
+	
+	    // Preservar los nodos <animation> del XML anterior de forma segura
+	    if (File.Exists(xmlOutputPath))
+	    {
+	        try
+	        {
+	            XDocument oldDoc = XDocument.Load(xmlOutputPath);
+	            var animationNodes = oldDoc.Root?.Elements("animation");
+	            if (animationNodes != null && animationNodes.Any())
+	            {
+	                root.Add(animationNodes); // Agrega todos los nodos de animación al nuevo root
+	            }
+	        }
+	        catch 
+	        { 
+	            // Manejar o registrar si el XML anterior estaba corrupto
+	        }
+	    }
+	
+	    XDocument doc = new XDocument(root);
+	    doc.Save(xmlOutputPath); // Guarda todo en un solo paso, perfectamente formateado
+	}
 
         /// <summary>
         /// Separa un atlas en imágenes de sprites individuales.
@@ -176,12 +174,10 @@ namespace YotsubaEngine.ActionFiles.XML_SpriteSheet_Files
         /// <param name="outputFolder">Carpeta de salida. <para>Output folder.</para></param>
         public static void UnpackAtlas(string xmlPath, string atlasImagePath, string outputFolder)
         {
-            EnsureWindowsSupport();
             XDocument doc = XDocument.Load(xmlPath);
-            atlasImagePath = atlasImagePath.Replace("/", "\\");
             if(!atlasImagePath.EndsWith(".png")) atlasImagePath += ".png";
             string imagePath = Path.Combine(YTBGlobalState.DevelopmentAssetsPath, atlasImagePath);
-            using (var bigAtlas = new Bitmap(imagePath))
+            using (Image bigAtlas =  Image.Load(imagePath))
             {
                 if (!Directory.Exists(outputFolder))
                     Directory.CreateDirectory(outputFolder);
@@ -197,10 +193,10 @@ namespace YotsubaEngine.ActionFiles.XML_SpriteSheet_Files
 
                     Rectangle cropArea = new Rectangle(x, y, w, h);
 
-                    using (var subImage = bigAtlas.Clone(cropArea, bigAtlas.PixelFormat))
+                    using (Image subImage = bigAtlas.Clone(c => c.Crop(cropArea)))
                     {
                         string finalPath = Path.Combine(outputFolder, name + ".png");
-                        subImage.Save(finalPath, System.Drawing.Imaging.ImageFormat.Png);
+                        subImage.SaveAsPng(finalPath);
                     }
                 }
             }
@@ -216,7 +212,6 @@ namespace YotsubaEngine.ActionFiles.XML_SpriteSheet_Files
         /// <param name="maxAtlasWidth">Ancho máximo del atlas. <para>Maximum atlas width.</para></param>
         public static void UpdateAtlas(string existingXmlPath, string[] newImagesPaths, int maxAtlasWidth = 2048)
         {
-            EnsureWindowsSupport();
             // Definimos una carpeta temporal al lado del archivo XML original
             string tempFolder = Path.Combine(Path.GetDirectoryName(existingXmlPath), "Temp_Processing_Atlas");
 
@@ -241,11 +236,11 @@ namespace YotsubaEngine.ActionFiles.XML_SpriteSheet_Files
 
                 using (var fs = File.OpenRead(imagePath))
                 {
-                    using (var tmp = Image.FromStream(fs))
-                    {
+                   	var tmp = Image.Identify(fs);
+                    
                         if(tmp.Width > maxAtlasWidth)
                         maxAtlasWidth = tmp.Width;
-                    }
+                    
                 }
                 // PASO 2: FUSIONAR
                 // Copiamos las imágenes NUEVAS a esa misma carpeta temporal
@@ -287,7 +282,9 @@ namespace YotsubaEngine.ActionFiles.XML_SpriteSheet_Files
                 string xmlPath = YTBGlobalState.DevelopmentAssetsPath + existingXmlPath.Split(carpetas.ToArray(),StringSplitOptions.None).LastOrDefault();
 
                 string relativeImagePath = Path.GetRelativePath(YTBGlobalState.DevelopmentAssetsPath, imagePath);
+                
                 relativeImagePath = relativeImagePath.Replace('\\', '/');
+                
                 ExportXML(allSprites, "", xmlPath, relativeImagePath);
 
                 YTBContentBuilder.Rebuild();
@@ -305,18 +302,6 @@ namespace YotsubaEngine.ActionFiles.XML_SpriteSheet_Files
                 {
                     Directory.Delete(tempFolder, true); // true borra archivos y subcarpetas
                 }
-            }
-        }
-
-        /// <summary>
-        /// Ensures System.Drawing usage only occurs on Windows platforms.
-        /// Garantiza que el uso de System.Drawing solo ocurra en plataformas Windows.
-        /// </summary>
-        private static void EnsureWindowsSupport()
-        {
-            if (!OperatingSystem.IsWindows())
-            {
-                throw new PlatformNotSupportedException("TexturePacker uses System.Drawing and requires Windows. Use a cross-platform image library for non-Windows platforms.");
             }
         }
     }
