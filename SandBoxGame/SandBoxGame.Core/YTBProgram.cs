@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoGameGum;
 using SandBoxGame.Core.Localization;
+using SandBoxGame.Core.Systems;
 using System.Globalization;
 using YotsubaEngine;
 using YotsubaEngine.ActionFiles.YTB_Files;
@@ -16,18 +18,17 @@ namespace SandBoxGame.Core
     /// </summary>
     public class YTBProgram : YTBGame
     {
-
         /// <summary>
         /// Ancho de la ventana del juego. En desarrollo, se establece en 1920x1080 para facilitar la depuración en monitores de escritorio.
         /// <para>Game window width. In development it is set to 1920x1080 for easier debugging on desktop monitors.</para>
         /// </summary>
-        public const int WINDOW_WIDTH = 1920;
+        public const int WINDOW_WIDTH = 480;
 
         /// <summary>
         /// Alto de la ventana del juego. En desarrollo, se establece en 1920x1080 para facilitar la depuración en monitores de escritorio.
         /// <para>Game window height. In development it is set to 1920x1080 for easier debugging on desktop monitors.</para>
         /// </summary>
-        public const int WINDOW_HEIGHT = 1080;
+        public const int WINDOW_HEIGHT = 720;
 
         /// <summary>
         /// Indica si el juego se inicia en pantalla completa.
@@ -68,6 +69,8 @@ namespace SandBoxGame.Core
         /// </summary>
         public YTBProgram(Platforms platform) : base(platform, IS_MOUSE_VISIBLE)
         {
+
+
             if (platform is not Platforms.Avalonia_GL)
             {
                 /// Esta propiedad no es compatible con Avalonia_GL, así que solo se aplica en otras plataformas.
@@ -77,7 +80,11 @@ namespace SandBoxGame.Core
             {
                
             }
-            Window.AllowUserResizing = true;
+            if (YTBGlobalState.IsDesktop)
+            {
+                Window.AllowUserResizing = true;
+            }
+
             SetConfig();
         }
 
@@ -93,11 +100,11 @@ namespace SandBoxGame.Core
         {
             _graphics = new(this);
 
-//-:cnd:noEmit
+            //-:cnd:noEmit
 #if !YTB
             YTBFileToGameData.GameDataProvider = GameDataRegistry.GetGameData;
 #endif
-//+:cnd:noEmit
+            //+:cnd:noEmit
 
             SetScriptManager(new ScriptRegistry());
             SetModelRegistry(new ModelRegistry());
@@ -207,16 +214,28 @@ namespace SandBoxGame.Core
             var selectedLanguage = LocalizationManager.DEFAULT_CULTURE_CODE;
             LocalizationManager.SetCulture(selectedLanguage);
 
+          
+
             base.Initialize();
 
         }
 
-        
+
+
         /// <summary>
         /// Loads game content, such as textures and particle systems.
         /// </summary>
         protected override void LoadContent()
         {
+            try
+            {
+                YTBGlobalState.GumProjectSave = GumService.Default.Initialize(this, "GumProject/GumProject.gumx");
+            }
+            catch (Exception ex)
+            {
+                throw;
+
+            }
             base.LoadContent();
         }
 
@@ -230,7 +249,6 @@ namespace SandBoxGame.Core
         /// </param>
         protected override void Update(GameTime gameTime)
         {
-            
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -244,11 +262,7 @@ namespace SandBoxGame.Core
         /// </param>
         protected override void Draw(GameTime gameTime)
         {
-
             base.Draw(gameTime);
-            //GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-            //pincel3d.DrawBox(new Vector3(2000, 0, 500), new Vector3(500), Color.DodgerBlue, YTBGlobalState.Game.SceneManager.CurrentScene.EntityManager.Camera.ViewMatrix, YTBGlobalState.Game.SceneManager.CurrentScene.EntityManager.Camera.ProjectionMatrix);
-            //pincel3d.DrawSquare(new Vector3(200, 0, 500), 500, Color.White, YTBGlobalState.Game.SceneManager.CurrentScene.EntityManager.Camera.ViewMatrix, YTBGlobalState.Game.SceneManager.CurrentScene.EntityManager.Camera.ProjectionMatrix);
         }
     }
 }

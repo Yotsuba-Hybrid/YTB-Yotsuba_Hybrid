@@ -10,20 +10,14 @@ namespace SandBoxGame.Core.Systems
     public class CustomExampleSystem : IRenderSystem
     {
         GumService GumUI => GumService.Default;
-        public CustomExampleSystem()
-        {
-           
-        }
 
         public override void InitializeSystem(EntityManager entities)
         {
             EntityManager = entities;
-            if (!GumUI.IsInitialized)
-            {
-                var gumProject = GumUI.Initialize(YTBGlobalState.Game, "Gum/GumProject.gumx");
-            }
+           
+            var gumProject = YTBGlobalState.GumProjectSave;
 
-            var screen = new YTBTESTRuntime();
+            var screen = new MobileRuntime();
             screen.AddToRoot();
         }
 
@@ -37,7 +31,8 @@ namespace SandBoxGame.Core.Systems
 
         public override void Render2D(SpriteBatch spriteBatch, GameTime gameTime)
         {
-
+            //YTBGame.GuiRenderer.BeginLayout(gameTime);
+            //YTBGame.GuiRenderer.EndLayout();
             GumUI.Draw();
         }
 

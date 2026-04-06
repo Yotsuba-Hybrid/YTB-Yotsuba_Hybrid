@@ -1,0 +1,22 @@
+﻿<UserControl
+    x:Class="Gum.Plugins.FileWatchPlugin.FileWatchControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Gum.Plugins.FileWatchPlugin"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <StackPanel>
+        <CheckBox
+            Margin="4,4,4,8"
+            Content="Print File Changes to Output"
+            IsChecked="{Binding PrintFileChangesToOutput}" />
+        <TextBlock Text="{Binding WatchFolderInformation}" />
+        <TextBlock Text="{Binding NumberOfFilesToFlush}" />
+        <TextBlock Text="{Binding TimeToNextFlush}" />
+        <TextBlock Text="{Binding NextFilesToFlush}" />
+        <TextBlock Text="{Binding IgnoredFilesInformation}" />
+    </StackPanel>
+</UserControl>

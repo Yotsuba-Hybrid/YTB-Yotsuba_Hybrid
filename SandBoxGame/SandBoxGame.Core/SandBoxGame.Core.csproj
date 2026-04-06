@@ -20,10 +20,20 @@
 	  <ProjectReference Include="..\..\YotsubaEngine\YotsubaEngine.csproj" />
 
   </ItemGroup>
-  <ItemGroup>
+	<ItemGroup>
+		<None Update="Content\GumProject\**\*.*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+  <!--<ItemGroup>
     <None Include="Assets\Gum\**\*">
       <Link>Content\Gum\%(RecursiveDir)%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>-->
+  <ItemGroup>
+    <Folder Include="Assets\Effects\" />
+    <Folder Include="Assets\Shader\" />
+    <Folder Include="Content\GumProject\" />
   </ItemGroup>
 </Project>

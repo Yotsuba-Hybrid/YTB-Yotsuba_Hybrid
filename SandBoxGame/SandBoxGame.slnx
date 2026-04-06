@@ -4,22 +4,27 @@
     <BuildType Name="Release" />
     <BuildType Name="YTB" />
   </Configurations>
-  <Folder Name="/Dependencies/">
+<Folder Name="/Dependencies/">
     <Project Path="../Hexa.NET.ImGui-2.2.4/Hexa.NET.ImGui-2.2.4/Hexa.NET.ImGui.Backends/Hexa.NET.ImGui.Backends.csproj">
       <BuildType Solution="YTB|*" Project="Release" />
     </Project>
     <Project Path="../Hexa.NET.ImGui-2.2.4/Hexa.NET.ImGui-2.2.4/Hexa.NET.ImGui/Hexa.NET.ImGui.csproj">
       <BuildType Solution="YTB|*" Project="Release" />
     </Project>
-    <Project Path="../Hexa.NET.ImGui-2.2.4/Hexa.NET.ImGui-2.2.4/Hexa.NET.ImGuizmo/Hexa.NET.ImGuizmo.csproj">
-      <BuildType Solution="YTB|*" Project="Release" />
-    </Project>
+<Project Path="../Hexa.NET.ImGui-2.2.4/Hexa.NET.ImGui-2.2.4/Hexa.NET.ImGuizmo/Hexa.NET.ImGuizmo.csproj">
+<BuildType Solution="YTB|*" Project="Release" />
+</Project>
     <Project Path="../Hexa.NET.ImGui-2.2.4/Hexa.NET.ImGui-2.2.4/Hexa.NET.ImNodes/Hexa.NET.ImNodes.csproj">
       <BuildType Solution="YTB|*" Project="Release" />
     </Project>
     <Project Path="../Hexa.NET.ImGui-2.2.4/Hexa.NET.ImGui-2.2.4/Hexa.NET.ImPlot/Hexa.NET.ImPlot.csproj">
       <BuildType Solution="YTB|*" Project="Release" />
     </Project>
+  </Folder>
+  <Folder Name="/Dependencies/Gum/">
+    <Project Path="../Gum/GumCommon/GumCommon.csproj" />
+    <Project Path="../Gum/MonoGameGum/MonoGameGum.csproj" />
+    <Project Path="../Gum/Tools/Gum.Analyzers/Gum.Analyzers.csproj" />
   </Folder>
   <Folder Name="/Platforms/">
     <Project Path="SandBoxGame.Android/SandBoxGame.Android.csproj">
