@@ -262,7 +262,17 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 #if YTB
             Task.Run(() => _ = WriteYTBFile.RefactorYTBFile());
 #endif
-            (YTBGameInfo, YTBConfig) game = YTBGlobalState.GameData;
+            (YTBGameInfo, YTBConfig) game;
+#if !YTB
+            if (YTBFileToGameData.GameDataProvider is not null)
+            {
+                YTBGlobalState.GameData = YTBFileToGameData.GameDataProvider();
+
+            }
+#endif
+
+            game = YTBGlobalState.GameData;
+
 
 
             SceneManager sceneManager = new(graphicsDeviceManager);

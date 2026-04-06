@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Gum.DataTypes;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -16,7 +17,7 @@ namespace YotsubaEngine.Core.YotsubaGame
     /// </summary>
     public class YTBGlobalState 
     {
-
+        public static GumProjectSave GumProjectSave { get; set; }
         public static Platforms Platform { get; internal set; }
         public static (YTBGameInfo, YTBConfig) GameData { get; set; }
         public static GraphicsDeviceManager GraphicsDeviceManager { get; internal set; }
