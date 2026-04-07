@@ -9,7 +9,9 @@ using YotsubaEngine.Core.System.S_2D;
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Exceptions;
 using YotsubaEngine.YTBMath;
+#if YTB
 using static YotsubaEngine.Exceptions.GameWontRun;
+#endif
 
 namespace YotsubaEngine.Core.Component.C_AGNOSTIC
 {

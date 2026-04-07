@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if YTB
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -119,10 +120,12 @@ namespace YotsubaEngine.Exceptions
 			DetailWontRunByException = string.Join(", ", ex.Data.Values.Cast<object>());
 			SetError(error);
 
+#if YTB
 			EngineUISystem.SendLog("Game Will Not Work", Color.Red);
 			EngineUISystem.SendLog("GameWontRun Exception: " + CauseWontRunByException, Color.Red);
 			EngineUISystem.SendLog("GameWontRun Exception Detail: " + DetailWontRunByException, Color.Red);
 			EngineUISystem.SendLog(error.ToString(), Color.Red);
+#endif
 		}
 
 		/// <summary>
@@ -136,6 +139,7 @@ namespace YotsubaEngine.Exceptions
 			GameWontRunByException = true;
 			CauseWontRunByException = ex;
 			SetError(error);
+
 			EngineUISystem.SendLog("Game Will Not Work", Color.Red);
 			EngineUISystem.SendLog("GameWontRun Exception: " + CauseWontRunByException, Color.Red);
 			EngineUISystem.SendLog(error.ToString(), Color.Red);
@@ -355,3 +359,4 @@ namespace YotsubaEngine.Exceptions
         }
 	}
 }
+#endif

@@ -7,8 +7,8 @@
   <UseFontCharacterFile>false</UseFontCharacterFile>
   <AutoSizeFontOutputs>false</AutoSizeFontOutputs>
   <Version>2</Version>
-  <DefaultCanvasWidth>480</DefaultCanvasWidth>
-  <DefaultCanvasHeight>720</DefaultCanvasHeight>
+  <DefaultCanvasWidth>1080</DefaultCanvasWidth>
+  <DefaultCanvasHeight>1920</DefaultCanvasHeight>
   <CustomCanvasSizes>
     <CustomCanvasSize>
       <Width xsi:nil="true" />
@@ -54,7 +54,6 @@
   <ShowLocalizationInGum>true</ShowLocalizationInGum>
   <CurrentLanguageIndex>0</CurrentLanguageIndex>
   <ScreenReference Name="DemoScreenGum" />
-  <ScreenReference Name="Mobile" />
   <ComponentReference Name="Controls/ButtonClose" />
   <ComponentReference Name="Controls/ButtonConfirm" />
   <ComponentReference Name="Controls/ButtonDeny" />

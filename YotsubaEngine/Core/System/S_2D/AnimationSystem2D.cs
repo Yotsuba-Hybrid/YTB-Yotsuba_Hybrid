@@ -4,7 +4,9 @@ using System;
 using YotsubaEngine.Core.Component.C_2D;
 using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.Contract;
+#if YTB
 using YotsubaEngine.Core.System.YotsubaEngineUI;
+#endif
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Events.YTBEvents;
 using YotsubaEngine.Exceptions;
@@ -37,7 +39,9 @@ namespace YotsubaEngine.Core.System.S_2D
             EntityManager = @entities;
 
             EventManager.Subscribe<AnimationChangeEvent>(OnAnimationChange);
+#if YTB
             EngineUISystem.SendLog(typeof(AnimationSystem2D).Name + " Se inicio correctamente");
+#endif
         }
 
         /// <summary>

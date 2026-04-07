@@ -11,7 +11,9 @@ using YotsubaEngine.Events.YTBEvents;
 using YotsubaEngine.Exceptions;
 using YotsubaEngine.HighestPerformanceTypes;
 using YotsubaEngine.Physics;
+#if YTB
 using static YotsubaEngine.Exceptions.GameWontRun;
+#endif
 
 namespace YotsubaEngine.YTB_Toolkit
 {
@@ -65,23 +67,37 @@ namespace YotsubaEngine.YTB_Toolkit
 
 			if (_entities._ytb.Any(x => x.Id == en.Id))
 			{
+#if YTB
 				_ = new GameWontRun(
 					$"Entity {entity.Name} is already registered in WASDControl. Check your script.",
 					YTBErrors.EntityCannotAddToWasdYTB_toolkit);
+#else
+				return;
+#endif
 			}
 
 			if (!entity.HasComponent(YTBComponent.Input))
 			{
+#if YTB
+
 				_ = new GameWontRun(
 					$"Entity {entity.Name} requires InputComponent for WASDControl.",
 					YTBErrors.EntityCannotAddToWasdYTB_toolkit);
+#else
+				return;
+#endif
 			}
 
 			if (!entity.HasComponent(YTBComponent.Transform))
 			{
+#if YTB
+
 				_ = new GameWontRun(
 					$"Entity {entity.Name} requires TransformComponent for WASDControl.",
 					YTBErrors.EntityCannotAddToWasdYTB_toolkit);
+#else
+				return;
+#endif
 			}
 
 			_entities.Add(entity);
@@ -97,9 +113,14 @@ namespace YotsubaEngine.YTB_Toolkit
 		{
 			if (!_entities._ytb.Any(x => x.Id == entity.Id))
 			{
+#if YTB
+
 				_ = new GameWontRun(
 					$"Entity {entity.Name} is not registered in WASDControl.",
 					YTBErrors.EntityCannotAddToWasdYTB_toolkit);
+#else
+				return;
+#endif
 			}
 			var e = _entities._ytb.FirstOrDefault(x => x.Id == entity.Id);
 			_entities.Remove(e);

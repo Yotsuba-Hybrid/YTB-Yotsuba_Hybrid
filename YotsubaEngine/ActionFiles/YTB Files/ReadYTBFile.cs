@@ -5,11 +5,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
+#if YTB
+using static YotsubaEngine.Exceptions.GameWontRun;
 using YotsubaEngine.Core.System.YotsubaEngineUI;
+#endif
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Exceptions;
 using YotsubaEngine.Templates;
-using static YotsubaEngine.Exceptions.GameWontRun;
 
 namespace YotsubaEngine.ActionFiles.YTB_Files
 {
@@ -73,7 +75,9 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                         !File.Exists(Path.Combine(DevelopmentConfigPath, JSONGameName)) ||
                         !File.Exists(Path.Combine(DevelopmentConfigPath, JSONGameConfigName)))
                     {
+#if YTB
                         EngineUISystem.SendLog("[ReadYTBFiles] Archivos .ytb no encontrados. Creando archivos por defecto...");
+#endif
                         WriteYTBFile.CreateYTBGameFile();
                     }
                 }
@@ -109,7 +113,9 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                         }
                         catch (JsonException jsonEx)
                         {
+#if YTB
                             EngineUISystem.SendLog($"[ReadYTBFiles] Error parsing YTB file '{ytbFile}': {jsonEx.Message}");
+#endif
                             throw;
                         }
                     }
@@ -193,8 +199,9 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
             {
                 if (YTBGlobalState.IsDesktop)
                 {
+#if YTB
                     EngineUISystem.SendLog("[ReadYTBFiles] Archivo de juego vacío o no encontrado. Creando archivo por defecto...");
-
+#endif
                     var cameraEntity = new YTBEntity
                     {
                         Name = "Camera",
@@ -244,8 +251,10 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
             // Manejar configuración vacía o inexistente
             if (GameConfig == null)
             {
-                EngineUISystem.SendLog("[ReadYTBFiles] Archivo de configuración vacío o no encontrado. Creando configuración por defecto...");
 
+#if YTB
+                EngineUISystem.SendLog("[ReadYTBFiles] Archivo de configuración vacío o no encontrado. Creando configuración por defecto...");
+#endif
                 GameConfig = new YTBConfig
                 {
                     Author = "YourName",
@@ -265,8 +274,9 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                 }
             }
 
+#if YTB
             EngineUISystem.SendLog("Archivos leídos correctamente...");
-
+#endif
             return (GameInfo, GameConfig);
         }
         /// <summary>
@@ -276,7 +286,10 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
         /// <returns>Game info. Información del juego.</returns>
         internal static async Task<YTBGameInfo> ReadYTBGameFile()
 		{
-			EngineUISystem.SendLog("Leyendo Archivos del juego...");
+
+#if YTB
+            EngineUISystem.SendLog("Leyendo Archivos del juego...");
+#endif
 			var gameFilePath = Path.Combine(DevelopmentConfigPath, JSONGameName);
 
 			string jsonGameContent = await File.ReadAllTextAsync(gameFilePath);
@@ -300,7 +313,9 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 
 			YTBGameInfo GameInfo = JsonSerializer.Deserialize(jsonGameContent, YotsubaJsonContext.Default.YTBGameInfo);
 
-			EngineUISystem.SendLog("Archivos leídos correctamente...");
+#if YTB
+            EngineUISystem.SendLog("Archivos leídos correctamente...");
+#endif
 
 			return GameInfo;
 		}
@@ -333,21 +348,27 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 		/// <returns>Configuración del juego. <para>Game configuration.</para></returns>
 		public static async Task<YTBConfig> ReadYTBGameConfigFile()
 		{
-			EngineUISystem.SendLog("Leyendo Configuración del juego...");
+#if YTB
+            EngineUISystem.SendLog("Leyendo Configuración del juego...");
+#endif
 			var configFilePath = Path.Combine(DevelopmentConfigPath, JSONGameConfigName);
 
 			// Crear archivo de configuración si no existe
 			if (!File.Exists(configFilePath))
 			{
-				EngineUISystem.SendLog("[ReadYTBGameConfigFile] Archivo de configuración no encontrado. Creando archivo por defecto...");
-				WriteYTBFile.CreateYTBGameFile();
+#if YTB
+                EngineUISystem.SendLog("[ReadYTBGameConfigFile] Archivo de configuración no encontrado. Creando archivo por defecto...");
+#endif
+                WriteYTBFile.CreateYTBGameFile();
 			}
 
 			string jsonConfigContent = await File.ReadAllTextAsync(configFilePath);
 
 			YTBConfig GameConfig = JsonSerializer.Deserialize<YTBConfig>(jsonConfigContent, YotsubaJsonContext.Default.YTBConfig);
 
-			EngineUISystem.SendLog("Archivos leídos correctamente...");
+#if YTB
+            EngineUISystem.SendLog("Archivos leídos correctamente...");
+#endif
 
 			return GameConfig;
 		}

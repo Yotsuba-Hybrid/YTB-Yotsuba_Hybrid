@@ -10,7 +10,9 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using YotsubaEngine.ActionFiles.YTB_Files;
+#if YTB
 using YotsubaEngine.Core.System.YotsubaEngineUI;
+#endif
 using YotsubaEngine.Graphics;
 
 namespace YotsubaEngine.ActionFiles.XML_SpriteSheet_Files

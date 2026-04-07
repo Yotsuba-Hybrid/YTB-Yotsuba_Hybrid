@@ -82,8 +82,11 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
 
             ref ScriptComponent component = ref EntityManager.ScriptComponents[entity.Id];
 
+
+#if YTB
             try
-            {
+            { 
+#endif
                 if (component.ScriptLanguaje.TryGetValue(ScriptComponentType.CSHARP, out string scriptName))
                 {
                     string basePath = AppContext.BaseDirectory;
@@ -100,11 +103,13 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
 
                 }
 
+#if YTB
             }
             catch (Exception ex)
             {
-               _ = new GameWontRun(ex, GameWontRun.YTBErrors.ScriptHasError);
-			}
+                _ = new GameWontRun(ex, GameWontRun.YTBErrors.ScriptHasError);
+            } 
+#endif
         }
 
         /// <summary>
