@@ -3,7 +3,9 @@ using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.Contract;
+#if YTB
 using YotsubaEngine.Core.System.YotsubaEngineUI;
+#endif
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Events.YTBEvents;
 using YotsubaEngine.Exceptions;
@@ -47,7 +49,9 @@ namespace YotsubaEngine.Core.System.S_2D
 			EventManager = EventManager.Instance;
             EntityManager = @entities;
             InputManager = InputManager.Instance;
+#if YTB
             EngineUISystem.SendLog(typeof(ButtonSystem2D).Name + " Se inicio correctamente");
+#endif
         }
 
         /// <summary>

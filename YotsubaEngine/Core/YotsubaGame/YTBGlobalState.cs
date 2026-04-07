@@ -1,5 +1,4 @@
-﻿using Gum.DataTypes;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -17,7 +16,6 @@ namespace YotsubaEngine.Core.YotsubaGame
     /// </summary>
     public class YTBGlobalState 
     {
-        public static GumProjectSave GumProjectSave { get; set; }
         public static Platforms Platform { get; internal set; }
         public static (YTBGameInfo, YTBConfig) GameData { get; set; }
         public static GraphicsDeviceManager GraphicsDeviceManager { get; internal set; }
@@ -151,7 +149,7 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// Color del fondo del engine (configurable desde la UI).
         /// <para>Engine background color (configurable from the UI).</para>
         /// </summary>
-        public static Color EngineBackground { get; set; } = Color.Turquoise;
+        public static Color ColorBackground { get; set; } = Color.Turquoise;
 
         /// <summary>
         /// Instancia global del juego.

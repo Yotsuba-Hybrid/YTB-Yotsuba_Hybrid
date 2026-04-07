@@ -1,4 +1,5 @@
-﻿using Hexa.NET.ImGui;
+﻿#if YTB
+using Hexa.NET.ImGui;
 using System;
 using System.Collections.Generic;
 
@@ -103,3 +104,4 @@ public sealed class GetUniqueImGuiID
         _used.Clear();
     }
 }
+#endif

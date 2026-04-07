@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if YTB
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using YotsubaEngine.Core.Component.C_2D;
@@ -10,8 +11,7 @@ using YotsubaEngine.Core.YotsubaGame;
 
 namespace YotsubaEngine.Core.System.S_2D
 {
-//-:cnd:noEmit
-#if YTB
+
     /// <summary>
     /// Sistema que dibuja overlays de debug para visualizar colisiones, grids y otros elementos de ayuda.
     /// <para>System that draws debug overlays to visualize collisions, grids, and helper elements.</para>
@@ -31,7 +31,7 @@ namespace YotsubaEngine.Core.System.S_2D
         /// <param name="graphicsDevice">Dispositivo gráfico. <para>Graphics device.</para></param>
         public void InitializeSystem(EntityManager entityManager, GraphicsDevice graphicsDevice)
         {
-            EntityManager    = entityManager;
+            EntityManager = entityManager;
             YTBGame game = (YTBGame)YTBGame.Instance;
             _fontSystem = game.SceneManager.CurrentScene.FontSystem2D;
 
@@ -64,42 +64,42 @@ namespace YotsubaEngine.Core.System.S_2D
 
             if (effectiveCameraBounds == Rectangle.Empty && EntityManager?.Camera != null)
             {
-//-:cnd:noEmit
+                //-:cnd:noEmit
 #if YTB
                 bool canRenderUIElements = RenderSystem2D.IsGameActive || !YTBGlobalState.IsDesktop;
 #else
                 bool canRenderUIElements = !YTBGlobalState.IsDesktop;
 #endif
-//+:cnd:noEmit
+                //+:cnd:noEmit
 
                 float currentZoom =
-//-:cnd:noEmit
+                    //-:cnd:noEmit
 #if YTB
                     canRenderUIElements ?
 #endif
-//+:cnd:noEmit
+                    //+:cnd:noEmit
                     YTBGlobalState.CameraZoom
-//-:cnd:noEmit
+                    //-:cnd:noEmit
 #if YTB
                     : RenderSystem2D.EDITOR_SCALE_CAMERA
 #endif
-//+:cnd:noEmit
+                    //+:cnd:noEmit
                     ;
 
                 if (currentZoom <= 0.001f) currentZoom = 0.001f;
 
                 Vector2 offset =
-//-:cnd:noEmit
+                    //-:cnd:noEmit
 #if YTB
                     canRenderUIElements ?
 #endif
-//+:cnd:noEmit
+                    //+:cnd:noEmit
                     YTBGlobalState.OffsetCamera
-//-:cnd:noEmit
+                    //-:cnd:noEmit
 #if YTB
                     : new Vector2(RenderSystem2D.EDITOR_OFFSET_CAMERA_X, RenderSystem2D.EDITOR_OFFSET_CAMERA_Y)
 #endif
-//+:cnd:noEmit
+                    //+:cnd:noEmit
                     ;
 
                 ref var camTransform = ref GetTransformComponentsAsSpan()[EntityManager.Camera.EntityToFollow];
@@ -422,6 +422,5 @@ namespace YotsubaEngine.Core.System.S_2D
         {
         }
     }
-#endif
-//+:cnd:noEmit
 }
+#endif

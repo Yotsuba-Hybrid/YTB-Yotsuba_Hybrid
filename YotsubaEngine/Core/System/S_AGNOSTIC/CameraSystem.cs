@@ -4,7 +4,9 @@ using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.Contract;
 using YotsubaEngine.Core.System.S_2D;
+#if YTB
 using YotsubaEngine.Core.System.YotsubaEngineUI;
+#endif
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Events.YTBEvents;
 using YotsubaEngine.Exceptions;
@@ -18,11 +20,6 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
     /// <param name="graphicsDevice">Administrador de dispositivo gráfico. <para>Graphics device manager.</para></param>
     public class CameraSystem(GraphicsDeviceManager graphicsDevice) : ISystem
     {
-        /// <summary>
-        /// Obtiene el administrador de entidades actual.
-        /// <para>Gets the current entity manager.</para>
-        /// </summary>
-        public EntityManager EntityManager { get; private set; }
 
         /// <summary>
         /// Obtiene la instancia del administrador de eventos.
@@ -41,13 +38,15 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         /// <para>Initializes the camera system.</para>
         /// </summary>
         /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
-        public void InitializeSystem(EntityManager entities)
+        public override void InitializeSystem(EntityManager entities)
         {
 
 			EntityManager = entities;
             EventManager = EventManager.Instance;
             EventManager.Subscribe<OnCameraSet>(CameraSetEvent);
+#if YTB
             EngineUISystem.SendLog(typeof(CameraSystem).Name + " Se inicio correctamente");
+#endif
 
         }
 
@@ -66,7 +65,7 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         /// <para>Updates the active camera each frame.</para>
         /// </summary>
         /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
-        public void UpdateSystem(GameTime gameTime)
+        public override void UpdateSystem(GameTime gameTime)
         {
 //-:cnd:noEmit
 #if YTB
@@ -82,30 +81,5 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
             EntityManager.Camera.Update();
         }
 
-
-        /// <summary>
-        /// Hook de actualización compartida (no usado en este sistema).
-        /// <para>Shared entity update hook (unused in this system).</para>
-        /// </summary>
-        /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
-        /// <param name="time">Tiempo de juego. <para>Game time.</para></param>
-        public void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time)
-        {
-            //throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Hook de inicialización compartida (no usado en este sistema).
-        /// <para>Shared entity initialization hook (unused in this system).</para>
-        /// </summary>
-        /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
-        public void SharedEntityInitialize(ref Yotsuba Entidad)
-        {
-            //throw new NotImplementedException();
-        }
-
-        public void Dispose()
-        {
-        }
     }
 }

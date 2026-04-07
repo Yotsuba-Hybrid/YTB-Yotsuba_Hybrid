@@ -7,8 +7,11 @@ using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.S_2D;
 using YotsubaEngine.Core.System.S_3D;
 using YotsubaEngine.Core.System.S_AGNOSTIC;
+#if YTB
 using YotsubaEngine.Core.System.YotsubaEngineUI;
 using YotsubaEngine.Core.System.YTBDragAndDrop;
+#endif
+
 using YotsubaEngine.YTB_Toolkit;
 
 namespace YotsubaEngine.Core.YotsubaGame
@@ -105,6 +108,7 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// </summary>
         private TileMapSystem2D TilemapSystem;
 
+#if YTB
         /// <summary>
         /// Clase propia del engine (NO SE EJECUTA EN PRODUCCION) que coordina los subsistemas UI. Mantiene referencias compartidas
         /// (GameInfo, GuiRenderer, SelectedEntity, etc.) y delega el render a clases pequeñas.
@@ -116,8 +120,7 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// </summary>
         private DragAndDropSystem DragAndDropSystem;
 
-        //-:cnd:noEmit
-#if YTB
+   
         /// <summary>
         /// Sistema que permite arrastrar entidades con FontComponent2D usando Ctrl + Shift + Click Izquierdo.
         /// Solo disponible en modo DEBUG.
@@ -125,7 +128,7 @@ namespace YotsubaEngine.Core.YotsubaGame
         private FontDragSystem FontDragSystem;
 #endif
         //+:cnd:noEmit
-        #endregion
+#endregion
 
         /// <summary>
         /// Constructor que recibe los gráficos para pasárselos al sistema de cámara.
@@ -143,10 +146,13 @@ namespace YotsubaEngine.Core.YotsubaGame
             RenderSystem3D = new RenderSystem3D();
             CameraSystem = new CameraSystem(_graphics);
             InputSystem = new InputSystem();
+#if YTB
             EngineUISystem = new EngineUISystem();
+            DragAndDropSystem = new();
+
+#endif
             ScriptSystem = new();
             TilemapSystem = new();
-            DragAndDropSystem = new();
             FontSystem2D = new();
             SystemBuilder = new SystemBuilder();
             //-:cnd:noEmit
@@ -232,9 +238,10 @@ namespace YotsubaEngine.Core.YotsubaGame
                 {
                     ScriptSystem.SharedEntityForEachUpdate(ref entity, gameTime);
                     SystemBuilder.SharedEntityForEachUpdate(ref entity, gameTime);
-                    DragAndDropSystem.SharedEntityForEachUpdate(ref entity, gameTime);
                     //-:cnd:noEmit
 #if YTB
+                    DragAndDropSystem.SharedEntityForEachUpdate(ref entity, gameTime);
+
                     FontDragSystem.SharedEntityForEachUpdate(ref entity, gameTime);
 #endif
                     //+:cnd:noEmit
@@ -248,9 +255,9 @@ namespace YotsubaEngine.Core.YotsubaGame
             }
             catch (Exception ex)
             {
-                EngineUISystem.SendLog($"Error in Scene.Update: {ex.Message}");
                 //-:cnd:noEmit
 #if YTB
+                EngineUISystem.SendLog($"Error in Scene.Update: {ex.Message}");
                 EngineUISystem.SendLog($"StackTrace: {ex.StackTrace}");
 #endif
                 //+:cnd:noEmit
@@ -265,10 +272,6 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// <param name="_spriteBatch">SpriteBatch compartido. <para>Shared sprite batch.</para></param>
         public void Draw(GameTime gameTime, SpriteBatch _spriteBatch)
         {
-
-
-
-
             if (EntityManager.YotsubaEntities != null && EntityManager.YotsubaEntities.Count > 0)
             {
                 TilemapSystem.UpdateSystem(gameTime, _spriteBatch);
@@ -290,8 +293,6 @@ namespace YotsubaEngine.Core.YotsubaGame
             {
                 EngineUISystem.UpdateSystem(_spriteBatch, gameTime);
             }
-
-
 #endif
             //+:cnd:noEmit
         }
@@ -338,7 +339,9 @@ namespace YotsubaEngine.Core.YotsubaGame
             RenderSystem3D.Dispose();
             CameraSystem.Dispose();
             InputSystem.Dispose();
+#if YTB
             DragAndDropSystem.Dispose();
+#endif
             FontSystem2D.Dispose();
         }
 

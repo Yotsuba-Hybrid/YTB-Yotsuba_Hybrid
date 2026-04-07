@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if YTB
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Immutable;
@@ -268,3 +269,4 @@ namespace YotsubaEngine.Core.System.YTBDragAndDrop
 #endif
 //+:cnd:noEmit
 }
+#endif

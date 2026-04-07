@@ -5,7 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+#if YTB
 using YotsubaEngine.Core.System.YotsubaEngineUI;
+#endif
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Templates;
 
@@ -53,13 +55,18 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
         /// </summary>
         public static void CreateYTBGameFile()
         {
+#if YTB
             try
-            {
+            { 
+#endif
                 // Asegurar que la carpeta GameConfig existe
                 if (!Directory.Exists(DevelopmentConfigPath))
                 {
                     Directory.CreateDirectory(DevelopmentConfigPath);
+#if YTB
                     EngineUISystem.SendLog($"[CreateYTBGameFile] Carpeta GameConfig creada en: {DevelopmentConfigPath}");
+
+#endif
                 }
 
                 var gameFilePath = Path.Combine(DevelopmentConfigPath, JSONGameName);
@@ -69,8 +76,11 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                 // Crear archivo del juego con escena y cámara por defecto
                 if (!File.Exists(gameFilePath))
                 {
+
+#if YTB
                     EngineUISystem.SendLog($"[CreateYTBGameFile] Creando archivo de juego por defecto: {JSONGameName}");
-                    
+
+#endif
                     // Crear entidad de cámara
                     var cameraEntity = EntityYTBXmlTemplate.GenerateNew();
                     cameraEntity.Name = "Camera";
@@ -112,14 +122,20 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                     };
 
                     File.WriteAllText(gameFilePath, JsonSerializer.Serialize(defaultGameInfo, YotsubaJsonContext.Default.YTBGameInfo));
+
+#if YTB
                     EngineUISystem.SendLog($"[CreateYTBGameFile] Archivo {JSONGameName} creado exitosamente con escena y cámara por defecto.");
+
+#endif
                 }
 
                 // Crear archivo de configuración por defecto
                 if (!File.Exists(configFilePath))
                 {
+#if YTB
                     EngineUISystem.SendLog($"[CreateYTBGameFile] Creando archivo de configuración por defecto: {JSONGameConfigName}");
-                    
+
+#endif
                     var defaultConfig = new YTBConfig
                     {
                         Author = "YourName",
@@ -128,24 +144,37 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                     };
 
                     File.WriteAllText(configFilePath, JsonSerializer.Serialize(defaultConfig, YotsubaJsonContext.Default.YTBConfig));
+#if YTB
                     EngineUISystem.SendLog($"[CreateYTBGameFile] Archivo {JSONGameConfigName} creado exitosamente.");
+
+#endif
                 }
 
                 // Crear archivo de historial vacío si no existe
                 if (!File.Exists(historyFilePath))
                 {
-                    EngineUISystem.SendLog($"[CreateYTBGameFile] Creando archivo de historial por defecto: {JSONHistoryGameXMLName}");
                     File.WriteAllText(historyFilePath, JsonSerializer.Serialize(new List<YTBEngineHistory>(), YotsubaJsonContext.Default.ListYTBEngineHistory));
-                    EngineUISystem.SendLog($"[CreateYTBGameFile] Archivo {JSONHistoryGameXMLName} creado exitosamente.");
+
+#if YTB
+                    EngineUISystem.SendLog($"[CreateYTBGameFile] Creando archivo de historial por defecto: {JSONHistoryGameXMLName}");
+
+                    EngineUISystem.SendLog($"[CreateYTBGameFile] Archivo {JSONHistoryGameXMLName} creado exitosamente."); 
+#endif
+
                 }
 
+#if YTB
                 EngineUISystem.SendLog("[CreateYTBGameFile] Todos los archivos necesarios están presentes.");
+
             }
             catch (Exception ex)
             {
                 EngineUISystem.SendLog($"[CreateYTBGameFile] ERROR: No se pudieron crear los archivos del juego. Excepción: {ex.Message}");
             }
-        }
+#endif
+
+
+            }
 
         /// <summary>
         /// Updates the game data file.
@@ -182,7 +211,10 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                     existingHistory.Add(history);
                     File.WriteAllText(historyFilePath,
                         JsonSerializer.Serialize<List<YTBEngineHistory>>(existingHistory, YotsubaJsonContext.Default.ListYTBEngineHistory));
+#if YTB
                     EngineUISystem.SendLog($"CAMBIOS GUARDADOS" + " --- " + fecha);
+
+#endif
                     return;
                 }
                 else
@@ -190,7 +222,10 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                     File.WriteAllText(historyFilePath,
                     JsonSerializer.Serialize<List<YTBEngineHistory>>([history], YotsubaJsonContext.Default.ListYTBEngineHistory));
 
+#if YTB
                     EngineUISystem.SendLog($"CAMBIOS GUARDADOS" + " --- " + fecha);
+
+#endif
                     return;
                 }
             }
@@ -226,7 +261,10 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
             var game = GameFile.Scene.Where(i => i.Name == sceneName).FirstOrDefault();
             if(game == null)
             {
+#if YTB
                 EngineUISystem.SendLog($"ERRORR: LA ESCENA {sceneName} NO EXISTE!!!");
+
+#endif
                 return;
             }
 
@@ -234,7 +272,10 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
             {
                 if(game.Entities.Any(x => x.Name == name))
                 {
+#if YTB
                     EngineUISystem.SendLog($"ERRORR: EL NOMBRE {name} YA FUE ASOCIADO A UNA ENTIDAD!!!");
+
+#endif
                     return;
                 }
             }
@@ -246,7 +287,10 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 
             EditYTBGameFile(GameFile);
 
+#if YTB
             EngineUISystem.SendLog($"Entidad creada correctamente: {name} con {game.Entities.FirstOrDefault(x => x.Name == name).ComponentsCount} componentes");
+
+#endif
         }
 
         /// <summary>
@@ -260,14 +304,21 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
             var GameFile = await ReadYTBFile.ReadYTBGameFile();
             if (GameFile.Scene.Any(Scene => Scene.Name == name))
             {
+#if YTB
                 EngineUISystem.SendLog($"¡¡¡ERRORR: NOMBRE {name} -------- Este nombre ya esta siendo usado por otra escena --------!!!");
+
+#endif
                 return;
             }
 
             GameFile.Scene.Add(new YTBScene() { Name = name, Entities = [] });
 
             EditYTBGameFile(GameFile);
+#if YTB
+
             EngineUISystem.SendLog($"Escena creada correctamente: {name} con {GameFile.Scene.FirstOrDefault(x => x.Name == name).EntitiesCount} entidades");
+
+#endif
         }
 
         /// <summary>
@@ -288,13 +339,20 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 
             if (entity == null)
             {
+#if YTB
                 EngineUISystem.SendLog($"¡¡¡ERRORR: NOMBRE {entityName} -------- No hay ninguna entidad con este nombre --------!!!");
+
+#endif
                 return;
             }
 
             if (entity.Components.Any(x => x.ComponentName == ComponentTypeString))
             {
+
+#if YTB
                 EngineUISystem.SendLog($"¡¡¡ERRORR: NOMBRE {entityName} -------- Esta entidad ya tenia el componente {ComponentTypeString} --------!!!");
+
+#endif
                 return;
             }
 
@@ -305,8 +363,11 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
             });
 
             EditYTBGameFile(GameFile);
+#if YTB
 
             EngineUISystem.SendLog($"Componente agregado correctamente: {entityName} con {ComponentTypeString} listo!");
+
+#endif
         }
 
         /// <summary>
@@ -330,7 +391,10 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
             var scene = game.Scene.FirstOrDefault(x => x.Name == sceneName);
             if (scene == null)
             {
+#if YTB
                 EngineUISystem.SendLog($"ERROR: No se encontró la escena '{sceneName}'.");
+
+#endif
                 return;
             }
 
@@ -338,7 +402,10 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
             var entity = scene.Entities.FirstOrDefault(x => x.Name == entityName);
             if (entity == null)
             {
+#if YTB
                 EngineUISystem.SendLog($"ERROR: No hay ninguna entidad llamada '{entityName}' en la escena '{sceneName}'.");
+
+#endif
                 return;
             }
 
@@ -346,7 +413,10 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
             var component = entity.Components.FirstOrDefault(x => x.ComponentName == componentType);
             if (component == null)
             {
+#if YTB
                 EngineUISystem.SendLog($"ERROR: No se encontró el componente '{componentType}' en la entidad '{entityName}'.");
+
+#endif
                 return;
             }
 
@@ -367,7 +437,10 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
             }
 
             EditYTBGameFile(game);
+#if YTB
             EngineUISystem.SendLog($"Componente editado correctamente: {entityName} con {componentType} listo y {entity.Components.FirstOrDefault(x => x.ComponentName == componentType).PropiedadesCount} propiedades!");
+
+#endif
         }
 
 

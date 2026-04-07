@@ -1,3 +1,41 @@
 {
-  "UserEvents": {}
+  "UserEvents": {
+    "63614ffde2d350df40e2c69689693d0612835b1370e0e2037d4d198939bb5184": [
+      {
+        "NewName": "Mobile.ButtonMenu",
+        "OldName": "Mobile.ButtonIconInstance",
+        "ElementType": "Screens",
+        "EventType": 7,
+        "TimestampUtc": "2026-04-06T13:03:19.0485554Z"
+      },
+      {
+        "NewName": "Mobile.ButtonCreateProject",
+        "OldName": "Mobile.ButtonIconInstance1",
+        "ElementType": "Screens",
+        "EventType": 7,
+        "TimestampUtc": "2026-04-06T13:03:34.6623128Z"
+      },
+      {
+        "NewName": "Mobile.ProjectSelectorComboBox",
+        "OldName": "Mobile.ComboBoxInstance",
+        "ElementType": "Screens",
+        "EventType": 7,
+        "TimestampUtc": "2026-04-06T13:03:43.5231331Z"
+      },
+      {
+        "NewName": "Mobile.ProjectSelectedTitle",
+        "OldName": "Mobile.LabelInstance1",
+        "ElementType": "Screens",
+        "EventType": 7,
+        "TimestampUtc": "2026-04-06T13:03:54.2764434Z"
+      },
+      {
+        "NewName": null,
+        "OldName": "Mobile",
+        "ElementType": "Screens",
+        "EventType": 1,
+        "TimestampUtc": "2026-04-06T13:54:24.573369Z"
+      }
+    ]
+  }
 }

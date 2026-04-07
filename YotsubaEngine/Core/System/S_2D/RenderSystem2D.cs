@@ -5,7 +5,9 @@ using YotsubaEngine.Core.Component.C_2D;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.Contract;
+#if YTB
 using YotsubaEngine.Core.System.YotsubaEngineUI;
+#endif
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Events.YTBEvents;
 using YotsubaEngine.Events.YTBEvents.EngineEvents;
@@ -77,7 +79,9 @@ namespace YotsubaEngine.Core.System.S_2D
 //+:cnd:noEmit
             EventManager = EventManager.Instance;
             EntityManager = entities;
+#if YTB
             EngineUISystem.SendLog(typeof(RenderSystem2D).Name + " Se inicio correctamente");
+#endif
 
 
 

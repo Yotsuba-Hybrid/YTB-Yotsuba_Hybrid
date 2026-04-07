@@ -1,4 +1,5 @@
-﻿using Hexa.NET.ImGui;
+﻿#if YTB
+using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using YotsubaEngine.Core.Entity;
@@ -7,8 +8,7 @@ using Num = System.Numerics;
 
 namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 {
-//-:cnd:noEmit
-#if YTB
+
     /// <summary>
     /// UI para controlar el debug overlay del juego (solo disponible en DEBUG).
     /// <para>UI to control the game's debug overlay (only available in DEBUG).</para>
@@ -231,6 +231,6 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
             ImGui.End();
         }
     }
-#endif
 //+:cnd:noEmit
 }
+#endif

@@ -27,6 +27,7 @@
 		<PackageReference Include="MonoGame.Tool.FFprobe" Version="7.0.0.10" />
 	</ItemGroup>
 	<ItemGroup>
+		<ProjectReference Include="..\..\YotsubaEngine\YotsubaEngine.csproj" />
 		<ProjectReference Include="..\..\YTBContentBuilder\YTBContentBuilder.csproj" />
 	</ItemGroup>
 </Project>

@@ -16,6 +16,18 @@
 	  <PackageReference Include="AvaloniaInside.MonoGame" Version="1.0.2" />
 
   </ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGuizmo\Hexa.NET.ImGuizmo.csproj" />
+		<ProjectReference Include="..\..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui\Hexa.NET.ImGui.csproj" />
+		<!--<PackageReference Include="Hexa.NET.ImGui" Version="2.2.4" />
+		<PackageReference Include="Hexa.NET.ImGuizmo" Version="2.2.4" />
+		<PackageReference Include="Hexa.NET.ImNodes" Version="2.2.4" />
+		<PackageReference Include="Hexa.NET.ImPlot" Version="2.2.4" />-->
+		<ProjectReference Include="..\..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImNodes\Hexa.NET.ImNodes.csproj" />
+		<ProjectReference Include="..\..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImPlot\Hexa.NET.ImPlot.csproj" />
+		<ProjectReference Include="..\..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui.Backends\Hexa.NET.ImGui.Backends.csproj" />
+	</ItemGroup>
   <ItemGroup>
 	  <ProjectReference Include="..\..\YotsubaEngine\YotsubaEngine.csproj" />
 

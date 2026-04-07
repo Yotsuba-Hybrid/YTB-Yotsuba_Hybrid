@@ -6,7 +6,9 @@ using YotsubaEngine.Core.Component.C_3D;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.Contract;
+#if YTB
 using YotsubaEngine.Core.System.YotsubaEngineUI;
+#endif
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Exceptions;
 using YotsubaEngine.Graphics;
@@ -49,7 +51,9 @@ namespace YotsubaEngine.Core.System.S_3D
 
             Graphics3D = new();
             EventManager = EventManager.Instance;
+#if YTB
             EngineUISystem.SendLog(typeof(RenderSystem3D).Name + " Se inicio correctamente");
+#endif
 
         }
 

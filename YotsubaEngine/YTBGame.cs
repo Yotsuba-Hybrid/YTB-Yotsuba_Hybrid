@@ -1,24 +1,25 @@
-﻿using Hexa.NET.ImGui;
-using Hexa.NET.ImGuizmo;
-using Hexa.NET.ImNodes;
-using Hexa.NET.ImPlot;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.IO;
 using System.Text;
-using System.Threading.Tasks;
-using YotsubaEngine.ActionFiles.YTB_Files;
-using YotsubaEngine.Audio;
-using YotsubaEngine.Core.System.GumUI;
+#if YTB
 using YotsubaEngine.Core.System.YotsubaEngineUI;
 using YotsubaEngine.Core.System.YotsubaEngineUI.UI;
-using YotsubaEngine.Core.System.YTBDragAndDrop;
-using YotsubaEngine.Core.YotsubaGame;
-using YotsubaEngine.Events.YTBEvents.EngineEvents;
-using YotsubaEngine.Graphics;
 using YotsubaEngine.Graphics.ImGuiNet;
+using System.Threading.Tasks;
+using YotsubaEngine.Core.System.YTBDragAndDrop;
+using YotsubaEngine.Events.YTBEvents.EngineEvents;
+using Hexa.NET.ImGui;
+using Hexa.NET.ImPlot;
+using Hexa.NET.ImNodes;
+using Hexa.NET.ImGuizmo;
+#endif
+using YotsubaEngine.ActionFiles.YTB_Files;
+using YotsubaEngine.Audio;
+using YotsubaEngine.Core.YotsubaGame;
+using YotsubaEngine.Graphics;
 using YotsubaEngine.Scripting;
 namespace YotsubaEngine
 {
@@ -88,12 +89,13 @@ namespace YotsubaEngine
         /// </summary>
         public static IModelRegistry ModelRegistry { get; set; }
 
+#if YTB
         /// <summary>
         /// Obtiene o establece la instancia del renderizador ImGui.
         /// <para>Gets or sets the ImGui renderer instance.</para>
         /// </summary>
-        public static ImGuiRenderer GuiRenderer { get; set; }
-
+        internal static ImGuiRenderer GuiRenderer { get; set; }
+#endif
         /// <summary>
         /// Crea una nueva instancia anfitriona del juego Yotsuba.
         /// <para>Creates a new Yotsuba game host instance.</para>
@@ -205,12 +207,13 @@ namespace YotsubaEngine
         /// </summary>
         protected override void Initialize()
         {
-
             YTBGlobalState.GraphicsDevice = GraphicsDevice;
 
-
-            //if(YTBGlobalState.IsDesktop && YTBGlobalState.EngineEnabled)
+            if (YTBGlobalState.IsDesktop && YTBGlobalState.EngineEnabled)
             {
+
+#if YTB
+
                 GuiRenderer = new ImGuiRenderer(this);
                 // ImGui setup (fonts, theme)
                 var io = ImGui.GetIO();
@@ -233,13 +236,9 @@ namespace YotsubaEngine
                     unsafe
                     {
 
-#if !YTB
-                        io.Fonts.AddFontFromFileTTF(fuentePrincipal, platforms == Platforms.Avalonia_GL ? 20.0f : 24.0f, null, io.Fonts.GetGlyphRangesDefault());
-#else
                     // 1. Cargar la fuente principal (texto)
                     // Usamos GetGlyphRangesDefault() para que cargue el alfabeto normal (ASCII).
                     io.Fonts.AddFontFromFileTTF(fuentePrincipal, platforms == Platforms.Avalonia_GL ? 20.0f : 24.0f, null, io.Fonts.GetGlyphRangesDefault());
-#endif
 
                         // 2. Crear la configuración para la fuente de íconos
                         ImFontConfigPtr config = ImGui.ImFontConfig();
@@ -307,13 +306,10 @@ namespace YotsubaEngine
                     // Le pasamos el contexto principal de ImGui a ImGuizmo para que sepa dónde dibujar
                     ImGuizmo.SetImGuiContext(guiContext);
                 }
+#endif
 
-                // Nota: ImGuizmo normalmente NO requiere un "CreateContext()" ni "SetCurrentContext()".
-                if (!YTBGlobalState.IsMobile)
-                {
-                    WriteYTBFile.CreateYTBGameFile();
-                }
-                // Configurar el título de la ventana desde YTBConfig
+                WriteYTBFile.CreateYTBGameFile();
+                
                 try
                 {
                     YTBConfig config = YTBGlobalState.GameData.Item2;
@@ -329,7 +325,9 @@ namespace YotsubaEngine
                 }
                 catch (Exception ex)
                 {
+#if YTB
                     EngineUISystem.SendLog($"[YTBGame] No se pudo cargar el nombre del juego desde la configuración: {ex.Message}");
+#endif
                     Window.Title = "Yotsuba Engine";
                 }
             }
@@ -367,8 +365,12 @@ namespace YotsubaEngine
         /// </summary>
         protected override void LoadContent()
         {
+#if YTB
+
             try
             {
+
+#endif
                 YTBGlobalState.GraphicsDevice = GraphicsDevice;
                 _spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -379,11 +381,14 @@ namespace YotsubaEngine
                 SceneManager = YTBFileToGameData.GenerateSceneManager(_graphics);
 
                 SceneManager.CurrentScene.Initialize(Content);
-            }
+#if YTB
+        }
             catch (Exception ex)
             {
                 EngineUISystem.SendLog($"[YTBGame] Error al cargar el contenido del juego: {ex.Message}");
             }
+#endif
+
 
             base.LoadContent();
         }
@@ -395,8 +400,7 @@ namespace YotsubaEngine
         protected override void Update(GameTime gameTime)
         {
             //-:cnd:noEmit
-#if YOTSUBA
-            // Exit the game if the Back button (GamePad) or Escape key (Keyboard) is pressed.
+#if YTB
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
                 || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
@@ -415,9 +419,7 @@ namespace YotsubaEngine
         protected override void Draw(GameTime gameTime)
         {
 
-            //GraphicsDevice.Clear(Color.DarkOrange);
-            //GraphicsDevice.Clear(Color.BlanchedAlmond);
-            GraphicsDevice.Clear(YTBGlobalState.EngineBackground);
+            GraphicsDevice.Clear(YTBGlobalState.ColorBackground);
             SceneManager.CurrentScene.Draw(gameTime, _spriteBatch);
 
             base.Draw(gameTime);

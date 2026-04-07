@@ -22,13 +22,13 @@ namespace SandBoxGame.Core
         /// Ancho de la ventana del juego. En desarrollo, se establece en 1920x1080 para facilitar la depuración en monitores de escritorio.
         /// <para>Game window width. In development it is set to 1920x1080 for easier debugging on desktop monitors.</para>
         /// </summary>
-        public const int WINDOW_WIDTH = 480;
+        public const int WINDOW_WIDTH = 1920;
 
         /// <summary>
         /// Alto de la ventana del juego. En desarrollo, se establece en 1920x1080 para facilitar la depuración en monitores de escritorio.
         /// <para>Game window height. In development it is set to 1920x1080 for easier debugging on desktop monitors.</para>
         /// </summary>
-        public const int WINDOW_HEIGHT = 720;
+        public const int WINDOW_HEIGHT = 1080;
 
         /// <summary>
         /// Indica si el juego se inicia en pantalla completa.
@@ -68,9 +68,7 @@ namespace SandBoxGame.Core
         /// <para>Initializes a new game instance and configures services and rendering.</para>
         /// </summary>
         public YTBProgram(Platforms platform) : base(platform, IS_MOUSE_VISIBLE)
-        {
-
-
+        {            
             if (platform is not Platforms.Avalonia_GL)
             {
                 /// Esta propiedad no es compatible con Avalonia_GL, así que solo se aplica en otras plataformas.
@@ -177,7 +175,7 @@ namespace SandBoxGame.Core
 
 
             // Configure screen orientations.
-            _graphics.SupportedOrientations = DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight;
+            //_graphics.SupportedOrientations = DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight;
 
             if (YTBGlobalState.Platform is not Platforms.Avalonia_GL)
             {
