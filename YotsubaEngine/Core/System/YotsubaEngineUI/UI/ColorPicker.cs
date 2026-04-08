@@ -1,4 +1,4 @@
-﻿
+﻿#if YTB
 using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework;
 using System;
@@ -14,7 +14,6 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
     /// </summary>
     public static class ColorPicker
     {
-        // Renderiza un combo con todos los colores estáticos de Microsoft.Xna.Framework.Color
         /// <summary>
         /// Renderiza un combo con todos los colores estáticos de XNA.
         /// <para>Renders a combo box with all static XNA colors.</para>
@@ -283,3 +282,4 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
     }
 
 }
+#endif

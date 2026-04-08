@@ -1,0 +1,223 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<LangVersion>12.0</LangVersion>
+		<Platform>AnyCPU</Platform>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>GumCommon</Title>
+		<Description>Flexible layout tool for graphics in any .NET environment</Description>
+		<PackageId>FlatRedBall.GumCommon</PackageId>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+		<Version>2026.3.28.2</Version>
+
+
+
+		<NoWarn>1591</NoWarn>
+
+
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+		<LangVersion>12.0</LangVersion>
+		<Nullable>enable</Nullable>
+		<Configurations>Debug;Release;Release_No_Diagnostics</Configurations>
+		<RootNamespace>Gum</RootNamespace>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' != 'Release_No_Diagnostics'">
+		<DefineConstants>$(DefineConstants);FULL_DIAGNOSTICS</DefineConstants>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Include="..\GumDataTypes\Behaviors\BehaviorInstanceSave.cs" Link="Behaviors\BehaviorInstanceSave.cs" />
+		<Compile Include="..\GumDataTypes\Behaviors\BehaviorReference.cs" Link="Behaviors\BehaviorReference.cs" />
+		<Compile Include="..\GumDataTypes\Behaviors\BehaviorSave.cs" Link="Behaviors\BehaviorSave.cs" />
+		<Compile Include="..\GumDataTypes\Behaviors\ElementBehaviorReference.cs" Link="Behaviors\ElementBehaviorReference.cs" />
+		<Compile Include="..\GumDataTypes\Behaviors\StandardFormsBehaviorNames.cs" Link="Behaviors\StandardFormsBehaviorNames.cs" />
+		<Compile Include="..\GumDataTypes\ComponentSave.cs" Link="DataTypes\ComponentSave.cs" />
+		<Compile Include="..\GumDataTypes\CustomPropertySave.cs" Link="DataTypes\CustomPropertySave.cs" />
+		<Compile Include="..\GumDataTypes\DimensionUnitType.cs" Link="DataTypes\DimensionUnitType.cs" />
+		<Compile Include="..\GumDataTypes\GumSyntaxVersionAttribute.cs" Link="DataTypes\GumSyntaxVersionAttribute.cs" />
+		<Compile Include="..\GumDataTypes\ElementReference.cs" Link="DataTypes\ElementReference.cs" />
+		<Compile Include="..\GumDataTypes\Serialization\GumFileSerializer.cs" Link="DataTypes\GumFileSerializer.cs" />
+		<Compile Include="..\GumDataTypes\ElementSave.cs" Link="DataTypes\ElementSave.cs" />
+		<Compile Include="..\GumDataTypes\EventSave.cs" Link="DataTypes\EventSave.cs" />
+		<Compile Include="..\GumDataTypes\GuideRectangle.cs" Link="DataTypes\GuideRectangle.cs" />
+		<Compile Include="..\GumDataTypes\FontGeneratorType.cs" Link="DataTypes\FontGeneratorType.cs" />
+		<Compile Include="..\GumDataTypes\GumProjectSave.cs" Link="DataTypes\GumProjectSave.cs" />
+		<Compile Include="..\GumDataTypes\IInstanceContainer.cs" Link="DataTypes\IInstanceContainer.cs" />
+		<Compile Include="..\GumDataTypes\InstanceSave.cs" Link="DataTypes\InstanceSave.cs" />
+		<Compile Include="..\GumDataTypes\IStateContainer.cs" Link="DataTypes\IStateContainer.cs" />
+		<Compile Include="..\GumDataTypes\NamedRectangle.cs" Link="DataTypes\NamedRectangle.cs" />
+		<Compile Include="..\GumDataTypes\SaveClasses\AnimatedStateSave.cs" Link="DataTypes\AnimatedStateSave.cs" />
+		<Compile Include="..\GumDataTypes\SaveClasses\AnimationReferenceSave.cs" Link="DataTypes\AnimationReferenceSave.cs" />
+		<Compile Include="..\GumDataTypes\SaveClasses\AnimationSave.cs" Link="DataTypes\AnimationSave.cs" />
+		<Compile Include="..\GumDataTypes\SaveClasses\ElementAnimationReferenceSave.cs" Link="DataTypes\ElementAnimationReferenceSave.cs" />
+		<Compile Include="..\GumDataTypes\SaveClasses\ElementAnimationsSave.cs" Link="DataTypes\ElementAnimationsSave.cs" />
+		<Compile Include="..\GumDataTypes\SaveClasses\NamedEventSave.cs" Link="DataTypes\NamedEventSave.cs" />
+		<Compile Include="..\GumDataTypes\ScreenSave.cs" Link="DataTypes\ScreenSave.cs" />
+		<Compile Include="..\GumDataTypes\StandardElementSave.cs" Link="DataTypes\StandardElementSave.cs" />
+		<Compile Include="..\GumDataTypes\UnitConverter.cs" Link="DataTypes\UnitConverter.cs" />
+		<Compile Include="..\GumDataTypes\Variables\IVariableFinder.cs" Link="DataTypes\IVariableFinder.cs" />
+		<Compile Include="..\GumDataTypes\Variables\StateSave.cs" Link="DataTypes\StateSave.cs" />
+		<Compile Include="..\GumDataTypes\Variables\StateSaveCategory.cs" Link="DataTypes\StateSaveCategory.cs" />
+		<Compile Include="..\GumDataTypes\Variables\VariableListSave.cs" Link="DataTypes\VariableListSave.cs" />
+		<Compile Include="..\GumDataTypes\Variables\VariableSave.cs" Link="DataTypes\VariableSave.cs" />
+		<Compile Include="..\GumRuntime\BbCodeParser.cs" Link="Runtime\BbCodeParser.cs" />
+		<Compile Include="..\GumRuntime\BindableGue.cs" Link="BindableGue.cs" />
+		<Compile Include="..\GumRuntime\ElementSaveExtensions.GumRuntime.cs" Link="Wireframe\ElementSaveExtensions.GumRuntime.cs" />
+		<Compile Include="..\GumRuntime\InstanceSaveExtensionMethods.GumRuntime.cs" Link="Wireframe\InstanceSaveExtensionMethods.GumRuntime.cs" />
+		<Compile Include="..\GumRuntime\InteractiveGue.cs" Link="InteractiveGue.cs" />
+		<Compile Include="..\Gum\Graphics\Animation\Content\AnimationChainListSave.cs" Link="Animation\AnimationChainListSave.cs" />
+		<Compile Include="..\Gum\Graphics\Animation\Content\AnimationChainSave.cs" Link="Animation\AnimationChainSave.cs" />
+		<Compile Include="..\Gum\Graphics\Animation\Content\AnimationFrameSave.cs" Link="Animation\AnimationFrameSave.cs" />
+		<Compile Include="..\Gum\Managers\CommonValidationError.cs" Link="Managers\CommonValidationError.cs" />
+		<Compile Include="..\Gum\Managers\INameVerifier.cs" Link="Managers\INameVerifier.cs" />
+		<Compile Include="..\Gum\Managers\ObjectFinder.cs" Link="Managers\ObjectFinder.cs" />
+		<Compile Include="..\Gum\Mvvm\ViewModel.cs" Link="Mvvm\ViewModel.cs" />
+		<Compile Include="..\RenderingLibrary\Content\IContentLoader.cs" Link="Content\IContentLoader.cs" />
+		<Compile Include="..\RenderingLibrary\Graphics\Fonts\BmfcSave.cs" Link="Content\BmfcSave.cs" />
+		<Compile Include="..\RenderingLibrary\Graphics\Fonts\IRuntimeFontService.cs" Link="Content\IRuntimeFontService.cs" />
+		<Compile Include="..\RenderingLibrary\Graphics\Fonts\ParsedFontFile.cs" Link="RenderingLibrary\ParsedFontFile.cs" />
+		<Compile Include="..\RenderingLibrary\Graphics\IAnimatable.cs" Link="RenderingLibrary\IAnimatable.cs" />
+		<Compile Include="..\RenderingLibrary\Graphics\InvisibleRenderable.cs" Link="RenderingLibrary\InvisibleRenderable.cs" />
+		<Compile Include="..\RenderingLibrary\Graphics\IRenderable.cs" Link="RenderingLibrary\IRenderable.cs" />
+		<Compile Include="..\RenderingLibrary\Graphics\IRenderer.cs" Link="RenderingLibrary\IRenderer.cs" />
+		<Compile Include="..\RenderingLibrary\Graphics\ISetClipsChildren.cs" Link="RenderingLibrary\ISetClipsChildren.cs" />
+		<Compile Include="..\RenderingLibrary\Graphics\IText.cs" Link="RenderingLibrary\IText.cs" />
+		<Compile Include="..\RenderingLibrary\Graphics\IWrappedText.cs" Link="RenderingLibrary\IWrappedText.cs" />
+		<Compile Include="..\RenderingLibrary\Graphics\ITextureCoordinate.cs" Link="RenderingLibrary\ITextureCoordinate.cs" />
+		<Compile Include="..\RenderingLibrary\Graphics\NineSliceExtensions.cs" Link="RenderingLibrary\NineSliceExtensions.cs" />
+		<Compile Include="..\RenderingLibrary\Graphics\RenderableBase.cs" Link="RenderingLibrary\RenderableBase.cs" />
+		<Compile Include="..\RenderingLibrary\Graphics\RendererSettings.cs" Link="RenderingLibrary\RendererSettings.cs" />
+		<Compile Include="..\RenderingLibrary\ISystemManagers.cs" Link="RenderingLibrary\ISystemManagers.cs" />
+		<Compile Include="..\Runtimes\SkiaGum\Content\LoaderManager.cs" Link="Content\LoaderManager.cs" />
+		<Compile Include="..\ToolsUtilities\**\*.cs" Link="Utilities\%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Remove="..\ToolsUtilities\obj\**" />
+	  <Compile Remove="..\ToolsUtilities\Properties\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Content\" />
+		<Folder Include="Managers\" />
+		<Folder Include="Mvvm\" />
+		<Folder Include="Animation\" />
+		<Folder Include="Behaviors\" />
+		<Folder Include="DataTypes\" />
+		<Folder Include="Utilities\" />
+		<Folder Include="RenderingLibrary\" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Include="..\Gum\DataTypes\BehaviorSaveExtensionMethods.cs">
+			<Link>DataTypes\BehaviorSaveExtensionMethods.cs</Link>
+		</Compile>
+		<Compile Include="..\Gum\DataTypes\ComponentSaveExtensionMethods.cs">
+			<Link>DataTypes\ComponentSaveExtensionMethods.cs</Link>
+		</Compile>
+		<Compile Include="..\Gum\DataTypes\ElementSaveExtensionMethods.cs">
+			<Link>DataTypes\ElementSaveExtensionMethods.cs</Link>
+		</Compile>
+
+		<Compile Include="..\Gum\DataTypes\InstanceSaveExtensionMethods.cs">
+			<Link>DataTypes\InstanceSaveExtensionMethods.cs</Link>
+		</Compile>
+
+		<Compile Include="..\Gum\DataTypes\GumProjectSaveExtensionMethods.cs">
+			<Link>DataTypes\GumProjectSaveExtensionMethods.cs</Link>
+		</Compile>
+		<Compile Include="..\GumRuntime\GraphicalUiElement.cs" Link="GraphicalUiElement.cs" />
+		<Compile Include="..\GumRuntime\GraphicalUiElement.Binding.cs" Link="GraphicalUiElement.Binding.cs" />
+		<Compile Include="..\GumRuntime\LayoutExporter.cs" Link="Runtime\LayoutExporter.cs" />
+
+
+		<Compile Include="..\Gum\DataTypes\PluginSettingsSave.cs">
+			<Link>DataTypes\PluginSettingsSave.cs</Link>
+		</Compile>
+
+		<Compile Include="..\Gum\DataTypes\RecursiveVariableFinder.cs">
+			<Link>DataTypes\RecursiveVariableFinder.cs</Link>
+		</Compile>
+		<Compile Include="..\Gum\DataTypes\StateSaveExtensionMethods.cs">
+			<Link>DataTypes\StateSaveExtensionMethods.cs</Link>
+		</Compile>
+		<Compile Include="..\Gum\DataTypes\StateSaveCategoryExtensions.cs">
+			<Link>DataTypes\StateSaveCategoryExtensions.cs</Link>
+		</Compile>
+		<Compile Include="..\Gum\Managers\StandardElementsManager.cs" Link="Managers\StandardElementsManager.cs" />
+		<Compile Include="..\Gum\DataTypes\VariableSaveExtensionMethods.cs">
+			<Link>DataTypes\VariableSaveExtensionMethods.cs</Link>
+		</Compile>
+
+
+
+		<Compile Include="..\Gum\DataTypes\VariableListSaveExtensionMethods.cs">
+			<Link>DataTypes\VariableListSaveExtensionMethods.cs</Link>
+		</Compile>
+
+		<Compile Include="..\RenderingLibrary\Camera.cs">
+			<Link>RenderingLibrary\Camera.cs</Link>
+		</Compile>
+
+		<Compile Include="..\RenderingLibrary\Graphics\IAspectRatio.cs">
+			<Link>Graphics\IAspectRatio.cs</Link>
+		</Compile>
+
+		<Compile Include="..\RenderingLibrary\Graphics\IRenderableIpso.cs">
+			<Link>IRenderableIpso.cs</Link>
+		</Compile>
+
+		<Compile Include="..\RenderingLibrary\Graphics\LayerCameraSettings.cs">
+			<Link>Graphics\LayerCameraSettings.cs</Link>
+		</Compile>
+
+
+		<Compile Include="..\RenderingLibrary\Graphics\Layer.cs">
+			<Link>RenderingLibrary\Layer.cs</Link>
+		</Compile>
+
+		<Compile Include="..\Gum\RenderingLibrary\Blend.cs">
+			<Link>RenderingLibrary\Blend.cs</Link>
+		</Compile>
+		<Compile Include="..\Gum\Wireframe\ElementWithState.cs">
+			<Link>Wireframe\ElementWithState.cs</Link>
+		</Compile>
+
+		<Compile Include="..\RenderingLibrary\Graphics\GradientType.cs">
+			<Link>Graphics\GradientType.cs</Link>
+		</Compile>
+
+		<Compile Include="..\RenderingLibrary\Graphics\IVisible.cs">
+			<Link>IVisible.cs</Link>
+		</Compile>
+		<Compile Include="..\RenderingLibrary\Graphics\SortableLayer.cs">
+			<Link>Graphics\SortableLayer.cs</Link>
+		</Compile>
+		<Compile Include="..\RenderingLibrary\Math\MathFunctions.cs">
+			<Link>RenderingLibrary\MathFunctions.cs</Link>
+		</Compile>
+		<Compile Include="..\RenderingLibrary\IPositionedSizedObject.cs">
+			<Link>IPositionedSizedObject.cs</Link>
+		</Compile>
+		<Compile Include="..\RenderingLibrary\Graphics\TextOverflowMode.cs" Link="Graphics\TextOverflowMode.cs" />
+		<Compile Include="..\RenderingLibrary\Graphics\VerticalAlignment.cs">
+			<Link>Graphics\VerticalAlignment.cs</Link>
+		</Compile>
+
+		<Compile Include="..\RenderingLibrary\Graphics\HorizontalAlignment.cs">
+			<Link>Graphics\HorizontalAlignment.cs</Link>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="CsvHelper" Version="33.1.0" />
+	  <PackageReference Include="FlatRedBall.InterpolationCore" Version="2025.4.22.1" />
+	  <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+	</ItemGroup>
+</Project>

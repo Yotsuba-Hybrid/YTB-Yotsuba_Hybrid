@@ -3,12 +3,15 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Diagnostics;
 using YotsubaEngine.Audio;
 using YotsubaEngine.Core.Component.C_2D;
 using YotsubaEngine.Core.Component.C_3D;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;
+#if YTB
 using YotsubaEngine.Core.System.YotsubaEngineUI;
+#endif
 using YotsubaEngine.Events.YTBEvents;
 using YotsubaEngine.Exceptions;
 using YotsubaEngine.Input;
@@ -909,7 +912,45 @@ namespace YotsubaEngine.Core.YotsubaGame.Scripting
         /// <param name="color">Color del mensaje. <para>Message color.</para></param>
         public void SendLog(string message, Color color)
         {
+#if YTB
             EngineUISystem.SendLog(message, color);
+
+#endif
+#if DEBUG
+            if (color == Color.Red)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Debug.WriteLine(message);
+            }
+            else if (color == Color.White)
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+                Debug.WriteLine(message);
+
+            }
+            else if (color == Color.Yellow)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Debug.WriteLine(message);
+
+            }
+            else if (color == Color.Green)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Debug.WriteLine(message);
+
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+                Debug.WriteLine(message);
+
+            }
+
+            Console.WriteLine(message);
+            Console.ResetColor();
+#endif
+
         }
 
         /// <summary>

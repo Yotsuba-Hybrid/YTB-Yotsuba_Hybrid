@@ -1,0 +1,14 @@
+﻿
+
+namespace Gum.RenderingLibrary
+{
+    public enum Blend
+    {
+        Normal,
+        Additive,
+        Replace,
+        SubtractAlpha,
+        ReplaceAlpha,
+        MinAlpha
+    }
+}

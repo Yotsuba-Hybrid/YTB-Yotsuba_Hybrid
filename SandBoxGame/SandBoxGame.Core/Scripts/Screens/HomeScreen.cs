@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using YotsubaEngine.Attributes;
 using YotsubaEngine.Audio;
 using YotsubaEngine.Core.Entity;
-using YotsubaEngine.Core.System.GumUI;
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Core.YotsubaGame.Scripting;
 using YotsubaEngine.Events.YTBEvents;
@@ -47,7 +46,7 @@ namespace SandBoxGame.Core.Scripts.Screens
 
             StopMusic();
 
-            YTBGlobalState.EngineBackground = new Color(32, 40, 78, 255);
+            YTBGlobalState.ColorBackground = new Color(32, 40, 78, 255);
             base.Initialize();
             // initialize alfa from current transform color (normalized 0..1)
             var initial = GetTransformComponent().Color;

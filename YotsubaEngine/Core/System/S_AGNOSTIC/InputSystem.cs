@@ -7,7 +7,9 @@ using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.Contract;
 using YotsubaEngine.Core.System.S_2D;
+#if YTB
 using YotsubaEngine.Core.System.YotsubaEngineUI;
+#endif
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Events.YTBEvents;
 using YotsubaEngine.Events.YTBEvents.EngineEvents;
@@ -27,12 +29,6 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         /// Referencia al EventManager para manejar eventos.
         /// </summary>
         private EventManager EventManager { get; set; }
-
-        /// <summary>
-        /// Entity manager reference for entity/component access.
-        /// Referencia al EntityManager para manejar entidades y componentes.
-        /// </summary>
-        private EntityManager EntityManager { get; set; }
 
 
         /// <summary>
@@ -56,13 +52,15 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         /// <para>Initializes the input system.</para>
         /// </summary>
         /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
-        public void InitializeSystem(EntityManager entities)
+        public override void InitializeSystem(EntityManager entities)
         {
 
             InputManager = InputManager.Instance;
             EventManager = EventManager.Instance;
             EntityManager = entities;
+#if YTB
             EngineUISystem.SendLog(typeof(InputSystem).Name + " Se inicio correctamente");
+#endif
 
         }
 
@@ -71,7 +69,7 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         /// <para>Updates input state and publishes input events.</para>
         /// </summary>
         /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
-        public void UpdateSystem(GameTime gameTime)
+        public override void UpdateSystem(GameTime gameTime)
         {
 
 //-:cnd:noEmit
@@ -420,27 +418,6 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
         }
 
         /// <summary>
-        /// Hook de actualización compartida (no usado en este sistema).
-        /// <para>Shared entity update hook (unused in this system).</para>
-        /// </summary>
-        /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
-        /// <param name="time">Tiempo de juego. <para>Game time.</para></param>
-        public void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time)
-        {
-            //throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Hook de inicialización compartida (no usado en este sistema).
-        /// <para>Shared entity initialization hook (unused in this system).</para>
-        /// </summary>
-        /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
-        public void SharedEntityInitialize(ref Yotsuba Entidad)
-        {
-            //throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// Enum que representa los diferentes botones del mouse.
         /// <para>Enum representing mouse buttons.</para>
         /// </summary>
@@ -473,8 +450,5 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
             XButton2
         }
 
-        public void Dispose()
-        {
-        }
     }
 }

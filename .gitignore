@@ -30,6 +30,9 @@ bld/
 # Visual Studio 2015/2017/2019/2022 cache/options directory
 .vs/
 
+
+YotsubaEngineHistory.ytb
+
 # Visual Studio Code
 .vscode/*
 !.vscode/settings.json

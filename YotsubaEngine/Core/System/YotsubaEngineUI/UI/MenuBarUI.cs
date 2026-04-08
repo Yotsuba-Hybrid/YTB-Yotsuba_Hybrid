@@ -1,4 +1,4 @@
-﻿
+﻿#if YTB
 using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework;
 using System;
@@ -191,3 +191,4 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 
     }
 }
+#endif

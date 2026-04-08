@@ -1,4 +1,5 @@
-﻿using Hexa.NET.ImGui;
+﻿#if YTB
+using Hexa.NET.ImGui;
 using Hexa.NET.ImGui.Backends.OpenGL3;
 using Hexa.NET.ImNodes;
 using Hexa.NET.ImPlot;
@@ -599,3 +600,4 @@ namespace YotsubaEngine.Graphics.ImGuiNet
         #endregion Internals
     }
 }
+#endif

@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -8,7 +8,9 @@ using System.Linq;
 using System.Xml;
 using YotsubaEngine.ActionFiles.YTB_Files;
 using YotsubaEngine.Core.Component.C_2D;
+#if YTB
 using YotsubaEngine.Core.System.YotsubaEngineUI;
+#endif
 using YotsubaEngine.Graphics;
 using YotsubaEngine.HighestPerformanceTypes;
 
@@ -57,8 +59,8 @@ namespace YotsubaEngine.ActionFiles.TMX_Files.TiledCS
             // Carga el documento XML en memoria
 
             string relative = tmxPath.TrimStart('\\', '/');
-            if (relative.StartsWith(_contentPath + "/", StringComparison.OrdinalIgnoreCase) ||
-                relative.StartsWith(_contentPath + "\\", StringComparison.OrdinalIgnoreCase))
+            if (relative.StartsWith(_contentPath + "/") ||
+                relative.StartsWith(_contentPath + "\\"))
             {
                 relative = relative.Substring(_contentPath.Length + 1);
             }
@@ -66,33 +68,15 @@ namespace YotsubaEngine.ActionFiles.TMX_Files.TiledCS
 
             XmlDocument document = new XmlDocument();
 
-            // Load the TMX file using TitleContainer for cross-platform compatibility
-            try
-            {
+            path = relative.Replace('\\', '/');
+
                 using (Stream stream = TitleContainer.OpenStream(path))
                 {
                     document.Load(stream);
                 }
-            }
-            catch (FileNotFoundException)
-            {
-                // Fallback: Try with normalized path for Android
-                string androidPath = relative.Replace('\\', '/');
-                try
-                {
-                    using var stream = TitleContainer.OpenStream(androidPath);
-                    using var reader = new StreamReader(stream);
-                    document.LoadXml(reader.ReadToEnd());
-                }
-                catch (Exception ex)
-                {
-                    EngineUISystem.SendLog($"Error loading TMX file '{path}': {ex.Message}");
-                    throw;
-                }
-            }
 
-            // --- 1. Lectura de TileSets ---
-            XmlNodeList listOfTilesets = document.GetElementsByTagName("tileset");
+                // --- 1. Lectura de TileSets ---
+                XmlNodeList listOfTilesets = document.GetElementsByTagName("tileset");
             YTB<TiledTileSet> tileSets = new YTB<TiledTileSet>();
 
             foreach (XmlNode node in listOfTilesets)

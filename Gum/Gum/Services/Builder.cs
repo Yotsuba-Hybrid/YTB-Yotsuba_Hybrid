@@ -1,0 +1,300 @@
+using Gum.Commands;
+using Gum.Controls;
+using Gum.Logic;
+using Gum.Managers;
+using Gum.Plugins.InternalPlugins.VariableGrid;
+using Gum.PropertyGridHelpers;
+using Gum.ToolCommands;
+using Gum.ToolStates;
+using Gum.Undo;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using CommunityToolkit.Mvvm.Messaging;
+using System.Linq.Expressions;
+using System.Windows;
+using System.Windows.Threading;
+using Gum.Dialogs;
+using Gum.Mvvm;
+using Gum.Services.Dialogs;
+using Gum.Plugins;
+using Gum.ViewModels;
+using Expression = System.Linq.Expressions.Expression;
+using Gum.Plugins.ImportPlugin.Manager;
+using Gum.Wireframe;
+using Microsoft.Extensions.Configuration;
+using System.IO;
+using Gum.Settings;
+using ToolsUtilities;
+using Gum.Logic.FileWatch;
+using Gum.Reflection;
+using Gum.ProjectServices.FontGeneration;
+using Gum.Services.Fonts;
+using Gum.Localization;
+
+namespace Gum.Services;
+
+internal static class GumBuilder
+{
+    public static IHostBuilder CreateHostBuilder(string[]? args = null)
+    {
+        string appDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Gum");
+        Directory.CreateDirectory(appDir);
+        string settingsPath = Path.Combine(appDir, "appsettings.json");
+
+        return Host.CreateDefaultBuilder(args)
+            .ConfigureAppConfiguration(cfg =>
+            {
+
+                if (!File.Exists(settingsPath))
+                {
+                    File.WriteAllText(settingsPath, "{}");
+                }
+
+                cfg.Sources.Clear();
+                cfg.SetBasePath(appDir);
+                cfg.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+            })
+            .ConfigureServices((context, services) =>
+            {
+                services.AddOptions();
+                services.ConfigureWritable<ThemeSettings>(context.Configuration, nameof(ThemeSettings), settingsPath);
+                services.ConfigureWritable<LayoutSettings>(context.Configuration, nameof(LayoutSettings), settingsPath);
+                services.AddGum();
+            });
+    }
+
+
+}
+
+file static class ServiceCollectionExtensions
+{
+    public static void AddGum(this IServiceCollection services)
+    {
+        // transients
+        services.ForEachConcreteTypeAssignableTo<ViewModel>(
+            typeof(GumBuilder).Assembly,
+            static (isp, type) => isp.AddTransient(type)
+        );
+        services.AddTransient(typeof(Lazy<>), typeof(Lazier<>));
+        services.AddTransient<PeriodicUiTimer>();
+
+        // static singletons
+        services.AddSingleton<IObjectFinder>(ObjectFinder.Self);
+        services.AddSingleton<PluginManager>(PluginManager.Self);
+        services.AddSingleton<IPluginManager>(provider => provider.GetRequiredService<PluginManager>());
+        services.AddSingleton<TypeManager>(TypeManager.Self);
+        services.AddSingleton<ITypeManager>(provider => provider.GetRequiredService<TypeManager>());
+        services.AddSingleton<ProjectManager>(ProjectManager.Self);
+        services.AddSingleton<StandardElementsManagerGumTool>(StandardElementsManagerGumTool.Self);
+        services.AddSingleton<IStandardElementsManagerGumTool>(provider => provider.GetRequiredService<StandardElementsManagerGumTool>());
+        services.AddSingleton<IProjectManager>(provider => provider.GetRequiredService<ProjectManager>());
+        services.AddSingleton<IProjectState, ProjectState>();
+        // We can do this once we get rid of usages of ProjectManager.Self because we have to inject. Until then, we can't do this.
+        //services.AddSingleton<ProjectManager>(ProjectManager.Self);
+
+        // singletons
+        services.AddSingleton<ICircularReferenceManager, CircularReferenceManager>();
+        services.AddSingleton<IFavoriteComponentManager, FavoriteComponentManager>();
+        services.AddSingleton<ICopyPasteLogic, CopyPasteLogic>();
+        services.AddSingleton<IDeleteLogic, DeleteLogic>();
+        services.AddSingleton<FileLocations>();
+        services.AddSingleton<FileWatchLogic>();
+        services.AddSingleton<IFontGenerationCallbacks, ToolFontGenerationCallbacks>();
+        services.AddSingleton<IFontFileGenerator>(provider =>
+        {
+            IFontGenerationCallbacks callbacks = provider.GetRequiredService<IFontGenerationCallbacks>();
+            BmFontExeFileGenerator bmFont = new BmFontExeFileGenerator(callbacks);
+            KernSmithFileGenerator kernSmith = new KernSmithFileGenerator(callbacks);
+            IProjectState projectState = provider.GetRequiredService<IProjectState>();
+            return new FontFileGeneratorSelector(bmFont, kernSmith,
+                () => projectState.GumProjectSave?.FontGenerator ?? DataTypes.FontGeneratorType.BmFont);
+        });
+        services.AddSingleton<IHeadlessFontGenerationService>(provider =>
+            new HeadlessFontGenerationService(
+                provider.GetRequiredService<IFontFileGenerator>(),
+                provider.GetRequiredService<IFontGenerationCallbacks>()));
+        services.AddSingleton<IFontManager, FontManager>();
+        services.AddSingleton<IHotkeyManager, HotkeyManager>();
+        services.AddSingleton<LocalizationService>();
+        services.AddSingleton<ISelectedState, SelectedState>();
+        services.AddSingleton<INameVerifier, NameVerifier>();
+        services.AddSingleton<IUndoManager, UndoManager>();
+        services.AddSingleton<IEditVariableService, EditVariableService>();
+        services.AddSingleton<IDeleteVariableService, DeleteVariableService>();
+        services.AddSingleton<IExposeVariableService, ExposeVariableService>();
+        services.AddSingleton<IDragDropManager, DragDropManager>();
+        services.AddSingleton<MenuStripManager>();
+        services.AddSingleton<ImportLogic>();
+        services.AddSingleton<IImportLogic>(provider => provider.GetRequiredService<ImportLogic>());
+        services.AddSingleton<MainOutputViewModel>();
+
+        // WireframeObjectManager concrete class is needed for Initialize() call in Program.cs (two-stage initialization)
+        services.AddSingleton<IWireframeObjectManager, WireframeObjectManager>();
+        services.AddSingleton<IOutputManager>(provider => provider.GetRequiredService<MainOutputViewModel>());
+        services.AddSingleton<FileWatchManager>();
+        services.AddSingleton<IFileWatchManager>(provider => provider.GetRequiredService<FileWatchManager>());
+        services.AddSingleton<ReorderLogic>();
+        services.AddSingleton<IReorderLogic>(provider => provider.GetRequiredService<ReorderLogic>());
+        services.AddSingleton<InheritanceLogic>();
+
+        services.AddSingleton<IUserProjectSettingsManager, UserProjectSettingsManager>();
+        services.AddSingleton<ProjectServices.ITypeResolver>(provider =>
+            new TypeManagerTypeResolverAdapter(provider.GetRequiredService<Reflection.ITypeManager>()));
+        services.AddSingleton<ProjectServices.IHeadlessErrorChecker>(provider =>
+            new ProjectServices.HeadlessErrorChecker(provider.GetRequiredService<ProjectServices.ITypeResolver>()));
+        services.AddSingleton<ErrorChecker>();
+        services.AddSingleton<IErrorChecker>(provider => provider.GetRequiredService<ErrorChecker>());
+        services.AddSingleton<IVariableSaveLogic, VariableSaveLogic>();
+        services.AddSingleton<VariableReferenceLogic>();
+        services.AddSingleton<IReferenceFinder, ReferenceFinder>();
+        services.AddSingleton<IRenameLogic, RenameLogic>();
+        services.AddSingleton<ISetVariableLogic, SetVariableLogic>();
+
+        services.AddSingleton<WireframeCommands>();
+        services.AddSingleton<IWireframeCommands>(provider => provider.GetRequiredService<WireframeCommands>());
+        services.AddSingleton<IGuiCommands, GuiCommands>();
+        services.AddSingleton<IEditCommands, EditCommands>();
+        services.AddSingleton<IVariableInCategoryPropagationLogic, VariableInCategoryPropagationLogic>();
+        services.AddSingleton<IElementCommands, ElementCommands>();
+        services.AddSingleton<IFileCommands, FileCommands>();
+        services.AddSingleton<ProjectCommands>();
+
+        services.AddSingleton<IMessenger>(_ => WeakReferenceMessenger.Default);
+
+        services.AddSingleton<MainPanelViewModel>();
+        services.AddSingleton<ITabManager>(provider => provider.GetRequiredService<MainPanelViewModel>());
+        services.AddSingleton<MainWindow>();
+        services.AddSingleton<MainWindowViewModel>();
+
+        // other
+        services.AddDialogs();
+        services.AddViewModelFuncFactories(typeof(ServiceCollectionExtensions).Assembly);
+        services.AddSingleton<IDispatcher>(_ => new AppDispatcher(() => Application.Current.Dispatcher));
+        services.AddSingleton<IUiSettingsService, UiSettingsService>();
+        services.AddSingleton<IThemingService, ThemingService>();
+    }
+
+    private static IServiceCollection AddDialogs(this IServiceCollection services)
+    {
+        services.AddSingleton<IDialogViewResolver, DialogViewResolver>();
+        services.AddSingleton<IDialogService, DialogService>();
+
+        return services;
+    }
+
+    private class Lazier<T> : Lazy<T> where T : notnull
+    {
+        public Lazier(IServiceProvider serviceProvider) : base(serviceProvider.GetRequiredService<T>) { }
+    }
+}
+
+file static class ServiceCollectionHelpers
+{
+    public static IServiceCollection ForEachConcreteTypeAssignableTo<TBaseType>(
+        this IServiceCollection services,
+        Assembly assembly,
+        Action<IServiceCollection, Type> callback)
+    {
+        Type baseType = typeof(TBaseType);
+
+        IEnumerable<Type> closedTypes = assembly.DefinedTypes
+            .Where(t =>
+                t.IsClass &&
+                !t.IsAbstract &&
+                !t.IsGenericTypeDefinition &&
+                baseType.IsAssignableFrom(t) &&
+                t.DeclaredConstructors.Any(c => c.IsPublic && !c.IsStatic))
+            .Select(t => t.AsType());
+
+        foreach (Type type in closedTypes)
+        {
+            callback(services, type);
+        }
+
+        return services;
+    }
+}
+
+file static class ViewModelFuncFactoryRegistration
+{
+    public static IServiceCollection AddViewModelFuncFactories(this IServiceCollection services, Assembly targetAssembly)
+    {
+        Type[] allTypes = targetAssembly.GetTypes();
+
+        foreach (Type type in allTypes)
+        {
+            if (!type.IsClass || type.IsAbstract)
+                continue;
+
+            foreach (ConstructorInfo ctor in type.GetConstructors(BindingFlags.Public | BindingFlags.Instance))
+            {
+                foreach (ParameterInfo param in ctor.GetParameters())
+                {
+                    if (!IsFuncType(param.ParameterType))
+                        continue;
+
+                    Type[] funcArgs = param.ParameterType.GetGenericArguments();
+                    Type resultType = funcArgs.Last();
+
+                    if (!typeof(ViewModel).IsAssignableFrom(resultType))
+                        continue;
+
+                    RegisterFuncFactory(services, param.ParameterType, funcArgs);
+                }
+            }
+        }
+
+        return services;
+    }
+
+    private static bool IsFuncType(Type t)
+    {
+        if (!t.IsGenericType) return false;
+        Type? def = t.GetGenericTypeDefinition();
+        return def.FullName!.StartsWith("System.Func");
+    }
+
+    private static void RegisterFuncFactory(IServiceCollection services, Type funcType, Type[] typeArgs)
+    {
+        if (services.Any(sd => sd.ServiceType == funcType))
+            return;
+
+        Type resultType = typeArgs.Last();
+        Type[] paramTypes = typeArgs.Take(typeArgs.Length - 1).ToArray();
+
+        ObjectFactory factory = ActivatorUtilities.CreateFactory(resultType, paramTypes);
+
+        var factoryDelegate = BuildFactoryLambda(funcType, factory, paramTypes, resultType);
+        Delegate factoryFunc = (Delegate)factoryDelegate;
+        services.AddTransient(funcType, sp => factoryFunc.DynamicInvoke(sp)!);
+    }
+
+    private static object BuildFactoryLambda(Type funcType, ObjectFactory factory, Type[] paramTypes, Type resultType)
+    {
+        ParameterExpression spParam = Expression.Parameter(typeof(IServiceProvider), "sp");
+
+        ParameterExpression[] delegateParams = paramTypes.Select(Expression.Parameter).ToArray();
+
+        NewArrayExpression argsArray = Expression.NewArrayInit(typeof(object),
+            delegateParams.Select(p => Expression.Convert(p, typeof(object)))
+        );
+
+        MethodCallExpression factoryCall = Expression.Call(
+            Expression.Constant(factory),
+            typeof(ObjectFactory).GetMethod("Invoke")!,
+            spParam,
+            argsArray
+        );
+
+        UnaryExpression castResult = Expression.Convert(factoryCall, resultType);
+
+        LambdaExpression innerLambda = Expression.Lambda(funcType, castResult, delegateParams);
+
+        Type outerFuncType = typeof(Func<,>).MakeGenericType(typeof(IServiceProvider), funcType);
+        return Expression.Lambda(outerFuncType, innerLambda, spParam).Compile();
+    }
+}
