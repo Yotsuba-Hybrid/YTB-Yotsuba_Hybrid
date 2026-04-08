@@ -1,24 +1,26 @@
-﻿using Hexa.NET.ImGui;
-using Hexa.NET.ImGuizmo;
-using Hexa.NET.ImNodes;
-using Hexa.NET.ImPlot;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.IO;
 using System.Text;
-using System.Threading.Tasks;
-using YotsubaEngine.ActionFiles.YTB_Files;
-using YotsubaEngine.Audio;
-using YotsubaEngine.Core.System.GumUI;
+#if YTB
 using YotsubaEngine.Core.System.YotsubaEngineUI;
 using YotsubaEngine.Core.System.YotsubaEngineUI.UI;
-using YotsubaEngine.Core.System.YTBDragAndDrop;
-using YotsubaEngine.Core.YotsubaGame;
-using YotsubaEngine.Events.YTBEvents.EngineEvents;
-using YotsubaEngine.Graphics;
 using YotsubaEngine.Graphics.ImGuiNet;
+using System.Threading.Tasks;
+using YotsubaEngine.Core.System.YTBDragAndDrop;
+using YotsubaEngine.Events.YTBEvents.EngineEvents;
+using Hexa.NET.ImGui;
+using Hexa.NET.ImPlot;
+using Hexa.NET.ImNodes;
+using Hexa.NET.ImGuizmo;
+#endif
+using YotsubaEngine.ActionFiles.YTB_Files;
+using YotsubaEngine.Audio;
+using YotsubaEngine.Core.YotsubaGame;
+using YotsubaEngine.Graphics;
 using YotsubaEngine.Scripting;
 namespace YotsubaEngine
 {
@@ -88,12 +90,13 @@ namespace YotsubaEngine
         /// </summary>
         public static IModelRegistry ModelRegistry { get; set; }
 
+#if YTB
         /// <summary>
         /// Obtiene o establece la instancia del renderizador ImGui.
         /// <para>Gets or sets the ImGui renderer instance.</para>
         /// </summary>
-        public static ImGuiRenderer GuiRenderer { get; set; }
-
+        internal static ImGuiRenderer GuiRenderer { get; set; }
+#endif
         /// <summary>
         /// Crea una nueva instancia anfitriona del juego Yotsuba.
         /// <para>Creates a new Yotsuba game host instance.</para>
@@ -101,6 +104,7 @@ namespace YotsubaEngine
         /// <param name="isMouseVisible">Indica si el cursor del mouse es visible. <para>Whether the mouse cursor is visible.</para></param>
         public YTBGame(Platforms platform, bool isMouseVisible) : base()
         {
+
             YTBGlobalState.Platform = platform;
 #if YTB
             if (IsDesktop)
@@ -115,23 +119,18 @@ namespace YotsubaEngine
             // Por defecto es "Content", pero puede cambiarse antes de crear la instancia del juego
             Content.RootDirectory = YTBGlobalState.CompiledAssetsFolderName;
 
+#if YTB
             (YTBGameInfo, YTBConfig) game;
-            if (YTBFileToGameData.GameDataProvider != null)
-            {
-                game = YTBFileToGameData.GameDataProvider();
-                YTBGlobalState.GameData = game;
 
-            }
-            else
-            {
-                Task.Run(async () =>
+            Task.Run(async () =>
                 {
 
                     game = await ReadYTBFile.ReadYTBFiles(false);
                     YTBGlobalState.GameData = game;
 
                 });
-            }
+
+#endif
             //Window.Title = "Yotsuba Engine";
             //Window.AllowUserResizing = true;
             YTBGlobalState.ContentManager = Content;
@@ -208,12 +207,14 @@ namespace YotsubaEngine
         /// </summary>
         protected override void Initialize()
         {
-
             YTBGlobalState.GraphicsDevice = GraphicsDevice;
 
 
-            //if(YTBGlobalState.IsDesktop && YTBGlobalState.EngineEnabled)
+            if (YTBGlobalState.IsDesktop && YTBGlobalState.EngineEnabled)
             {
+
+#if YTB
+
                 GuiRenderer = new ImGuiRenderer(this);
                 // ImGui setup (fonts, theme)
                 var io = ImGui.GetIO();
@@ -223,86 +224,58 @@ namespace YotsubaEngine
                     io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
                 }
 
-                string outputFontsDir;
-                if (IsMobile)
-                {
-                    // On Android, assets are inside the APK and can't be accessed via file paths.
-                    // Extract fonts to a writable temp directory using MonoGame's TitleContainer.
-                    outputFontsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Fonts");
-                    Directory.CreateDirectory(outputFontsDir);
-                    foreach (var fontName in new[] { "GeistPixel-Square.ttf", "NerdFontsSymbolsOnly.ttf" })
-                    {
-                        string destPath = Path.Combine(outputFontsDir, fontName);
-                        if (!File.Exists(destPath))
-                        {
-                            using var stream = TitleContainer.OpenStream(Path.Combine("Fonts", fontName));
-                            using var fs = File.Create(destPath);
-                            stream.CopyTo(fs);
-                        }
-                    }
-                }
-                else
-                {
-                    outputFontsDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Fonts");
-                }
 
+                const string outputFontsDir = "Fonts";
                 string fuentePrincipal = Path.Combine(outputFontsDir, "LibertinusMath-Regular.ttf");
                 string fuenteIconos = Path.Combine(outputFontsDir, "NerdFontsSymbolsOnly.ttf");
 
-                // ¡Validación de seguridad para evitar crashes de ImGui C++!
-                if (!File.Exists(fuentePrincipal))
-                {
-                    throw new FileNotFoundException($"¡CRÍTICO! ImGui no encontró la fuente en: {fuentePrincipal}");
-                }
-                if (!File.Exists(fuenteIconos))
-                {
-                    throw new FileNotFoundException($"¡CRÍTICO! ImGui no encontró los íconos en: {fuenteIconos}");
-                }
+              
 
                 Platforms platforms = YTBGlobalState.Platform;
-                unsafe
-                {
 
-#if !YTB
-                    io.Fonts.AddFontFromFileTTF(fuentePrincipal, platforms == Platforms.Avalonia_GL ? 20.0f : 24.0f, null, io.Fonts.GetGlyphRangesDefault());
-#else
+                if (YTBGlobalState.IsDesktop)
+                {
+                    unsafe
+                    {
+
                     // 1. Cargar la fuente principal (texto)
                     // Usamos GetGlyphRangesDefault() para que cargue el alfabeto normal (ASCII).
                     io.Fonts.AddFontFromFileTTF(fuentePrincipal, platforms == Platforms.Avalonia_GL ? 20.0f : 24.0f, null, io.Fonts.GetGlyphRangesDefault());
-#endif
 
-                    // 2. Crear la configuración para la fuente de íconos
-                    ImFontConfigPtr config = ImGui.ImFontConfig();
-                    config.MergeMode = true;
-                    config.PixelSnapH = true;
+                        // 2. Crear la configuración para la fuente de íconos
+                        ImFontConfigPtr config = ImGui.ImFontConfig();
+                        config.MergeMode = true;
+                        config.PixelSnapH = true;
 
-                    // 3. Definir el rango de caracteres para Nerd Fonts.
-                    uint[] iconRanges = new uint[]
-                    {
+
+                        // 3. Definir el rango de caracteres para Nerd Fonts.
+                        uint[] iconRanges = new uint[]
+                        {
                         0xE000, 0xF8FF,
                         0
-                    };
+                        };
 
-                    fixed (uint* rangePtr = iconRanges)
-                    {
-                        byte[] fuenteBytes = Encoding.UTF8.GetBytes(fuenteIconos);
-
-                        fixed (byte* fb = fuenteBytes)
+                        fixed (uint* rangePtr = iconRanges)
                         {
+                            byte[] fuenteBytes = Encoding.UTF8.GetBytes(fuenteIconos);
+
+                            fixed (byte* fb = fuenteBytes)
+                            {
 
 
-                            // Pass rangePtr instead of GetGlyphRangesDefault()
-                            io.Fonts.AddFontFromFileTTF(fb, platforms == Platforms.Avalonia_GL ? 20.0f : 24.0f, config, rangePtr);
+                                // Pass rangePtr instead of GetGlyphRangesDefault()
+                                io.Fonts.AddFontFromFileTTF(fb, platforms == Platforms.Avalonia_GL ? 20.0f : 24.0f, config, rangePtr);
+                            }
                         }
+
+                        config.Destroy();
                     }
 
-                    config.Destroy();
+                    io.FontGlobalScale = 1;
+
+                    // 6. Construir la textura final (Obligatorio después de añadir fuentes)
+                    io.Fonts.Build();
                 }
-
-                io.FontGlobalScale = 1;
-
-                // 6. Construir la textura final (Obligatorio después de añadir fuentes)
-                io.Fonts.Build();
 
                 // Nota: Algunos wrappers de MonoGame (ImGuiRenderer) requieren que llames a un método 
                 // interno para actualizar la textura en la GPU. Si no ves las fuentes, puede que necesites:
@@ -321,26 +294,27 @@ namespace YotsubaEngine
                 }
                 var guiContext = ImGui.GetCurrentContext();
 
-                ImPlot.SetImGuiContext(guiContext);
-                var plotContext = ImPlot.CreateContext();
-                ImPlot.SetCurrentContext(plotContext);
-
-                ImNodes.SetImGuiContext(guiContext);
-                var nodesContext = ImNodes.CreateContext();
-                ImNodes.SetCurrentContext(nodesContext);
-                var editorCtx = ImNodes.EditorContextCreate();
-                ImNodes.EditorContextSet(editorCtx);
-                ImNodes.StyleColorsDark(ImNodes.GetStyle());
-
-                // Le pasamos el contexto principal de ImGui a ImGuizmo para que sepa dónde dibujar
-                ImGuizmo.SetImGuiContext(guiContext);
-
-                // Nota: ImGuizmo normalmente NO requiere un "CreateContext()" ni "SetCurrentContext()".
-                if (!YTBGlobalState.IsMobile)
+                if (YTBGlobalState.IsDesktop)
                 {
-                    WriteYTBFile.CreateYTBGameFile();
+                    ImPlot.SetImGuiContext(guiContext);
+                    var plotContext = ImPlot.CreateContext();
+                    ImPlot.SetCurrentContext(plotContext);
+
+                    ImNodes.SetImGuiContext(guiContext);
+                    var nodesContext = ImNodes.CreateContext();
+                    ImNodes.SetCurrentContext(nodesContext);
+                    var editorCtx = ImNodes.EditorContextCreate();
+                    ImNodes.EditorContextSet(editorCtx);
+                    ImNodes.StyleColorsDark(ImNodes.GetStyle());
+
+                    // Le pasamos el contexto principal de ImGui a ImGuizmo para que sepa dónde dibujar
+                    ImGuizmo.SetImGuiContext(guiContext);
                 }
-                // Configurar el título de la ventana desde YTBConfig
+#endif
+
+
+                WriteYTBFile.CreateYTBGameFile();
+                
                 try
                 {
                     YTBConfig config = YTBGlobalState.GameData.Item2;
@@ -356,7 +330,9 @@ namespace YotsubaEngine
                 }
                 catch (Exception ex)
                 {
+#if YTB
                     EngineUISystem.SendLog($"[YTBGame] No se pudo cargar el nombre del juego desde la configuración: {ex.Message}");
+#endif
                     Window.Title = "Yotsuba Engine";
                 }
             }
@@ -394,8 +370,12 @@ namespace YotsubaEngine
         /// </summary>
         protected override void LoadContent()
         {
+#if YTB
+
             try
             {
+
+#endif
                 YTBGlobalState.GraphicsDevice = GraphicsDevice;
                 _spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -406,11 +386,14 @@ namespace YotsubaEngine
                 SceneManager = YTBFileToGameData.GenerateSceneManager(_graphics);
 
                 SceneManager.CurrentScene.Initialize(Content);
-            }
+#if YTB
+        }
             catch (Exception ex)
             {
                 EngineUISystem.SendLog($"[YTBGame] Error al cargar el contenido del juego: {ex.Message}");
             }
+#endif
+
 
             base.LoadContent();
         }
@@ -422,8 +405,7 @@ namespace YotsubaEngine
         protected override void Update(GameTime gameTime)
         {
             //-:cnd:noEmit
-#if YOTSUBA
-            // Exit the game if the Back button (GamePad) or Escape key (Keyboard) is pressed.
+#if YTB
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
                 || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
@@ -442,9 +424,7 @@ namespace YotsubaEngine
         protected override void Draw(GameTime gameTime)
         {
 
-            //GraphicsDevice.Clear(Color.DarkOrange);
-            //GraphicsDevice.Clear(Color.BlanchedAlmond);
-            GraphicsDevice.Clear(YTBGlobalState.EngineBackground);
+            GraphicsDevice.Clear(YTBGlobalState.ColorBackground);
             SceneManager.CurrentScene.Draw(gameTime, _spriteBatch);
 
             base.Draw(gameTime);

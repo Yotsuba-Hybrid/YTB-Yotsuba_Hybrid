@@ -1,0 +1,1007 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.ComponentModel;
+using Gum.DataTypes.Variables;
+using Gum.DataTypes;
+using Gum.ToolStates;
+using Gum.Managers;
+using Gum.PropertyGridHelpers.Converters;
+using Gum.Plugins;
+using Gum.Logic;
+using WpfDataUi.DataTypes;
+using Gum.Wireframe;
+using WpfDataUi.Controls;
+using GumRuntime;
+using Gum.DataTypes.Behaviors;
+using Gum.Undo;
+using Gum.Plugins.InternalPlugins.VariableGrid;
+using Gum.Services;
+using System.Collections;
+using Gum.Commands;
+using Gum.Reflection;
+
+namespace Gum.PropertyGridHelpers;
+
+#region AmountToDisplay Enum
+
+public enum AmountToDisplay
+{
+    AllVariables,
+    ElementAndExposedOnly
+}
+#endregion
+
+public class ElementSaveDisplayer
+{
+    #region Fields
+    static EditorAttribute mFileWindowAttribute = new EditorAttribute(typeof(System.Windows.Forms.Design.FileNameEditor), typeof(System.Drawing.Design.UITypeEditor));
+
+    private readonly SubtextLogic _subtextLogic;
+    private readonly ISelectedState _selectedState;
+    private readonly IUndoManager _undoManager;
+    private readonly TypeManager _typeManager;
+    private readonly IVariableSaveLogic _variableSaveLogic;
+    private readonly CategorySortAndColorLogic _categorySortAndColorLogic;
+    private readonly IPluginManager _pluginManager;
+    private readonly StandardElementsManager _standardElementsManager;
+
+    #endregion
+
+    #region PropertyData record
+
+    private record PropertyData(
+        string OriginalName,
+        Type ComponentType,
+        Attribute[] Attributes,
+        TypeConverter Converter,
+        string Category,
+        bool IsReadOnly,
+        bool IsAssignedByReference,
+        string Subtext,
+        string? DisplayName = null,
+        string? ToolTipText = null,
+        Dictionary<string, object>? PropertiesToSetOnDisplayer = null);
+
+    #endregion
+
+    public ElementSaveDisplayer(SubtextLogic subtextLogic,
+        TypeManager typeManager,
+        ISelectedState selectedState,
+        IUndoManager undoManager,
+        IPluginManager pluginManager,
+        IVariableSaveLogic variableSaveLogic)
+    {
+        _subtextLogic = subtextLogic;
+        _selectedState = selectedState;
+        _undoManager = undoManager;
+        _typeManager = typeManager;
+        _variableSaveLogic = variableSaveLogic;
+        _categorySortAndColorLogic = new CategorySortAndColorLogic();
+        _pluginManager = pluginManager;
+        _standardElementsManager = StandardElementsManager.Self;
+    }
+
+    private List<PropertyData> GetProperties(ElementSave instanceOwner, InstanceSave instanceSave, StateSave stateSave)
+    {
+        // search terms: display properties, display variables, show variables, variable display, variable displayer
+        List<PropertyData> propertyList = new List<PropertyData>();
+
+        if (instanceSave != null && stateSave != null)
+        {
+            FillPropertyList(propertyList, instanceSave, instanceOwner);
+
+        }
+        else if (instanceOwner != null && stateSave != null)
+        {
+            StateSave defaultState = GetRecursiveStateFor(instanceOwner);
+
+            FillPropertyList(propertyList, instanceOwner, null, defaultState);
+
+
+        }
+
+        return propertyList;
+    }
+
+    private void FillPropertyList(List<PropertyData> propertyList, ElementSave instanceOwner,
+        InstanceSave instanceSave, StateSave defaultState, AmountToDisplay amountToDisplay = AmountToDisplay.AllVariables)
+    {
+        var currentState = _selectedState.SelectedStateSave;
+        bool isDefault = currentState == _selectedState.SelectedElement.DefaultState;
+
+        bool isDefinedByBase = instanceSave?.DefinedByBase == true;
+
+        var effectiveElementSave = instanceSave == null ? instanceOwner : instanceSave.GetBaseElementSave();
+
+        bool isCustomType = (effectiveElementSave is StandardElementSave) == false;
+        if (isCustomType || instanceSave != null)
+        {
+            AddNameAndBaseTypeProperties(propertyList, instanceOwner, instanceSave, isReadOnly: isDefault == false || isDefinedByBase);
+        }
+
+        if (instanceSave != null)
+        {
+            propertyList.Add(new PropertyData("Locked", typeof(bool), new Attribute[0], null, "", !isDefault, false, null,
+                ToolTipText: "When locked, the instance cannot be selected in the editor by clicking on it, and variable editing is disabled."));
+
+            if (instanceOwner is ComponentSave)
+            {
+                propertyList.Add(new PropertyData("IsSlot", typeof(bool), new Attribute[0], null, "", !isDefault, false, null, DisplayName: "Is Slot",
+                    ToolTipText: "Marks this instance as a slot — a designated area that can hold child instances when this component is placed inside another component or screen."));
+            }
+        }
+
+        var shouldShowChildContainer = effectiveElementSave is ComponentSave && instanceSave == null;
+        if (shouldShowChildContainer)
+        {
+            AddDefaultChildContainerProperty(propertyList, isDefault);
+        }
+        // we can't remove it here, because it might be added as a regular variable below...
+
+
+        var variableListName = "VariableReferences";
+        if (instanceSave != null)
+        {
+            variableListName = instanceSave.Name + "." + variableListName;
+        }
+
+        Dictionary<string, string> variablesSetThroughReference = GetVariablesSetThroughReferences(effectiveElementSave, currentState, variableListName);
+
+        HashSet<string> addedNames = new HashSet<string>(propertyList.Select(p => p.OriginalName));
+
+        // if component
+        if (instanceSave == null && effectiveElementSave as ComponentSave != null)
+        {
+            var defaultElementState = _standardElementsManager.GetDefaultStateFor("Component");
+            var variables = defaultElementState.Variables;
+            foreach (var item in variables)
+            {
+                // Don't add states here, because they're handled below from this object's Default:
+                if (item.IsState(effectiveElementSave) == false)
+                {
+                    string variableName = item.Name;
+                    var isReadonly = false;
+                    string subtext = null;
+                    var isSetByReference = variablesSetThroughReference.ContainsKey(variableName);
+                    if (variablesSetThroughReference.ContainsKey(variableName))
+                    {
+                        isReadonly = true;
+                        subtext = variablesSetThroughReference[variableName];
+                    }
+                    var property = CreatePropertyData(effectiveElementSave, instanceSave, amountToDisplay, item, isReadonly, isSetByReference, subtext, addedNames);
+
+                    if(property != null)
+                    {
+                        propertyList.Add(property);
+                        addedNames.Add(property.OriginalName);
+                    }
+                }
+            }
+        }
+        // else if screen
+        else if (instanceSave == null && effectiveElementSave as ScreenSave != null)
+        {
+            var defaultElementState = _standardElementsManager.GetDefaultStateFor("Screen");
+            var variables = defaultElementState.Variables;
+
+            foreach (var item in variables)
+            {
+                // Shouldn't we check state?
+                string variableName = item.Name;
+                var isReadonly = false;
+                string subtext = null;
+                var isSetByReference = variablesSetThroughReference.ContainsKey(variableName);
+                if (isSetByReference)
+                {
+                    isReadonly = true;
+                    subtext = variablesSetThroughReference[variableName];
+                }
+                var property = CreatePropertyData(effectiveElementSave, instanceSave, amountToDisplay, item, isReadonly, isSetByReference, subtext, addedNames);
+
+                if (property != null)
+                {
+                    propertyList.Add(property);
+                    addedNames.Add(property.OriginalName);
+                }
+            }
+        }
+
+
+        // now that variables have been added we can remove the default child container:
+        if(!shouldShowChildContainer)
+        {
+            string variableName = "DefaultChildContainer";
+            propertyList.RemoveAll(item => item.OriginalName == variableName);
+            addedNames.Remove(variableName);
+        }
+
+        #region Loop through all variables
+
+        Dictionary<string, string> exposedVariables = new Dictionary<string, string>();
+        if (instanceSave != null)
+        {
+            if (instanceOwner != null)
+            {
+                var exposedVariablesOnThisInstance = instanceOwner.DefaultState.Variables
+                    .Where(item => !string.IsNullOrEmpty(item.ExposedAsName) && item.SourceObject == instanceSave.Name);
+                foreach (var variable in exposedVariablesOnThisInstance)
+                {
+                    var definingVariable = effectiveElementSave.GetVariableFromThisOrBase(variable.GetRootName()) ??
+                        ObjectFinder.Self.GetRootVariable(variable.Name, instanceOwner);
+                    if (definingVariable != null)
+                    {
+                        exposedVariables.Add(definingVariable.Name, variable.ExposedAsName);
+                    }
+                }
+            }
+        }
+
+        // We want to use the default state to get all possible
+        // variables because the default state will always set all
+        // variables.  We then look at the current state to get the
+        // actual value
+        for (int i = 0; i < defaultState.Variables.Count; i++)
+        {
+            VariableSave defaultVariable = defaultState.Variables[i];
+
+            string variableName = defaultVariable.Name;
+            var isReadonly = false;
+            string? subtext = null;
+            var isSetByReference = variablesSetThroughReference.ContainsKey(variableName);
+            if (isSetByReference)
+            {
+                isReadonly = true;
+                subtext += "=" + variablesSetThroughReference[variableName];
+            }
+
+            if (instanceSave != null)
+            {
+
+                if (exposedVariables.ContainsKey(defaultVariable.Name))
+                {
+                    if (!string.IsNullOrEmpty(subtext))
+                    {
+                        subtext += "\n";
+                    }
+                    subtext += "Exposed as " + exposedVariables[defaultVariable.Name];
+                }
+            }
+
+            var shouldSkip = false;
+
+            if(currentState != effectiveElementSave.DefaultState &&
+                defaultVariable.IsState(effectiveElementSave, out ElementSave categoryContainer, out StateSaveCategory category))
+            {
+                if(category?.States.Contains(currentState) == true)
+                {
+                    shouldSkip = true;
+                }
+            }
+
+            if(!shouldSkip)
+            {
+                var property = CreatePropertyData(effectiveElementSave, instanceSave, amountToDisplay, defaultVariable, isReadonly, isSetByReference, subtext, addedNames);
+                if(property != null)
+                {
+                    propertyList.Add(property);
+                    addedNames.Add(property.OriginalName);
+                }
+            }
+        }
+
+        #endregion
+    }
+
+    private static Dictionary<string, string> GetVariablesSetThroughReferences(ElementSave elementSave, StateSave currentState, string variableListName)
+    {
+        Dictionary<string, string> variablesSetThroughReference = new Dictionary<string, string>();
+
+        var value = currentState.GetValueRecursive(variableListName) as IList;
+        if (value != null)
+        {
+            foreach (var item in value)
+            {
+                var assignment = item as string;
+                if (assignment?.Contains("=") == true)
+                {
+                    var indexOfEquals = assignment.IndexOf("=");
+                    var variableName = assignment.Substring(0, indexOfEquals).Trim();
+                    var rightSideEquals = assignment.Substring(indexOfEquals + 1).Trim();
+                    variablesSetThroughReference[variableName] = rightSideEquals;
+                }
+            }
+        }
+
+        HashSet<InstanceSave> instancesWithExposedVariables = new HashSet<InstanceSave>();
+        foreach (var variable in elementSave.DefaultState.Variables)
+        {
+            if (!string.IsNullOrEmpty(variable.SourceObject) && !string.IsNullOrEmpty(variable.ExposedAsName))
+            {
+                var instance = elementSave.GetInstance(variable.SourceObject);
+                if (instance != null)
+                {
+                    instancesWithExposedVariables.Add(instance);
+                }
+            }
+        }
+
+        foreach (var instanceWithExposedVariables in instancesWithExposedVariables)
+        {
+            var instanceVariableListName = "VariableReferences";
+
+            var instanceRfv = new RecursiveVariableFinder(instanceWithExposedVariables, elementSave);
+
+            var variable = instanceRfv.GetVariableList(instanceVariableListName);
+
+            if (variable?.ValueAsIList != null)
+            {
+                foreach (string item in variable.ValueAsIList)
+                {
+                    if(item?.StartsWith("//") == true)
+                    {
+                        continue;
+                    }
+                    var indexOfEquals = item.IndexOf("=");
+
+                    if(indexOfEquals == -1)
+                    {
+                        continue;
+                    }
+
+                    try
+                    {
+                        var variableName = instanceWithExposedVariables.Name + "." + item.Substring(0, indexOfEquals).Trim();
+                        var rightSideEquals = item.Substring(indexOfEquals + 1).Trim();
+                        variablesSetThroughReference[variableName] = rightSideEquals;
+                    }
+                    // swallow this exception, anything could be typed in this text box, and we don't
+                    // want to crash here because of it.
+                    catch { }
+                }
+            }
+        }
+
+        return variablesSetThroughReference;
+    }
+
+    public void GetCategories(BehaviorSave behavior, InstanceSave instance, List<MemberCategory> categories)
+    {
+        if (instance != null)
+        {
+            var propertyList = new List<PropertyData>();
+            AddNameAndBaseTypeProperties(propertyList, null, instance, isReadOnly: false);
+
+            foreach(var item in propertyList)
+            {
+                var srim = CreateSrimFromPropertyData(null, instance, null, null, item);
+
+                if (srim == null)
+                {
+                    continue;
+                }
+                string category = item.Category?.Trim();
+
+                var categoryToAddTo = categories.FirstOrDefault(c => c.Name == category);
+
+                if (categoryToAddTo == null)
+                {
+                    categoryToAddTo = new MemberCategory(category);
+                    categories.Add(categoryToAddTo);
+                }
+
+                categoryToAddTo.Members.Add(srim);
+            }
+
+        }
+
+    }
+
+
+    public List<MemberCategory> GetCategories(ElementSave instanceOwner, InstanceSave instance, List<MemberCategory> categories, StateSave stateSave, StateSaveCategory stateSaveCategory)
+    {
+        var properties = GetProperties(instanceOwner, instance, stateSave);
+
+        StateSave defaultState;
+        ElementSave? instanceElementSave = null;
+        if(instance == null)
+        {
+            defaultState = GetRecursiveStateFor(instanceOwner);
+        }
+        else
+        {
+            GetDefaultState(instance, out instanceElementSave, out defaultState);
+        }
+
+
+
+        foreach (var propertyData in properties)
+        {
+            var srim = CreateSrimFromPropertyData(instanceOwner, instance, stateSave, stateSaveCategory, propertyData);
+
+            if(srim == null)
+            {
+                continue;
+            }
+            string category = propertyData.Category?.Trim();
+
+            if(string.IsNullOrEmpty(category))
+            {
+                category = "General";
+            }
+
+
+            var categoryToAddTo = categories.FirstOrDefault(item => item.Name == category);
+
+            if (categoryToAddTo == null)
+            {
+                categoryToAddTo = new MemberCategory(category);
+                categories.Add(categoryToAddTo);
+            }
+
+            categoryToAddTo.Members.Add(srim);
+
+        }
+
+        // do variable lists last:
+        for (int i = 0; i < defaultState.VariableLists.Count; i++)
+        {
+            VariableListSave variableList = defaultState.VariableLists[i];
+
+            bool shouldInclude = GetIfShouldInclude(variableList, instanceOwner, instance)
+                && !variableList.IsHiddenInPropertyGrid;
+
+            if (shouldInclude && instance != null && instanceElementSave != null)
+            {
+                if (ObjectFinder.Self.IsVariableHiddenRecursively(instanceElementSave, variableList.Name))
+                {
+                    var qualifiedName = instance.Name + "." + variableList.Name;
+                    var currentState = _selectedState.SelectedStateSave;
+                    var isExplicitlySet = currentState?.VariableLists.Any(vl => vl.Name == qualifiedName) == true;
+                    if (!isExplicitlySet)
+                    {
+                        shouldInclude = false;
+                    }
+                }
+            }
+
+            if (shouldInclude)
+            {
+                StateReferencingInstanceMember srim;
+
+                Type? type = null;
+
+                if(variableList.Type == "string")
+                {
+                    type = typeof(List<string>);
+                }
+
+                // todo - eventually move these up to a constructor.
+                var _editVariableService = Locator.GetRequiredService<IEditVariableService>();
+                var _exposeVariableService = Locator.GetRequiredService<IExposeVariableService>();
+                var _hotkeyManager = Locator.GetRequiredService<IHotkeyManager>();
+                var _deleteVariableService = Locator.GetRequiredService<IDeleteVariableService>();
+                var _guiCommands = Locator.GetRequiredService<IGuiCommands>();
+                var _fileCommands = Locator.GetRequiredService<IFileCommands>();
+                var _setVariableLogic = Locator.GetRequiredService<ISetVariableLogic>();
+                var _wireframeObjectManager = Locator.GetRequiredService<IWireframeObjectManager>();
+
+                string variableName = instance != null
+                    ? instance.Name + "." + variableList.Name
+                    : variableList.Name;
+
+                srim = new StateReferencingInstanceMember(
+                    null,
+                    null,
+                    type,
+                    false,
+                    false,
+                    false,
+                    stateSave,
+                    stateSaveCategory,
+                    variableName,
+                    instance,
+                    instanceOwner,
+                    _undoManager,
+                    _editVariableService,
+                    _exposeVariableService,
+                    _hotkeyManager,
+                    _deleteVariableService,
+                    _selectedState,
+                    _guiCommands,
+                    _fileCommands,
+                    _setVariableLogic,
+                    _wireframeObjectManager);
+
+                // moved to internal
+                //srim.SetToDefault += (memberName) => ResetVariableToDefault(srim);
+                // Only if it wasn't already set:
+                if(srim.PreferredDisplayer == null)
+                {
+                    srim.PreferredDisplayer = typeof(ListBoxDisplay);
+                }
+
+                if (instance == null && instanceOwner.VariablesHiddenFromInstances?.Contains(variableList.Name) == true)
+                {
+                    var hiddenText = "Hidden from instances";
+                    srim.DetailText = string.IsNullOrEmpty(srim.DetailText)
+                        ? hiddenText
+                        : srim.DetailText + "\n" + hiddenText;
+                }
+
+                string? category = variableList.Category;
+
+                var categoryToAddTo = categories.FirstOrDefault(item => item.Name == category);
+
+                if (categoryToAddTo == null)
+                {
+                    categoryToAddTo = new MemberCategory(category);
+                    categories.Add(categoryToAddTo);
+                }
+
+                categoryToAddTo.Members.Add(srim);
+            }
+        }
+
+        categories = _categorySortAndColorLogic.SortAndColorCategories(categories);
+
+        return categories;
+    }
+
+
+
+    private StateReferencingInstanceMember CreateSrimFromPropertyData(ElementSave instanceOwner, InstanceSave instance,
+        StateSave stateSave, StateSaveCategory stateSaveCategory, PropertyData propertyData)
+    {
+        // early continue
+        var browsableAttribute = propertyData.Attributes?.FirstOrDefault(item => item is BrowsableAttribute);
+
+        var isMarkedAsNotBrowsable = browsableAttribute != null && (browsableAttribute as BrowsableAttribute)?.Browsable == false;
+        if (isMarkedAsNotBrowsable)
+        {
+            return null;
+        }
+
+        string variableName = instance != null
+            ? instance.Name + "." + propertyData.OriginalName
+            : propertyData.OriginalName;
+
+        // todo - eventually move these up to a constructor.
+        var _editVariableService = Locator.GetRequiredService<IEditVariableService>();
+        var _exposeVariableService = Locator.GetRequiredService<IExposeVariableService>();
+        var _hotkeyManager = Locator.GetRequiredService<IHotkeyManager>();
+        var _deleteVariableService = Locator.GetRequiredService<IDeleteVariableService>();
+        var _guiCommands = Locator.GetRequiredService<IGuiCommands>();
+        var _fileCommands = Locator.GetRequiredService<IFileCommands>();
+        var _setVariableLogic = Locator.GetRequiredService<ISetVariableLogic>();
+        var _wireframeObjectManager = Locator.GetRequiredService<IWireframeObjectManager>();
+
+        var srim = new StateReferencingInstanceMember(
+            propertyData.Attributes,
+            propertyData.Converter,
+            propertyData.ComponentType,
+            propertyData.IsReadOnly,
+            propertyData.IsAssignedByReference,
+            true,
+            stateSave,
+            stateSaveCategory,
+            variableName,
+            instance,
+            instanceOwner,
+            _undoManager,
+            _editVariableService,
+            _exposeVariableService,
+            _hotkeyManager,
+            _deleteVariableService,
+            _selectedState,
+            _guiCommands,
+            _fileCommands,
+            _setVariableLogic,
+            _wireframeObjectManager
+            );
+
+        // Override the display name if specified in PropertyData
+        if (!string.IsNullOrEmpty(propertyData.DisplayName))
+        {
+            srim.DisplayName = propertyData.DisplayName;
+        }
+
+        srim.ToolTipText = propertyData.ToolTipText;
+
+        if (propertyData.PropertiesToSetOnDisplayer != null)
+        {
+            foreach (var kvp in propertyData.PropertiesToSetOnDisplayer)
+            {
+                srim.PropertiesToSetOnDisplayer[kvp.Key] = kvp.Value;
+            }
+        }
+
+        // moved to internal
+        //srim.SetToDefault += (memberName) => ResetVariableToDefault(srim);
+        SetSubtext(stateSave, propertyData.Subtext, srim, variableName);
+
+        if(stateSave != null)
+        {
+            if (_subtextLogic.HasSubtextFunctionFor(stateSave, variableName))
+            {
+                srim.PropertyChanged += (sender, args) =>
+                {
+                    if (args.PropertyName == "Value")
+                    {
+                        SetSubtext(stateSave, propertyData.Subtext, srim, variableName);
+                    }
+                };
+            }
+        }
+
+        return srim;
+    }
+
+    private void SetSubtext(StateSave stateSave, string subtext, StateReferencingInstanceMember srim, string variableName)
+    {
+        srim.DetailText = subtext;
+        string? extraDetail = null;
+        if (stateSave != null)
+        {
+            extraDetail = _subtextLogic.GetSubtextForCurrentState(stateSave, variableName);
+
+
+        }
+        if (!string.IsNullOrEmpty(extraDetail))
+        {
+            if (!string.IsNullOrEmpty(srim.DetailText))
+            {
+                srim.DetailText += "\n";
+            }
+            srim.DetailText += extraDetail;
+        }
+    }
+
+    private StateSave GetRecursiveStateFor(ElementSave elementSave, StateSave? stateToAddTo = null)
+    {
+        // go bottom up
+        var baseElement = ObjectFinder.Self.GetElementSave(elementSave.BaseType);
+        if (baseElement != null)
+        {
+            stateToAddTo = GetRecursiveStateFor(baseElement, stateToAddTo);
+        }
+        if(stateToAddTo == null)
+        {
+            stateToAddTo = new StateSave();
+        }
+
+
+        var existingVariableNames = stateToAddTo.Variables.Select(item => item.Name);
+        var existingVariableListNames = stateToAddTo.VariableLists.Select(item => item.Name);
+
+        if (elementSave is StandardElementSave)
+        {
+            var defaultStates = _standardElementsManager.GetDefaultStateFor(elementSave.Name);
+            var variablesToAdd = defaultStates.Variables
+                .Select(item => item.Clone())
+                .Where(item => existingVariableNames.Contains(item.Name) == false);
+
+            stateToAddTo.Variables.AddRange(variablesToAdd);
+
+            var variableListsToAdd = defaultStates.VariableLists
+                .Select(item => item.Clone())
+                .Where(item => existingVariableListNames.Contains(item.Name) == false);
+
+            stateToAddTo.VariableLists.AddRange(variableListsToAdd);
+        }
+        else
+        {
+            var variablesToAdd = elementSave.DefaultState.Variables
+                .Select(item => item.Clone())
+                .Where(item => existingVariableNames.Contains(item.Name) == false);
+
+            stateToAddTo.Variables.AddRange(variablesToAdd);
+
+            var variableListsToAdd = elementSave.DefaultState.VariableLists
+                .Select(item => item.Clone())
+                .Where(item => existingVariableListNames.Contains(item.Name) == false);
+
+            stateToAddTo.VariableLists.AddRange(variableListsToAdd);
+        }
+
+        // https://github.com/vchelaru/Gum/issues/1023
+        foreach (var category in elementSave.Categories)
+        {
+            var expectedName = category.Name + "State";
+
+            var variable = elementSave.GetVariableFromThisOrBase(expectedName);
+            if (variable != null)
+            {
+                stateToAddTo.Variables.Add(variable);
+            }
+        }
+
+        return stateToAddTo;
+    }
+
+    private void FillPropertyList(List<PropertyData> properties, InstanceSave instanceSave, ElementSave instanceOwner)
+    {
+        ElementSave instanceBaseType;
+        StateSave defaultStateForInstanceBaseTypeElement;
+        GetDefaultState(instanceSave, out instanceBaseType, out defaultStateForInstanceBaseTypeElement);
+
+        if(instanceBaseType != null)
+        {
+            FillPropertyList(properties, instanceOwner, instanceSave, defaultStateForInstanceBaseTypeElement, AmountToDisplay.ElementAndExposedOnly);
+        }
+        else
+        {
+            // We have an instance that has been selected that does not have a base type.
+            // This can happen if the instance references a component type that doesn't exist.
+            // We still want to let the user make edits to this object to fix the problem:
+            var currentState = _selectedState.SelectedStateSave;
+            bool isDefault = currentState == _selectedState.SelectedElement.DefaultState;
+            if (instanceSave?.DefinedByBase == true)
+            {
+                isDefault = false;
+            }
+
+            if (instanceSave != null)
+            {
+                AddNameAndBaseTypeProperties(properties, instanceOwner, instanceSave, isReadOnly: isDefault == false);
+
+            }
+        }
+    }
+
+    /// <summary>
+    /// Retrieves the base element type and its default state for the specified instance.
+    /// </summary>
+    private void GetDefaultState(InstanceSave instanceSave, out ElementSave instanceBaseType, out StateSave defaultState)
+    {
+        instanceBaseType = instanceSave.GetBaseElementSave();
+        if (instanceBaseType != null)
+        {
+            if (instanceBaseType is StandardElementSave)
+            {
+                // if we use the standard elements manager, we don't get any custom categories, so we need to add those:
+                defaultState = _standardElementsManager.GetDefaultStateFor(instanceBaseType.Name).Clone();
+                foreach (var category in instanceBaseType.Categories)
+                {
+                    var expectedName = category.Name + "State";
+
+                    var variable = instanceBaseType.GetVariableFromThisOrBase(expectedName);
+                    if (variable != null)
+                    {
+                        defaultState.Variables.Add(variable);
+                    }
+                }
+            }
+            else
+            {
+                defaultState = GetRecursiveStateFor(instanceBaseType);
+            }
+        }
+        else
+        {
+            defaultState = new StateSave();
+        }
+    }
+
+    private PropertyData CreatePropertyData(ElementSave elementSave, InstanceSave instanceSave,
+        AmountToDisplay amountToDisplay, VariableSave defaultVariable, bool forceReadOnly, bool isAssignedByReference, string subtext, HashSet<string> addedNames)
+    {
+        ElementSave container = elementSave;
+        if (instanceSave != null)
+        {
+            container = instanceSave.ParentContainer;
+        }
+
+        // Not sure why we were passing elementSave to this function:
+        // I added a container object
+        //bool shouldInclude = GetIfShouldInclude(defaultVariable, elementSave, instanceSave, ses);
+        bool shouldInclude = _variableSaveLogic.GetIfVariableIsActive(defaultVariable, container, instanceSave);
+
+        shouldInclude &= (
+            string.IsNullOrEmpty(defaultVariable.SourceObject) ||
+            amountToDisplay == AmountToDisplay.AllVariables ||
+            !string.IsNullOrEmpty(defaultVariable.ExposedAsName));
+
+        shouldInclude &= !addedNames.Contains(defaultVariable.Name);
+
+        if (shouldInclude && instanceSave != null)
+        {
+            var hiddenCheckName = !string.IsNullOrEmpty(defaultVariable.ExposedAsName)
+                ? defaultVariable.ExposedAsName
+                : defaultVariable.Name;
+            if (ObjectFinder.Self.IsVariableHiddenRecursively(elementSave, hiddenCheckName))
+            {
+                var qualifiedName = instanceSave.Name + "." + defaultVariable.Name;
+                var currentState = _selectedState.SelectedStateSave;
+                var isExplicitlySet = currentState?.Variables.Any(v => v.Name == qualifiedName) == true;
+                if (!isExplicitlySet)
+                {
+                    shouldInclude = false;
+                }
+            }
+        }
+
+        var isState = defaultVariable.IsState(elementSave, out ElementSave categoryContainer, out StateSaveCategory categorySave);
+
+        if(isState && shouldInclude)
+        {
+            // uncategorized states are only default, so don't show it:
+            shouldInclude = categorySave != null;
+        }
+
+        if (shouldInclude)
+        {
+            TypeConverter typeConverter = defaultVariable.GetTypeConverter(elementSave);
+
+            Attribute[] customAttributes = GetAttributesForVariable(defaultVariable);
+
+            string category = null;
+            if (!string.IsNullOrEmpty(defaultVariable.Category))
+            {
+                category = defaultVariable.Category;
+            }
+            else if (!string.IsNullOrEmpty(defaultVariable.ExposedAsName))
+            {
+                var baseVariable = ObjectFinder.Self.GetRootVariable(defaultVariable.Name, elementSave);
+                if(baseVariable != null)
+                {
+                    category = baseVariable.Category;
+                }
+                else
+                {
+                    category = "Exposed";
+                }
+            }
+
+            if (string.IsNullOrEmpty(category) && isState)
+            {
+                category = "States and Visibility";
+            }
+
+            if(defaultVariable.Type == null)
+            {
+                throw new Exception($"Could not find type for {defaultVariable}");
+            }
+
+            Type type;
+
+            if(!string.IsNullOrEmpty(defaultVariable.Type))
+            {
+                type = _typeManager.GetTypeFromString(defaultVariable.Type);
+            }
+            else
+            {
+                var rootVariable = ObjectFinder.Self.GetRootVariable(defaultVariable.Name, elementSave);
+
+                type = _typeManager.GetTypeFromString(rootVariable.Type);
+            }
+
+            string name = defaultVariable.Name;
+
+            if (!string.IsNullOrEmpty(defaultVariable.ExposedAsName))
+            {
+                name = defaultVariable.ExposedAsName;
+            }
+
+
+
+            var propertySubtext = _subtextLogic.GetDefaultSubtext(defaultVariable, subtext, name, elementSave, instanceSave);
+
+            var hiddenIndicatorName = !string.IsNullOrEmpty(defaultVariable.ExposedAsName)
+                ? defaultVariable.ExposedAsName
+                : defaultVariable.Name;
+            if (instanceSave == null && elementSave.VariablesHiddenFromInstances?.Contains(hiddenIndicatorName) == true)
+            {
+                var hiddenText = "Hidden from instances";
+                propertySubtext = string.IsNullOrEmpty(propertySubtext)
+                    ? hiddenText
+                    : propertySubtext + "\n" + hiddenText;
+            }
+
+            return new PropertyData(name, type, customAttributes, typeConverter, category, forceReadOnly, isAssignedByReference, propertySubtext,
+                ToolTipText: defaultVariable.ToolTipText);
+        }
+        return null;
+    }
+
+
+    private void AddDefaultChildContainerProperty(List<PropertyData> propertyList, bool isDefault)
+    {
+        propertyList.Add(new PropertyData(
+            "DefaultChildContainer",
+            typeof(string),
+            new Attribute[0],
+            new AvailableInstancesConverter(),
+            "",
+            !isDefault,
+            false,
+            null,
+            DisplayName: "Default Slot",
+            ToolTipText: "The slot instance that receives child objects by default when this component is placed inside another component or screen."));
+    }
+
+    private void AddNameAndBaseTypeProperties(List<PropertyData> pdc, ElementSave? instanceOwner, InstanceSave instance, bool isReadOnly)
+    {
+        pdc.Add(new PropertyData("Name", typeof(string), new Attribute[0], TypeDescriptor.GetConverter(typeof(string)), "", isReadOnly, false, null));
+
+        var isExcluded = false;
+
+        if(instanceOwner != null)
+        {
+            RecursiveVariableFinder rfv = null;
+            if (instance != null)
+            {
+                rfv = new RecursiveVariableFinder(instance, instanceOwner);
+            }
+            else
+            {
+                rfv = new RecursiveVariableFinder(instanceOwner.DefaultState);
+            }
+            // create a fake variable here to see if it's excluded:
+            var fakeBaseTypeVariable = new VariableSave
+            {
+                Name = "BaseType",
+            };
+
+            isExcluded = _pluginManager.ShouldExclude(
+                fakeBaseTypeVariable, rfv);
+        }
+
+
+        if (!isExcluded)
+        {
+            var baseTypeConverter = new AvailableBaseTypeConverter(instanceOwner, instance);
+            // We may want to support Screens inheriting from other Screens in the future, but for now we won't allow it
+            pdc.Add(new PropertyData("BaseType", typeof(string), new Attribute[0], baseTypeConverter, "", isReadOnly, false, null,
+                PropertiesToSetOnDisplayer: new Dictionary<string, object> { [nameof(ComboBoxDisplay.IsEditable)] = true }));
+        }
+    }
+
+    private bool GetIfShouldInclude(VariableListSave variableList, ElementSave container, InstanceSave currentInstance)
+    {
+        bool toReturn = (string.IsNullOrEmpty(variableList.SourceObject));
+
+        if (toReturn)
+        {
+            StandardElementSave rootElementSave = null;
+
+            if (currentInstance != null)
+            {
+                rootElementSave = ObjectFinder.Self.GetRootStandardElementSave(currentInstance);
+            }
+            else if ((container is ScreenSave) == false)
+            {
+                rootElementSave = ObjectFinder.Self.GetRootStandardElementSave(container);
+            }
+
+            toReturn = _variableSaveLogic.GetShouldIncludeBasedOnBaseType(variableList, container, rootElementSave);
+        }
+
+        return toReturn;
+    }
+
+    private Attribute[] GetAttributesForVariable(VariableSave defaultVariable)
+    {
+        List<Attribute> attributes = new List<Attribute>();
+
+        if (defaultVariable.IsFile)
+        {
+            attributes.Add(mFileWindowAttribute);
+        }
+
+        if (defaultVariable.IsHiddenInPropertyGrid)
+        {
+            attributes.Add(new BrowsableAttribute(false));
+        }
+
+        List<Attribute> attributesFromPlugins = _pluginManager.GetAttributesFor(defaultVariable);
+
+        if(attributesFromPlugins.Count != 0)
+        {
+            attributes.AddRange(attributesFromPlugins);
+        }
+
+        return attributes.ToArray();
+    }
+
+}

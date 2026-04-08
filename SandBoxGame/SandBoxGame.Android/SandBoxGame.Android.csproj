@@ -10,6 +10,7 @@
     <MonoGamePlatform>Android</MonoGamePlatform>
     <Configurations>Debug;Release;YTB</Configurations>
     <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+	  <AndroidUseFastDeployment>false</AndroidUseFastDeployment>
 
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -31,11 +32,15 @@
     <DebugSymbols>True</DebugSymbols>
     <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
+
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\YotsubaEngine\YotsubaEngine.csproj" />
     <ProjectReference Include="..\SandBoxGame.Core\SandBoxGame.Core.csproj" />
   </ItemGroup>
+	<!--<ItemGroup>
+		<AndroidAsset Include="..\DesktopGL\Content\GumProject\**\*.*" Link="Content\GumProject\%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>-->
   <ItemGroup>
     <AndroidAsset Include="$(OutputPath)Content\**\*">
       <Link>Content\%(RecursiveDir)%(Filename)%(Extension)</Link>

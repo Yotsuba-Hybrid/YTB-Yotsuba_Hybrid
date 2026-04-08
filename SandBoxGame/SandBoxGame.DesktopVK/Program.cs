@@ -11,5 +11,6 @@ internal class Program
     {
         using var game = new YTBProgram(YotsubaEngine.Core.YotsubaGame.Platforms.Desktop_VK);
         game.Run();
+        
     }
 }

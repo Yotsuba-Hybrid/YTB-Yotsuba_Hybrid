@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if YTB
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Immutable;
@@ -30,7 +31,7 @@ namespace YotsubaEngine.Core.System.YTBDragAndDrop
         private int? _draggedFontEntityId = null;
         private Vector2 _dragOffset = Vector2.Zero;
 
-        public void Dispose()
+        public override void Dispose()
         {
         }
 
@@ -268,3 +269,4 @@ namespace YotsubaEngine.Core.System.YTBDragAndDrop
 #endif
 //+:cnd:noEmit
 }
+#endif

@@ -1,4 +1,5 @@
-﻿using Hexa.NET.ImGui;
+﻿#if YTB
+using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace YotsubaEngine.Graphics.ImGuiNet
@@ -48,3 +49,4 @@ namespace YotsubaEngine.Graphics.ImGuiNet
         }
     }
 }
+#endif

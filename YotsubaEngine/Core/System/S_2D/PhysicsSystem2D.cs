@@ -7,7 +7,6 @@ using YotsubaEngine.Core.Component.C_2D;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.Contract;
-using YotsubaEngine.Core.System.YotsubaEngineUI;
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Events.YTBEvents;
 using YotsubaEngine.HighestPerformanceTypes;
@@ -51,7 +50,9 @@ namespace YotsubaEngine.Core.System.S_2D
             Collision_Prediction_Runtime.InitializeSystem(entities);
             EventManager = EventManager.Instance;
             EntityManager = @entities;
+#if YTB
             EngineUISystem.SendLog(typeof(PhysicsSystem2D).Name + " Se inicio correctamente");
+#endif
         }
 
         /// <summary>

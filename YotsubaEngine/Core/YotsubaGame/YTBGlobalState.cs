@@ -150,7 +150,7 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// Color del fondo del engine (configurable desde la UI).
         /// <para>Engine background color (configurable from the UI).</para>
         /// </summary>
-        public static Color EngineBackground { get; set; } = Color.Turquoise;
+        public static Color ColorBackground { get; set; } = Color.Turquoise;
 
         /// <summary>
         /// Instancia global del juego.

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿#if YTB
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,9 @@ using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.Contract;
 using YotsubaEngine.Core.System.S_2D;
+#if YTB
 using YotsubaEngine.Core.System.YotsubaEngineUI;
+#endif
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.HighestPerformanceTypes;
 using static YotsubaEngine.Core.System.S_AGNOSTIC.InputSystem;
@@ -270,7 +273,7 @@ namespace YotsubaEngine.Core.System.YTBDragAndDrop
         /// </summary>
         private void GuardarCambiosEnEscena(Yotsuba entity, TransformComponent transform)
         {
-            var gameInfo = EngineUISystem.GameInfo;
+            var gameInfo = YTBGlobalState.GameData.Item1;
             var gameClass = (YTBGame)YTBGame.Instance;
             string sceneName = gameClass.SceneManager.CurrentScene.SceneName;
 
@@ -463,3 +466,4 @@ namespace YotsubaEngine.Core.System.YTBDragAndDrop
         public DroppedFileKind Kind { get; } = kind;
     }
 }
+#endif
