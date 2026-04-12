@@ -7,7 +7,19 @@
   <Platforms>
     <Platform Name="AnyCPU" />
   </Platforms>
-<Folder Name="/Dependencies/">
+<Folder Name="/Dependencies/" />
+  <Folder Name="/Dependencies/Gum/">
+  <Project Path="../Gum/GumCommon/GumCommon.csproj">
+  <BuildType Solution="YTB|*" Project="Release" />
+  </Project>
+  <Project Path="../Gum/MonoGameGum/MonoGameGum.csproj">
+  <BuildType Solution="YTB|*" Project="Release" />
+  </Project>
+  <Project Path="../Gum/Tools/Gum.Analyzers/Gum.Analyzers.csproj">
+  <BuildType Solution="YTB|*" Project="Release" />
+  </Project>
+  </Folder>
+<Folder Name="/Dependencies/ImGui/">
 <Project Path="../Hexa.NET.ImGui-2.2.4/Hexa.NET.ImGui-2.2.4/Hexa.NET.ImGui.Backends/Hexa.NET.ImGui.Backends.csproj">
 <BuildType Solution="YTB|*" Project="Release" />
 </Project>
@@ -24,44 +36,61 @@
 <BuildType Solution="YTB|*" Project="Release" />
 </Project>
 </Folder>
-  <Folder Name="/Dependencies/Gum/">
-    <Project Path="../Gum/GumCommon/GumCommon.csproj">
-      <BuildType Solution="Debug|AnyCPU" Project="Debug" />
-      <BuildType Solution="Release|AnyCPU" Project="Release" />
-      <BuildType Solution="YTB|AnyCPU" Project="Release" />
-    </Project>
-    <Project Path="../Gum/MonoGameGum/MonoGameGum.csproj">
-      <BuildType Solution="Debug|AnyCPU" Project="Debug" />
-      <BuildType Solution="Release|AnyCPU" Project="Release" />
-      <BuildType Solution="YTB|AnyCPU" Project="Release" />
-    </Project>
-    <Project Path="../Gum/Tools/Gum.Analyzers/Gum.Analyzers.csproj">
-      <BuildType Solution="Debug|AnyCPU" Project="Debug" />
-      <BuildType Solution="Release|AnyCPU" Project="Release" />
-      <BuildType Solution="YTB|AnyCPU" Project="Release" />
-    </Project>
-  </Folder>
-  <Folder Name="/Platforms/">
-  <Project Path="SandBoxGame.Android/SandBoxGame.Android.csproj">
-  <Deploy />
-  </Project>
-  <Project Path="SandBoxGame.AvaloniaGL/SandBoxGame.AvaloniaGL.csproj">
-  <BuildType Solution="YTB|*" Project="Release" />
-  </Project>
-  <Project Path="SandBoxGame.DesktopGL/SandBoxGame.DesktopGL.csproj" />
-  <Project Path="SandBoxGame.DesktopVK/SandBoxGame.DesktopVK.csproj" />
-  <Project Path="SandBoxGame.iOS/SandBoxGame.iOS.csproj">
-  <Deploy Solution="YTB|*" />
-  </Project>
-  <Project Path="SandBoxGame.WindowsDX12/SandBoxGame.WindowsDX12.csproj" />
-  </Folder>
-  <Folder Name="/YotsubaEngine/">
-  <Project Path="../YotsubaEngine/YotsubaEngine.csproj" />
-  <Project Path="../YTBContentBuilder/YTBContentBuilder.csproj" Id="e5a9f17e-eb06-43ba-95c1-033dec5340af" />
-  </Folder>
-  <Folder Name="/Platforms/AssetBuilder/">
-  <Project Path="SandBoxGame.Content/SandBoxGame.Content.csproj" />
-  </Folder>
+<Folder Name="/Dependencies/YotsubaEngine/">
+<Project Path="../YotsubaEngine/YotsubaEngine.csproj" />
+<Project Path="../YTBContentBuilder/YTBContentBuilder.csproj" Id="e5a9f17e-eb06-43ba-95c1-033dec5340af" />
+</Folder>
+<Folder Name="/Dependencies/YotsubaEngine/AssetBuilder/">
+<Project Path="SandBoxGame.Content/SandBoxGame.Content.csproj" />
+</Folder>
+  <Folder Name="/Platforms/" />
+<Folder Name="/Platforms/Mobile/">
+<Project Path="SharedCode.Mobile/SharedCode.Mobile.csproj" Id="c3e136f0-a3f9-4f5d-ad56-9307ae64d3a0">
+<BuildType Solution="YTB|*" Project="Release" />
+</Project>
+</Folder>
+<Folder Name="/Platforms/Mobile/Android/">
+<Project Path="SandBoxGame.Android/SandBoxGame.Android.csproj">
+<Deploy />
+</Project>
+</Folder>
+<Folder Name="/Platforms/Mobile/IOS/">
+<Project Path="SandBoxGame.iOS/SandBoxGame.iOS.csproj">
+<Deploy Solution="YTB|*" />
+</Project>
+</Folder>
+<Folder Name="/Platforms/Multiplatform/">
+<Project Path="SharedCode.Multiplatform/SharedCode.Multiplatform.NoMobile.csproj" Id="2a413b9a-3ad5-40e7-b91e-e3f03f43bf3e">
+<BuildType Solution="YTB|*" Project="Release" />
+</Project>
+</Folder>
+<Folder Name="/Platforms/Multiplatform/Desktop/">
+<Project Path="SharedCode.Linux.Mac.Windows/SharedCode.Linux.Mac.Windows.csproj">
+<BuildType Solution="YTB|*" Project="Release" />
+</Project>
+</Folder>
+<Folder Name="/Platforms/Multiplatform/Desktop/OpenGl/">
+<Project Path="SandBoxGame.AvaloniaGL/SandBoxGame.AvaloniaGL.csproj">
+<BuildType Solution="YTB|*" Project="Release" />
+</Project>
+<Project Path="SandBoxGame.DesktopGL/SandBoxGame.DesktopGL.csproj" />
+</Folder>
+<Folder Name="/Platforms/Multiplatform/Desktop/Vulkan/">
+<Project Path="SandBoxGame.DesktopVK/SandBoxGame.DesktopVK.csproj" />
+</Folder>
+<Folder Name="/Platforms/Multiplatform/Microsoft/">
+<Project Path="SharedCode.Microsoft/SharedCode.Microsoft.csproj">
+<BuildType Solution="YTB|*" Project="Release" />
+</Project>
+</Folder>
+<Folder Name="/Platforms/Multiplatform/Microsoft/DirectX12 (Windows &amp; XBOX)/">
+<Project Path="SandBoxGame.WindowsDX12/SandBoxGame.WindowsDX12.csproj" />
+</Folder>
+<Folder Name="/Platforms/Multiplatform/Microsoft/WPF (Windows Only)/">
+<Project Path="MonoGame.WpfCore/MonoGame.WpfCore.csproj">
+<BuildType Solution="YTB|*" Project="Release" />
+</Project>
+</Folder>
 <Project Path="SandBoxGame.Core/SandBoxGame.Core.csproj" />
 
 </Solution>

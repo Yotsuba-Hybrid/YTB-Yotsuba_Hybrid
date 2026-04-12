@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using MonoGameGum;
 using SandBoxGame.Core.Localization;
 using SandBoxGame.Core.Systems;
@@ -177,7 +177,7 @@ namespace SandBoxGame.Core
             // Configure screen orientations.
             //_graphics.SupportedOrientations = DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight;
 
-            if (YTBGlobalState.Platform is not Platforms.Avalonia_GL)
+            if (YTBGlobalState.Platform is not Platforms.Avalonia_GL && YTBGlobalState.Platform is not Platforms.Windows_WPF_DX12)
             {
                 InitializeGraphicsDevice(_graphics, GraphicsDevice, WINDOW_WIDTH, WINDOW_HEIGHT, IS_FULLSCREEN);
             }
@@ -240,7 +240,6 @@ namespace SandBoxGame.Core
         protected override void Update(GameTime gameTime)
         {
             // TODO: Add your update logic here
-
             base.Update(gameTime);
         }
 
@@ -254,5 +253,6 @@ namespace SandBoxGame.Core
         {
             base.Draw(gameTime);
         }
+
     }
 }

@@ -14,6 +14,11 @@ using YotsubaEngine.Physics;
 using YotsubaEngine.Physics.RigidBody;
 using YotsubaEngine.Runtime.CPR;
 using YotsubaEngine.YTBMath;
+#if YTB
+using YotsubaEngine.Core.System.YotsubaEngineUI;
+using YotsubaEngine.Exceptions;
+using YotsubaEngine.Core.System.YotsubaEngineUI.UI;
+#endif
 
 namespace YotsubaEngine.Core.System.S_2D
 {

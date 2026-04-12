@@ -95,7 +95,7 @@ namespace YotsubaEngine
         /// Obtiene o establece la instancia del renderizador ImGui.
         /// <para>Gets or sets the ImGui renderer instance.</para>
         /// </summary>
-        internal static ImGuiRenderer GuiRenderer { get; set; }
+        public static ImGuiRenderer GuiRenderer { get; set; }
 #endif
         /// <summary>
         /// Crea una nueva instancia anfitriona del juego Yotsuba.
@@ -430,6 +430,18 @@ namespace YotsubaEngine
             base.Draw(gameTime);
 
 
+        }
+
+        protected override void EndDraw()
+        {
+            if (YTBGlobalState.Platform == Platforms.Windows_WPF_DX12)
+            {
+
+            }
+            else
+            {
+                base.EndDraw();
+            }
         }
 
         /// <summary>

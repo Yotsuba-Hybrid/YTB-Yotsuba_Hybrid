@@ -10,16 +10,15 @@
 
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\YotsubaEngine\YotsubaEngine.csproj" />
-    <ProjectReference Include="..\SandBoxGame.Core\SandBoxGame.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <BundleResource Include="$(OutputPath)Content\**\*">
       <Link>Content\%(RecursiveDir)%(Filename)%(Extension)</Link>
     </BundleResource>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.iOS" Version="3.8.5-preview.*" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharedCode.Mobile\SharedCode.Mobile.csproj" />
   </ItemGroup>
   <Import Project="..\SandBoxGame.Content\BuildContent.targets" />
   <Import Project="..\..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\CopyAllImGuiNatives.targets" />
