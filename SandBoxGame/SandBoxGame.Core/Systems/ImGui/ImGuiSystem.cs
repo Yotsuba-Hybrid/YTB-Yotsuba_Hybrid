@@ -11,9 +11,9 @@ using YotsubaEngine.Graphics.ImGuiNet;
 
 namespace SandBoxGame.Core.Systems.ImGui
 {
-    internal class ImGuiSystem : IRenderSystem
+    public class ImGuiSystem : IRenderSystem
     {
-        internal static ImGuiRenderer GuiRenderer { get; set; }
+        public static ImGuiRenderer GuiRenderer { get; set; }
 
         public override void InitializeSystem(EntityManager entities)
         {
@@ -23,8 +23,8 @@ namespace SandBoxGame.Core.Systems.ImGui
             {
 
                 // ImGui setup (fonts, theme)
-                var io = ImGui.GetIO();
-                ImGui.GetIO().BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
+                var io = Hexa.NET.ImGui.ImGui.GetIO();
+                Hexa.NET.ImGui.ImGui.GetIO().BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
                 io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
 
                 const string outputFontsDir = "Fonts";
@@ -38,7 +38,7 @@ namespace SandBoxGame.Core.Systems.ImGui
                     // 1. Cargar la fuente principal (texto)
 
                     // 2. Crear la configuración para la fuente de íconos
-                    ImFontConfigPtr config = ImGui.ImFontConfig();
+                    ImFontConfigPtr config = Hexa.NET.ImGui.ImGui.ImFontConfig();
                     config.MergeMode = true;
                     config.PixelSnapH = true;
 
@@ -71,7 +71,7 @@ namespace SandBoxGame.Core.Systems.ImGui
                 io.Fonts.Build();
             }
 
-            var style = ImGui.GetStyle();
+            var style = Hexa.NET.ImGui.ImGui.GetStyle();
 
             if (YTBGlobalState.IsAndroid)
             {
@@ -81,7 +81,7 @@ namespace SandBoxGame.Core.Systems.ImGui
             {
                 GuiRenderer.RebuildFontAtlas();
             }
-            var guiContext = ImGui.GetCurrentContext();
+            var guiContext = Hexa.NET.ImGui.ImGui.GetCurrentContext();
 
             if (YTBGlobalState.IsDesktop)
             {

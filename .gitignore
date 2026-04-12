@@ -6,7 +6,6 @@
 *.suo
 *.user
 *.userosscache
-*.sln.docstates
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -43,7 +42,6 @@ YotsubaEngineHistory.ytb
 
 # Rider / IntelliJ
 .idea/
-*.sln.iml
 
 # MSTest test Results
 [Tt]est[Rr]esult*/

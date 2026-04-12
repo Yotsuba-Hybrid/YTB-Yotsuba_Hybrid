@@ -6,7 +6,7 @@
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<Platform>AnyCPU</Platform>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<!--<GeneratePackageOnBuild>True</GeneratePackageOnBuild>-->
 		<PackageId>Gum.MonoGame</PackageId>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Version>2026.3.28.2</Version>
@@ -16,7 +16,7 @@
 		<LangVersion>12</LangVersion>
 
 
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<!--<GenerateDocumentationFile>true</GenerateDocumentationFile>-->
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<Configurations>Debug;Release;TEST;Release_No_Diagnostics</Configurations>

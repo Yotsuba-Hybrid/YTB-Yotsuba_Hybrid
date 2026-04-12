@@ -11,6 +11,7 @@ namespace SandBoxGame.Core
         {
             "Icon",
             "icon-1024",
+            "monogame-logo",
             "splash",
             "Spritesheets/SpriteSheet",
         };

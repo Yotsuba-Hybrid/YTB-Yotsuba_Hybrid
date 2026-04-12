@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SandBoxGame.Core\SandBoxGame.Core.csproj" />
+    <ProjectReference Include="..\SharedCode.Multiplatform\SharedCode.Multiplatform.NoMobile.csproj" />
   </ItemGroup>
 
 	<Import Project="..\SandBoxGame.Content\BuildContent.targets" />

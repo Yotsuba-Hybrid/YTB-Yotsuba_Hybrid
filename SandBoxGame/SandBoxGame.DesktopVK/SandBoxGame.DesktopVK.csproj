@@ -15,8 +15,7 @@
 		<DefineConstants>DEBUG;YOTSUBA</DefineConstants>
 	</PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\YotsubaEngine\YotsubaEngine.csproj" />
-    <ProjectReference Include="..\SandBoxGame.Core\SandBoxGame.Core.csproj" />
+    <ProjectReference Include="..\SharedCode.Linux.Mac.Windows\SharedCode.Linux.Mac.Windows.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.Native" Version="3.8.5-preview.*" />

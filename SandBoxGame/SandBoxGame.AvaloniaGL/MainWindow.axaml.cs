@@ -10,8 +10,10 @@ using System.Threading.Tasks;
 using YotsubaEngine;
 using YotsubaEngine.ActionFiles.YTB_Files;
 using YotsubaEngine.Core.YotsubaGame;
+#if !YTB
 using YotsubaEngine.Graphics.ImGuiNet;
-
+using SandBoxGame.Core.Systems.ImGui;
+#endif
 namespace SandBoxGame.AvaloniaGL;
 
 public partial class MainWindow : Window
@@ -68,7 +70,8 @@ public partial class MainWindow : Window
 
     private void OnPointerMoved(object? sender, PointerEventArgs e)
     {
-        var renderer = YTBGame.GuiRenderer;
+        
+        var renderer = ImGuiSystem.GuiRenderer;
         if (renderer == null) return;
 
         // Obtener la escala de la pantalla
@@ -87,7 +90,7 @@ public partial class MainWindow : Window
     {
         MyGameControl.Focus();
 
-        var renderer = YTBGame.GuiRenderer;
+        var renderer = ImGuiSystem.GuiRenderer;
         if (renderer == null) return;
 
         var scale = GetScaling();
@@ -101,7 +104,7 @@ public partial class MainWindow : Window
 
     private void OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        var renderer = YTBGame.GuiRenderer;
+        var renderer = ImGuiSystem.GuiRenderer;
         if (renderer == null) return;
 
         UpdateButtonState(e.GetCurrentPoint(MyGameControl).Properties, renderer);
@@ -109,7 +112,7 @@ public partial class MainWindow : Window
 
     private void OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
-        var renderer = YTBGame.GuiRenderer;
+        var renderer = ImGuiSystem.GuiRenderer;
         if (renderer == null) return;
         renderer.InjectMouseWheel((float)e.Delta.X, (float)e.Delta.Y);
     }
@@ -125,7 +128,7 @@ public partial class MainWindow : Window
 
     private void OnKeyDown(object? sender, KeyEventArgs e)
     {
-        var renderer = YTBGame.GuiRenderer;
+        var renderer = ImGuiSystem.GuiRenderer;
         if (renderer == null) return;
         if (TryMapKey(e.Key, out var imguiKey))
             renderer.InjectKeyEvent(imguiKey, true);
@@ -133,7 +136,7 @@ public partial class MainWindow : Window
 
     private void OnKeyUp(object? sender, KeyEventArgs e)
     {
-        var renderer = YTBGame.GuiRenderer;
+        var renderer = ImGuiSystem.GuiRenderer;
         if (renderer == null) return;
         if (TryMapKey(e.Key, out var imguiKey))
             renderer.InjectKeyEvent(imguiKey, false);
@@ -141,7 +144,7 @@ public partial class MainWindow : Window
 
     private void OnTextInput(object? sender, Avalonia.Input.TextInputEventArgs e)
     {
-        var renderer = YTBGame.GuiRenderer;
+        var renderer = ImGuiSystem.GuiRenderer;
         if (renderer == null || e.Text == null) return;
         foreach (var c in e.Text)
         {
