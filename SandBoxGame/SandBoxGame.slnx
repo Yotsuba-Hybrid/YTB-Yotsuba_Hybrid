@@ -37,6 +37,9 @@
 </Project>
 </Folder>
 <Folder Name="/Dependencies/YotsubaEngine/">
+<Project Path="../YotsubaEngine.3D/YotsubaEngine_3D.csproj" Id="b5377f73-5c14-481d-a98e-d264895a1d5f">
+<BuildType Solution="YTB|*" Project="Release" />
+</Project>
 <Project Path="../YotsubaEngine/YotsubaEngine.csproj" />
 <Project Path="../YTBContentBuilder/YTBContentBuilder.csproj" Id="e5a9f17e-eb06-43ba-95c1-033dec5340af" />
 </Folder>

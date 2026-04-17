@@ -421,21 +421,21 @@ namespace YotsubaEngine.Core.YotsubaGame.Scripting
         /// <para>Gets the button component for the current entity.</para>
         /// </summary>
         /// <returns>Componente de botón. <para>Button component.</para></returns>
-        public ButtonComponent2D GetButtonComponent() => EntityManager.Button2DComponents[Entity.Id];
+        public ref ButtonComponent2D GetButtonComponent() => ref EntityManager.Button2DComponents[Entity.Id];
         /// <summary>
         /// Obtiene el componente de botón para un id de entidad específico.
         /// <para>Gets the button component for a specific entity id.</para>
         /// </summary>
         /// <param name="entityId">Identificador de la entidad. <para>Entity identifier.</para></param>
         /// <returns>Componente de botón. <para>Button component.</para></returns>
-        public ButtonComponent2D GetButtonComponent(int entityId) => EntityManager.Button2DComponents[entityId];
+        public ref ButtonComponent2D GetButtonComponent(int entityId) => ref EntityManager.Button2DComponents[entityId];
         /// <summary>
         /// Obtiene el componente de botón para una instancia de entidad específica.
         /// <para>Gets the button component for a specific entity instance.</para>
         /// </summary>
         /// <param name="entity">Instancia de la entidad. <para>Entity instance.</para></param>
         /// <returns>Componente de botón. <para>Button component.</para></returns>
-        public ButtonComponent2D GetButtonComponent(Yotsuba entity) => EntityManager.Button2DComponents[entity.Id];
+        public ref ButtonComponent2D GetButtonComponent(Yotsuba entity) => ref EntityManager.Button2DComponents[entity.Id];
 
         /// <summary>
         /// Obtiene el componente de tilemap para la entidad actual.
@@ -973,5 +973,25 @@ namespace YotsubaEngine.Core.YotsubaGame.Scripting
             var scene = YTBGlobalState.Game.SceneManager.CurrentScene;
             return scene.SceneName;
         }
+    }
+
+    public class EntityFunctionsScript : BaseScript { }
+    public static class EntityFunctions
+    {
+        private static EntityFunctionsScript EntityFunctionsScript = new();
+        private static void ValidateEntityManager(this EntityFunctionsScript functionsScript) => functionsScript.EntityManager ??= YTBGlobalState.Game.SceneManager.CurrentScene.EntityManager;
+        internal static void SetEntityManager(EntityManager entityManager)
+        {
+            EntityFunctionsScript.EntityManager = entityManager;
+        }
+
+        public static ref AnimationComponent2D GetAnimationComponent(this Yotsuba entity) => ref EntityFunctionsScript.GetAnimationComponent(entity);
+
+        public static ref ButtonComponent2D GetButtonComponent(this Yotsuba entity) => ref EntityFunctionsScript.GetButtonComponent(entity);
+
+        public static ref FontComponent2D GetFontComponent(this Yotsuba entity) => ref EntityFunctionsScript.GetFontComponent(entity);
+
+        public static ref SpriteComponent2D GetSpriteComponent2D(this Yotsuba entity) => ref EntityFunctionsScript.GetSpriteComponent(entity);
+
     }
 }

@@ -15,6 +15,7 @@ namespace SandBoxGame.Core.Systems
         public override void InitializeSystem(EntityManager entities)
         {
             EntityManager = entities;
+            if (!GumUI.IsInitialized)
             GumService.Default.Initialize(YTBGlobalState.Game, "GumProject/GumProject.gumx");
 
             var screen = new DemoScreenGumRuntime();

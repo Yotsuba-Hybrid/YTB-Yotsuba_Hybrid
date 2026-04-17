@@ -114,7 +114,7 @@ namespace YotsubaEngine.Core.System.S_AGNOSTIC
                 if (IsKeySJustPressed && IsKeyCtrlIsPressed)
                 {
                     EngineUISystem.SaveChanges();
-                    YTBGame game = (YTBGame)YTBGlobalState.Game;
+                    YTBGame game = YTBGlobalState.Game;
                     YTBGlobalState.LastSceneNameBeforeUpdate = game.SceneManager.CurrentScene.SceneName;
                     Task.Run(async () => await YTBFileToGameData.UpdateStateOfSceneManager());
                 }

@@ -30,11 +30,6 @@ namespace YotsubaEngine.Core.System.S_3D
         private EventManager EventManager { get; set; }
 
         /// <summary>
-        /// Referencia al EntityManager para manejar entidades y componentes.
-        /// </summary>
-        private EntityManager EntityManager { get; set; }
-
-        /// <summary>
         /// Referencia a la clase Graphics3D para realizar operaciones de renderizado 3D.
         /// </summary>
         private Graphics3D Graphics3D;
@@ -44,7 +39,7 @@ namespace YotsubaEngine.Core.System.S_3D
         /// <para>Initializes the 3D render system.</para>
         /// </summary>
         /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
-        public void InitializeSystem(EntityManager entities)
+        public override void InitializeSystem(EntityManager entities)
         {
 
             EntityManager = entities;
@@ -62,7 +57,7 @@ namespace YotsubaEngine.Core.System.S_3D
         /// <para>Updates 3D rendering each frame.</para>
         /// </summary>
         /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
-        public void UpdateSystem(GameTime gameTime)
+        public override void UpdateSystem(GameTime gameTime)
         {
 
 
@@ -199,31 +194,6 @@ namespace YotsubaEngine.Core.System.S_3D
 
                 Graphics3D.DrawSprite2_5D(ref sprite, transform.Position, transform.Color, camera.ViewMatrix, camera.ProjectionMatrix, transform.Rotation);
             }
-        }
-
-        /// <summary>
-        /// Hook de actualización compartida por entidad (no usado).
-        /// <para>Shared per-entity update hook (unused).</para>
-        /// </summary>
-        /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
-        /// <param name="time">Tiempo de juego. <para>Game time.</para></param>
-        public void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time)
-        {
-            // 3D render system does not require per-entity updates; handled in UpdateSystem
-        }
-
-        /// <summary>
-        /// Hook de inicialización compartida por entidad (no usado).
-        /// <para>Shared per-entity initialization hook (unused).</para>
-        /// </summary>
-        /// <param name="Entidad">Instancia de entidad. <para>Entity instance.</para></param>
-        public void SharedEntityInitialize(ref Yotsuba Entidad)
-        {
-            // 3D entity initialization is currently handled externally (Coming Soon)
-        }
-
-        public void Dispose()
-        {
         }
     }
 }

@@ -22,6 +22,7 @@ using YotsubaEngine.Audio;
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Graphics;
 using YotsubaEngine.Scripting;
+using YotsubaEngine.Core.YotsubaGame.Scripting;
 namespace YotsubaEngine
 {
     /// <summary>
@@ -209,7 +210,6 @@ namespace YotsubaEngine
         {
             YTBGlobalState.GraphicsDevice = GraphicsDevice;
 
-
             if (YTBGlobalState.IsDesktop && YTBGlobalState.EngineEnabled)
             {
 
@@ -350,6 +350,7 @@ namespace YotsubaEngine
             base.Initialize();
         }
 
+
         //-:cnd:noEmit
 #if YTB
         /// <summary>
@@ -363,7 +364,8 @@ namespace YotsubaEngine
         }
 
 #endif
-        //+:cnd:noEmit
+//+:cnd:noEmit
+
         /// <summary>
         /// Loads engine content and initializes the scene.
         /// Carga el contenido del motor e inicializa la escena.
@@ -371,7 +373,6 @@ namespace YotsubaEngine
         protected override void LoadContent()
         {
 #if YTB
-
             try
             {
 

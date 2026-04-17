@@ -25,7 +25,374 @@ namespace YotsubaEngine.Graphics
         public ModelRegistry()
         {
             // Register all discovered models / Registrar todos los modelos descubiertos
+            RegisterModel("FBX format/barrel");
+            RegisterModel("FBX format/boat-row-large");
+            RegisterModel("FBX format/boat-row-small");
+            RegisterModel("FBX format/bottle-large");
+            RegisterModel("FBX format/bottle");
+            RegisterModel("FBX format/cannon-ball");
+            RegisterModel("FBX format/cannon-mobile");
+            RegisterModel("FBX format/cannon");
+            RegisterModel("FBX format/castle-door");
+            RegisterModel("FBX format/castle-gate");
+            RegisterModel("FBX format/castle-wall");
+            RegisterModel("FBX format/castle-window");
+            RegisterModel("FBX format/chest");
+            RegisterModel("FBX format/crate-bottles");
+            RegisterModel("FBX format/crate");
+            RegisterModel("FBX format/flag-high-pennant");
+            RegisterModel("FBX format/flag-high");
+            RegisterModel("FBX format/flag-pennant");
+            RegisterModel("FBX format/flag-pirate-high-pennant");
+            RegisterModel("FBX format/flag-pirate-high");
+            RegisterModel("FBX format/flag-pirate-pennant");
+            RegisterModel("FBX format/flag-pirate");
+            RegisterModel("FBX format/flag");
+            RegisterModel("FBX format/grass-patch");
+            RegisterModel("FBX format/grass-plant");
+            RegisterModel("FBX format/grass");
+            RegisterModel("FBX format/hole");
+            RegisterModel("FBX format/mast-ropes");
+            RegisterModel("FBX format/mast");
+            RegisterModel("FBX format/palm-bend");
+            RegisterModel("FBX format/palm-detailed-bend");
+            RegisterModel("FBX format/palm-detailed-straight");
+            RegisterModel("FBX format/palm-straight");
+            RegisterModel("FBX format/patch-grass-foliage");
+            RegisterModel("FBX format/patch-grass");
+            RegisterModel("FBX format/patch-sand-foliage");
+            RegisterModel("FBX format/patch-sand");
+            RegisterModel("FBX format/platform-planks");
+            RegisterModel("FBX format/platform");
+            RegisterModel("FBX format/rocks-a");
+            RegisterModel("FBX format/rocks-b");
+            RegisterModel("FBX format/rocks-c");
+            RegisterModel("FBX format/rocks-sand-a");
+            RegisterModel("FBX format/rocks-sand-b");
+            RegisterModel("FBX format/rocks-sand-c");
+            RegisterModel("FBX format/ship-ghost");
+            RegisterModel("FBX format/ship-large");
+            RegisterModel("FBX format/ship-medium");
+            RegisterModel("FBX format/ship-pirate-large");
+            RegisterModel("FBX format/ship-pirate-medium");
+            RegisterModel("FBX format/ship-pirate-small");
+            RegisterModel("FBX format/ship-small");
+            RegisterModel("FBX format/ship-wreck");
+            RegisterModel("FBX format/structure-fence-sides");
+            RegisterModel("FBX format/structure-fence");
+            RegisterModel("FBX format/structure-platform-dock-small");
+            RegisterModel("FBX format/structure-platform-dock");
+            RegisterModel("FBX format/structure-platform-small");
+            RegisterModel("FBX format/structure-platform");
+            RegisterModel("FBX format/structure-roof");
+            RegisterModel("FBX format/structure");
+            RegisterModel("FBX format/tool-paddle");
+            RegisterModel("FBX format/tool-shovel");
+            RegisterModel("FBX format/tower-base-door");
+            RegisterModel("FBX format/tower-base");
+            RegisterModel("FBX format/tower-complete-large");
+            RegisterModel("FBX format/tower-complete-small");
+            RegisterModel("FBX format/tower-middle-windows");
+            RegisterModel("FBX format/tower-middle");
+            RegisterModel("FBX format/tower-roof");
+            RegisterModel("FBX format/tower-top");
+            RegisterModel("FBX format/tower-watch");
         }
 
+        /// <summary>
+        /// Static accessors for 3D models (cached on first access).
+        /// Accesos estáticos para modelos 3D (cacheados en primer acceso).
+        /// </summary>
+        public static class Models
+        {
+            private static Model _barrel;
+            /// <summary>3D Model: barrel (FBX format/barrel)</summary>
+            public static Model barrel => _barrel ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/barrel");
+
+            private static Model _boat_row_large;
+            /// <summary>3D Model: boat-row-large (FBX format/boat-row-large)</summary>
+            public static Model boat_row_large => _boat_row_large ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/boat-row-large");
+
+            private static Model _boat_row_small;
+            /// <summary>3D Model: boat-row-small (FBX format/boat-row-small)</summary>
+            public static Model boat_row_small => _boat_row_small ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/boat-row-small");
+
+            private static Model _bottle_large;
+            /// <summary>3D Model: bottle-large (FBX format/bottle-large)</summary>
+            public static Model bottle_large => _bottle_large ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/bottle-large");
+
+            private static Model _bottle;
+            /// <summary>3D Model: bottle (FBX format/bottle)</summary>
+            public static Model bottle => _bottle ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/bottle");
+
+            private static Model _cannon_ball;
+            /// <summary>3D Model: cannon-ball (FBX format/cannon-ball)</summary>
+            public static Model cannon_ball => _cannon_ball ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/cannon-ball");
+
+            private static Model _cannon_mobile;
+            /// <summary>3D Model: cannon-mobile (FBX format/cannon-mobile)</summary>
+            public static Model cannon_mobile => _cannon_mobile ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/cannon-mobile");
+
+            private static Model _cannon;
+            /// <summary>3D Model: cannon (FBX format/cannon)</summary>
+            public static Model cannon => _cannon ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/cannon");
+
+            private static Model _castle_door;
+            /// <summary>3D Model: castle-door (FBX format/castle-door)</summary>
+            public static Model castle_door => _castle_door ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/castle-door");
+
+            private static Model _castle_gate;
+            /// <summary>3D Model: castle-gate (FBX format/castle-gate)</summary>
+            public static Model castle_gate => _castle_gate ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/castle-gate");
+
+            private static Model _castle_wall;
+            /// <summary>3D Model: castle-wall (FBX format/castle-wall)</summary>
+            public static Model castle_wall => _castle_wall ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/castle-wall");
+
+            private static Model _castle_window;
+            /// <summary>3D Model: castle-window (FBX format/castle-window)</summary>
+            public static Model castle_window => _castle_window ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/castle-window");
+
+            private static Model _chest;
+            /// <summary>3D Model: chest (FBX format/chest)</summary>
+            public static Model chest => _chest ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/chest");
+
+            private static Model _crate_bottles;
+            /// <summary>3D Model: crate-bottles (FBX format/crate-bottles)</summary>
+            public static Model crate_bottles => _crate_bottles ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/crate-bottles");
+
+            private static Model _crate;
+            /// <summary>3D Model: crate (FBX format/crate)</summary>
+            public static Model crate => _crate ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/crate");
+
+            private static Model _flag_high_pennant;
+            /// <summary>3D Model: flag-high-pennant (FBX format/flag-high-pennant)</summary>
+            public static Model flag_high_pennant => _flag_high_pennant ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/flag-high-pennant");
+
+            private static Model _flag_high;
+            /// <summary>3D Model: flag-high (FBX format/flag-high)</summary>
+            public static Model flag_high => _flag_high ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/flag-high");
+
+            private static Model _flag_pennant;
+            /// <summary>3D Model: flag-pennant (FBX format/flag-pennant)</summary>
+            public static Model flag_pennant => _flag_pennant ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/flag-pennant");
+
+            private static Model _flag_pirate_high_pennant;
+            /// <summary>3D Model: flag-pirate-high-pennant (FBX format/flag-pirate-high-pennant)</summary>
+            public static Model flag_pirate_high_pennant => _flag_pirate_high_pennant ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/flag-pirate-high-pennant");
+
+            private static Model _flag_pirate_high;
+            /// <summary>3D Model: flag-pirate-high (FBX format/flag-pirate-high)</summary>
+            public static Model flag_pirate_high => _flag_pirate_high ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/flag-pirate-high");
+
+            private static Model _flag_pirate_pennant;
+            /// <summary>3D Model: flag-pirate-pennant (FBX format/flag-pirate-pennant)</summary>
+            public static Model flag_pirate_pennant => _flag_pirate_pennant ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/flag-pirate-pennant");
+
+            private static Model _flag_pirate;
+            /// <summary>3D Model: flag-pirate (FBX format/flag-pirate)</summary>
+            public static Model flag_pirate => _flag_pirate ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/flag-pirate");
+
+            private static Model _flag;
+            /// <summary>3D Model: flag (FBX format/flag)</summary>
+            public static Model flag => _flag ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/flag");
+
+            private static Model _grass_patch;
+            /// <summary>3D Model: grass-patch (FBX format/grass-patch)</summary>
+            public static Model grass_patch => _grass_patch ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/grass-patch");
+
+            private static Model _grass_plant;
+            /// <summary>3D Model: grass-plant (FBX format/grass-plant)</summary>
+            public static Model grass_plant => _grass_plant ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/grass-plant");
+
+            private static Model _grass;
+            /// <summary>3D Model: grass (FBX format/grass)</summary>
+            public static Model grass => _grass ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/grass");
+
+            private static Model _hole;
+            /// <summary>3D Model: hole (FBX format/hole)</summary>
+            public static Model hole => _hole ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/hole");
+
+            private static Model _mast_ropes;
+            /// <summary>3D Model: mast-ropes (FBX format/mast-ropes)</summary>
+            public static Model mast_ropes => _mast_ropes ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/mast-ropes");
+
+            private static Model _mast;
+            /// <summary>3D Model: mast (FBX format/mast)</summary>
+            public static Model mast => _mast ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/mast");
+
+            private static Model _palm_bend;
+            /// <summary>3D Model: palm-bend (FBX format/palm-bend)</summary>
+            public static Model palm_bend => _palm_bend ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/palm-bend");
+
+            private static Model _palm_detailed_bend;
+            /// <summary>3D Model: palm-detailed-bend (FBX format/palm-detailed-bend)</summary>
+            public static Model palm_detailed_bend => _palm_detailed_bend ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/palm-detailed-bend");
+
+            private static Model _palm_detailed_straight;
+            /// <summary>3D Model: palm-detailed-straight (FBX format/palm-detailed-straight)</summary>
+            public static Model palm_detailed_straight => _palm_detailed_straight ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/palm-detailed-straight");
+
+            private static Model _palm_straight;
+            /// <summary>3D Model: palm-straight (FBX format/palm-straight)</summary>
+            public static Model palm_straight => _palm_straight ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/palm-straight");
+
+            private static Model _patch_grass_foliage;
+            /// <summary>3D Model: patch-grass-foliage (FBX format/patch-grass-foliage)</summary>
+            public static Model patch_grass_foliage => _patch_grass_foliage ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/patch-grass-foliage");
+
+            private static Model _patch_grass;
+            /// <summary>3D Model: patch-grass (FBX format/patch-grass)</summary>
+            public static Model patch_grass => _patch_grass ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/patch-grass");
+
+            private static Model _patch_sand_foliage;
+            /// <summary>3D Model: patch-sand-foliage (FBX format/patch-sand-foliage)</summary>
+            public static Model patch_sand_foliage => _patch_sand_foliage ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/patch-sand-foliage");
+
+            private static Model _patch_sand;
+            /// <summary>3D Model: patch-sand (FBX format/patch-sand)</summary>
+            public static Model patch_sand => _patch_sand ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/patch-sand");
+
+            private static Model _platform_planks;
+            /// <summary>3D Model: platform-planks (FBX format/platform-planks)</summary>
+            public static Model platform_planks => _platform_planks ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/platform-planks");
+
+            private static Model _platform;
+            /// <summary>3D Model: platform (FBX format/platform)</summary>
+            public static Model platform => _platform ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/platform");
+
+            private static Model _rocks_a;
+            /// <summary>3D Model: rocks-a (FBX format/rocks-a)</summary>
+            public static Model rocks_a => _rocks_a ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/rocks-a");
+
+            private static Model _rocks_b;
+            /// <summary>3D Model: rocks-b (FBX format/rocks-b)</summary>
+            public static Model rocks_b => _rocks_b ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/rocks-b");
+
+            private static Model _rocks_c;
+            /// <summary>3D Model: rocks-c (FBX format/rocks-c)</summary>
+            public static Model rocks_c => _rocks_c ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/rocks-c");
+
+            private static Model _rocks_sand_a;
+            /// <summary>3D Model: rocks-sand-a (FBX format/rocks-sand-a)</summary>
+            public static Model rocks_sand_a => _rocks_sand_a ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/rocks-sand-a");
+
+            private static Model _rocks_sand_b;
+            /// <summary>3D Model: rocks-sand-b (FBX format/rocks-sand-b)</summary>
+            public static Model rocks_sand_b => _rocks_sand_b ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/rocks-sand-b");
+
+            private static Model _rocks_sand_c;
+            /// <summary>3D Model: rocks-sand-c (FBX format/rocks-sand-c)</summary>
+            public static Model rocks_sand_c => _rocks_sand_c ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/rocks-sand-c");
+
+            private static Model _ship_ghost;
+            /// <summary>3D Model: ship-ghost (FBX format/ship-ghost)</summary>
+            public static Model ship_ghost => _ship_ghost ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/ship-ghost");
+
+            private static Model _ship_large;
+            /// <summary>3D Model: ship-large (FBX format/ship-large)</summary>
+            public static Model ship_large => _ship_large ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/ship-large");
+
+            private static Model _ship_medium;
+            /// <summary>3D Model: ship-medium (FBX format/ship-medium)</summary>
+            public static Model ship_medium => _ship_medium ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/ship-medium");
+
+            private static Model _ship_pirate_large;
+            /// <summary>3D Model: ship-pirate-large (FBX format/ship-pirate-large)</summary>
+            public static Model ship_pirate_large => _ship_pirate_large ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/ship-pirate-large");
+
+            private static Model _ship_pirate_medium;
+            /// <summary>3D Model: ship-pirate-medium (FBX format/ship-pirate-medium)</summary>
+            public static Model ship_pirate_medium => _ship_pirate_medium ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/ship-pirate-medium");
+
+            private static Model _ship_pirate_small;
+            /// <summary>3D Model: ship-pirate-small (FBX format/ship-pirate-small)</summary>
+            public static Model ship_pirate_small => _ship_pirate_small ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/ship-pirate-small");
+
+            private static Model _ship_small;
+            /// <summary>3D Model: ship-small (FBX format/ship-small)</summary>
+            public static Model ship_small => _ship_small ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/ship-small");
+
+            private static Model _ship_wreck;
+            /// <summary>3D Model: ship-wreck (FBX format/ship-wreck)</summary>
+            public static Model ship_wreck => _ship_wreck ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/ship-wreck");
+
+            private static Model _structure_fence_sides;
+            /// <summary>3D Model: structure-fence-sides (FBX format/structure-fence-sides)</summary>
+            public static Model structure_fence_sides => _structure_fence_sides ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/structure-fence-sides");
+
+            private static Model _structure_fence;
+            /// <summary>3D Model: structure-fence (FBX format/structure-fence)</summary>
+            public static Model structure_fence => _structure_fence ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/structure-fence");
+
+            private static Model _structure_platform_dock_small;
+            /// <summary>3D Model: structure-platform-dock-small (FBX format/structure-platform-dock-small)</summary>
+            public static Model structure_platform_dock_small => _structure_platform_dock_small ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/structure-platform-dock-small");
+
+            private static Model _structure_platform_dock;
+            /// <summary>3D Model: structure-platform-dock (FBX format/structure-platform-dock)</summary>
+            public static Model structure_platform_dock => _structure_platform_dock ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/structure-platform-dock");
+
+            private static Model _structure_platform_small;
+            /// <summary>3D Model: structure-platform-small (FBX format/structure-platform-small)</summary>
+            public static Model structure_platform_small => _structure_platform_small ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/structure-platform-small");
+
+            private static Model _structure_platform;
+            /// <summary>3D Model: structure-platform (FBX format/structure-platform)</summary>
+            public static Model structure_platform => _structure_platform ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/structure-platform");
+
+            private static Model _structure_roof;
+            /// <summary>3D Model: structure-roof (FBX format/structure-roof)</summary>
+            public static Model structure_roof => _structure_roof ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/structure-roof");
+
+            private static Model _structure;
+            /// <summary>3D Model: structure (FBX format/structure)</summary>
+            public static Model structure => _structure ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/structure");
+
+            private static Model _tool_paddle;
+            /// <summary>3D Model: tool-paddle (FBX format/tool-paddle)</summary>
+            public static Model tool_paddle => _tool_paddle ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/tool-paddle");
+
+            private static Model _tool_shovel;
+            /// <summary>3D Model: tool-shovel (FBX format/tool-shovel)</summary>
+            public static Model tool_shovel => _tool_shovel ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/tool-shovel");
+
+            private static Model _tower_base_door;
+            /// <summary>3D Model: tower-base-door (FBX format/tower-base-door)</summary>
+            public static Model tower_base_door => _tower_base_door ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/tower-base-door");
+
+            private static Model _tower_base;
+            /// <summary>3D Model: tower-base (FBX format/tower-base)</summary>
+            public static Model tower_base => _tower_base ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/tower-base");
+
+            private static Model _tower_complete_large;
+            /// <summary>3D Model: tower-complete-large (FBX format/tower-complete-large)</summary>
+            public static Model tower_complete_large => _tower_complete_large ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/tower-complete-large");
+
+            private static Model _tower_complete_small;
+            /// <summary>3D Model: tower-complete-small (FBX format/tower-complete-small)</summary>
+            public static Model tower_complete_small => _tower_complete_small ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/tower-complete-small");
+
+            private static Model _tower_middle_windows;
+            /// <summary>3D Model: tower-middle-windows (FBX format/tower-middle-windows)</summary>
+            public static Model tower_middle_windows => _tower_middle_windows ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/tower-middle-windows");
+
+            private static Model _tower_middle;
+            /// <summary>3D Model: tower-middle (FBX format/tower-middle)</summary>
+            public static Model tower_middle => _tower_middle ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/tower-middle");
+
+            private static Model _tower_roof;
+            /// <summary>3D Model: tower-roof (FBX format/tower-roof)</summary>
+            public static Model tower_roof => _tower_roof ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/tower-roof");
+
+            private static Model _tower_top;
+            /// <summary>3D Model: tower-top (FBX format/tower-top)</summary>
+            public static Model tower_top => _tower_top ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/tower-top");
+
+            private static Model _tower_watch;
+            /// <summary>3D Model: tower-watch (FBX format/tower-watch)</summary>
+            public static Model tower_watch => _tower_watch ??= YTBGlobalState.ContentManager.Load<Model>("FBX format/tower-watch");
+
+        }
     }
 }

@@ -7,6 +7,7 @@ using YotsubaEngine.Audio;
 using YotsubaEngine.Core.Component.C_2D;
 using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.YotsubaGame;
+using YotsubaEngine.Core.YotsubaGame.Scripting;
 using YotsubaEngine.Events.YTBEvents;
 using YotsubaEngine.Events.YTBEvents.EngineEvents;
 
@@ -59,11 +60,11 @@ namespace YotsubaEngine.YTB_Toolkit
             YTBGame game = (YTBGame)YTBGame.Instance;
 
             string lastSceneName = game.SceneManager.CurrentScene.SceneName;
-            Scene? newScene = game.SceneManager.Scenes._ytb
-                .FirstOrDefault(x => x.SceneName == sceneName);
+            Scene? newScene = game.SceneManager.Scenes
+                .Find(x => x.SceneName == sceneName);
 
-            Scene lasteScene = game.SceneManager.Scenes._ytb
-                .FirstOrDefault(x => x.SceneName == lastSceneName)!;
+            Scene lasteScene = game.SceneManager.Scenes
+                .Find(x => x.SceneName == lastSceneName)!;
 
             lasteScene.Clear();
 
@@ -77,7 +78,8 @@ namespace YotsubaEngine.YTB_Toolkit
                 EventManager.Instance.EventManagerWasPaused -= handler;
 
                 game.SceneManager.CurrentScene = newScene;
-                newScene.Initialize(YTBFileToGameData.ContentManager);
+                newScene.Initialize(YTBGlobalState.ContentManager);
+                EntityFunctions.SetEntityManager(newScene.EntityManager);
                 EventManager.StopEvents = false;
                 //-:cnd:noEmit
 #if YTB
@@ -100,8 +102,7 @@ namespace YotsubaEngine.YTB_Toolkit
             EventManager.Instance.Publish(new StopEvents());
 
             YTBGame game = (YTBGame)YTBGame.Instance;
-            Scene? newScene = game.SceneManager.Scenes._ytb
-                .FirstOrDefault(x => x.SceneName == sceneName);
+            Scene? newScene = game.SceneManager.Scenes.Find(x => x.SceneName == sceneName);
 
             if (newScene == null)
                 return false;

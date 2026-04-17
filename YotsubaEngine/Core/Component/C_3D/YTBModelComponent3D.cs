@@ -10,7 +10,6 @@ namespace YotsubaEngine.Core.Component.C_3D
     /// </summary>
     public struct YTBModelComponent3D
     {
-
         /// <summary>
         /// Colección de identificadores de objetos 3D.
         /// <para>Collection of 3D object identifiers.</para>
