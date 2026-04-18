@@ -114,6 +114,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
             int id = 0;
 
             // --- recorrer escenas ---
+            if(_gameInfo is not null)
             foreach (var scene in _gameInfo.Scene.ToImmutableArray())
             {
                 if (scene.Entities == null) scene.Entities = [];
@@ -481,7 +482,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
             
             // Agregar la cámara a la escena
             scene.Entities.Add(mainCamera);
-            
+
             _gameInfo.Scene.Add(scene);
             WriteYTBFile.EditYTBGameFile(_gameInfo);
 

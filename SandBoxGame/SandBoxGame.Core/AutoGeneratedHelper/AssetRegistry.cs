@@ -9,7 +9,6 @@ namespace SandBoxGame.Core
     {
         public static readonly List<string> TextureAssets = new List<string>
         {
-            "FBX format/Textures/colormap",
             "Icon",
             "icon-1024",
             "monogame-logo",

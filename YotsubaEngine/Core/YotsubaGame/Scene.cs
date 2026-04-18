@@ -7,9 +7,13 @@ using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.S_2D;
 using YotsubaEngine.Core.System.S_3D;
 using YotsubaEngine.Core.System.S_AGNOSTIC;
+using YotsubaEngine.Core.YotsubaGame.Scripting;
+
 #if YTB
 using YotsubaEngine.Core.System.YotsubaEngineUI;
 using YotsubaEngine.Core.System.YTBDragAndDrop;
+using YotsubaEngine.Core.YotsubaGame.Scripting;
+
 #endif
 
 using YotsubaEngine.YTB_Toolkit;
@@ -170,6 +174,7 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// <param name="content">Administrador de contenido. <para>Content manager.</para></param>
         public void Initialize(ContentManager content)
         {
+            EntityFunctions.SetEntityManager(EntityManager);
             ToolkitWASDControl = new(EntityManager);
             ToolkitWASDControl.Initialize();
             AnimationSystem2D.InitializeSystem(EntityManager);

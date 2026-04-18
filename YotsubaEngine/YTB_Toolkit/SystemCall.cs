@@ -79,7 +79,6 @@ namespace YotsubaEngine.YTB_Toolkit
 
                 game.SceneManager.CurrentScene = newScene;
                 newScene.Initialize(YTBGlobalState.ContentManager);
-                EntityFunctions.SetEntityManager(newScene.EntityManager);
                 EventManager.StopEvents = false;
                 //-:cnd:noEmit
 #if YTB

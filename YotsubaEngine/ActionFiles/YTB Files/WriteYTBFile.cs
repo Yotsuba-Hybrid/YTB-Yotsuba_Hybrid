@@ -448,7 +448,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
         {
             YTBGameInfo gameInfo = await ReadYTBFile.ReadYTBGameFile();
             YTBEntity templateEntity = EntityYTBXmlTemplate.GenerateNew();
-
+            
             foreach (YTBComponents componentTemplate in templateEntity.Components)
             {
                 foreach (YTBScene scene in gameInfo.Scene)

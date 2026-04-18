@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using YotsubaEngine.Attributes;
 using YotsubaEngine.Core.Component.C_3D;
 using YotsubaEngine.Core.YotsubaGame.Scripting;

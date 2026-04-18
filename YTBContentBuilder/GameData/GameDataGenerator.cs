@@ -45,7 +45,8 @@ namespace YotsubaEngine.YTBContentBuilder.GameData
             sb.AppendLine("            {");
 
             // Parse game file and generate scene list
-            using var gameDoc = JsonDocument.Parse(File.ReadAllText(gameFilePath));
+            string content = File.ReadAllText(gameFilePath);
+            using var gameDoc = JsonDocument.Parse(String.IsNullOrEmpty(content) ? "{}" : content);
             var root = gameDoc.RootElement;
 
             if (root.TryGetProperty("scene", out JsonElement scenesElement))

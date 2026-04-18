@@ -525,21 +525,24 @@ namespace YotsubaEngine.Core.YotsubaGame.Scripting
         /// Obtiene componente de modelo 3D nativo del YTB para la entidad actual.
         /// </summary>
         /// <returns></returns>
-        public ref YTBModelComponent3D GetYTBModelComponent3D() => ref GetYTBModelComponent3D(Entity.Id);
+        public ref YTBModelComponent3D GetFigureComponent3D() => ref GetFigureComponent3D(Entity.Id);
 
         /// <summary>
         /// Obtiene el componente YTB de modelo 3D para un id de entidad específico.
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public ref YTBModelComponent3D GetYTBModelComponent3D(Yotsuba entity) => ref GetYTBModelComponent3D(entity.Id);
+        public ref YTBModelComponent3D GetFigureComponent3D(Yotsuba entity) => ref GetFigureComponent3D(entity.Id);
 
         /// <summary>
         /// Obtiene el componente YTB de modelo 3D para una entidad específica.
         /// </summary>
         /// <param name="entityId"></param>
         /// <returns></returns>
-        public ref YTBModelComponent3D GetYTBModelComponent3D(int entityId) => ref EntityManager.YtbModelComponents[entityId];
+        public ref YTBModelComponent3D GetFigureComponent3D(int entityId) => ref EntityManager.YtbModelComponents[entityId];
+        public ref ModelComponent3D GetModelComponent3D() => ref GetModelComponent3D(Entity);
+        public ref ModelComponent3D GetModelComponent3D(Yotsuba entity) => ref GetModelComponent3D(entity.Id);
+        public ref ModelComponent3D GetModelComponent3D(int entityId) => ref EntityManager.ModelComponents3D[entityId];
 
         /// <summary>
         /// Obtiene el componente de cámara activo.
@@ -547,20 +550,6 @@ namespace YotsubaEngine.Core.YotsubaGame.Scripting
         /// </summary>
         /// <returns>Componente de cámara activo. <para>Active camera component.</para></returns>
         public CameraComponent3D GetCamera() => EntityManager.Camera;
-        /// <summary>
-        /// Obtiene el componente de cámara activo.
-        /// <para>Gets the active camera component.</para>
-        /// </summary>
-        /// <param name="entityId">Identificador de la entidad. <para>Entity identifier.</para></param>
-        /// <returns>Componente de cámara activo. <para>Active camera component.</para></returns>
-        public CameraComponent3D GetCamera(int entityId) => EntityManager.Camera;
-        /// <summary>
-        /// Obtiene el componente de cámara activo.
-        /// <para>Gets the active camera component.</para>
-        /// </summary>
-        /// <param name="entity">Instancia de la entidad. <para>Entity instance.</para></param>
-        /// <returns>Componente de cámara activo. <para>Active camera component.</para></returns>
-        public CameraComponent3D GetCamera(Yotsuba entity) => EntityManager.Camera;
 
         /// <summary>
         /// Obtiene la entidad actual del script.
@@ -957,7 +946,7 @@ namespace YotsubaEngine.Core.YotsubaGame.Scripting
         /// Obtiene el escena actual del juego.
         /// </summary>
         /// <returns></returns>
-        public Scene GetCurrentScene()
+        public static Scene GetCurrentScene()
         {
             var scene = YTBGlobalState.Game.SceneManager.CurrentScene;
             return scene;
@@ -968,7 +957,7 @@ namespace YotsubaEngine.Core.YotsubaGame.Scripting
         /// <para>Gets the name of the current game scene.</para>
         /// </summary>
         /// <returns>Nombre de la escena activa. <para>Name of the active scene.</para></returns>
-        public string GetCurrentSceneName()
+        public static string GetCurrentSceneName()
         {
             var scene = YTBGlobalState.Game.SceneManager.CurrentScene;
             return scene.SceneName;
@@ -979,19 +968,20 @@ namespace YotsubaEngine.Core.YotsubaGame.Scripting
     public static class EntityFunctions
     {
         private static EntityFunctionsScript EntityFunctionsScript = new();
-        private static void ValidateEntityManager(this EntityFunctionsScript functionsScript) => functionsScript.EntityManager ??= YTBGlobalState.Game.SceneManager.CurrentScene.EntityManager;
         internal static void SetEntityManager(EntityManager entityManager)
         {
             EntityFunctionsScript.EntityManager = entityManager;
         }
-
         public static ref AnimationComponent2D GetAnimationComponent(this Yotsuba entity) => ref EntityFunctionsScript.GetAnimationComponent(entity);
-
         public static ref ButtonComponent2D GetButtonComponent(this Yotsuba entity) => ref EntityFunctionsScript.GetButtonComponent(entity);
-
         public static ref FontComponent2D GetFontComponent(this Yotsuba entity) => ref EntityFunctionsScript.GetFontComponent(entity);
-
         public static ref SpriteComponent2D GetSpriteComponent2D(this Yotsuba entity) => ref EntityFunctionsScript.GetSpriteComponent(entity);
+        public static ref RigidBodyComponent2D GetRigidBodyComponent2D(this Yotsuba entity) => ref EntityFunctionsScript.GetRigidBody2D(entity);
+        public static ref TileMapComponent2D GetTileMapComponent2D(this Yotsuba entity) => ref EntityFunctionsScript.GetTilemapComponent(entity);
+        public static ref ModelComponent3D GetModelComponent3D(this Yotsuba entity) => ref EntityFunctionsScript.GetModelComponent3D(entity);
+        public static ref ScriptComponent GetScriptComponent(this Yotsuba entity) => ref EntityFunctionsScript.GetScriptComponent(entity);
+        public static ref InputComponent GetInputComponent(this Yotsuba entity) => ref EntityFunctionsScript.GetInputComponent(entity);
+        public static ref ShaderComponent GetShaderComponent(this Yotsuba entity) => ref EntityFunctionsScript.GetShaderComponent(entity);
 
     }
 }
