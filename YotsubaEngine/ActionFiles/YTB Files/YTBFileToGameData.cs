@@ -1275,7 +1275,8 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                 }
 
                 // Crear el componente
-                ShaderComponent shaderComponent = new ShaderComponent(effect, isActive);
+                ShaderComponent shaderComponent = new ShaderComponent(effect);
+                shaderComponent.IsActive = isActive;
 
                 string shaderParams = component.Propiedades.FirstOrDefault(x => x.Item1 == "params")?.Item2 ?? string.Empty;
 

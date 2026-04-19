@@ -47,6 +47,7 @@
     </None>
   </ItemGroup>-->
   <ItemGroup>
+    <Folder Include="Assets\Effect\" />
     <Folder Include="Content\GumProject\" />
   </ItemGroup>
 </Project>

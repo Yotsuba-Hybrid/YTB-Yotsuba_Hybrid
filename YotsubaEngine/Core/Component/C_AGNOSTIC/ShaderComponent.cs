@@ -9,7 +9,7 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
     /// </summary>
     /// <param name="effect">Efecto de shader a aplicar.<para>Shader effect to apply.</para></param>
     /// <param name="IsActive">Indica si el shader está activo.<para>Indicates whether the shader is active.</para></param>
-    public struct ShaderComponent(Effect effect, bool IsActive)
+    public struct ShaderComponent(Effect effect)
     {
         /// <summary>
         /// Efecto de shader asignado.
