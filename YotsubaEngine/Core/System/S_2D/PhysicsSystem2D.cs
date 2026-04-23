@@ -29,7 +29,7 @@ namespace YotsubaEngine.Core.System.S_2D
     public class PhysicsSystem2D : ISystem
     {
 
-        private Collision_Prediction_Runtime Collision_Prediction_Runtime;
+        private Collision_Prediction_Runtime_2D Collision_Prediction_Runtime;
 
         private YTB<int> _potentialColliders = new(); // LA ÚNICA INSTANCIA TEMPORAL
         /// <summary>
@@ -97,24 +97,12 @@ namespace YotsubaEngine.Core.System.S_2D
         {
             foreach (ref Yotsuba entity in entities)
             {
-                if (!entity.HasComponent(YTBComponent.Rigibody)) continue;
+                if (!entity.HasComponent(YTBComponent.Rigibody2D)) continue;
 
                 ref RigidBodyComponent2D rigidBody = ref rigidbodyComponents[entity.Id];
 
-                // Only apply gravity in Platform mode
-                if (rigidBody.GameType != GameType.Platform) continue;
-
                 // Apply gravity
-                float newVelocityY = rigidBody.Velocity.Y + rigidBody.Gravity;
-
-                // Apply fast fall multiplier if fast falling
-                if (rigidBody.IsFastFalling && rigidBody.Velocity.Y >= 0)
-                {
-                    newVelocityY = rigidBody.Velocity.Y + (rigidBody.Gravity * rigidBody.FastFallMultiplier);
-                }
-
-                // Clamp to max fall speed
-                newVelocityY = Math.Min(newVelocityY, rigidBody.MaxFallSpeed);
+                float newVelocityY = rigidBody.Velocity.Y;
 
                 rigidBody.Velocity = new Vector3(rigidBody.Velocity.X, newVelocityY, rigidBody.Velocity.Z);
             }
@@ -161,7 +149,6 @@ namespace YotsubaEngine.Core.System.S_2D
 
                 ref RigidBodyComponent2D rigidBody = ref rigibodyComponents[entityId];
 
-                bool wasGrounded = rigidBody.IsGrounded;
 
                 // Calculate next position
                 Vector2 nextPosition = new Vector2(transform.Position.X, transform.Position.Y) + YTBCartessian.Vector3ToVector2(rigidBody.Velocity);
@@ -209,7 +196,7 @@ namespace YotsubaEngine.Core.System.S_2D
                     }
                 }
                 // Apply movement based on collision results
-                ApplyMovement(entity.Id, ref rigidBody, ref transform, collisionBottom, collisionTop, collisionLeft, collisionRight, wasGrounded, gameTime);
+                ApplyMovement(entity.Id, ref rigidBody, ref transform, collisionBottom, collisionTop, collisionLeft, collisionRight, gameTime);
             }
         }
 
@@ -420,7 +407,7 @@ namespace YotsubaEngine.Core.System.S_2D
             ref RigidBodyComponent2D rigidBody, 
             ref TransformComponent transform,
             bool collisionBottom, bool collisionTop, bool collisionLeft, bool collisionRight,
-            bool wasGrounded, GameTime gameTime)
+            GameTime gameTime)
         {
             Vector2 finalVelocity = YTBCartessian.Vector3ToVector2(rigidBody.Velocity);
 
@@ -428,36 +415,10 @@ namespace YotsubaEngine.Core.System.S_2D
             if (collisionBottom)
             {
                 finalVelocity.Y = 0;
-                rigidBody.IsGrounded = true;
-                rigidBody.IsJumping = false;
-                rigidBody.IsFastFalling = false;
-
-                // Publish grounded event if just landed
-                if (!wasGrounded)
-                {
-                    EventManager.Publish(new OnEntityGroundedEvent
-                    {
-                        EntityId = entityId,
-                        GameTime = gameTime
-                    });
-                }
             }
             else if (collisionTop)
             {
                 finalVelocity.Y = 0;
-            }
-            else if (rigidBody.GameType == GameType.Platform)
-            {
-                // No vertical collision - entity is airborne
-                if (wasGrounded)
-                {
-                    rigidBody.IsGrounded = false;
-                    EventManager.Publish(new OnEntityAirborneEvent
-                    {
-                        EntityId = entityId,
-                        GameTime = gameTime
-                    });
-                }
             }
 
             // Handle horizontal collisions

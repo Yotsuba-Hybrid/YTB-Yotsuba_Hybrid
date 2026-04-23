@@ -14,6 +14,7 @@ namespace YotsubaEngine.Core.Component.C_3D
     {
 
         public CollisionLayer CollisionLayer { get; set; } = CollisionLayer.Main;
+
         /// <summary>
         /// Cuerpo 3D del componente.
         /// <para>Bounding sphere used for collisions.</para>

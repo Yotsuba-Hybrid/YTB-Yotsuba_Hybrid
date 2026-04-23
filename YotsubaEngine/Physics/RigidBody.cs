@@ -11,15 +11,11 @@
             /// <para>Collidable mass level.</para>
             /// </summary>
             Collision = 1,
+
             /// <summary>
             /// Nivel de masa sin colisión.
             /// <para>Non-collidable mass level.</para>
             /// </summary>
             NoCollision = 2,
-            /// <summary>
-            /// Nivel de masa de movimiento lento.
-            /// <para>Slow movement mass level.</para>
-            /// </summary>
-            Slow = 3,
         }
 }

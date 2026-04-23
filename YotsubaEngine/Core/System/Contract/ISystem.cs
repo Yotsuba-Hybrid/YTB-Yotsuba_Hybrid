@@ -114,7 +114,7 @@ namespace YotsubaEngine.Core.System.Contract
         /// <para>Returns a reference to the transform component of the entity with the specified id.</para>
         /// </summary>
         /// <param name="entityId">Identificador único de la entidad. <para>Unique entity identifier.</para></param>
-        public ref TransformComponent GetTransform2DComponent(int entityId)
+        public ref TransformComponent GetTransformComponent(int entityId)
         {
             return ref EntityManager.TransformComponents[entityId];
         }
@@ -124,7 +124,7 @@ namespace YotsubaEngine.Core.System.Contract
         /// <para>Returns a reference to the transform component of the specified entity.</para>
         /// </summary>
         /// <param name="entity">Instancia de la entidad. <para>Entity instance.</para></param>
-        public ref TransformComponent GetTransform2DComponent(ref Yotsuba entity)
+        public ref TransformComponent GetTransformComponent(ref Yotsuba entity)
         {
             return ref EntityManager.TransformComponents[entity.Id];
         }
@@ -134,7 +134,7 @@ namespace YotsubaEngine.Core.System.Contract
         /// <para>Returns a reference to the transform component of the specified entity.</para>
         /// </summary>
         /// <param name="entity">Instancia de la entidad (por valor). <para>Entity instance (by value).</para></param>
-        public ref TransformComponent GetTransform2DComponent(Yotsuba entity)
+        public ref TransformComponent GetTransformComponent(Yotsuba entity)
         {
             return ref EntityManager.TransformComponents[entity.Id];
         }
@@ -342,6 +342,47 @@ namespace YotsubaEngine.Core.System.Contract
         public ref RigidBodyComponent2D GetRigidBodyComponent(Yotsuba entity)
         {
             return ref EntityManager.Rigidbody2DComponents[entity.Id];
+        }
+
+        // --- RigidBody 3D ---
+
+        /// <summary>
+        /// Retorna un <see cref="Span{T}"/> de todos los componentes de cuerpo rígido 3D.
+        /// <para>Returns a <see cref="Span{T}"/> of all 3D rigid body components.</para>
+        /// </summary>
+        public Span<RigidBodyComponent3D> GetRigidBody3DComponentsAsSpan()
+        {
+            return EntityManager.Rigidbody3DComponents.AsSpan();
+        }
+
+        /// <summary>
+        /// Retorna una referencia al componente de cuerpo rígido 3D de la entidad con el id especificado.
+        /// <para>Returns a reference to the 3D rigid body component of the entity with the specified id.</para>
+        /// </summary>
+        /// <param name="entityId">Identificador único de la entidad. <para>Unique entity identifier.</para></param>
+        public ref RigidBodyComponent3D GetRigidBody3DComponent(int entityId)
+        {
+            return ref EntityManager.Rigidbody3DComponents[entityId];
+        }
+
+        /// <summary>
+        /// Retorna una referencia al componente de cuerpo rígido 3D de la entidad especificada.
+        /// <para>Returns a reference to the 3D rigid body component of the specified entity.</para>
+        /// </summary>
+        /// <param name="entity">Instancia de la entidad. <para>Entity instance.</para></param>
+        public ref RigidBodyComponent3D GetRigidBody3DComponent(ref Yotsuba entity)
+        {
+            return ref EntityManager.Rigidbody3DComponents[entity.Id];
+        }
+
+        /// <summary>
+        /// Retorna una referencia al componente de cuerpo rígido 3D de la entidad especificada.
+        /// <para>Returns a reference to the 3D rigid body component of the specified entity.</para>
+        /// </summary>
+        /// <param name="entity">Instancia de la entidad (por valor). <para>Entity instance (by value).</para></param>
+        public ref RigidBodyComponent3D GetRigidBody3DComponent(Yotsuba entity)
+        {
+            return ref EntityManager.Rigidbody3DComponents[entity.Id];
         }
 
         // --- Button 2D ---

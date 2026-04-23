@@ -211,7 +211,7 @@ namespace YotsubaEngine.Core.System.S_2D
             foreach (ref Yotsuba entity in GetEntitiesAsSpan())
             {
                 // Solo dibujar entidades con Transform y RigidBody
-                if (!entity.HasComponent(YTBComponent.Transform) || !entity.HasComponent(YTBComponent.Rigibody) || entity.HasComponent(YTBComponent.TileMap))
+                if (!entity.HasComponent(YTBComponent.Transform) || !entity.HasComponent(YTBComponent.Rigibody2D) || entity.HasComponent(YTBComponent.TileMap))
                     continue;
 
                 ref TransformComponent transform = ref transformComponents[entity.Id];

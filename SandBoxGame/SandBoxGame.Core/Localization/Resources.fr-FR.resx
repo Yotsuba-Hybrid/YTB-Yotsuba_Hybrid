@@ -116,11 +116,17 @@
   </resheader>
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>s
+  </resheader>
   <data name="TapAnywhere" xml:space="preserve">
     <value>Tap Anywhere</value>
   </data>
   <data name="ClickAnywhere" xml:space="preserve">
     <value>Click Anywhere</value>
+  </data>
+  <data name="Touch Here" xml:space="preserve">
+    <value>Toca Aqui</value>
+  </data>
+  <data name="GameName" xml:space="preserve">
+    <value>YTB Engine</value>
   </data>
 </root>

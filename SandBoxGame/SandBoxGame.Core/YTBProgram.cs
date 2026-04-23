@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using MonoGameGum;
 using SandBoxGame.Core.Localization;
 using SandBoxGame.Core.Systems;
@@ -71,6 +72,7 @@ namespace SandBoxGame.Core
         /// </summary>
         public YTBProgram(Platforms platform) : base(platform, IS_MOUSE_VISIBLE)
         {
+
             if (platform is not Platforms.Avalonia_GL)
             {
                 /// Esta propiedad no es compatible con Avalonia_GL, así que solo se aplica en otras plataformas.
@@ -252,7 +254,7 @@ namespace SandBoxGame.Core
         /// Provides a snapshot of timing values used for rendering.
         /// </param>
         protected override void Draw(GameTime gameTime)
-        {
+        {            
             base.Draw(gameTime);
         }
 

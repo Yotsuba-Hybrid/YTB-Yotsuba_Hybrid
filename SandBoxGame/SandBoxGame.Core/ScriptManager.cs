@@ -13,13 +13,7 @@ namespace YotsubaEngine.Scripting
     {
         public ScriptRegistry()
         {
-          Scripts.TryAdd("Bat", () => new SandBoxGame.Core.Scripts.Bat() );
-          Scripts.TryAdd("Dimencion25", () => new SandBoxGame.Core.Scripts.Dimencion25() );
           Scripts.TryAdd("ModelExample", () => new SandBoxGame.Core.Scripts.ModelExample() );
-          Scripts.TryAdd("Slime", () => new SandBoxGame.Core.Scripts.Slime() );
-          Scripts.TryAdd("Background", () => new SandBoxGame.Core.Scripts.HomeScreen.Background() );
-          Scripts.TryAdd("GroundScript", () => new SandBoxGame.Core.Scripts.ModelScreen.GroundScript() );
-          Scripts.TryAdd("HomeScreen", () => new SandBoxGame.Core.Scripts.Screens.HomeScreen() );
         }
 
         public override BaseScript Create(string scriptName)

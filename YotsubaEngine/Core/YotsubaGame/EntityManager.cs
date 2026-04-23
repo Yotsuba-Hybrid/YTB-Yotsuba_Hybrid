@@ -49,6 +49,12 @@ namespace YotsubaEngine.Core.YotsubaGame
         public YTB<RigidBodyComponent2D> Rigidbody2DComponents = new YTB<RigidBodyComponent2D>();
 
         /// <summary>
+        /// Listado de los componentes de cuerpo rigido 3D. 
+        /// <para>List of 3D rigid body components.</para>
+        /// </summary>
+        public YTB<RigidBodyComponent3D> Rigidbody3DComponents = new YTB<RigidBodyComponent3D>();
+
+        /// <summary>
         /// Listado de los componentes de entrada de las entidades.
         /// <para>List of input components for entities.</para>
         /// </summary>
@@ -152,6 +158,13 @@ namespace YotsubaEngine.Core.YotsubaGame
                 throw new AddComponentInDiferentEntityIndexException(
                     $"Componente ingreso a un índice diferente al de su entidad asociada. " +
                     $"Componente: {typeof(RigidBodyComponent2D)}. " +
+                    $"Index {Index} != {ComponentIndex}"
+                    );
+
+            if (Rigidbody3DComponents.Add(default, out ComponentIndex) != Index)
+                throw new AddComponentInDiferentEntityIndexException(
+                    $"Componente ingreso a un índice diferente al de su entidad asociada. " +
+                    $"Componente: {typeof(RigidBodyComponent3D)}. " +
                     $"Index {Index} != {ComponentIndex}"
                     );
 
@@ -278,9 +291,22 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// <param name="component">Componente de cuerpo rígido. <para>Rigid body component.</para></param>
         public void AddRigidbodyComponent(Yotsuba entity, RigidBodyComponent2D component)
         {
-            YotsubaEntities[entity.Id].AddComponent(YTBComponent.Rigibody);
+            YotsubaEntities[entity.Id].AddComponent(YTBComponent.Rigibody2D);
             Rigidbody2DComponents[(uint)entity.Id] = component;
-            EventManager.Instance.Publish<OnEntityRigidBodyIsAdded>(new(YotsubaEntities[entity.Id]));
+            EventManager.Instance.Publish<OnEntityRigidBody2DIsAdded>(new(YotsubaEntities[entity.Id]));
+
+
+            /// <summary>
+            /// Agrega un cuerpo rígido a una entidad.
+            /// <para>Adds a rigid body to an entity.</para>
+            /// </summary>
+            /// <param name="entity">Entidad objetivo. <para>Target entity.</para></param>
+            /// <param name="component">Componente de cuerpo rígido. <para>Rigid body component.</para></param>
+        public void AddRigidbody3DComponent(Yotsuba entity, RigidBodyComponent3D component)
+        {
+            YotsubaEntities[entity.Id].AddComponent(YTBComponent.Rigibody2D);
+            Rigidbody3DComponents[(uint)entity.Id] = component;
+            EventManager.Instance.Publish<OnEntityRigidBody3DIsAdded>(new(YotsubaEntities[entity.Id]));
         }
 
 

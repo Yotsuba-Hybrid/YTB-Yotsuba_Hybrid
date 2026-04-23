@@ -88,7 +88,8 @@ namespace YotsubaEngine.Core.Entity
         /// Componente de cuerpo rígido.
         /// <para>Rigid body component.</para>
         /// </summary>
-        Rigibody = 1 << 3,
+        Rigibody2D = 1 << 3,
+
         /// <summary>
         /// Componente de entrada.
         /// <para>Input component.</para>
@@ -140,5 +141,12 @@ namespace YotsubaEngine.Core.Entity
         /// <para>3D object component.</para>
         /// </summary>
         YTBModel3D = 1 << 14,
+
+        /// <summary>
+        /// Componente de cuerpo rígido.
+        /// <para>Rigid body component.</para>
+        /// </summary>
+        Rigibody3D = 1 << 15,
+
     }
 }

@@ -930,12 +930,6 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 					continue;
 				}
 
-				if (prop.Item1 == "GameType")
-				{
-					RenderEnumCombo(component, prop, new[] { "TopDown", "Platform" });
-					continue;
-				}
-
 				if (prop.Item1 == "Mass")
 				{
 					RenderEnumCombo(component, prop, new[] {
@@ -1331,7 +1325,6 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 			{ "CurrentAnimationType", "Tipo de animación actual" },
 			{ "OffSetCollision", "Desfase de colisión" },
 			{ "Velocity", "Velocidad" },
-			{ "GameType", "Tipo de juego" },
 			{ "Mass", "Masa" },
 			{ "IsActive", "Activo" },
 			{ "EffectiveArea", "Área efectiva" },

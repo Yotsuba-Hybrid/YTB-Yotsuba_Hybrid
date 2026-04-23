@@ -10,7 +10,7 @@ using YotsubaEngine.Runtime.CPR.Events;
 
 namespace YotsubaEngine.Runtime.CPR
 {
-    public class Collision_Prediction_Runtime : YTB_Runtime
+    public class Collision_Prediction_Runtime_2D : YTB_Runtime
     {
         private static bool DistanceIsSetted = false;
         /// <summary>
@@ -44,7 +44,7 @@ namespace YotsubaEngine.Runtime.CPR
             Span<TransformComponent> transformComponents = GetTransformComponentsAsSpan();
             foreach(ref Yotsuba entity in GetEntitiesAsSpan())
             {
-                if (entity.HasComponent(YTBComponent.Rigibody) && entity.HasComponent(YTBComponent.Transform) && entity.HasNotComponent(YTBComponent.TileMap))
+                if (entity.HasComponent(YTBComponent.Rigibody2D) && entity.HasComponent(YTBComponent.Transform) && entity.HasNotComponent(YTBComponent.TileMap))
                 {
                     Entities.Add(entity.Id);
                     ref TransformComponent transform = ref transformComponents[entity.Id];
@@ -62,7 +62,7 @@ namespace YotsubaEngine.Runtime.CPR
                 }
             }
 
-            EventManager.Instance.Subscribe<OnEntityRigidBodyIsAdded>(EntityAdd);
+            EventManager.Instance.Subscribe<OnEntityRigidBody2DIsAdded>(EntityAdd);
             EventManager.Instance.Subscribe<OnEntityTransformIsAdded>(EntityAdd);
         }
 
@@ -140,9 +140,10 @@ namespace YotsubaEngine.Runtime.CPR
         public override void Dispose()
         {
             DistanceIsSetted = false;
-            EventManager.Instance.Unsubscribe<OnEntityRigidBodyIsAdded>(EntityAdd);
+            EventManager.Instance.Unsubscribe<OnEntityRigidBody2DIsAdded>(EntityAdd);
             EventManager.Instance.Unsubscribe<OnEntityTransformIsAdded>(EntityAdd);
             base.Dispose();
+            GC.SuppressFinalize(this);
         }
 
         private void RegisterEntity(int entityId)
@@ -162,7 +163,7 @@ namespace YotsubaEngine.Runtime.CPR
             EntityPoint[entityId] = point;
         }
 
-        private void EntityAdd(OnEntityRigidBodyIsAdded added)
+        private void EntityAdd(OnEntityRigidBody2DIsAdded added)
         {
             if (added.Entity.HasComponent(YTBComponent.Transform) && added.Entity.HasNotComponent(YTBComponent.TileMap))
             {
@@ -172,7 +173,7 @@ namespace YotsubaEngine.Runtime.CPR
 
         private void EntityAdd(OnEntityTransformIsAdded added)
         {
-            if (added.Entity.HasComponent(YTBComponent.Rigibody) && added.Entity.HasNotComponent(YTBComponent.TileMap))
+            if (added.Entity.HasComponent(YTBComponent.Rigibody2D) && added.Entity.HasNotComponent(YTBComponent.TileMap))
             {
                 RegisterEntity(added.Entity.Id);
             }

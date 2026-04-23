@@ -36,7 +36,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
             BuildScene_0_Batch_0(entities);
             return new YTBScene
             {
-                Name = "Index",
+                Name = "New Scene",
                 Entities = entities
             };
         }
@@ -45,7 +45,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
         {
             e.Add(new YTBEntity
             {
-                Name = "MainCamera",
+                Name = "Camera",
                 Components = new List<YTBComponents>
                 {
                     new YTBComponents
@@ -53,11 +53,11 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                         ComponentName = "TransformComponent",
                         Propiedades = new List<Tuple<string, string>>
                         {
-                            new Tuple<string, string>("Position", "0,0,0"),
-                            new Tuple<string, string>("Size", "100,100,0"),
-                            new Tuple<string, string>("Color", "White"),
-                            new Tuple<string, string>("SpriteEffects", "None"),
-                            new Tuple<string, string>("Scale", "1"),
+                            new Tuple<string, string>("Position", ",,"),
+                            new Tuple<string, string>("Size", ",,"),
+                            new Tuple<string, string>("Color", ""),
+                            new Tuple<string, string>("SpriteEffects", ""),
+                            new Tuple<string, string>("Scale", ""),
                         }
                     },
                     new YTBComponents
@@ -89,7 +89,6 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                         {
                             new Tuple<string, string>("OffSetCollision", ","),
                             new Tuple<string, string>("Velocity", ","),
-                            new Tuple<string, string>("GameType", "TopDown"),
                             new Tuple<string, string>("Mass", ""),
                         }
                     },
@@ -119,7 +118,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                         ComponentName = "CameraComponent3D",
                         Propiedades = new List<Tuple<string, string>>
                         {
-                            new Tuple<string, string>("EntityName", "MainCamera"),
+                            new Tuple<string, string>("EntityName", "Camera"),
                             new Tuple<string, string>("InitialPosition", "0,60,30"),
                             new Tuple<string, string>("OffsetCamera", "0,50,-100"),
                             new Tuple<string, string>("AngleView", "60"),

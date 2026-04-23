@@ -5,7 +5,7 @@ using YotsubaEngine.Core.Entity;
 
 namespace YotsubaEngine.Runtime.CPR.Events
 {
-    public struct OnEntityRigidBodyIsAdded(Yotsuba entity)
+    public readonly struct OnEntityRigidBody2DIsAdded(Yotsuba entity)
     {
         public Yotsuba Entity { get; } = entity;
     }
