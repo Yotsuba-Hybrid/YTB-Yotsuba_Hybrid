@@ -20,7 +20,6 @@ namespace YotsubaEngine_3D.Components
         {
             _model = model;
             int cantidadHuesos = _model.Bones.Count;
-
             // 1. Inicializar los arrays para no generar basura (Garbage Collection) en el Update
             _bindPoseOriginal = new Matrix[cantidadHuesos];
             _transformacionesActuales = new Matrix[cantidadHuesos];
@@ -38,6 +37,7 @@ namespace YotsubaEngine_3D.Components
 
         public void Update(GameTime gameTime)
         {
+            
             float tiempo = (float)gameTime.TotalGameTime.TotalSeconds;
 
             // --- LA MATEMÁTICA PROCEDURAL ---

@@ -14,7 +14,7 @@ namespace YotsubaEngine.Core.YotsubaGame
     /// Almacena la configuración global compartida del runtime del motor.
     /// <para>Stores shared global settings for the engine runtime.</para>
     /// </summary>
-    public class YTBGlobalState 
+    public partial class YTBGlobalState 
     {
 
         public static Platforms Platform { get; internal set; }
@@ -157,12 +157,6 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// <para>Global game instance.</para>
         /// </summary>
         public static YTBGame Game => (YTBGame)YTBGame.Instance;
-
-        /// <summary>
-        /// Acceso al control WASD global; requiere inicialización previa.
-        /// <para>Access to the global WASD control; requires prior initialization.</para>
-        /// </summary>
-        public static WASDControl YTB_WASD_Movement => WASDControl.Instance;
 
         /// <summary>
         /// Llamadas a los helpers del engine.

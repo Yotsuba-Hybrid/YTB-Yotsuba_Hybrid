@@ -123,4 +123,10 @@
   <data name="ClickAnywhere" xml:space="preserve">
     <value>Click Anywhere</value>
   </data>
+  <data name="Touch Here" xml:space="preserve">
+    <value>Toca Aqui</value>
+  </data>
+  <data name="GameName" xml:space="preserve">
+    <value>Yotsuba Hybrid</value>
+  </data>
 </root>

@@ -341,9 +341,8 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         /// <param name="entityId">ID de la entidad para verificar selección en modo engine.<para>Entity ID for engine mode selection check.</para></param>
         public void DrawModel(ModelComponent3D model3D, ref TransformComponent transformComponent, ShaderComponent? shaderComponent = null, int entityId = -1)
         {
-            var transforms = new Matrix[model3D.Model.Bones.Count];
-            model3D.Model.CopyAbsoluteBoneTransformsTo(transforms);
 
+            Matrix[] transforms = model3D.BoneTransforms;
 //-:cnd:noEmit
 #if YTB
             bool isSelected = YTBGlobalState.EngineShortcutsMode && entityId != -1 && YTBGlobalState.SelectedModel3DEntityIds.Contains(entityId);
@@ -352,15 +351,26 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
 
             if (shaderComponent.HasValue && shaderComponent.Value.IsActive)
             {
+                float yaw = MathHelper.ToRadians(transformComponent.Rotation);
+                Matrix entityWorld = Matrix.CreateScale(transformComponent.Scale) // <-- Añade la escala global aquí
+                       * Matrix.CreateRotationY(yaw)
+                       * Matrix.CreateTranslation(transformComponent.Position);
 
                 foreach (ModelMesh mesh in model3D.Model.Meshes)
                 {
-                    var meshTransform = transforms[mesh.ParentBone.Index];
+                    Matrix finalWorld = transforms[mesh.ParentBone.Index] * entityWorld;
 
                     foreach (ModelMeshPart meshPart in mesh.MeshParts)
                     {
                         meshPart.Effect = shaderComponent.Value.Effect;
+                        EffectParameter worldParam = shaderComponent.Value.Effect.Parameters["World"];
+                        if (worldParam != null) worldParam.SetValue(finalWorld);
 
+                        EffectParameter viewParam = shaderComponent.Value.Effect.Parameters["View"];
+                        if (viewParam != null) viewParam.SetValue(RenderPoint);
+
+                        EffectParameter projParam = shaderComponent.Value.Effect.Parameters["Projection"];
+                        if (projParam != null) projParam.SetValue(RenderParams);
                     }
 
                     mesh.Draw();
@@ -375,12 +385,11 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
 
                     foreach (BasicEffect e in mesh.Effects)
                     {
-
                         float yaw = MathHelper.ToRadians(transformComponent.Rotation);
                         Matrix world = transforms[mesh.ParentBone.Index]
                             * Matrix.CreateRotationY(yaw)
-                            * Matrix.CreateTranslation(transformComponent.Position);
-
+                            * Matrix.CreateTranslation(transformComponent.Position)
+                            * Matrix.CreateScale(transformComponent.Scale);
                         
 //-:cnd:noEmit
 #if YTB 

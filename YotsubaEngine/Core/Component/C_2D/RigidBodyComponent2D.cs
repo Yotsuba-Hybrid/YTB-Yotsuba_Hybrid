@@ -12,7 +12,7 @@ namespace YotsubaEngine.Core.Component.C_2D
     /// </summary>
     /// <param name="gameType">Tipo de juego usado para la física.<para>Game type used for physics behavior.</para></param>
     /// <param name="mass">Nivel de masa del cuerpo.<para>Mass level for the body.</para></param>
-    public struct RigidBodyComponent2D(GameType gameType, MassLevel mass)
+    public struct RigidBodyComponent2D(MassLevel mass)
     {
         /// <summary>
         /// Capa de colisión de la entidad (solo colisionara con entidades en su misma capa, o que su capa sea "All")
@@ -38,12 +38,6 @@ namespace YotsubaEngine.Core.Component.C_2D
         public Vector2 OffSetCollision { get; set; } = Vector2.Zero;
 
         /// <summary>
-        /// Determina el comportamiento de la física según el tipo de juego.
-        /// <para>Determines physics behavior based on game type.</para>
-        /// </summary>
-        public GameType GameType { get; set; } = gameType;
-
-        /// <summary>
         /// Velocidad del objeto en el espacio 3D.
         /// <para>Current velocity in 3D space.</para>
         /// </summary>
@@ -55,54 +49,5 @@ namespace YotsubaEngine.Core.Component.C_2D
         /// </summary>
         public MassLevel Mass { get; set; } = mass;
 
-        // ========== PLATFORM PHYSICS PROPERTIES ==========
-
-        /// <summary>
-        /// Fuerza de gravedad aplicada en modo Platform.
-        /// <para>Gravity strength applied in Platform mode.</para>
-        /// </summary>
-        public float Gravity { get; set; } = 0.5f;
-
-        /// <summary>
-        /// Fuerza de salto aplicada al saltar en modo Platform.
-        /// <para>Jump force applied when jumping in Platform mode.</para>
-        /// </summary>
-        public float JumpForce { get; set; } = -12.0f;
-
-        /// <summary>
-        /// Velocidad máxima de caída (velocidad terminal) en modo Platform.
-        /// <para>Maximum fall speed (terminal velocity) in Platform mode.</para>
-        /// </summary>
-        public float MaxFallSpeed { get; set; } = 15.0f;
-
-        /// <summary>
-        /// Multiplicador de caída rápida al presionar abajo en modo Platform.
-        /// <para>Fast fall multiplier when pressing down in Platform mode.</para>
-        /// </summary>
-        public float FastFallMultiplier { get; set; } = 2.5f;
-
-        /// <summary>
-        /// Si la entidad está actualmente en el suelo (modo Platform).
-        /// <para>Whether the entity is currently on the ground (Platform mode).</para>
-        /// </summary>
-        public bool IsGrounded { get; set; } = false;
-
-        /// <summary>
-        /// Si la entidad está actualmente saltando (modo Platform).
-        /// <para>Whether the entity is currently jumping (Platform mode).</para>
-        /// </summary>
-        public bool IsJumping { get; set; } = false;
-
-        /// <summary>
-        /// Si la entidad está actualmente cayendo en picado (modo Platform).
-        /// <para>Whether the entity is currently fast falling (Platform mode).</para>
-        /// </summary>
-        public bool IsFastFalling { get; set; } = false;
-
-        /// <summary>
-        /// Dirección en la que la entidad miró por última vez (-1 izq, 1 der). Usado para animaciones.
-        /// <para>Direction the entity last faced (-1 left, 1 right). Used for animations.</para>
-        /// </summary>
-        public int FacingDirection { get; set; } = 1;
     }
 }

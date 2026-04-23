@@ -739,7 +739,6 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 #endif
             string OffsetCollision = component.Propiedades.FirstOrDefault(x => x.Item1 == "OffSetCollision").Item2;
             string Velocity = component.Propiedades.FirstOrDefault(x => x.Item1 == "Velocity").Item2;
-            string GameType = component.Propiedades.FirstOrDefault(x => x.Item1 == "GameType").Item2;
             string Mass = component.Propiedades.FirstOrDefault(x => x.Item1 == "Mass").Item2;
 
             if(int.TryParse(OffsetCollision.Split(",")[0], out int Ox) && int.TryParse(OffsetCollision.Split(",")[1], out int Oy))
@@ -766,17 +765,6 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
             }
 #endif
 
-            if (Enum.TryParse(GameType, out GameType gameType))
-            {
-                rigidBodyComponent2D.GameType = gameType;
-            }
-            else
-            {
-#if YTB
-                    _ = new GameWontRun(YTBErrors.RigidBody2DParseFailed, sceneName, name, nameof(RigidBodyComponent2D), "GameType", $"No se pudo parsear GameType: '{GameType}'", "Asegúrese de que GameType sea un valor válido del enum GameType");
-#endif
-            }
-
             if(Enum.TryParse(Mass, out MassLevel mass))
             {
                 rigidBodyComponent2D.Mass = mass;
@@ -793,7 +781,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
             catch (Exception ex)
             {
 
-                _ = new GameWontRun(YTBErrors.RigidBody2DParseFailed, sceneName, name, nameof(RigidBodyComponent2D), "", $"Error al parsear RigidBodyComponent2D: {ex.Message}", "Revise que todas las propiedades del RigidBody (OffSetCollision, Velocity, GameType, Mass) sean válidas");
+                _ = new GameWontRun(YTBErrors.RigidBody2DParseFailed, sceneName, name, nameof(RigidBodyComponent2D), "", $"Error al parsear RigidBodyComponent2D: {ex.Message}", "Revise que todas las propiedades del RigidBody (OffSetCollision, Velocity, Mass) sean válidas");
             }
 #endif
             return rigidBodyComponent2D;
@@ -1275,7 +1263,8 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                 }
 
                 // Crear el componente
-                ShaderComponent shaderComponent = new ShaderComponent(effect, isActive);
+                ShaderComponent shaderComponent = new ShaderComponent(effect);
+                shaderComponent.IsActive = isActive;
 
                 string shaderParams = component.Propiedades.FirstOrDefault(x => x.Item1 == "params")?.Item2 ?? string.Empty;
 

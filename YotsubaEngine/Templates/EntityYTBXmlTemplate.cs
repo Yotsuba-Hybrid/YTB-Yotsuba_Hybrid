@@ -65,7 +65,6 @@ namespace YotsubaEngine.Templates
                         {
                             new("OffSetCollision", ","),
                             new("Velocity", ","),
-                            new("GameType", "TopDown"),
                             new("Mass", "")
                         }
                     },
@@ -258,7 +257,6 @@ namespace YotsubaEngine.Templates
                 {
                     new("OffSetCollision", "0,0"),
                     new("Velocity", "0,0"),
-                    new("GameType", "TopDown"),
                     new("Mass", "0")
                 }
             };

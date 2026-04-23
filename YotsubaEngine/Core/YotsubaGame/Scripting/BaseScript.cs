@@ -252,7 +252,7 @@ namespace YotsubaEngine.Core.YotsubaGame.Scripting
         /// <param name="Velocity">Vector de velocidad a sumar. <para>Velocity vector to add.</para></param>
         public void ApplyMovement(Vector2 Velocity)
         {
-            if (!Entity.HasComponent(YTBComponent.Rigibody))
+            if (!Entity.HasComponent(YTBComponent.Rigibody2D))
             {
                 throw new Exception($"La entidad {Entity.Name} con id {Entity.Id} no tiene un RigidBody2D para aplicar movimiento. Esta entidad esta en la escena: \"{YTBGlobalState.Game.SceneManager.CurrentScene.SceneName}\"");
             }
@@ -269,7 +269,7 @@ namespace YotsubaEngine.Core.YotsubaGame.Scripting
         public void ApplyMovement(int entityId, Vector2 Velocity)
         {
             ref var yotsuba = ref EntityManager.YotsubaEntities.AsSpan()[entityId];
-            if (yotsuba.HasNotComponent(YTBComponent.Rigibody))
+            if (yotsuba.HasNotComponent(YTBComponent.Rigibody2D))
             {
                 throw new Exception($"La entidad con id {entityId} no tiene un RigidBody2D para aplicar movimiento. Esta entidad puede no estar en la escena actual.");
             }
@@ -285,7 +285,7 @@ namespace YotsubaEngine.Core.YotsubaGame.Scripting
         /// <param name="Velocity">Vector de velocidad a sumar. <para>Velocity vector to add.</para></param>
         public void ApplyMovement(ref Yotsuba entity, Vector2 Velocity)
         {
-            if (!entity.HasComponent(YTBComponent.Rigibody))
+            if (!entity.HasComponent(YTBComponent.Rigibody2D))
             {
                 throw new Exception($"La entidad {entity.Name} con id {entity.Id} no tiene un RigidBody2D para aplicar movimiento. Esta entidad puede no estar en la escena actual.");
             }
@@ -301,7 +301,7 @@ namespace YotsubaEngine.Core.YotsubaGame.Scripting
         /// <param name="Velocity">Vector de velocidad a sumar. <para>Velocity vector to add.</para></param>
         public void ApplyMovement(Yotsuba entity, Vector2 Velocity)
         {
-            if (!entity.HasComponent(YTBComponent.Rigibody))
+            if (!entity.HasComponent(YTBComponent.Rigibody2D))
             {
                 throw new Exception($"La entidad {entity.Name} con id {entity.Id} no tiene un RigidBody2D para aplicar movimiento. Esta entidad puede no estar en la escena actual.");
             }

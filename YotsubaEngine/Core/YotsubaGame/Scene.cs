@@ -41,11 +41,6 @@ namespace YotsubaEngine.Core.YotsubaGame
         public EntityManager EntityManager { get; set; }
 
         /// <summary>
-        /// Instancia global del control WASD.
-        /// <para>Global instance of the WASD control.</para>
-        /// </summary>
-        public static WASDControl ToolkitWASDControl { get; private set; }
-        /// <summary>
         /// La instancia global del administrador de eventos.
         /// <para>Global instance of the event manager.</para>
         /// </summary>
@@ -175,8 +170,6 @@ namespace YotsubaEngine.Core.YotsubaGame
         public void Initialize(ContentManager content)
         {
             EntityFunctions.SetEntityManager(EntityManager);
-            ToolkitWASDControl = new(EntityManager);
-            ToolkitWASDControl.Initialize();
             AnimationSystem2D.InitializeSystem(EntityManager);
             ButtonSystem2D.InitializeSystem(EntityManager);
             PhysicsSystem2D.InitializeSystem(EntityManager);
