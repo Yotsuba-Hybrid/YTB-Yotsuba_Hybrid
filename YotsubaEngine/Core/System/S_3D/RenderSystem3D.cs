@@ -12,9 +12,8 @@ using YotsubaEngine.Core.System.YotsubaEngineUI;
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Exceptions;
 using YotsubaEngine.Graphics;
-using YotsubaEngine.HighestPerformanceTypes;
 using YotsubaEngine.Input;
-using Num = System.Numerics;
+using YotsubaEngine.Runtime.OCR;
 using static YotsubaEngine.Core.System.S_AGNOSTIC.InputSystem;
 namespace YotsubaEngine.Core.System.S_3D
 {
@@ -22,7 +21,7 @@ namespace YotsubaEngine.Core.System.S_3D
     /// Sistema que gestiona todo lo que se ve en pantalla y que sea 3D específicamente, renderizar modelos 3D.
     /// <para>System that manages everything rendered in 3D, including 3D models.</para>
     /// </summary>
-    public class RenderSystem3D : ISystem
+    public class RenderSystem3D : IRenderSystem
     {
         /// <summary>
         /// Referencia al EventManager para manejar eventos.
@@ -34,6 +33,8 @@ namespace YotsubaEngine.Core.System.S_3D
         /// </summary>
         private Graphics3D Graphics3D;
 
+        private HardwareOcclusionQuerieRuntime HardwareOcclusionQuerieRuntime;
+
         /// <summary>
         /// Inicializa el sistema de renderizado 3D.
         /// <para>Initializes the 3D render system.</para>
@@ -41,9 +42,9 @@ namespace YotsubaEngine.Core.System.S_3D
         /// <param name="entities">Administrador de entidades. <para>Entity manager.</para></param>
         public override void InitializeSystem(EntityManager entities)
         {
-
+            HardwareOcclusionQuerieRuntime = new();
             EntityManager = entities;
-
+            HardwareOcclusionQuerieRuntime.InitializeSystem(entities);
             Graphics3D = new();
             EventManager = EventManager.Instance;
 #if YTB
@@ -57,7 +58,7 @@ namespace YotsubaEngine.Core.System.S_3D
         /// <para>Updates 3D rendering each frame.</para>
         /// </summary>
         /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
-        public override void UpdateSystem(GameTime gameTime)
+        public override void Render3D(GameTime gameTime)
         {
 
 
@@ -68,7 +69,8 @@ namespace YotsubaEngine.Core.System.S_3D
 #endif
             //+:cnd:noEmit
 
-            Span<Yotsuba> entities = EntityManager.YotsubaEntities.AsSpan();
+            Span<int> entities = HardwareOcclusionQuerieRuntime.GetEntitiesToRender();
+            Span<Yotsuba> Yotsubas = GetEntitiesAsSpan();
             Span<ModelComponent3D> Models = EntityManager.ModelComponents3D.AsSpan();
             Span<TransformComponent> transformComponents = EntityManager.TransformComponents.AsSpan();
             Span<YTBModelComponent3D> ytb3DComponents = EntityManager.YtbModelComponents.AsSpan();
@@ -105,7 +107,7 @@ namespace YotsubaEngine.Core.System.S_3D
                     float closestDistance = float.MaxValue;
                     int closestEntityId = -1;
                     
-                    foreach (ref Yotsuba entity in entities)
+                    foreach (ref Yotsuba entity in Yotsubas)
                     {
 
                         if (entity.HasNotComponent(YTBComponent.Model3D)  || entity.HasNotComponent(YTBComponent.Transform)) continue;
@@ -165,19 +167,20 @@ namespace YotsubaEngine.Core.System.S_3D
             Span<ShaderComponent> shaderComponents = EntityManager.ShaderComponents.AsSpan();
             Span<SpriteComponent2D> spriteComponent2Ds = EntityManager.Sprite2DComponents.AsSpan();
 
-
-            foreach (ref Yotsuba entity in entities)
+            foreach (ref int entityId in entities)
             {
-                if(entity.HasNotComponent(YTBComponent.Transform)) continue;
+                ref Yotsuba entity = ref Yotsubas[entityId];
+                if (entity.HasNotComponent(YTBComponent.Transform)) continue;
 
                 ref TransformComponent transform = ref transformComponents[entity.Id];
 
                 if (entity.HasComponent(YTBComponent.Model3D))
                 {
                     ref var model = ref Models[entity.Id];
-                    camera.DrawModel(model, ref transform,
-                        entity.HasComponent(YTBComponent.Shader) ? shaderComponents[entity.Id] : null,
-                        entity.Id);
+
+                        camera.DrawModel(ref model, ref transform,
+                            entity.HasComponent(YTBComponent.Shader) ? shaderComponents[entity.Id] : null,
+                            entity.Id);
                 }
 
                 if (entity.HasComponent(YTBComponent.YTBModel3D))

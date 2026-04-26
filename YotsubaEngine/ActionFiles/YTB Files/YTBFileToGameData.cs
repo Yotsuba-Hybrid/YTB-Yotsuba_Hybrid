@@ -1334,7 +1334,10 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                 string radius = component.Propiedades.FirstOrDefault(x => x.Item1 == "SphereRadius")?.Item2;
                     if (float.TryParse(radius, out float r))
                     {
-                        modelComponent.RadiusSphere = r;
+                        if (r > 0)
+                        {
+                            modelComponent.RadiusSphere = r;
+                        }
                     }
 
                 string offsetSphere = component.Propiedades.FirstOrDefault(x => x.Item1 == "OffsetSphere").Item2;

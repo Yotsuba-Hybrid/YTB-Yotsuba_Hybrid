@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using YotsubaEngine.Core.Component.C_2D;
 using YotsubaEngine.Core.Component.C_3D;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;

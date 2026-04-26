@@ -1,13 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Reflection;
-using YotsubaEngine.Core.Component.C_2D;
 using YotsubaEngine.Core.Component.C_3D;
 using YotsubaEngine.Core.Entity;
-using YotsubaEngine.Core.System.S_2D;
 using YotsubaEngine.Core.YotsubaGame;
-using YotsubaEngine.Exceptions;
 using YotsubaEngine.YTBMath;
 #if YTB
 using static YotsubaEngine.Exceptions.GameWontRun;
@@ -331,6 +327,16 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
             return Vector3.Transform(OffsetCamera, rotation);
         }
 
+
+        public void DrawModel(ref ModelComponent3D model3D, ref TransformComponent transform, ShaderComponent? shaderComponent = null, int entityId = -1)
+        {
+            float yaw = transform.Rotation;
+            Matrix worldMatrix = Matrix.CreateScale(transform.Scale)
+                      * Matrix.CreateRotationY(yaw)
+                      * Matrix.CreateTranslation(transform.Position);
+
+            DrawModel(ref model3D, ref worldMatrix, shaderComponent, entityId);
+        }
         /// <summary>
         /// Ayudante para dibujar un modelo 3D con la cámara actual.
         /// <para>Helper to draw a 3D model with the current camera.</para>
@@ -339,26 +345,33 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         /// <param name="transformComponent">Componente de transformación.<para>Transform component.</para></param>
         /// <param name="shaderComponent">Componente de shader opcional.<para>Optional shader component.</para></param>
         /// <param name="entityId">ID de la entidad para verificar selección en modo engine.<para>Entity ID for engine mode selection check.</para></param>
-        public void DrawModel(ModelComponent3D model3D, ref TransformComponent transformComponent, ShaderComponent? shaderComponent = null, int entityId = -1)
+        /// <summary>
+        /// Ayudante para dibujar un modelo 3D con la cámara actual, usando una matriz de mundo pre-calculada.
+        /// </summary>
+        public void DrawModel(ref ModelComponent3D model3D, ref Matrix worldMatrix, ShaderComponent? shaderComponent = null, int entityId = -1)
         {
-
             Matrix[] transforms = model3D.BoneTransforms;
-//-:cnd:noEmit
+            //-:cnd:noEmit
+
+            var gd = YTBGlobalState.GraphicsDevice;
+            RasterizerState previousRasterizer = null;
+            if (model3D.RasterizerState is not null)
+            {
+                previousRasterizer = gd.RasterizerState; // Guardamos el global temporalmente
+                gd.RasterizerState = model3D.RasterizerState; // Aplicamos el individual
+            }
 #if YTB
             bool isSelected = YTBGlobalState.EngineShortcutsMode && entityId != -1 && YTBGlobalState.SelectedModel3DEntityIds.Contains(entityId);
 #endif
-//+:cnd:noEmit
+            //+:cnd:noEmit
 
             if (shaderComponent.HasValue && shaderComponent.Value.IsActive)
             {
-                float yaw = MathHelper.ToRadians(transformComponent.Rotation);
-                Matrix entityWorld = Matrix.CreateScale(transformComponent.Scale) // <-- Añade la escala global aquí
-                       * Matrix.CreateRotationY(yaw)
-                       * Matrix.CreateTranslation(transformComponent.Position);
-
+                // YA NO RECALCULAMOS LA MATRIZ AQUÍ
                 foreach (ModelMesh mesh in model3D.Model.Meshes)
                 {
-                    Matrix finalWorld = transforms[mesh.ParentBone.Index] * entityWorld;
+                    // Multiplicamos el hueso del modelo por la matriz de mundo que recibimos
+                    Matrix finalWorld = transforms[mesh.ParentBone.Index] * worldMatrix;
 
                     foreach (ModelMeshPart meshPart in mesh.MeshParts)
                     {
@@ -372,32 +385,24 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
                         EffectParameter projParam = shaderComponent.Value.Effect.Parameters["Projection"];
                         if (projParam != null) projParam.SetValue(RenderParams);
                     }
-
                     mesh.Draw();
                 }
-
             }
-            else 
+            else
             {
-
                 foreach (ModelMesh mesh in model3D.Model.Meshes)
                 {
-
                     foreach (BasicEffect e in mesh.Effects)
                     {
-                        float yaw = MathHelper.ToRadians(transformComponent.Rotation);
-                        Matrix world = transforms[mesh.ParentBone.Index]
-                            * Matrix.CreateRotationY(yaw)
-                            * Matrix.CreateTranslation(transformComponent.Position)
-                            * Matrix.CreateScale(transformComponent.Scale);
-                        
-//-:cnd:noEmit
-#if YTB 
+                        // YA NO RECALCULAMOS LA MATRIZ AQUÍ
+                        Matrix finalWorld = transforms[mesh.ParentBone.Index] * worldMatrix;
+
+                        //-:cnd:noEmit
+#if YTB
                         if (isSelected)
                         {
                             e.LightingEnabled = true;
                             e.EmissiveColor = new Vector3(0.5f, 0.0f, 0.0f);
-
                         }
                         else
                         {
@@ -405,22 +410,23 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
                             e.LightingEnabled = false;
                         }
 #endif
-//+:cnd:noEmit
+                        //+:cnd:noEmit
 
-                        e.World = world;
+                        e.World = finalWorld;
                         e.View = RenderPoint;
                         e.Projection = RenderParams;
                         e.EnableDefaultLighting();
                         e.PreferPerPixelLighting = true;
-
                     }
-
                     mesh.Draw();
-
                 }
             }
-        }
 
+            if (previousRasterizer is not null)
+            {
+                gd.RasterizerState = previousRasterizer;
+            }
+        }
 
         /// <summary>
         /// Construye una matriz de vista 2D con las transformaciones de la cámara.

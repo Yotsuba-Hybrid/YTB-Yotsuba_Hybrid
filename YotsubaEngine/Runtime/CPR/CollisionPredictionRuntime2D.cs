@@ -149,7 +149,7 @@ namespace YotsubaEngine.Runtime.CPR
         private void RegisterEntity(int entityId)
         {
             Entities.Add(entityId);
-            ref TransformComponent transform = ref GetTransform2DComponent(entityId);
+            ref TransformComponent transform = ref GetTransformComponent(entityId);
             ref RigidBodyComponent2D rigidBody = ref GetRigidBodyComponent(entityId);
 
             Point point = GetSpatialHash(ref transform);
