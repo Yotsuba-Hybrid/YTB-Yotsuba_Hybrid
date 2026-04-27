@@ -11,9 +11,9 @@ using YotsubaEngine.Runtime.RPR;
 
 namespace YotsubaEngine.Runtime.OCR
 {
-    public class HardwareOcclusionQuerieRuntime : YTB_Runtime
+    public class Hardware_Occlusion_Querie_Runtime : YTB_Runtime
     {
-        private RenderPredictionRuntime3D RenderPredictionRuntime3D;
+        private Render_Prediction_Runtime_3D RenderPredictionRuntime3D;
 
         private Graphics3D Graphics3D;
 

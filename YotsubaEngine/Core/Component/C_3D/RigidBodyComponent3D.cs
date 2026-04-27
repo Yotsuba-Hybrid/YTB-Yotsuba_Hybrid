@@ -10,16 +10,10 @@ namespace YotsubaEngine.Core.Component.C_3D
     /// </summary>
     /// <param name="sphere">Esfera de colisión inicial.<para>Initial collision sphere.</para></param>
     /// <param name="mass">Nivel de masa del cuerpo.<para>Mass level for the body.</para></param>
-    public struct RigidBodyComponent3D(BoundingSphere sphere, MassLevel mass)
+    public struct RigidBodyComponent3D(MassLevel mass)
     {
 
         public CollisionLayer CollisionLayer { get; set; } = CollisionLayer.Main;
-
-        /// <summary>
-        /// Cuerpo 3D del componente.
-        /// <para>Bounding sphere used for collisions.</para>
-        /// </summary>
-        public BoundingSphere BoundingSphere { get; set; } = sphere;
 
         /// <summary>
         /// Velocidad del objeto 3D.

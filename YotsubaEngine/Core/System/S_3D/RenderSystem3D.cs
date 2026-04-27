@@ -33,7 +33,7 @@ namespace YotsubaEngine.Core.System.S_3D
         /// </summary>
         private Graphics3D Graphics3D;
 
-        private HardwareOcclusionQuerieRuntime HardwareOcclusionQuerieRuntime;
+        private Hardware_Occlusion_Querie_Runtime HardwareOcclusionQuerieRuntime;
 
         /// <summary>
         /// Inicializa el sistema de renderizado 3D.

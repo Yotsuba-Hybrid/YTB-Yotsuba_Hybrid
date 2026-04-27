@@ -12,7 +12,7 @@ namespace YotsubaEngine.Runtime.RPR
     /// Runtime de alto rendimiento que calcula y almacena en tiempo real las entidades que pueden ser renderizadas en un entorno 3D.
     /// Ya sea por tener un ModelComponent3D, o un YTBModelComponent3D. (Es requisito que las entidades tengan un TransformComponent)
     /// </summary>
-    public class RenderPredictionRuntime3D : YTB_Runtime
+    public class Render_Prediction_Runtime_3D : YTB_Runtime
     {
         public override void InitializeSystem(EntityManager entities)
         {

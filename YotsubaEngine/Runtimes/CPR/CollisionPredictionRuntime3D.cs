@@ -9,7 +9,7 @@ using YotsubaEngine.Runtime.CPR.Events;
 
 namespace YotsubaEngine.Runtime.CPR
 {
-    public class CollisionPredictionRuntime3D : YTB_Runtime
+    public class Collision_Prediction_Runtime_3D : YTB_Runtime
     {
         private static bool DistanceIsSetted = false;
 

@@ -17,6 +17,7 @@ namespace YotsubaEngine.Core.YotsubaGame
     public partial class YTBGlobalState 
     {
 
+        public static bool NotifyOnlyFirst3DCollision { get; set; }
         public static Platforms Platform { get; internal set; }
         public static (YTBGameInfo, YTBConfig) GameData { get; set; }
         public static GraphicsDeviceManager GraphicsDeviceManager { get; internal set; }
