@@ -240,10 +240,10 @@ namespace YotsubaEngine.Core.System.S_3D
                 // Disparamos SIEMPRE el evento para notificar al gameplay que hubo contacto
                 EventManager.Instance.Publish(new OnEntity3DCollide(entityIdA, entityIdB, collisionNormal, penetrationDepth, hitPartA, hitPartB));
 
-                // LÓGICA DE TRIGGER (NoCollision): 
-                // Si ambos objetos son Collision (Sólidos), se empujan mutuamente.
-                // Si ALGUNO de los dos es NoCollision, se tratan como fantasmas/triggers, pueden atravesarse y NO llamamos a ResolveCollision.
-                if (rigidA.Mass == MassLevel.Collision && rigidB.Mass == MassLevel.Collision)
+                // LÓGICA DE TRIGGER (Trigger):
+                // Si ambos objetos son Solid (Sólidos), se empujan mutuamente.
+                // Si ALGUNO de los dos es Trigger, se tratan como fantasmas/triggers, pueden atravesarse y NO llamamos a ResolveCollision.
+                if (rigidA.Collide == CollisionLevel.Solid && rigidB.Collide == CollisionLevel.Solid)
                 {
                     ResolveCollision(ref transformA, ref rigidA, ref transformB, ref rigidB, collisionNormal, penetrationDepth);
                 }
@@ -256,15 +256,26 @@ namespace YotsubaEngine.Core.System.S_3D
 
         /// <summary>
         /// Separa dos entidades sólidas que se han penetrado y cancela la velocidad en el eje del impacto.
-        /// (Solo se ejecuta si ambas entidades son MassLevel.Collision)
+        /// (Solo se ejecuta si ambas entidades son CollisionLevel.Solid)
+        /// Distribución de fuerza proporcional a la masa (objetos ligeros reciben más impacto).
         /// </summary>
         private void ResolveCollision(ref TransformComponent tA, ref RigidBodyComponent3D rbA, ref TransformComponent tB, ref RigidBodyComponent3D rbB, Vector3 normal, float penetration)
         {
-            // Como ambas entidades son físicas, repartimos el rebote a la mitad para cada una.
-            float ratioA = 0.5f;
-            float ratioB = 0.5f;
+            // Calcular distribución de fuerza basada en masa física (no comunista 50/50).
+            // Objetos más pesados reciben MENOS fuerza, objetos más ligeros reciben MÁS.
+            float massA = rbA.Mass;
+            float massB = rbB.Mass;
 
-            // 1. Desenterramos a las entidades para que visualmente no se vean "clipping" (traspasadas)
+            // Evitar división por cero
+            float totalMass = massA + massB;
+            if (totalMass == 0) totalMass = 1f;
+
+            // Ratio inverso: objeto MÁS PESADO recibe MENOS impacto
+            // Ejemplo: A(4kg) vs B(1kg) → A recibe 20%, B recibe 80%
+            float ratioA = massB / totalMass; // Objeto A recibe % de masa B
+            float ratioB = massA / totalMass; // Objeto B recibe % de masa A
+
+            // 1. Separar objetos proporcionalmente a sus masas
             tA.Position += normal * (penetration * ratioA);
             tB.Position -= normal * (penetration * ratioB);
 

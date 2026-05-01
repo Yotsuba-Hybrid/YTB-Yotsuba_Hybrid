@@ -210,7 +210,7 @@ namespace YotsubaEngine.Core.System.S_2D
             Rectangle entityRect, bool sizeZero, GameTime gameTime,
             ref bool collisionBottom, ref bool collisionTop, ref bool collisionLeft, ref bool collisionRight)
         {
-            if (rigidBody.Mass == MassLevel.NoCollision || otherRigidBody.Mass == MassLevel.NoCollision) return;
+            if (rigidBody.Collide == CollisionLevel.Trigger || otherRigidBody.Collide == CollisionLevel.Trigger) return;
 
             ref TileMapComponent2D tilemap = ref EntityManager.TileMapComponent2Ds[tilemapEntity.Id];
 
@@ -324,7 +324,7 @@ namespace YotsubaEngine.Core.System.S_2D
             Rectangle entityRect, bool sizeZero, GameTime gameTime,
             ref bool collisionBottom, ref bool collisionTop, ref bool collisionLeft, ref bool collisionRight)
         {
-            if (rigidBody.Mass == MassLevel.NoCollision || otherRigidBody.Mass == MassLevel.NoCollision) return;
+            if (rigidBody.Collide == CollisionLevel.Trigger || otherRigidBody.Collide == CollisionLevel.Trigger) return;
             if (otherTransform.Size == Vector3.Zero) return;
 
             Rectangle otherRect = new Rectangle(

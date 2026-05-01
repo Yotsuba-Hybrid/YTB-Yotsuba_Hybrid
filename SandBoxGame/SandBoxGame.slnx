@@ -36,6 +36,9 @@
 <BuildType Solution="YTB|*" Project="Release" />
 </Project>
 </Folder>
+<Folder Name="/Elementos de la solución/">
+<File Path="SandBoxGame.DesktopGL/bin/YTB/net10.0/SandBoxGame.exe" />
+</Folder>
   <Folder Name="/Platforms/" />
 <Folder Name="/Platforms/Mobile/">
 <Project Path="SharedCode.Mobile/SharedCode.Mobile.csproj" Id="c3e136f0-a3f9-4f5d-ad56-9307ae64d3a0">

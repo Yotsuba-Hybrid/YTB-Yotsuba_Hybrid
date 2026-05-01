@@ -1,6 +1,4 @@
-﻿
-
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -17,7 +15,6 @@ using YotsubaEngine.Core.Entity;
 #if YTB
 using YotsubaEngine.Core.System.YotsubaEngineUI;
 using static YotsubaEngine.Exceptions.GameWontRun;
-
 #endif
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Core.YotsubaGame.Scripting;
@@ -765,9 +762,9 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
             }
 #endif
 
-            if(Enum.TryParse(Mass, out MassLevel mass))
+            if(Enum.TryParse(Mass, out CollisionLevel levl))
             {
-                rigidBodyComponent2D.Mass = mass;
+                rigidBodyComponent2D.Collide = levl;
             }
 #if YTB
 
