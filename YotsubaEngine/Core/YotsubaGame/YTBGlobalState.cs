@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -23,6 +23,12 @@ namespace YotsubaEngine.Core.YotsubaGame
         public static GraphicsDeviceManager GraphicsDeviceManager { get; internal set; }
 
         /// <summary>
+        /// Indica si el juego se está ejecutando en un navegador web (WASM/Blazor).
+        /// <para>Indicates if the game is running in a web browser (WASM/Blazor).</para>
+        /// </summary>
+        public readonly static bool IsBrowser = OperatingSystem.IsBrowser();
+
+        /// <summary>
         /// Indica si el juego se está ejecutando en una plataforma móvil.
         /// <para>Indicates if the game is running on a mobile platform.</para>
         /// </summary>
@@ -31,7 +37,8 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// Indica si el juego se está ejecutando en una plataforma de escritorio.
         /// <para>Indicates if the game is running on a desktop platform.</para>
         /// </summary>
-        public readonly static bool IsDesktop = OperatingSystem.IsMacOS() || OperatingSystem.IsLinux() || OperatingSystem.IsWindows();
+        public readonly static bool IsDesktop = !IsBrowser && !IsMobile
+            && (OperatingSystem.IsMacOS() || OperatingSystem.IsLinux() || OperatingSystem.IsWindows());
 
         /// <summary>
         /// Indica si el juego se está ejecutando en Windows.

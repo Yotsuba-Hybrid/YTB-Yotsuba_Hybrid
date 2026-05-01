@@ -6,6 +6,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
 	  <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+	  <Configurations>Debug;Release;YTB;BlazorGL</Configurations>
 
   </PropertyGroup>
 

@@ -1,4 +1,4 @@
-﻿#if !YTB
+﻿#if !YTB && !KNI
 using Hexa.NET.ImGui;
 using Hexa.NET.ImGui.Backends.OpenGL3;
 using Hexa.NET.ImNodes;

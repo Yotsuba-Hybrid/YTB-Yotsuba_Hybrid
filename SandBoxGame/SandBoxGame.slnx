@@ -3,6 +3,7 @@
     <BuildType Name="Debug" />
     <BuildType Name="Release" />
     <BuildType Name="YTB" />
+    <BuildType Name="BlazorGL" />
   </Configurations>
   <Platforms>
     <Platform Name="AnyCPU" />
@@ -11,6 +12,7 @@
   <Folder Name="/Dependencies/Gum/">
   <Project Path="../Gum/GumCommon/GumCommon.csproj">
   <BuildType Solution="YTB|*" Project="Release" />
+  <BuildType Solution="BlazorGL|*" Project="BlazorGL" />
   </Project>
   <Project Path="../Gum/MonoGameGum/MonoGameGum.csproj">
   <BuildType Solution="YTB|*" Project="Release" />
@@ -18,26 +20,31 @@
   <Project Path="../Gum/Tools/Gum.Analyzers/Gum.Analyzers.csproj">
   <BuildType Solution="YTB|*" Project="Release" />
   </Project>
+  <Project Path="../Gum/MonoGameGum/KniGum/KniGum.csproj">
+  <BuildType Solution="BlazorGL|*" Project="BlazorGL" />
+  </Project>
   </Folder>
 <Folder Name="/Dependencies/ImGui/">
 <Project Path="../Hexa.NET.ImGui-2.2.4/Hexa.NET.ImGui-2.2.4/Hexa.NET.ImGui.Backends/Hexa.NET.ImGui.Backends.csproj">
 <BuildType Solution="YTB|*" Project="Release" />
+<BuildType Solution="BlazorGL|*" Project="BlazorGL" />
 </Project>
 <Project Path="../Hexa.NET.ImGui-2.2.4/Hexa.NET.ImGui-2.2.4/Hexa.NET.ImGui/Hexa.NET.ImGui.csproj">
 <BuildType Solution="YTB|*" Project="Release" />
+<BuildType Solution="BlazorGL|*" Project="BlazorGL" />
 </Project>
 <Project Path="../Hexa.NET.ImGui-2.2.4/Hexa.NET.ImGui-2.2.4/Hexa.NET.ImGuizmo/Hexa.NET.ImGuizmo.csproj">
 <BuildType Solution="YTB|*" Project="Release" />
+<BuildType Solution="BlazorGL|*" Project="BlazorGL" />
 </Project>
 <Project Path="../Hexa.NET.ImGui-2.2.4/Hexa.NET.ImGui-2.2.4/Hexa.NET.ImNodes/Hexa.NET.ImNodes.csproj">
 <BuildType Solution="YTB|*" Project="Release" />
+<BuildType Solution="BlazorGL|*" Project="BlazorGL" />
 </Project>
 <Project Path="../Hexa.NET.ImGui-2.2.4/Hexa.NET.ImGui-2.2.4/Hexa.NET.ImPlot/Hexa.NET.ImPlot.csproj">
 <BuildType Solution="YTB|*" Project="Release" />
+<BuildType Solution="BlazorGL|*" Project="BlazorGL" />
 </Project>
-</Folder>
-<Folder Name="/Elementos de la solución/">
-<File Path="SandBoxGame.DesktopGL/bin/YTB/net10.0/SandBoxGame.exe" />
 </Folder>
   <Folder Name="/Platforms/" />
 <Folder Name="/Platforms/Mobile/">
@@ -58,6 +65,12 @@
 <Folder Name="/Platforms/Multiplatform/">
 <Project Path="SharedCode.Multiplatform/SharedCode.Multiplatform.NoMobile.csproj" Id="2a413b9a-3ad5-40e7-b91e-e3f03f43bf3e">
 <BuildType Solution="YTB|*" Project="Release" />
+<BuildType Solution="BlazorGL|*" Project="BlazorGL" />
+</Project>
+</Folder>
+<Folder Name="/Platforms/Multiplatform/Web/">
+<Project Path="SandBoxGame.BlazorGL/SandBoxGame.BlazorGL.csproj">
+<BuildType Solution="BlazorGL|*" Project="Debug" />
 </Project>
 </Folder>
 <Folder Name="/Platforms/Multiplatform/Desktop/">
@@ -91,11 +104,15 @@
 <Project Path="../YotsubaEngine.3D/YotsubaEngine_3D.csproj" Id="b5377f73-5c14-481d-a98e-d264895a1d5f">
 <BuildType Solution="YTB|*" Project="Release" />
 </Project>
-<Project Path="../YotsubaEngine/YotsubaEngine.csproj" />
+<Project Path="../YotsubaEngine/YotsubaEngine.csproj">
+<BuildType Solution="BlazorGL|*" Project="BlazorGL" />
+</Project>
 <Project Path="../YTBContentBuilder/YTBContentBuilder.csproj" Id="e5a9f17e-eb06-43ba-95c1-033dec5340af" />
 </Folder>
 <Folder Name="/YotsubaEngine/AssetBuilder/" />
 <Project Path="SandBoxGame.Content/SandBoxGame.Content.csproj" />
-<Project Path="SandBoxGame.Core/SandBoxGame.Core.csproj" />
+<Project Path="SandBoxGame.Core/SandBoxGame.Core.csproj">
+<BuildType Solution="BlazorGL|*" Project="BlazorGL" />
+</Project>
 
 </Solution>

@@ -1,8 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFrameworks>net10.0;net8.0</TargetFrameworks>
     <Platforms>AnyCPU</Platforms>
-    <Configurations>Debug;Release;YTB</Configurations>
+    <Configurations>Debug;Release;YTB;BlazorGL</Configurations>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -10,15 +10,36 @@
 	<PropertyGroup Condition="'$(Configuration)' == 'YTB'">
 		<DefineConstants>DEBUG;YOTSUBA</DefineConstants>
 	</PropertyGroup>
-  <ItemGroup>
+	<PropertyGroup Condition="'$(UseKNI)' == 'true'">
+		<DefineConstants>$(DefineConstants);USE_GUMCOMMON;FULL_DIAGNOSTICS</DefineConstants>
+	</PropertyGroup>
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- MonoGame (todas las configuraciones EXCEPTO BlazorGL)     -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <ItemGroup Condition="'$(UseKNI)' != 'true'">
     <PackageReference Include="MonoGame.Framework.Native" Version="3.8.5-preview.*">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
 	  <PackageReference Include="AvaloniaInside.MonoGame" Version="1.0.2" />
-
   </ItemGroup>
 
-	<ItemGroup Condition="'$(Configuration)' != 'YTB'">
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- KNI (solo configuración BlazorGL)                         -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <ItemGroup Condition="'$(UseKNI)' == 'true'">
+    <PackageReference Include="nkast.Xna.Framework" Version="4.2.9001" PrivateAssets="All" />
+    <PackageReference Include="nkast.Xna.Framework.Content" Version="4.2.9001" PrivateAssets="All" />
+    <PackageReference Include="nkast.Xna.Framework.Graphics" Version="4.2.9001" PrivateAssets="All" />
+    <PackageReference Include="nkast.Xna.Framework.Audio" Version="4.2.9001" PrivateAssets="All" />
+    <PackageReference Include="nkast.Xna.Framework.Media" Version="4.2.9001" PrivateAssets="All" />
+    <PackageReference Include="nkast.Xna.Framework.Input" Version="4.2.9001" PrivateAssets="All" />
+    <PackageReference Include="nkast.Xna.Framework.Game" Version="4.2.9001" PrivateAssets="All" />
+    <PackageReference Include="nkast.Xna.Framework.Devices" Version="4.2.9001" PrivateAssets="All" />
+    <PackageReference Include="nkast.Xna.Framework.Storage" Version="4.2.9001" PrivateAssets="All" />
+  </ItemGroup>
+
+	<!-- ImGui: solo en configs desktop (excluir YTB y BlazorGL) -->
+	<ItemGroup Condition="'$(UseKNI)' != 'true'">
 		<ProjectReference Include="..\..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGuizmo\Hexa.NET.ImGuizmo.csproj" />
 		<ProjectReference Include="..\..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui\Hexa.NET.ImGui.csproj" />
 		<!--<PackageReference Include="Hexa.NET.ImGui" Version="2.2.4" />
@@ -29,11 +50,18 @@
 		<ProjectReference Include="..\..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImPlot\Hexa.NET.ImPlot.csproj" />
 		<ProjectReference Include="..\..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui.Backends\Hexa.NET.ImGui.Backends.csproj" />
 	</ItemGroup>
+  <!-- Gum + YotsubaEngine -->
   <ItemGroup>
 	  <ProjectReference Include="..\..\Gum\GumCommon\GumCommon.csproj" />
-	  <ProjectReference Include="..\..\Gum\MonoGameGum\MonoGameGum.csproj" />
 	  <ProjectReference Include="..\..\YotsubaEngine\YotsubaEngine.csproj" />
-
+  </ItemGroup>
+  <!-- MonoGameGum (MonoGame) -->
+  <ItemGroup Condition="'$(UseKNI)' != 'true'">
+	  <ProjectReference Include="..\..\Gum\MonoGameGum\MonoGameGum.csproj" />
+  </ItemGroup>
+  <!-- KniGum (KNI) -->
+  <ItemGroup Condition="'$(UseKNI)' == 'true'">
+	  <ProjectReference Include="..\..\Gum\MonoGameGum\KniGum\KniGum.csproj" />
   </ItemGroup>
 	<ItemGroup>
 		<None Update="Content\GumProject\**\*.*">

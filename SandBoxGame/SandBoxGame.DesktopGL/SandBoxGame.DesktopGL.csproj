@@ -8,7 +8,7 @@
     <ApplicationIcon>../SandBoxGame.Core/Assets/Icon.ico</ApplicationIcon>
     <AssemblyName>SandBoxGame</AssemblyName>
     <MonoGamePlatform>DesktopGL</MonoGamePlatform>
-    <Configurations>Debug;Release;YTB</Configurations>
+    <Configurations>Debug;Release;YTB;BlazorGL</Configurations>
     <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
 
   </PropertyGroup>

@@ -1,0 +1,10 @@
+<Project>
+  <!--
+    Propiedades globales para la configuración BlazorGL (web via KNI).
+    Este archivo se hereda automáticamente por todos los .csproj en SandBoxGame/ y subdirectorios.
+  -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0' Or '$(MSBuildProjectName)' == 'SandBoxGame.BlazorGL'">
+    <UseKNI>true</UseKNI>
+    <DefineConstants>$(DefineConstants);KNI;BLAZOR_WEB;USE_GUMCOMMON;FULL_DIAGNOSTICS</DefineConstants>
+  </PropertyGroup>
+</Project>

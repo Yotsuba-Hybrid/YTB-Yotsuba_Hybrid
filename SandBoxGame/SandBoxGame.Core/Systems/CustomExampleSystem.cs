@@ -1,10 +1,10 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameGum;
+using System.Diagnostics;
 using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.Contract;
 using YotsubaEngine.Core.YotsubaGame;
-
 namespace SandBoxGame.Core.Systems
 {
     public class CustomExampleSystem : IRenderSystem
@@ -15,17 +15,27 @@ namespace SandBoxGame.Core.Systems
         public override void InitializeSystem(EntityManager entities)
         {
             EntityManager = entities;
-            if (!GumUI.IsInitialized)
-            GumService.Default.Initialize(YTBGlobalState.Game, "GumProject/GumProject.gumx");
 
+            try
+            {
+                if (!GumUI.IsInitialized)
+                    GumService.Default.Initialize(YTBGlobalState.Game, "GumProject/GumProject.gumx");
+
+            }catch(System.Exception ex)
+            {
+                System.Console.WriteLine($"Error initializing Gum: {ex.Message}");
+                Debug.WriteLine($"Error initializing Gum: {ex.Message}");
+            }
             var screen = new DemoScreenGumRuntime();
-                screen.AddToRoot();
+            screen.AddToRoot();
         }
 
         public override void SharedEntityForEachUpdate(ref Yotsuba Entidad, GameTime time) { }
 
         public override void UpdateSystem(GameTime gameTime)
         {
+            YTBGlobalState.ColorBackground = Color.Turquoise;
+
             GumUI.Update(gameTime);
         }
 

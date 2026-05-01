@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using YotsubaEngine.Core.Component.C_3D;
@@ -27,6 +27,7 @@ namespace YotsubaEngine.Runtime.OCR
         {
             EntityManager = entities;
             Entities = new();
+            EntityToReturn = new YTB<int>();
             RenderPredictionRuntime3D = new();
             Graphics3D = new();
             RenderPredictionRuntime3D.InitializeSystem(entities);

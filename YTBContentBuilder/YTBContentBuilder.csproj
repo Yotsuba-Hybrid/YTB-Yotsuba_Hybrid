@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
 	  <OutputType>Library</OutputType>
-	  <Configurations>Debug;Release;YTB</Configurations>
+	  <Configurations>Debug;Release;YTB;BlazorGL</Configurations>
 
   </PropertyGroup>
 	<ItemGroup>

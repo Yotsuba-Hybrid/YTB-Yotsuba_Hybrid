@@ -1,24 +1,42 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-			<TargetFramework>net10.0</TargetFramework>
+			<TargetFrameworks>net10.0;net8.0</TargetFrameworks>
 			<OutputType>Library</OutputType>
-			<Configurations>Debug;Release;YTB</Configurations>
+			<Configurations>Debug;Release;YTB;BlazorGL</Configurations>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
 	</PropertyGroup>
 <PropertyGroup Condition="'$(Configuration)' == 'YTB'">
   <DefineConstants>$(DefineConstants);YTB;DEBUG;YOTSUBA</DefineConstants>
 </PropertyGroup>
-	<ItemGroup>
+	<!-- ══════════════════════════════════════════════════════════ -->
+	<!-- MonoGame (todas las configuraciones EXCEPTO BlazorGL)     -->
+	<!-- ══════════════════════════════════════════════════════════ -->
+	<ItemGroup Condition="'$(UseKNI)' != 'true'">
 		<PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.5-preview.*">
 			<PrivateAssets>All</PrivateAssets>
 		</PackageReference>
-		
-	
-		
-	
+	</ItemGroup>
+
+	<!-- ══════════════════════════════════════════════════════════ -->
+	<!-- KNI (solo configuración BlazorGL)                         -->
+	<!-- ══════════════════════════════════════════════════════════ -->
+	<ItemGroup Condition="'$(UseKNI)' == 'true'">
+		<PackageReference Include="nkast.Xna.Framework" Version="4.2.9001" PrivateAssets="All" />
+		<PackageReference Include="nkast.Xna.Framework.Content" Version="4.2.9001" PrivateAssets="All" />
+		<PackageReference Include="nkast.Xna.Framework.Graphics" Version="4.2.9001" PrivateAssets="All" />
+		<PackageReference Include="nkast.Xna.Framework.Audio" Version="4.2.9001" PrivateAssets="All" />
+		<PackageReference Include="nkast.Xna.Framework.Media" Version="4.2.9001" PrivateAssets="All" />
+		<PackageReference Include="nkast.Xna.Framework.Input" Version="4.2.9001" PrivateAssets="All" />
+		<PackageReference Include="nkast.Xna.Framework.Game" Version="4.2.9001" PrivateAssets="All" />
+		<PackageReference Include="nkast.Xna.Framework.Devices" Version="4.2.9001" PrivateAssets="All" />
+		<PackageReference Include="nkast.Xna.Framework.Storage" Version="4.2.9001" PrivateAssets="All" />
+	</ItemGroup>
+
+	<!-- SixLabors: disponible en todas las plataformas -->
+	<ItemGroup>
 		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
-</ItemGroup>
+	</ItemGroup>
 	<ItemGroup Condition="'$(Configuration)' == 'YTB'">
 		<ProjectReference Include="..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGuizmo\Hexa.NET.ImGuizmo.csproj" />
 		<ProjectReference Include="..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui\Hexa.NET.ImGui.csproj" />

@@ -137,6 +137,9 @@ namespace SandBoxGame.Core
             #region Engine Config
             /// En desarrollo, los assets fisicos (.ytb, .cs, etc) est�n en Assets dentro de Platforms.Core
             ///NO TOCAR, A MENOS QUE HAYA CAMBIADO LA RUTA
+#if !KNI
+            /// En desarrollo, los assets fisicos (.ytb, .cs, etc) estn en Assets dentro de Platforms.Core
+            ///NO TOCAR, A MENOS QUE HAYA CAMBIADO LA RUTA
             YTBGlobalState.DevelopmentAssetsPath = Path.Combine(
                 Directory.GetCurrentDirectory(),
                 "..", "..", "..", "..", "SandBoxGame.Core",
@@ -149,6 +152,7 @@ namespace SandBoxGame.Core
                 "..", "..", "..", "..", "SandBoxGame.Content",
                 "SandBoxGame.Content.csproj"
                 );
+#endif
 
             SetScriptManager(new ScriptRegistry());
             SetModelRegistry(new ModelRegistry());
@@ -217,6 +221,9 @@ namespace SandBoxGame.Core
             LocalizationManager.SetCulture(selectedLanguage);
 
 
+
+            GumRuntime.ElementSaveExtensions.CustomCreateGraphicalComponentFunc = MonoGameGum.Renderables.RenderableCreator.HandleCreateGraphicalComponent;
+            Gum.Managers.StandardElementsManager.Self.Initialize();
 
             base.Initialize();
 

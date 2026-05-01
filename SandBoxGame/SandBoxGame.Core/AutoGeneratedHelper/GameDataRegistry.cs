@@ -90,6 +90,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                             new Tuple<string, string>("OffSetCollision", ","),
                             new Tuple<string, string>("Velocity", ","),
                             new Tuple<string, string>("Mass", ""),
+                            new Tuple<string, string>("GameType", "TopDown"),
                         }
                     },
                     new YTBComponents

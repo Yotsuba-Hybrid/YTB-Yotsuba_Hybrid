@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net10.0</TargetFrameworks>
+		<TargetFrameworks>net10.0;net8.0</TargetFrameworks>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>12.0</LangVersion>
@@ -11,7 +11,7 @@
 		<Description>Flexible layout tool for graphics in any .NET environment</Description>
 		<PackageId>FlatRedBall.GumCommon</PackageId>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<Configurations>Debug;Release;YTB</Configurations>
+		<Configurations>Debug;Release;YTB;BlazorGL</Configurations>
 
 		<Version>2026.3.28.2</Version>
 
@@ -26,12 +26,12 @@
 
 		<LangVersion>12.0</LangVersion>
 		<Nullable>enable</Nullable>
-		<Configurations>Debug;Release;Release_No_Diagnostics</Configurations>
+		<Configurations>Debug;Release;YTB;Release_No_Diagnostics;BlazorGL</Configurations>
 		<RootNamespace>Gum</RootNamespace>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)' != 'Release_No_Diagnostics'">
-		<DefineConstants>$(DefineConstants);FULL_DIAGNOSTICS</DefineConstants>
+	<PropertyGroup>
+		<DefineConstants>$(DefineConstants);USE_GUMCOMMON;FULL_DIAGNOSTICS</DefineConstants>
 	</PropertyGroup>
 
 	<ItemGroup>

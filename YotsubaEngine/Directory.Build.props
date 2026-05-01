@@ -1,0 +1,10 @@
+<Project>
+  <!--
+    Propiedades globales para la configuración BlazorGL (web via KNI).
+    YotsubaEngine está fuera de SandBoxGame/, necesita su propio archivo.
+  -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
+    <UseKNI>true</UseKNI>
+    <DefineConstants>$(DefineConstants);KNI;BLAZOR_WEB;USE_GUMCOMMON;FULL_DIAGNOSTICS</DefineConstants>
+  </PropertyGroup>
+</Project>

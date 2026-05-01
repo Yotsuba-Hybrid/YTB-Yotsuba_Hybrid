@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -12,6 +12,11 @@ namespace YotsubaEngine.Core.YotsubaGame
         Desktop_GL,
         Desktop_VK,
         Android,
-        IOS
+        IOS,
+        /// <summary>
+        /// Plataforma web mediante KNI Blazor WebAssembly (WebGL).
+        /// <para>Web platform via KNI Blazor WebAssembly (WebGL).</para>
+        /// </summary>
+        Web_BlazorGL
     }
 }
