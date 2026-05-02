@@ -1,10 +1,7 @@
 <Project>
   <!--
-    Propiedades globales para la configuración BlazorGL (web via KNI).
-    Este archivo se hereda automáticamente por todos los .csproj en SandBoxGame/ y subdirectorios.
+    SandBoxGame/Directory.Build.props
+    Importa el props raíz (que define UseV2 via Configuration).
   -->
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0' Or '$(MSBuildProjectName)' == 'SandBoxGame.BlazorGL'">
-    <UseKNI>true</UseKNI>
-    <DefineConstants>$(DefineConstants);KNI;BLAZOR_WEB;USE_GUMCOMMON;FULL_DIAGNOSTICS</DefineConstants>
-  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
 </Project>

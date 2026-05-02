@@ -1,27 +1,30 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-			<TargetFrameworks>net10.0;net8.0</TargetFrameworks>
-			<OutputType>Library</OutputType>
-			<Configurations>Debug;Release;YTB;BlazorGL</Configurations>
+		<TargetFrameworks>net10.0;net8.0</TargetFrameworks>
+		<OutputType>Library</OutputType>
+		<Configurations>Debug;Release;YTB</Configurations>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
 	</PropertyGroup>
-<PropertyGroup Condition="'$(Configuration)' == 'YTB'">
-  <DefineConstants>$(DefineConstants);YTB;DEBUG;YOTSUBA</DefineConstants>
-</PropertyGroup>
-	<!-- ══════════════════════════════════════════════════════════ -->
-	<!-- MonoGame (todas las configuraciones EXCEPTO BlazorGL)     -->
-	<!-- ══════════════════════════════════════════════════════════ -->
-	<ItemGroup Condition="'$(UseKNI)' != 'true'">
+
+	<PropertyGroup Condition="'$(Configuration)' == 'YTB'">
+		<DefineConstants>$(DefineConstants);YTB;DEBUG;YOTSUBA</DefineConstants>
+	</PropertyGroup>
+
+	<!-- Constantes KNI cuando UseV2=true -->
+	<PropertyGroup Condition="'$(UseV2)' == 'true'">
+		<DefineConstants>$(DefineConstants);KNI;BLAZOR_WEB;USE_GUMCOMMON;FULL_DIAGNOSTICS</DefineConstants>
+	</PropertyGroup>
+
+	<!-- MonoGame -->
+	<ItemGroup Condition="'$(UseV2)' != 'true'">
 		<PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.5-preview.*">
 			<PrivateAssets>All</PrivateAssets>
 		</PackageReference>
 	</ItemGroup>
 
-	<!-- ══════════════════════════════════════════════════════════ -->
-	<!-- KNI (solo configuración BlazorGL)                         -->
-	<!-- ══════════════════════════════════════════════════════════ -->
-	<ItemGroup Condition="'$(UseKNI)' == 'true'">
+	<!-- KNI -->
+	<ItemGroup Condition="'$(UseV2)' == 'true'">
 		<PackageReference Include="nkast.Xna.Framework" Version="4.2.9001" PrivateAssets="All" />
 		<PackageReference Include="nkast.Xna.Framework.Content" Version="4.2.9001" PrivateAssets="All" />
 		<PackageReference Include="nkast.Xna.Framework.Graphics" Version="4.2.9001" PrivateAssets="All" />
@@ -37,33 +40,29 @@
 	<ItemGroup>
 		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
 	</ItemGroup>
-	<ItemGroup Condition="'$(Configuration)' == 'YTB'">
+
+	<!-- ImGui disponible en MonoGame (UseV2 != true) -->
+	<ItemGroup Condition="'$(UseV2)' != 'true'">
 		<ProjectReference Include="..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGuizmo\Hexa.NET.ImGuizmo.csproj" />
 		<ProjectReference Include="..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui\Hexa.NET.ImGui.csproj" />
-		<!--<PackageReference Include="Hexa.NET.ImGui" Version="2.2.4" />
-		<PackageReference Include="Hexa.NET.ImGuizmo" Version="2.2.4" />
-		<PackageReference Include="Hexa.NET.ImNodes" Version="2.2.4" />
-		<PackageReference Include="Hexa.NET.ImPlot" Version="2.2.4" />-->
 		<ProjectReference Include="..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImNodes\Hexa.NET.ImNodes.csproj" />
 		<ProjectReference Include="..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImPlot\Hexa.NET.ImPlot.csproj" />
 		<ProjectReference Include="..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui.Backends\Hexa.NET.ImGui.Backends.csproj" />
 	</ItemGroup>
+
 	<ItemGroup>
-	  <Folder Include="ActionFiles\ImGuiEditor\" />
-	  <Folder Include="Graphics\Multiplatform\UI\" />
-	  <Folder Include="Physics\Collision Prediction Runtime %28CPR%29\" />
+		<Folder Include="ActionFiles\ImGuiEditor\" />
+		<Folder Include="Graphics\Multiplatform\UI\" />
+		<Folder Include="Physics\Collision Prediction Runtime (CPR)\" />
 	</ItemGroup>
-	<ItemGroup Condition="'$(Configuration)' == 'YTB'">
+	<ItemGroup>
 		<None Update="imgui.ini">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
 	<ItemGroup>
-	  <!-- Ensure any font files placed under the engine's Fonts folder are copied to build output -->
-	  <None Include="Fonts\**\*.*">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
+		<None Include="Fonts\**\*.*">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
-
-
 </Project>

@@ -1,0 +1,10 @@
+<Project>
+  <!--
+    ══════════════════════════════════════════════════════════════
+    Directory.Build.props — RAÍZ
+    ══════════════════════════════════════════════════════════════
+    No se asigna UseV2 desde Configuration ya que la configuración
+    BlazorGL ha sido eliminada. El flag UseV2 se propaga via 
+    AdditionalProperties="UseV2=true" desde los proyectos ejecutables.
+  -->
+</Project>

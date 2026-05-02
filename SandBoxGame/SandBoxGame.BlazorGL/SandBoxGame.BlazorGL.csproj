@@ -2,7 +2,7 @@
   <PropertyGroup>
     <!-- KNI soporta net8.0 para WASM. -->
     <TargetFramework>net8.0</TargetFramework>
-	  <Configurations>Debug;Release;YTB;BlazorGL</Configurations>
+	  <Configurations>Debug;Release;YTB</Configurations>
 	  <MonoGamePlatform>Web</MonoGamePlatform>
     <AssemblyName>SandBoxGame</AssemblyName>
     <Nullable>enable</Nullable>
@@ -12,9 +12,11 @@
     <ContentOutput>$(ProjectDir)wwwroot\</ContentOutput>
   </PropertyGroup>
 
-  <!-- Usamos la directiva UseKNI local si hace falta, pero ya viene del Directory.Build.props -->
+  <!-- UseV2=true se propaga transitivamente a Core, YotsubaEngine, Gum, etc. -->
   <ItemGroup>
-    <ProjectReference Include="..\SharedCode.Multiplatform\SharedCode.Multiplatform.NoMobile.csproj" />
+    <ProjectReference Include="..\SharedCode.Multiplatform\SharedCode.Multiplatform.NoMobile.csproj" 
+                      AdditionalProperties="UseV2=true"
+                      SetTargetFramework="TargetFramework=net8.0" />
   </ItemGroup>
 
   <ItemGroup>
