@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "dgSpecHash": "5y2/PzcwFEw=",
+  "success": true,
+  "projectFilePath": "c:\\YTBEngine\\YotsubaHybrid\\SandBoxGame\\SandBoxGame.Core\\SandBoxGame.Core.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Usuario\\.nuget\\packages\\csvhelper\\33.1.0\\csvhelper.33.1.0.nupkg.sha512",
+    "C:\\Users\\Usuario\\.nuget\\packages\\flatredball.interpolationcore\\2025.4.22.1\\flatredball.interpolationcore.2025.4.22.1.nupkg.sha512",
+    "C:\\Users\\Usuario\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\7.0.0\\microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512",
+    "C:\\Users\\Usuario\\.nuget\\packages\\nkast.xna.framework\\4.2.9001\\nkast.xna.framework.4.2.9001.nupkg.sha512",
+    "C:\\Users\\Usuario\\.nuget\\packages\\nkast.xna.framework.audio\\4.2.9001\\nkast.xna.framework.audio.4.2.9001.nupkg.sha512",
+    "C:\\Users\\Usuario\\.nuget\\packages\\nkast.xna.framework.content\\4.2.9001\\nkast.xna.framework.content.4.2.9001.nupkg.sha512",
+    "C:\\Users\\Usuario\\.nuget\\packages\\nkast.xna.framework.devices\\4.2.9001\\nkast.xna.framework.devices.4.2.9001.nupkg.sha512",
+    "C:\\Users\\Usuario\\.nuget\\packages\\nkast.xna.framework.game\\4.2.9001\\nkast.xna.framework.game.4.2.9001.nupkg.sha512",
+    "C:\\Users\\Usuario\\.nuget\\packages\\nkast.xna.framework.graphics\\4.2.9001\\nkast.xna.framework.graphics.4.2.9001.nupkg.sha512",
+    "C:\\Users\\Usuario\\.nuget\\packages\\nkast.xna.framework.input\\4.2.9001\\nkast.xna.framework.input.4.2.9001.nupkg.sha512",
+    "C:\\Users\\Usuario\\.nuget\\packages\\nkast.xna.framework.media\\4.2.9001\\nkast.xna.framework.media.4.2.9001.nupkg.sha512",
+    "C:\\Users\\Usuario\\.nuget\\packages\\nkast.xna.framework.storage\\4.2.9001\\nkast.xna.framework.storage.4.2.9001.nupkg.sha512",
+    "C:\\Users\\Usuario\\.nuget\\packages\\sixlabors.imagesharp\\3.1.12\\sixlabors.imagesharp.3.1.12.nupkg.sha512",
+    "C:\\Users\\Usuario\\.nuget\\packages\\system.data.datasetextensions\\4.5.0\\system.data.datasetextensions.4.5.0.nupkg.sha512",
+    "C:\\Users\\Usuario\\.nuget\\packages\\textcopy\\6.2.1\\textcopy.6.2.1.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -5,6 +5,9 @@
 		<Configurations>Debug;Release;YTB</Configurations>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+		<DefaultItemExcludes>$(DefaultItemExcludes);obj\**;objV2\**;bin\**;binV2\**</DefaultItemExcludes>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'YTB'">
@@ -66,3 +69,4 @@
 		</None>
 	</ItemGroup>
 </Project>
+

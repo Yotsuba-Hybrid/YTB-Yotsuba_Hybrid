@@ -59,7 +59,9 @@
 </Project>
 </Folder>
 <Folder Name="/Platforms/Multiplatform/Web/">
-<Project Path="SandBoxGame.BlazorGL/SandBoxGame.BlazorGL.csproj" />
+<Project Path="SandBoxGame.Web.BlazorGL/SandBoxGame.Web.BlazorGL.csproj">
+<BuildType Solution="YTB|*" Project="Release" />
+</Project>
 </Folder>
 <Folder Name="/Platforms/Multiplatform/Desktop/">
 <Project Path="SharedCode.Linux.Mac.Windows/SharedCode.Linux.Mac.Windows.csproj">

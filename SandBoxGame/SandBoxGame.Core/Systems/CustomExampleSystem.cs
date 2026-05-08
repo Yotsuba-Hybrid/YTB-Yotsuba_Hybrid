@@ -1,7 +1,9 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameGum;
+using System;
 using System.Diagnostics;
+using System.IO;
 using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.Contract;
 using YotsubaEngine.Core.YotsubaGame;
@@ -11,7 +13,6 @@ namespace SandBoxGame.Core.Systems
     {
 
         GumService GumUI => GumService.Default;
-
         public override void InitializeSystem(EntityManager entities)
         {
             EntityManager = entities;
@@ -42,7 +43,7 @@ namespace SandBoxGame.Core.Systems
         public override void Render2D(SpriteBatch spriteBatch, GameTime gameTime)
         {
 
-            GumUI.Draw();
+                GumUI.Draw();
 
         }
         public override void Dispose() { }

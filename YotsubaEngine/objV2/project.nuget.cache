@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "dgSpecHash": "lXdTxyHHjEs=",
+  "success": true,
+  "projectFilePath": "c:\\YTBEngine\\YotsubaHybrid\\YotsubaEngine\\YotsubaEngine.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Usuario\\.nuget\\packages\\nkast.xna.framework\\4.2.9001\\nkast.xna.framework.4.2.9001.nupkg.sha512",
+    "C:\\Users\\Usuario\\.nuget\\packages\\nkast.xna.framework.audio\\4.2.9001\\nkast.xna.framework.audio.4.2.9001.nupkg.sha512",
+    "C:\\Users\\Usuario\\.nuget\\packages\\nkast.xna.framework.content\\4.2.9001\\nkast.xna.framework.content.4.2.9001.nupkg.sha512",
+    "C:\\Users\\Usuario\\.nuget\\packages\\nkast.xna.framework.devices\\4.2.9001\\nkast.xna.framework.devices.4.2.9001.nupkg.sha512",
+    "C:\\Users\\Usuario\\.nuget\\packages\\nkast.xna.framework.game\\4.2.9001\\nkast.xna.framework.game.4.2.9001.nupkg.sha512",
+    "C:\\Users\\Usuario\\.nuget\\packages\\nkast.xna.framework.graphics\\4.2.9001\\nkast.xna.framework.graphics.4.2.9001.nupkg.sha512",
+    "C:\\Users\\Usuario\\.nuget\\packages\\nkast.xna.framework.input\\4.2.9001\\nkast.xna.framework.input.4.2.9001.nupkg.sha512",
+    "C:\\Users\\Usuario\\.nuget\\packages\\nkast.xna.framework.media\\4.2.9001\\nkast.xna.framework.media.4.2.9001.nupkg.sha512",
+    "C:\\Users\\Usuario\\.nuget\\packages\\nkast.xna.framework.storage\\4.2.9001\\nkast.xna.framework.storage.4.2.9001.nupkg.sha512",
+    "C:\\Users\\Usuario\\.nuget\\packages\\sixlabors.imagesharp\\3.1.12\\sixlabors.imagesharp.3.1.12.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,10 +1,16 @@
 <Project>
   <!--
-    Propiedades globales para la configuración BlazorGL (web via KNI).
-    YotsubaEngine está fuera de SandBoxGame/, necesita su propio archivo.
+    ══════════════════════════════════════════════════════════════
+    YotsubaEngine/Directory.Build.props
+    ══════════════════════════════════════════════════════════════
+    Cuando UseV2=true (KNI/BlazorGL), aísla TODOS los artefactos
+    de compilación para evitar conflictos con MonoGame:
+      - objV2\  para intermedios (project.assets.json, AssemblyInfo, etc.)
+      - binV2\  para outputs (DLLs)
   -->
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
-    <UseKNI>true</UseKNI>
-    <DefineConstants>$(DefineConstants);KNI;BLAZOR_WEB;USE_GUMCOMMON;FULL_DIAGNOSTICS</DefineConstants>
+  <PropertyGroup Condition="'$(UseV2)' == 'true'">
+    <BaseIntermediateOutputPath>objV2\</BaseIntermediateOutputPath>
+    <MSBuildProjectExtensionsPath>$(BaseIntermediateOutputPath)</MSBuildProjectExtensionsPath>
+    <BaseOutputPath>binV2\</BaseOutputPath>
   </PropertyGroup>
 </Project>

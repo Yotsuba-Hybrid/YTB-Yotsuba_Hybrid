@@ -6,6 +6,8 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- Asegurar que tanto obj como objV2 se excluyan siempre de la compilación por defecto -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);obj\**;objV2\**;bin\**;binV2\**</DefaultItemExcludes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'YTB'">
@@ -22,7 +24,6 @@
     <PackageReference Include="MonoGame.Framework.Native" Version="3.8.5-preview.*">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="AvaloniaInside.MonoGame" Version="1.0.2" />
   </ItemGroup>
 
   <!-- KNI -->
