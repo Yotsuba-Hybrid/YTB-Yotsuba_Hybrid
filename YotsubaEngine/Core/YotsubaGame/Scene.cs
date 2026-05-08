@@ -12,7 +12,6 @@ using YotsubaEngine.Core.YotsubaGame.Scripting;
 #if YTB
 using YotsubaEngine.Core.System.YotsubaEngineUI;
 using YotsubaEngine.Core.System.YTBDragAndDrop;
-using YotsubaEngine.Core.YotsubaGame.Scripting;
 
 #endif
 
@@ -313,7 +312,7 @@ namespace YotsubaEngine.Core.YotsubaGame
             gd.SamplerStates[0] = SamplerState.LinearWrap;
 
             ScriptSystem.DrawSystem3D(gameTime);
-            RenderSystem3D.UpdateSystem(gameTime);
+            RenderSystem3D.Render3D(gameTime);
             SystemBuilder.Render3D(gameTime);
 
             gd.BlendState = oldBlendState;

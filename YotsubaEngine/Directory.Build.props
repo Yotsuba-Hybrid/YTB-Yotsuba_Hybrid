@@ -1,0 +1,16 @@
+<Project>
+  <!--
+    ══════════════════════════════════════════════════════════════
+    YotsubaEngine/Directory.Build.props
+    ══════════════════════════════════════════════════════════════
+    Cuando UseV2=true (KNI/BlazorGL), aísla TODOS los artefactos
+    de compilación para evitar conflictos con MonoGame:
+      - objV2\  para intermedios (project.assets.json, AssemblyInfo, etc.)
+      - binV2\  para outputs (DLLs)
+  -->
+  <PropertyGroup Condition="'$(UseV2)' == 'true'">
+    <BaseIntermediateOutputPath>objV2\</BaseIntermediateOutputPath>
+    <MSBuildProjectExtensionsPath>$(BaseIntermediateOutputPath)</MSBuildProjectExtensionsPath>
+    <BaseOutputPath>binV2\</BaseOutputPath>
+  </PropertyGroup>
+</Project>

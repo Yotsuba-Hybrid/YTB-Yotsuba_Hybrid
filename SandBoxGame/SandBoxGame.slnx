@@ -18,6 +18,7 @@
   <Project Path="../Gum/Tools/Gum.Analyzers/Gum.Analyzers.csproj">
   <BuildType Solution="YTB|*" Project="Release" />
   </Project>
+  <Project Path="../Gum/MonoGameGum/KniGum/KniGum.csproj" />
   </Folder>
 <Folder Name="/Dependencies/ImGui/">
 <Project Path="../Hexa.NET.ImGui-2.2.4/Hexa.NET.ImGui-2.2.4/Hexa.NET.ImGui.Backends/Hexa.NET.ImGui.Backends.csproj">
@@ -54,6 +55,11 @@
 </Folder>
 <Folder Name="/Platforms/Multiplatform/">
 <Project Path="SharedCode.Multiplatform/SharedCode.Multiplatform.NoMobile.csproj" Id="2a413b9a-3ad5-40e7-b91e-e3f03f43bf3e">
+<BuildType Solution="YTB|*" Project="Release" />
+</Project>
+</Folder>
+<Folder Name="/Platforms/Multiplatform/Web/">
+<Project Path="SandBoxGame.Web.BlazorGL/SandBoxGame.Web.BlazorGL.csproj">
 <BuildType Solution="YTB|*" Project="Release" />
 </Project>
 </Folder>

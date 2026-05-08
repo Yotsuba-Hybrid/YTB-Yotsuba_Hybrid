@@ -11,8 +11,9 @@ namespace YotsubaEngine.Core.Component.C_2D
     /// <para>Component that adds basic 2D physics behavior.</para>
     /// </summary>
     /// <param name="gameType">Tipo de juego usado para la física.<para>Game type used for physics behavior.</para></param>
-    /// <param name="mass">Nivel de masa del cuerpo.<para>Mass level for the body.</para></param>
-    public struct RigidBodyComponent2D(MassLevel mass)
+    /// <param name="collide">Nivel de colisión: Solid o Trigger.<para>Collision level: Solid or Trigger.</para></param>
+    /// <param name="mass">Masa física real. Valor por defecto: 1.0f.<para>Physical mass. Default: 1.0f.</para></param>
+    public struct RigidBodyComponent2D(CollisionLevel collide, float mass = 1.0f)
     {
         /// <summary>
         /// Capa de colisión de la entidad (solo colisionara con entidades en su misma capa, o que su capa sea "All")
@@ -44,10 +45,17 @@ namespace YotsubaEngine.Core.Component.C_2D
         public Vector3 Velocity { get; set; } = Vector3.Zero;
 
         /// <summary>
-        /// Masa del objeto para determinar su inercia y resistencia a fuerzas.
-        /// <para>Mass used to determine inertia and resistance.</para>
+        /// Nivel de colisión: Solid (colisiona) o Trigger (atraviesa).
+        /// <para>Collision level: Solid (collides) or Trigger (passes through).</para>
         /// </summary>
-        public MassLevel Mass { get; set; } = mass;
+        public CollisionLevel Collide { get; set; } = collide;
+
+        /// <summary>
+        /// Masa física real del objeto. Determina distribución de fuerza en colisiones.
+        /// Valor por defecto: 1.0f. Permite cualquier número (0 para triggers).
+        /// <para>Physical mass that determines force distribution in collisions. Default: 1.0f.</para>
+        /// </summary>
+        public float Mass { get; set; } = mass;
 
     }
 }

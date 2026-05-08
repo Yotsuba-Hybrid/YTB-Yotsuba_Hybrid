@@ -1,0 +1,15 @@
+<Project>
+  <!--
+    ══════════════════════════════════════════════════════════════
+    SandBoxGame/Directory.Build.props
+    ══════════════════════════════════════════════════════════════
+    Importa el props raíz y aísla obj/bin cuando UseV2=true.
+  -->
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+  <PropertyGroup Condition="'$(UseV2)' == 'true'">
+    <BaseIntermediateOutputPath>objV2\</BaseIntermediateOutputPath>
+    <MSBuildProjectExtensionsPath>$(BaseIntermediateOutputPath)</MSBuildProjectExtensionsPath>
+    <BaseOutputPath>binV2\</BaseOutputPath>
+  </PropertyGroup>
+</Project>

@@ -5,7 +5,7 @@
 
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Configurations>Debug;Release;YTB</Configurations>
+		<Configurations>Debug;Release;YTB;BlazorGL</Configurations>
 		<NuGetAudit>false</NuGetAudit>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)' == 'YTB'">

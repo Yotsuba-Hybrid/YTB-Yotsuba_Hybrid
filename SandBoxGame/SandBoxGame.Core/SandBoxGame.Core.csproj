@@ -1,51 +1,85 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFrameworks>net10.0;net8.0</TargetFrameworks>
     <Platforms>AnyCPU</Platforms>
     <Configurations>Debug;Release;YTB</Configurations>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- Asegurar que tanto obj como objV2 se excluyan siempre de la compilación por defecto -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);obj\**;objV2\**;bin\**;binV2\**</DefaultItemExcludes>
   </PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)' == 'YTB'">
-		<DefineConstants>DEBUG;YOTSUBA</DefineConstants>
-	</PropertyGroup>
-  <ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'YTB'">
+    <DefineConstants>DEBUG;YOTSUBA;YTB</DefineConstants>
+  </PropertyGroup>
+
+  <!-- Constantes KNI cuando UseV2=true -->
+  <PropertyGroup Condition="'$(UseV2)' == 'true'">
+    <DefineConstants>$(DefineConstants);KNI;BLAZOR_WEB;USE_GUMCOMMON;FULL_DIAGNOSTICS</DefineConstants>
+  </PropertyGroup>
+
+  <!-- MonoGame -->
+  <ItemGroup Condition="'$(UseV2)' != 'true'">
     <PackageReference Include="MonoGame.Framework.Native" Version="3.8.5-preview.*">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
-	  <PackageReference Include="AvaloniaInside.MonoGame" Version="1.0.2" />
-
   </ItemGroup>
 
-	<ItemGroup Condition="'$(Configuration)' != 'YTB'">
-		<ProjectReference Include="..\..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGuizmo\Hexa.NET.ImGuizmo.csproj" />
-		<ProjectReference Include="..\..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui\Hexa.NET.ImGui.csproj" />
-		<!--<PackageReference Include="Hexa.NET.ImGui" Version="2.2.4" />
-		<PackageReference Include="Hexa.NET.ImGuizmo" Version="2.2.4" />
-		<PackageReference Include="Hexa.NET.ImNodes" Version="2.2.4" />
-		<PackageReference Include="Hexa.NET.ImPlot" Version="2.2.4" />-->
-		<ProjectReference Include="..\..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImNodes\Hexa.NET.ImNodes.csproj" />
-		<ProjectReference Include="..\..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImPlot\Hexa.NET.ImPlot.csproj" />
-		<ProjectReference Include="..\..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui.Backends\Hexa.NET.ImGui.Backends.csproj" />
-	</ItemGroup>
+  <!-- KNI -->
+  <ItemGroup Condition="'$(UseV2)' == 'true'">
+    <PackageReference Include="nkast.Xna.Framework" Version="4.2.9001" PrivateAssets="All" />
+    <PackageReference Include="nkast.Xna.Framework.Content" Version="4.2.9001" PrivateAssets="All" />
+    <PackageReference Include="nkast.Xna.Framework.Graphics" Version="4.2.9001" PrivateAssets="All" />
+    <PackageReference Include="nkast.Xna.Framework.Audio" Version="4.2.9001" PrivateAssets="All" />
+    <PackageReference Include="nkast.Xna.Framework.Media" Version="4.2.9001" PrivateAssets="All" />
+    <PackageReference Include="nkast.Xna.Framework.Input" Version="4.2.9001" PrivateAssets="All" />
+    <PackageReference Include="nkast.Xna.Framework.Game" Version="4.2.9001" PrivateAssets="All" />
+    <PackageReference Include="nkast.Xna.Framework.Devices" Version="4.2.9001" PrivateAssets="All" />
+    <PackageReference Include="nkast.Xna.Framework.Storage" Version="4.2.9001" PrivateAssets="All" />
+  </ItemGroup>
+
+  <!-- ImGui: solo en plataformas NO-V2 (excluir BlazorGL/KNI) -->
+  <ItemGroup Condition="'$(UseV2)' != 'true'">
+    <ProjectReference Include="..\..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGuizmo\Hexa.NET.ImGuizmo.csproj" />
+    <ProjectReference Include="..\..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui\Hexa.NET.ImGui.csproj" />
+    <ProjectReference Include="..\..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImNodes\Hexa.NET.ImNodes.csproj" />
+    <ProjectReference Include="..\..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImPlot\Hexa.NET.ImPlot.csproj" />
+    <ProjectReference Include="..\..\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui-2.2.4\Hexa.NET.ImGui.Backends\Hexa.NET.ImGui.Backends.csproj" />
+  </ItemGroup>
+
+  <!-- Gum + YotsubaEngine — UseV2 == true -->
+  <ItemGroup Condition="'$(UseV2)' == 'true'">
+    <ProjectReference Include="..\..\Gum\GumCommon\GumCommon.csproj" 
+                      AdditionalProperties="UseV2=true" />
+    <ProjectReference Include="..\..\YotsubaEngine\YotsubaEngine.csproj" 
+                      AdditionalProperties="UseV2=true" />
+  </ItemGroup>
+
+  <!-- Gum + YotsubaEngine — UseV2 != true -->
+  <ItemGroup Condition="'$(UseV2)' != 'true'">
+    <ProjectReference Include="..\..\Gum\GumCommon\GumCommon.csproj" 
+                      AdditionalProperties="UseV2=false" />
+    <ProjectReference Include="..\..\YotsubaEngine\YotsubaEngine.csproj" 
+                      AdditionalProperties="UseV2=false" />
+  </ItemGroup>
+
+  <!-- MonoGameGum (MonoGame — UseV2 != true) -->
+  <ItemGroup Condition="'$(UseV2)' != 'true'">
+    <ProjectReference Include="..\..\Gum\MonoGameGum\MonoGameGum.csproj" />
+  </ItemGroup>
+
+  <!-- KniGum (KNI — UseV2 == true) -->
+  <ItemGroup Condition="'$(UseV2)' == 'true'">
+    <ProjectReference Include="..\..\Gum\MonoGameGum\KniGum\KniGum.csproj" 
+                      AdditionalProperties="UseV2=true" />
+  </ItemGroup>
+
   <ItemGroup>
-	  <ProjectReference Include="..\..\Gum\GumCommon\GumCommon.csproj" />
-	  <ProjectReference Include="..\..\Gum\MonoGameGum\MonoGameGum.csproj" />
-	  <ProjectReference Include="..\..\YotsubaEngine\YotsubaEngine.csproj" />
-
-  </ItemGroup>
-	<ItemGroup>
-		<None Update="Content\GumProject\**\*.*">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-	</ItemGroup>
-  <!--<ItemGroup>
-    <None Include="Assets\Gum\**\*">
-      <Link>Content\Gum\%(RecursiveDir)%(Filename)%(Extension)</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Content\GumProject\**\*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>-->
+  </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\Effect\" />
     <Folder Include="Content\GumProject\" />

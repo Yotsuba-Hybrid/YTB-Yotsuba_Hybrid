@@ -7,6 +7,7 @@ using YotsubaEngine.Exceptions;
 using YotsubaEngine.Graphics;
 using YotsubaEngine.HighestPerformanceTypes;
 using YotsubaEngine.Runtime.CPR.Events;
+using YotsubaEngine.Runtime.RPR.Events;
 
 namespace YotsubaEngine.Core.YotsubaGame
 {
@@ -294,6 +295,7 @@ namespace YotsubaEngine.Core.YotsubaGame
             YotsubaEntities[entity.Id].AddComponent(YTBComponent.Rigibody2D);
             Rigidbody2DComponents[(uint)entity.Id] = component;
             EventManager.Instance.Publish<OnEntityRigidBody2DIsAdded>(new(YotsubaEntities[entity.Id]));
+        }
 
 
             /// <summary>
@@ -332,6 +334,8 @@ namespace YotsubaEngine.Core.YotsubaGame
         {
             YotsubaEntities[entity.Id].AddComponent(YTBComponent.Model3D);
             ModelComponents3D[(uint)entity.Id] = component;
+
+            EventManager.Instance.Publish<OnEntityModelComponentIsAdded>(new OnEntityModelComponentIsAdded(entity));
         }
 
         /// <summary>
@@ -404,6 +408,7 @@ namespace YotsubaEngine.Core.YotsubaGame
         {
             YotsubaEntities[entity.Id].AddComponent(YTBComponent.YTBModel3D);
             YtbModelComponents[(uint)entity.Id] = component;
+            EventManager.Instance.Publish<OnEntityYTBModelIsAdded>(new OnEntityYTBModelIsAdded(entity));
         }
     }
 }

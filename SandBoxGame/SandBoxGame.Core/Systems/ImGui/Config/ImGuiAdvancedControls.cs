@@ -1,4 +1,4 @@
-﻿#if !YTB
+﻿#if !YTB && !KNI
 using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

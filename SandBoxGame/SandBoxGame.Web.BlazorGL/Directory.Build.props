@@ -1,0 +1,9 @@
+<Project>
+  <!--
+    SandBoxGame.Web.BlazorGL/Directory.Build.props
+    BlazorGL es siempre UseV2=true, no necesita redirección de obj.
+    NO importa el padre (que redirige a objV2/ cuando UseV2=true)
+    porque BlazorGL define UseV2 en su propio csproj, DESPUÉS de
+    que Directory.Build.props ya fue evaluado.
+  -->
+</Project>

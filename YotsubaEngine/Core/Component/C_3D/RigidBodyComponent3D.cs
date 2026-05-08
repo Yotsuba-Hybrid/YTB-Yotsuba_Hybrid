@@ -8,18 +8,11 @@ namespace YotsubaEngine.Core.Component.C_3D
     /// Componente que añade datos de cuerpo rígido 3D.
     /// <para>Component that adds 3D rigid body data.</para>
     /// </summary>
-    /// <param name="sphere">Esfera de colisión inicial.<para>Initial collision sphere.</para></param>
-    /// <param name="mass">Nivel de masa del cuerpo.<para>Mass level for the body.</para></param>
-    public struct RigidBodyComponent3D(BoundingSphere sphere, MassLevel mass)
+    /// <param name="collide">Nivel de colisión: Solid o Trigger.<para>Collision level: Solid or Trigger.</para></param>
+    /// <param name="mass">Masa física real del objeto. Valor por defecto: 1.0f.<para>Physical mass of the object. Default: 1.0f.</para></param>
+    public struct RigidBodyComponent3D(CollisionLevel collide, float mass = 1.0f)
     {
-
         public CollisionLayer CollisionLayer { get; set; } = CollisionLayer.Main;
-
-        /// <summary>
-        /// Cuerpo 3D del componente.
-        /// <para>Bounding sphere used for collisions.</para>
-        /// </summary>
-        public BoundingSphere BoundingSphere { get; set; } = sphere;
 
         /// <summary>
         /// Velocidad del objeto 3D.
@@ -28,10 +21,17 @@ namespace YotsubaEngine.Core.Component.C_3D
         public Vector3 Velocity { get; set; } = Vector3.Zero;
 
         /// <summary>
-        /// Masa del objeto para determinar su inercia y resistencia a fuerzas.
-        /// <para>Mass used to determine inertia and resistance.</para>
+        /// Nivel de colisión: Solid (colisiona) o Trigger (atraviesa).
+        /// <para>Collision level: Solid (collides) or Trigger (passes through).</para>
         /// </summary>
-        public MassLevel Mass { get; set; } = mass;
+        public CollisionLevel Collide { get; set; } = collide;
+
+        /// <summary>
+        /// Masa física real del objeto. Determina distribución de fuerza en colisiones.
+        /// Valor por defecto: 1.0f. Permite cualquier número (0 para triggers).
+        /// <para>Physical mass that determines force distribution in collisions. Default: 1.0f.</para>
+        /// </summary>
+        public float Mass { get; set; } = mass;
 
         /// <summary>
         /// Desfase de colisión.

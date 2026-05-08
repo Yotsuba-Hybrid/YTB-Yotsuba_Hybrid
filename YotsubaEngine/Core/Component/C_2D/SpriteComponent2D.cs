@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using YotsubaEngine.Core.YotsubaGame;
+using YotsubaEngine.Runtime.RPR.Events;
 
 namespace YotsubaEngine.Core.Component.C_2D
 {
@@ -12,6 +14,8 @@ namespace YotsubaEngine.Core.Component.C_2D
     /// <param name="sourceRectangle">Región de la textura a renderizar.<para>Texture region to render.</para></param>
     public struct SpriteComponent2D(Texture2D texture, Rectangle sourceRectangle)
     {
+        private bool is2_5D = false;
+
         /// <summary>
         /// Textura usada para renderizar la entidad.
         /// <para>Texture used to render the entity.</para>
@@ -34,7 +38,18 @@ namespace YotsubaEngine.Core.Component.C_2D
         /// Indica la dimensión en la que se renderizará el sprite.
         /// <para>Indicates the dimension in which the sprite will be rendered.</para>
         /// </summary>
-        public bool Is2_5D { get; set; } = false;
+        public bool Is2_5D
+        {
+            get => is2_5D;
+            set
+            {
+                is2_5D = value;
+                if (is2_5D)
+                {
+                    EventManager.Instance.Publish<OnSpriteIsSettedAs2_5D>(new());
+                }
+            }
+        }
     }
 
 }

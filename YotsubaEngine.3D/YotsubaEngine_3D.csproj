@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Configurations>Debug;Release;YTB</Configurations>
+    <Configurations>Debug;Release;YTB;BlazorGL</Configurations>
   </PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)' == 'YTB'">
 		<DefineConstants>$(DefineConstants);YTB;DEBUG;YOTSUBA</DefineConstants>

@@ -1,4 +1,4 @@
-﻿#if !YTB
+﻿#if !YTB && !KNI
 
 using Hexa.NET.ImGui;
 using Hexa.NET.ImGuizmo;

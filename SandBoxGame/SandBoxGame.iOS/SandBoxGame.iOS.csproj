@@ -5,7 +5,7 @@
     <SupportedOSPlatformVersion>12.2</SupportedOSPlatformVersion>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MonoGamePlatform>iOS</MonoGamePlatform>
-    <Configurations>Debug;Release;YTB</Configurations>
+    <Configurations>Debug;Release;YTB;BlazorGL</Configurations>
     <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
 
   </PropertyGroup>

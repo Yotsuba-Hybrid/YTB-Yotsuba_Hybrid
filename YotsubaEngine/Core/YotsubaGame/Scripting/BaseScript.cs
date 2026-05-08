@@ -983,5 +983,23 @@ namespace YotsubaEngine.Core.YotsubaGame.Scripting
         public static ref InputComponent GetInputComponent(this Yotsuba entity) => ref EntityFunctionsScript.GetInputComponent(entity);
         public static ref ShaderComponent GetShaderComponent(this Yotsuba entity) => ref EntityFunctionsScript.GetShaderComponent(entity);
 
+        public static BoundingBox Transform(this BoundingBox box, Matrix matrix)
+        {
+            // Obtenemos las 8 esquinas de la caja local
+            Vector3[] corners = box.GetCorners();
+
+            Vector3 min = new Vector3(float.MaxValue);
+            Vector3 max = new Vector3(float.MinValue);
+
+            // Transformamos cada esquina por la matriz del mundo y recalculamos el Min/Max
+            for (int i = 0; i < 8; i++)
+            {
+                Vector3 transformedCorner = Vector3.Transform(corners[i], matrix);
+                min = Vector3.Min(min, transformedCorner);
+                max = Vector3.Max(max, transformedCorner);
+            }
+
+            return new BoundingBox(min, max);
+        }
     }
 }

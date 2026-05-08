@@ -1,0 +1,8 @@
+<Project>
+  <!-- 
+    Propaga UseV2 al restore graph para que NuGet sepa qué paquetes restaurar.
+  -->
+  <PropertyGroup Condition="'$(UseV2)' == 'true'">
+    <_GenerateRestoreGraphProjectEntryInputProperties>$(_GenerateRestoreGraphProjectEntryInputProperties);UseV2=$(UseV2)</_GenerateRestoreGraphProjectEntryInputProperties>
+  </PropertyGroup>
+</Project>
