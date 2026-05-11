@@ -190,9 +190,14 @@ namespace YotsubaEngine
             graphicsDeviceManager.PreferredBackBufferWidth = width;  // Ancho
             graphicsDeviceManager.PreferredBackBufferHeight = height; // Alto
             graphicsDeviceManager.IsFullScreen = fullScreen;
+
+            //Permitir caracteristicas avanzadas, como la oclusion del runtime
+            graphicsDeviceManager.GraphicsProfile = GraphicsProfile.HiDef;
+
             graphicsDeviceManager.ApplyChanges();
             GraphicsDevice = _graphics.GraphicsDevice;
             YTBGlobalState.GraphicsDeviceManager = graphicsDeviceManager;
+
             YTBGlobalState.GraphicsDevice = _graphics.GraphicsDevice;
         }
 

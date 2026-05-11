@@ -176,11 +176,14 @@ namespace YotsubaEngine.Core.System.S_3D
                                 BoundingSphere exactPartB = meshB.BoundingSphere.Transform(modelB.BoneTransforms[meshB.ParentBone.Index] * matrixB);
                                 if (exactPartA.Intersects(exactPartB))
                                 {
-                                    CalculateSpherePenetration(exactPartA, exactPartB, out collisionNormal, out penetrationDepth);
-                                    exactCollisionDetected = true;
-                                    hitPartA = meshA.Name; // Registramos exactamente qué malla chocó
-                                    hitPartB = meshB.Name;
-                                    break;
+
+                                    if (CheckExactGeometry(meshA, ref matrixA, meshB, ref matrixB, out collisionNormal, out penetrationDepth))
+                                    {
+                                        exactCollisionDetected = true;
+                                        hitPartA = meshA.Name; // Registramos exactamente qué malla chocó
+                                        hitPartB = meshB.Name;
+                                        break;
+                                    }
                                 }
                             }
                             if (exactCollisionDetected) break; // Si ya detectamos choque, dejamos de iterar huesos
@@ -248,6 +251,69 @@ namespace YotsubaEngine.Core.System.S_3D
                     ResolveCollision(ref transformA, ref rigidA, ref transformB, ref rigidB, collisionNormal, penetrationDepth);
                 }
             }
+        }
+
+        private bool CheckExactGeometry(ModelMesh meshA, ref Matrix matrixA, ModelMesh meshB, ref Matrix matrixB, out Vector3 collisionNormal, out float penetrationDepth)
+        {
+            bool exactCollisionDetected;
+
+            VertexPositionNormalTexture[] positionNormalTextureA;
+            VertexPositionNormalTexture[] positionNormalTextureB;
+
+            for (int iA = 0; iA < meshA.MeshParts.Count; iA++)
+            {
+
+                ModelMeshPart part = meshA.MeshParts[iA];
+                positionNormalTextureA = new VertexPositionNormalTexture[part.NumVertices];
+                int stride = part.VertexBuffer.VertexDeclaration.VertexStride;
+                part.VertexBuffer.GetData(part.VertexOffset * stride, positionNormalTextureA, 0, part.NumVertices, stride);
+
+                ushort[] indices = new ushort[part.PrimitiveCount * 3];
+                part.IndexBuffer.GetData(part.StartIndex * 2, indices, 0, part.PrimitiveCount * 3);
+
+
+                for (int i = 0; i < indices.Length; i+= 3)
+                {
+                    ushort vertexA = indices[i];
+                    ushort vertexB = indices[i + 1];
+                    ushort vertexC = indices[i + 2];
+
+                    Vector3 vA = Vector3.Transform(positionNormalTextureA[vertexA].Position, matrixA);
+                    Vector3 vB = Vector3.Transform(positionNormalTextureA[vertexB].Position, matrixA);
+                    Vector3 vC = Vector3.Transform(positionNormalTextureA[vertexC].Position, matrixA);
+
+
+                    for (int iB = 0; iB < meshB.MeshParts.Count; iB+= 3)
+                    {
+                        var partB = meshB.MeshParts[iB];
+                        positionNormalTextureB = new VertexPositionNormalTexture[partB.NumVertices];
+                        int strideB = partB.VertexBuffer.VertexDeclaration.VertexStride;
+                        partB.VertexBuffer.GetData(partB.VertexOffset * strideB, positionNormalTextureB, 0, partB.NumVertices, strideB);
+
+                        ushort[] indicesb = new ushort[partB.PrimitiveCount * 3];
+                        partB.IndexBuffer.GetData(partB.StartIndex * 2, indicesb, 0, partB.PrimitiveCount * 3);
+                        ushort vertexA_b = indicesb[iB];
+                        ushort vertexB_b = indicesb[iB + 1];
+                        ushort vertexC_b = indicesb[iB + 2];
+
+                        
+
+                        Vector3 vA_b = Vector3.Transform(positionNormalTextureB[vertexA_b].Position, matrixB);
+                        Vector3 vB_b = Vector3.Transform(positionNormalTextureB[vertexB_b].Position, matrixB);
+                        Vector3 vC_b = Vector3.Transform(positionNormalTextureB[vertexC_b].Position, matrixB);
+
+                        if (TriangleIntersect(ref vA, ref vB, ref vC, ref vA_b, ref vB_b, ref vC_b, out collisionNormal, out penetrationDepth))
+                        {
+                            exactCollisionDetected = true;
+                            break;
+                        }
+                    }
+
+                }
+
+            }
+
+            return exactCollisionDetected;
         }
 
         // =========================================================
