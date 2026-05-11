@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using YotsubaEngine.Attributes;
 
 namespace YotsubaEngine.Core.Component.C_AGNOSTIC
 {
@@ -13,51 +14,49 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
     /// <param name="scale">Escala inicial.<para>Initial scale.</para></param>
     /// <param name="spriteEffects">Efectos del sprite.<para>Sprite effects.</para></param>
     /// <param name="color">Color de tinte inicial.<para>Initial tint color.</para></param>
+    [UIComponent("Transformación", nameof(TransformComponent))]
     public struct TransformComponent(Vector3 position, Vector3 size, float scale, SpriteEffects spriteEffects, Color color)
     {
         /// <summary>
         /// Establece la posición de la transformación.
         /// <para>Sets the transform position.</para>
         /// </summary>
-        /// <param name="x">Coordenada X de la posición.<para>X coordinate of the position.</para></param>
-        /// <param name="y">Coordenada Y de la posición.<para>Y coordinate of the position.</para></param>
-        /// <param name="z">Coordenada Z de la posición.<para>Z coordinate of the position.</para></param>
         public void SetPosition(float x, float y, float z) => Position = new Vector3(x, y, z);
 
         /// <summary>
         /// Obtiene o establece el tamaño del sprite.
-        /// <para>Gets or sets the sprite size.</para>
         /// </summary>
+        [UIComponentValue("Tamaño", nameof(Size), "Tamaño del sprite en el mundo", "Formato: X,Y,Z (3 números decimales separados por comas).")]
         public Vector3 Size { get; set; } = size;
 
         /// <summary>
         /// Escala aplicada al sprite.
-        /// <para>Scale applied to the sprite.</para>
         /// </summary>
+        [UIComponentValue("Escala", nameof(Scale), "Multiplicador de escala uniforme.", "La escala debe ser un número decimal válido (ej: 1.0).")]
         public float Scale { get; set; } = scale;
 
         /// <summary>
         /// Rotación aplicada al sprite.
-        /// <para>Rotation applied to the sprite.</para>
         /// </summary>
+        [UIComponentValue("Rotación", nameof(Rotation), "Ángulo de rotación en radianes.", "La rotación debe ser un número decimal válido.")]
         public float Rotation { get; set; } = 0f;
 
         /// <summary>
         /// Posición del sprite en el espacio del mundo.
-        /// <para>Sprite position in world space.</para>
         /// </summary>
+        [UIComponentValue("Posición", nameof(Position), "Posición 3D de la entidad en el mundo.", "Formato: X,Y,Z (3 números decimales separados por comas).")]
         public Vector3 Position { get; set; } = position;
 
         /// <summary>
         /// Efectos del sprite como reflejo.
-        /// <para>Sprite effects such as flipping.</para>
         /// </summary>
+        [UIComponentValue("Efectos del sprite", nameof(SpriteEffects), "Efectos de volteo (None, FlipHorizontally, FlipVertically).", "Valor de SpriteEffects no válido.")]
         public SpriteEffects SpriteEffects { get; set; } = spriteEffects;
 
         /// <summary>
         /// Color de tinte aplicado al sprite.
-        /// <para>Tint color applied to the sprite.</para>
         /// </summary>
+        [UIComponentValue("Color", nameof(Color), "Color de tinte aplicado al sprite.", "Use un nombre de color válido de XNA (ej: Red, Blue, White).")]
         public Color Color { get; set; } = color;
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using YotsubaEngine.Attributes;
 using YotsubaEngine.Core.YotsubaGame.Scripting;
 using YotsubaEngine.HighestPerformanceTypes;
 
@@ -9,18 +10,26 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
     /// Componente que almacena instancias de scripts y enlaces de lenguaje.
     /// <para>Component that stores script instances and language bindings.</para>
     /// </summary>
-    public struct ScriptComponent()
+    [UIComponent("Script", nameof(ScriptComponent))]
+    public partial struct ScriptComponent()
     {
 
         /// <summary>
-        /// Todos los scripts asociados a esta entidad.
-        /// <para>All scripts associated with this entity.</para>
+        /// Todos los scripts asociados a esta entidad (runtime).
         /// </summary>
         public YTB<BaseScript> Scripts = new YTB<BaseScript>();
 
         /// <summary>
-        /// Tipos de lenguaje de script usados por la entidad.
-        /// <para>Script language types used by the entity.</para>
+        /// Bridge serializable: scripts en formato "CSHARP&amp;:&amp;Route1&amp;;&amp;CSHARP&amp;:&amp;Route2".
+        /// </summary>
+        [UIComponentValue("Scripts", "Scripts",
+            "Scripts asociados a la entidad. Formato compuesto con separadores '&;&' y '&:&'.",
+            "Formato inválido.",
+            ValueConverterForRead:"RenderScriptsUI")]
+        public string ScriptsRaw { get; set; }
+
+        /// <summary>
+        /// Tipos de lenguaje de script usados por la entidad (runtime).
         /// </summary>
         public Dictionary<ScriptComponentType, string> ScriptLanguaje = new Dictionary<ScriptComponentType, string>(3);
     }
