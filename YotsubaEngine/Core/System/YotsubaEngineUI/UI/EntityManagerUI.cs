@@ -7,9 +7,11 @@ using System.Collections.Immutable;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Xml.Linq;
 using YotsubaEngine.ActionFiles.TMX_Files.TiledCS;
 using YotsubaEngine.ActionFiles.YTB_Files;
+using YotsubaEngine.Attributes;
 using YotsubaEngine.Core.Component.C_2D;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Exceptions;
@@ -23,8 +25,22 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 	/// Editor UI panel for inspecting and editing entity components.
 	/// Panel de UI del editor para inspeccionar y editar componentes de entidades.
 	/// </summary>
-	internal class EntityManagerUI
+	internal class EntityManagerUI : IUIRenderContext
 	{
+		private YTBComponents _currentComponent;
+
+		YTBComponents IUIRenderContext.Component => _currentComponent;
+		void IUIRenderContext.UpdateProperty(string propertyName, string newValue)
+			=> UpdateProperty(_currentComponent, propertyName, newValue);
+		IReadOnlyList<string> IUIRenderContext.TextureAtlasFiles => _textureAtlasFiles;
+		List<SubtextureInfo> IUIRenderContext.ParseSubtextures(string xmlPath) => ParseSubtextures(xmlPath);
+		List<AnimationInfo> IUIRenderContext.ParseAnimations(string xmlPath) => ParseAnimations(xmlPath);
+		IEnumerable<string> IUIRenderContext.SceneEntityNames
+			=> _getCurrentScene()?.Entities?
+				.Where(e => !string.IsNullOrEmpty(e.Name))
+				.Select(e => e.Name) ?? Enumerable.Empty<string>();
+		IEnumerable<string> IUIRenderContext.AllScripts => GetAllScripts();
+
 		private readonly Func<YTBEntity> _getSelectedEntity;
 		private readonly Func<YTBScene> _getCurrentScene;
 		private readonly Action _saveAction;
@@ -235,65 +251,29 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 					{
 						ImGui.Indent(15);
 
-						switch (component.ComponentName)
+						// Loop genérico basado en [UIComponent]/[UIComponentValue]:
+						// Itera sobre los miembros del componente y renderiza el control adecuado.
+						_currentComponent = component;
+						var compType = global::YotsubaEngine.Core.System.UIComponentRegistry.GetComponentType(component.ComponentName);
+						if (compType != null)
 						{
-							case "TransformComponent":
-								RenderTransformComponent(component);
-								componentes.Remove(component.ComponentName);
-								break;
-							case "SpriteComponent2D":
-								RenderSpriteComponent2D(component);
-								componentes.Remove(component.ComponentName);
-
-								break;
-							case "AnimationComponent2D":
-								RenderAnimationComponent2D(component);
-								componentes.Remove(component.ComponentName);
-
-								break;
-							case "RigidBodyComponent2D":
-								RenderRigidBodyComponent2D(component);
-								componentes.Remove(component.ComponentName);
-
-								break;
-							case "ButtonComponent2D":
-								RenderButtonComponent2D(component);
-								componentes.Remove(component.ComponentName);
-
-								break;
-							case "InputComponent":
-								RenderInputComponent(component);
-								componentes.Remove(component.ComponentName);
-
-								break;
-						case "CameraComponent3D":
-							RenderCameraComponent3D(component);
-								componentes.Remove(component.ComponentName);
-
-								break;
-							case "ScriptComponent":
-								RenderScriptComponent(component);
-								componentes.Remove(component.ComponentName);
-								break;
-							case "TileMapComponent2D":
-								RenderTileMapComponent(component);
-								componentes.Remove(component.ComponentName);
-								break;
-							case "FontComponent2D":
-								RenderFontComponent2D(component);
-								componentes.Remove(component.ComponentName);
-								break;
-						case "ShaderComponent":
-							RenderShaderComponent(component);
-								componentes.Remove(component.ComponentName);
-								break;
-						case "ModelComponent3D":
-							RenderModelComponent3D(component);
-								componentes.Remove(component.ComponentName);
-								break;
-							default:
-								//RenderGenericComponent(component);
-								break;
+							componentes.Remove(component.ComponentName);
+							foreach (var member in global::YotsubaEngine.Core.System.UIComponentRegistry.GetMembers(compType))
+							{
+								RenderMember(component, member);
+							}
+						}
+						else
+						{
+							// Fallback para componentes sin [UIComponent] (ej. CustomComponent placeholder)
+							foreach (var prop in component.Propiedades.ToImmutableArray())
+							{
+								string value = prop.Item2;
+								ImGui.PushItemWidth(250);
+								if (ImGui.InputText($"{GetPropertyLabel(prop.Item1)}##{prop.Item1}", ref value, 100))
+									UpdateProperty(component, prop.Item1, value);
+								ImGui.PopItemWidth();
+							}
 						}
 
 						ImGui.Unindent(15);
@@ -1480,6 +1460,120 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 
 			}
 		}
+
+		/// <summary>
+		/// Renderiza un miembro [UIComponentValue] del componente. Si el atributo apunta a un método
+		/// estático de render via <see cref="UIComponentValue.NameMethodValueConverterForRead"/>, se invoca
+		/// el delegate JIT-cacheado. En caso contrario, se auto-detecta el control adecuado por tipo.
+		/// </summary>
+		private void RenderMember(YTBComponents component, global::YotsubaEngine.Core.System.UIComponentRegistry.ComponentMember member)
+		{
+			var attr = member.Attribute;
+			string raw = GetPropertyValue(component, attr.SerializableName);
+			if (string.IsNullOrEmpty(raw))
+			{
+				foreach (var legacy in attr.LegacySerializableNames)
+				{
+					raw = GetPropertyValue(component, legacy);
+					if (!string.IsNullOrEmpty(raw)) break;
+				}
+			}
+			raw ??= "";
+
+			// Render custom (combos pareados, dropdowns con datos externos, etc.)
+			if (!string.IsNullOrEmpty(attr.NameMethodValueConverterForRead))
+			{
+				var compType = member.Member.DeclaringType!;
+				var del = global::YotsubaEngine.Core.System.UIComponentRegistry.GetRenderConverter(compType, attr.NameMethodValueConverterForRead);
+				if (del != null)
+				{
+					del(this, raw);
+					return;
+				}
+				// Si el método no se encontró, caemos al render por tipo (InputText por defecto).
+			}
+
+			RenderAutoControlByType(component, attr, member.MemberType, raw);
+		}
+
+		/// <summary>
+		/// Dibuja el control ImGui adecuado para el tipo de la propiedad.
+		/// </summary>
+		private void RenderAutoControlByType(YTBComponents component, UIComponentValue attr, Type t, string value)
+		{
+			string label = attr.VisibleName;
+			string key = attr.SerializableName;
+
+			if (t == typeof(bool))
+			{
+				bool b = false;
+				bool.TryParse(value, out b);
+				if (ImGui.Checkbox($"{label}##{key}", ref b))
+					UpdateProperty(component, key, b.ToString().ToLower());
+				return;
+			}
+
+			if (t == typeof(int))
+			{
+				int iv = 0;
+				int.TryParse(value, out iv);
+				ImGui.PushItemWidth(120);
+				if (ImGui.InputInt($"{label}##{key}", ref iv))
+					UpdateProperty(component, key, iv.ToString(CultureInfo.InvariantCulture));
+				ImGui.PopItemWidth();
+				return;
+			}
+
+			if (t == typeof(float))
+			{
+				float fv = 0f;
+				float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out fv);
+				ImGui.PushItemWidth(120);
+				if (ImGui.InputFloat($"{label}##{key}", ref fv))
+					UpdateProperty(component, key, fv.ToString(CultureInfo.InvariantCulture));
+				ImGui.PopItemWidth();
+				return;
+			}
+
+			if (t == typeof(Microsoft.Xna.Framework.Vector2))
+			{
+				RenderVector2(component, new Tuple<string, string>(key, value), new[] { "X", "Y" });
+				return;
+			}
+
+			if (t == typeof(Microsoft.Xna.Framework.Vector3))
+			{
+				RenderVector3(component, new Tuple<string, string>(key, value), new[] { "X", "Y", "Z" });
+				return;
+			}
+
+			if (t == typeof(Rectangle))
+			{
+				RenderRectangle(component, new Tuple<string, string>(key, value), new[] { "X", "Y", "Ancho", "Alto" });
+				return;
+			}
+
+			if (t == typeof(Color))
+			{
+				Color myColor = Color.White;
+				var propInfo = ColorPicker.ParseColorPropertyInfo(value);
+				if (propInfo != null) myColor = (Color)propInfo.GetValue(null)!;
+				ColorPicker.RenderColorCombo(key, ref myColor, (newName) => UpdateProperty(component, key, newName));
+				return;
+			}
+
+			if (t.IsEnum)
+			{
+				RenderEnumCombo(component, new Tuple<string, string>(key, value), Enum.GetNames(t));
+				return;
+			}
+
+			// string (y cualquier otro tipo) → InputText
+			ImGui.PushItemWidth(250);
+			if (ImGui.InputText($"{label}##{key}", ref value, 200))
+				UpdateProperty(component, key, value);
+			ImGui.PopItemWidth();
+		}
 		#endregion
 
 		/// <summary>
@@ -1869,58 +1963,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 			Console.WriteLine($"Componente '{component.ComponentName}' eliminado (igualado al template vacío)");
 		}
 
-		#region Helper Classes
-		/// <summary>
-		/// Stores subtexture data parsed from a texture atlas XML.
-		/// Almacena datos de subtexturas parseados desde un XML de atlas.
-		/// </summary>
-		private class SubtextureInfo
-		{
-			/// <summary>
-			/// Subtexture name.
-			/// Nombre de la subtextura.
-			/// </summary>
-			public string Name { get; set; }
-			/// <summary>
-			/// X coordinate in pixels.
-			/// Coordenada X en píxeles.
-			/// </summary>
-			public int X { get; set; }
-			/// <summary>
-			/// Y coordinate in pixels.
-			/// Coordenada Y en píxeles.
-			/// </summary>
-			public int Y { get; set; }
-			/// <summary>
-			/// Width in pixels.
-			/// Ancho en píxeles.
-			/// </summary>
-			public int Width { get; set; }
-			/// <summary>
-			/// Height in pixels.
-			/// Alto en píxeles.
-			/// </summary>
-			public int Height { get; set; }
-		}
-
-		/// <summary>
-		/// Stores animation data parsed from a texture atlas XML.
-		/// Almacena datos de animación parseados desde un XML de atlas.
-		/// </summary>
-		private class AnimationInfo
-		{
-			/// <summary>
-			/// Animation name.
-			/// Nombre de la animación.
-			/// </summary>
-			public string Name { get; set; }
-			/// <summary>
-			/// Frame delay in milliseconds.
-			/// Retardo de frames en milisegundos.
-			/// </summary>
-			public int Delay { get; set; }
-		}
-		#endregion
+		// Helper classes (SubtextureInfo / AnimationInfo) viven en SubtextureInfo.cs en el mismo namespace.
 
 		#region ModelComponent3D
 		/// <summary>
