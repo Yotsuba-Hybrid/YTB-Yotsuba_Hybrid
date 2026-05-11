@@ -65,7 +65,8 @@ namespace YotsubaEngine.Core.System.S_2D
             ref AnimationComponent2D animationComponent = ref EntityManager.Animation2DComponents[id];
             var animation = animationComponent.GetAnimation(@event.AnimationName);
             animation.Reset();
-            animationComponent.CurrentAnimationType = (@event.AnimationName, animation);
+            animationComponent.CurrentAnimationType = @event.AnimationName;
+            animationComponent.CurrentAnimation = (@event.AnimationName, animation);
         }
 
         /// <summary>
@@ -93,21 +94,21 @@ namespace YotsubaEngine.Core.System.S_2D
                 ref AnimationComponent2D animationComponent = ref animationsComponents[entity.Id];
                 ref SpriteComponent2D spriteComponent = ref spriteComponents[entity.Id];
 
-                if (animationComponent.CurrentAnimationType.Item2.IsFinished)
+                if (animationComponent.CurrentAnimation.Item2.IsFinished)
                 {
-                    if (!animationComponent.CurrentAnimationType.Item2.FinishedWasMarked)
+                    if (!animationComponent.CurrentAnimation.Item2.FinishedWasMarked)
                     {
                         EventManager.Publish(new OnAnimationDontLoopReleaseEvent()
                         {
                             EntityId = entity.Id,
-                            AnimationName = animationComponent.CurrentAnimationType.Item1
+                            AnimationName = animationComponent.CurrentAnimation.Item1
                         });
-                        animationComponent.CurrentAnimationType.Item2.FinishedWasMarked = true;
+                        animationComponent.CurrentAnimation.Item2.FinishedWasMarked = true;
                     }
                 }
                 else
                 {
-                    TextureRegion region = animationComponent.CurrentAnimationType.Item2.CurrentFrame(gameTime);
+                    TextureRegion region = animationComponent.CurrentAnimation.Item2.CurrentFrame(gameTime);
                     spriteComponent.Texture = region.Texture;
                     spriteComponent.SourceRectangle = region.SourceRectangle;
                 }

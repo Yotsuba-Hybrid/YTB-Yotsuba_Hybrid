@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using YotsubaEngine.Attributes;
 using YotsubaEngine.Graphics;
 using YotsubaEngine.HighestPerformanceTypes;
 
@@ -9,8 +10,15 @@ namespace YotsubaEngine.Core.Component.C_2D
     /// Componente que representa un mapa de tiles en 2D, incluyendo regiones, colisiones, tamaño y capas.
     /// <para>Represents a 2D tile map component including regions, collisions, and layers.</para>
     /// </summary>
+    [UIComponent("Mapa de Tiles 2D", nameof(TileMapComponent2D))]
     public struct TileMapComponent2D
     {
+        /// <summary>
+        /// Ruta al archivo de mapa de tiles (.tmx). Bridge de serialización: al cargar, se usa para inicializar Tiles, Collisions y demás runtime state.
+        /// </summary>
+        [UIComponentValue("Ruta del mapa de tiles", "TileMapPath", "Ruta al archivo .tmx generado por Tiled.", "El archivo del mapa no existe o no es válido.")]
+        public string TileMapPath { get; set; }
+
         /// <summary>
         /// Colección de regiones de tiles indexadas por un identificador entero único. Cada región define un área dentro de una textura.
         /// <para>Collection of tile regions indexed by unique identifiers. Each region defines an area within a texture.</para>
