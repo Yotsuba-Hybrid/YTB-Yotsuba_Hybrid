@@ -1,401 +1,236 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Reflection;
+using Microsoft.Xna.Framework;
 using YotsubaEngine.ActionFiles.YTB_Files;
+using YotsubaEngine.Attributes;
+using YotsubaEngine.Core.Component.C_2D;
+using YotsubaEngine.Core.Component.C_3D;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
+#if YTB
+using YotsubaEngine.Core.System;
+#endif
 
 namespace YotsubaEngine.Templates
 {
     /// <summary>
-    /// Proporciona constructores de plantillas para datos XML de entidades y componentes YTB.
-    /// <para>Provides template builders for YTB entity and component XML data.</para>
+    /// Proporciona constructores de plantillas para datos de entidades y componentes YTB.
+    /// La mayor parte se auto-genera a partir de los atributos [UIComponent]/[UIComponentValue] usando <see cref="TemplateFromAttributes"/>.
     /// </summary>
     public static class EntityYTBXmlTemplate
     {
         /// <summary>
-        /// Builds a default entity template with common components.
-        /// Construye una plantilla de entidad por defecto con componentes comunes.
+        /// Construye una plantilla de entidad por defecto con todos los componentes [UIComponent] registrados.
+        /// En #if YTB usa <see cref="UIComponentRegistry"/> (reflexión). Fuera de #if YTB usa las plantillas hand-written.
         /// </summary>
         internal static YTBEntity GenerateNew()
         {
+            var components = new List<YTBComponents>();
 
-            var newEntity = new YTBEntity
+#if YTB
+            foreach (var kv in UIComponentRegistry.AllComponents)
             {
-                Name = "",
-                Components = new List<YTBComponents>
-                {
-                    new YTBComponents
-                    {
-                        ComponentName = "TransformComponent",
-                        Propiedades = new List<Tuple<string,string>>
-                        {
-                            new("Position", ",,"),
-                            new("Size", ",,"),
-                            new("Color", ""),
-                            new("SpriteEffects", ""),
-                            new("Scale", ""),
-                            //new("SpriteSize", "false")
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "SpriteComponent2D",
-                        Propiedades = new List<Tuple<string,string>>
-                        {
-                            new("TextureAtlasPath", ""),
-                            new("SpriteName", ""),
-                            new("SourceRectangle", ",,,"),
-                            new("IsVisible", ""),
-                            new("2.5D", "")
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "AnimationComponent2D",
-                        Propiedades = new List<Tuple<string,string>>
-                        {
-                            new("TextureAtlasPath", ""),
-                            new("AnimationBindings", ""),
-                            new("CurrentAnimationType", "")
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "RigidBodyComponent2D",
-                        Propiedades = new List<Tuple<string,string>>
-                        {
-                            new("OffSetCollision", ","),
-                            new("Velocity", ","),
-                            new("Mass", "")
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "ButtonComponent2D",
-                        Propiedades = new List<Tuple<string,string>>
-                        {
-                            new("IsActive", ""),
-                            new("EffectiveArea", ",,,"),
-                            new("Description", "")
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "InputComponent",
-                        Propiedades = new List<Tuple<string,string>>
-                        {
-                            new("InputsInUse", ""),
-                            new("GamePadIndex", ""),
-                            new("KeyboardMappings", ""),
-                            new("MouseMappings", ""),
-                            //new("WASDToolkit", "false")
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = nameof(CameraComponent3D),
-                        Propiedades = new List<Tuple<string,string>>
-                        {
-                            new("EntityName", ""),
-                            new("InitialPosition", "0,0,0"),
-                            new("OffsetCamera", ",,,"),
-                            new("AngleView", "0"),
-                            new("NearRender", "0"),
-                            new("FarRender", "0")
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "ScriptComponent",
-                        Propiedades = new List<Tuple<string,string>>
-                        {
-                            new("Scripts", "CSHARP&:&RouteToScript&;&"),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "TileMapComponent2D",
-                        Propiedades = new List<Tuple<string,string>>
-                        {
-                            new("TileMapPath", "nothing"),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "FontComponent2D",
-                        Propiedades = new List<Tuple<string,string>>
-                        {
-                            new("Texto", ""),
-                            new("Font", "")
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "ShaderComponent",
-                        Propiedades = new List<Tuple<string,string>>
-                        {
-                            new("ShaderPath", ""),
-                            new("IsActive", ""),
-                            new("params", "")
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "ModelComponent3D",
-                        Propiedades = new List<Tuple<string,string>>
-                        {
-                            new("ModelPath", ""),
-                            new("IsVisible", ""),
-                            new("SphereRadius", ""),
-                            new("OffsetSphere", "")
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "CustomComponent",
-                        Propiedades = new List<Tuple<string,string>>
-                        {
-                            new("Property1", ""),
-                            new("Property2", ""),
-                            new("Property3", "")
-                        }
-                    }
-                }
-            };
-
-            return newEntity;
-        }
-
-        /// <summary>
-        /// Crea una plantilla para componentes de script.
-        /// <para>Creates a template for script components.</para>
-        /// </summary>
-        /// <returns>Plantilla de componente de script. <para>Script component template.</para></returns>
-        public static YTBComponents ScriptTemplate()
-        {
-            return new YTBComponents
+                components.Add(TemplateFromAttributes(kv.Key));
+            }
+#else
+            components.Add(TransformTemplate());
+            components.Add(Sprite2DTemplate());
+            components.Add(Animation2DTemplate());
+            components.Add(Rigibody2DTemplate());
+            components.Add(Button2DTemplate());
+            components.Add(InputTemplate());
+            components.Add(CameraTemplate());
+            components.Add(ScriptTemplate());
+            components.Add(TileMap2DTemplate());
+            components.Add(Font2DTemplate());
+            components.Add(ShaderTemplate());
+            components.Add(Model3DTemplate());
+#endif
+            // CustomComponent es un placeholder genérico fuera del sistema de atributos.
+            components.Add(new YTBComponents
             {
-                ComponentName = "ScriptComponent",
-                Propiedades = new List<Tuple<string, string>>
-                        {
-                            new("Scripts", "CSHARP&:&&;&"),
-                        }
-            };
-        }
-
-        /// <summary>
-        /// Crea una plantilla para componentes de transformación.
-        /// <para>Creates a template for transform components.</para>
-        /// </summary>
-        /// <returns>Plantilla de componente de transformación. <para>Transform component template.</para></returns>
-        public static YTBComponents TransformTemplate()
-        {
-            return new YTBComponents
-            {
-                ComponentName = "TransformComponent",
-                Propiedades = new List<Tuple<string, string>>
-                        {
-                            new("Position", "0,0,1"),
-                            new("Size", "100,100,0"),
-                            new("Color", "White"),
-                            new("SpriteEffects", "None"),
-                            new("Scale", "1")
-                        }
-            };
-        }
-
-        /// <summary>
-        /// Crea una plantilla para componentes de sprite 2D.
-        /// <para>Creates a template for 2D sprite components.</para>
-        /// </summary>
-        /// <returns>Plantilla de componente de sprite 2D. <para>2D sprite component template.</para></returns>
-        public static YTBComponents Sprite2DTemplate()
-        {
-            return new YTBComponents
-            {
-                ComponentName = "SpriteComponent2D",
-                Propiedades = new List<Tuple<string, string>>
-                        {
-                            new("TextureAtlasPath", ""),
-                            new("SpriteName", ""),
-                            new("SourceRectangle", "0,0,0,0"),
-                            new("IsVisible", "true"),
-                            new("2.5D", "false")
-                        }
-            };
-        }
-
-        /// <summary>
-        /// Crea una plantilla para componentes de animación 2D.
-        /// <para>Creates a template for 2D animation components.</para>
-        /// </summary>
-        /// <returns>Plantilla de componente de animación 2D. <para>2D animation component template.</para></returns>
-        public static YTBComponents Animation2DTemplate()
-        {
-            return new YTBComponents
-            {
-                ComponentName = "AnimationComponent2D",
-                Propiedades = new List<Tuple<string, string>>
-                        {
-                            new("TextureAtlasPath", ""),
-                            new("AnimationBindings", ""),
-                            new("CurrentAnimationType", "none")
-                        }
-            };
-        }
-
-        /// <summary>
-        /// Crea una plantilla para componentes de cuerpo rígido 2D.
-        /// <para>Creates a template for 2D rigid body components.</para>
-        /// </summary>
-        /// <returns>Plantilla de componente de cuerpo rígido 2D. <para>2D rigid body component template.</para></returns>
-        public static YTBComponents Rigibody2DTemplate()
-        {
-            return new YTBComponents
-            {
-                ComponentName = "RigidBodyComponent2D",
+                ComponentName = "CustomComponent",
                 Propiedades = new List<Tuple<string, string>>
                 {
-                    new("OffSetCollision", "0,0"),
-                    new("Velocity", "0,0"),
-                    new("Mass", "0")
+                    new("Property1", ""),
+                    new("Property2", ""),
+                    new("Property3", "")
                 }
-            };
+            });
+
+            return new YTBEntity { Name = "", Components = components };
         }
 
+#if YTB
         /// <summary>
-        /// Crea una plantilla para componentes de botón 2D.
-        /// <para>Creates a template for 2D button components.</para>
+        /// Construye un YTBComponents desde los atributos [UIComponent]/[UIComponentValue] de un tipo.
+        /// Cada propiedad serializable recibe un valor por defecto razonable según su tipo.
         /// </summary>
-        /// <returns>Plantilla de componente de botón 2D. <para>2D button component template.</para></returns>
-        public static YTBComponents Button2DTemplate()
+        public static YTBComponents TemplateFromAttributes(Type componentType)
         {
+            var compAttr = componentType.GetCustomAttribute<UIComponent>()
+                ?? throw new ArgumentException($"El tipo {componentType.Name} no tiene [UIComponent].");
+
+            var props = new List<Tuple<string, string>>();
+            foreach (var member in UIComponentRegistry.GetMembers(componentType))
+            {
+                props.Add(new Tuple<string, string>(
+                    member.Attribute.SerializableName,
+                    GetDefaultValueForType(member.MemberType)));
+            }
+
             return new YTBComponents
             {
-                ComponentName = "ButtonComponent2D",
-                Propiedades = new List<Tuple<string, string>>
-                        {
-                            new("IsActive", "true"),
-                            new("EffectiveArea", "0,0,0,0"),
-                            new("Description", "None")
-                        }
+                ComponentName = compAttr.SerializableName,
+                Propiedades = props
             };
         }
 
         /// <summary>
-        /// Crea una plantilla para componentes de entrada.
-        /// <para>Creates a template for input components.</para>
+        /// Valor por defecto de string para inicializar la plantilla según el tipo C#.
         /// </summary>
-        /// <returns>Plantilla de componente de entrada. <para>Input component template.</para></returns>
-        public static YTBComponents InputTemplate()
+        private static string GetDefaultValueForType(Type t)
         {
-            return new YTBComponents
-            {
-                ComponentName = "InputComponent",
-                Propiedades = new List<Tuple<string, string>>
-                        {
-                            new("InputsInUse", ""),
-                            new("GamePadIndex", ""),
-                            new("KeyboardMappings", "MoveUp:W,\nMoveDown:S,\nMoveLeft:A,\nMoveRight:D,"),
-                            new("MouseMappings", ""),
-
-                        }
-            };
+            if (t == typeof(Vector3)) return ",,";
+            if (t == typeof(Vector2)) return ",";
+            if (t == typeof(Rectangle)) return ",,,";
+            // bool, float, int, string, enum → cadena vacía (el usuario completa en la UI)
+            return "";
         }
+#endif
 
-        /// <summary>
-        /// Crea una plantilla para componentes de cámara.
-        /// <para>Creates a template for camera components.</para>
-        /// </summary>
-        /// <returns>Plantilla de componente de cámara. <para>Camera component template.</para></returns>
-        public static YTBComponents CameraTemplate()
+        // === Plantillas hand-written usadas como fallback / defaults amistosos ===
+        public static YTBComponents ScriptTemplate() => new()
         {
-           return new YTBComponents
-            {
-                ComponentName = "CameraComponent3D",
-                Propiedades = new List<Tuple<string, string>>
-                        {
-                            new("EntityName", ""),
-                            new("InitialPosition", "0,60,30"),
-                            new("OffsetCamera", "0,50,-100"),
-                            new("AngleView", "60"),
-                            new("NearRender", "10"),
-                            new("FarRender", "3000")
-                        }
-            };
-        }
+            ComponentName = "ScriptComponent",
+            Propiedades = new() { new("Scripts", "CSHARP&:&&;&") }
+        };
 
-        /// <summary>
-        /// Crea una plantilla para componentes de tile map 2D.
-        /// <para>Creates a template for 2D tile map components.</para>
-        /// </summary>
-        /// <returns>Plantilla de componente de tile map 2D. <para>2D tile map component template.</para></returns>
-        public static YTBComponents TileMap2DTemplate()
+        public static YTBComponents TransformTemplate() => new()
         {
-            return new YTBComponents
+            ComponentName = "TransformComponent",
+            Propiedades = new()
             {
-                ComponentName = "TileMapComponent2D",
-                Propiedades = new List<Tuple<string, string>>
-                        {
-                            new("TileMapPath", ""),
-                        }
-            };
-        }
+                new("Position", "0,0,1"),
+                new("Size", "100,100,0"),
+                new("Color", "White"),
+                new("SpriteEffects", "None"),
+                new("Scale", "1"),
+                new("Rotation", "0")
+            }
+        };
 
-        /// <summary>
-        /// Crea una plantilla para componentes de fuente 2D.
-        /// <para>Creates a template for 2D font components.</para>
-        /// </summary>
-        /// <returns>Plantilla de componente de fuente 2D. <para>2D font component template.</para></returns>
-        public static YTBComponents Font2DTemplate()
+        public static YTBComponents Sprite2DTemplate() => new()
         {
-            return new YTBComponents
+            ComponentName = "SpriteComponent2D",
+            Propiedades = new()
             {
-                ComponentName = "FontComponent2D",
-                Propiedades = new List<Tuple<string, string>>
-                        {
-                            new("Texto", "Texto de ejemplo"),
-                            new("Font", "Fonts/Hud")
-                        }
-            };
-        }
+                new("TextureAtlasPath", ""),
+                new("SpriteName", ""),
+                new("SourceRectangle", "0,0,0,0"),
+                new("IsVisible", "true"),
+                new("2.5D", "false")
+            }
+        };
 
-        /// <summary>
-        /// Crea una plantilla para componentes de shader 2D.
-        /// <para>Creates a template for 2D shader components.</para>
-        /// </summary>
-        /// <returns>Plantilla de componente de shader 2D. <para>2D shader component template.</para></returns>
-        public static YTBComponents ShaderTemplate()
+        public static YTBComponents Animation2DTemplate() => new()
         {
-            return new YTBComponents
+            ComponentName = "AnimationComponent2D",
+            Propiedades = new()
             {
-                ComponentName = "ShaderComponent",
-                Propiedades = new List<Tuple<string, string>>
-                        {
-                            new("ShaderPath", ""),
-                            new("IsActive", ""),
-                            new("params", "true")
-                        }
-            };
-        }
+                new("TextureAtlasPath", ""),
+                new("AnimationBindings", ""),
+                new("CurrentAnimationType", "none")
+            }
+        };
 
-        /// <summary>
-        /// Crea una plantilla para componentes de modelo 3D.
-        /// <para>Creates a template for 3D model components.</para>
-        /// </summary>
-        /// <returns>Plantilla de componente de modelo 3D. <para>3D model component template.</para></returns>
-        public static YTBComponents Model3DTemplate()
+        public static YTBComponents Rigibody2DTemplate() => new()
         {
-            return new YTBComponents
+            ComponentName = "RigidBodyComponent2D",
+            Propiedades = new()
             {
-                ComponentName = "ModelComponent3D",
-                Propiedades = new List<Tuple<string, string>>
-                        {
-                            new("ModelPath", ""),
-                            new("IsVisible", "true"),
-                            new("SphereRadius", "default"),
-                            new("OffsetSphere", "0,0,0")
-                        }
-            };
-        }
+                new("OffSetCollision", "0,0"),
+                new("Velocity", "0,0,0"),
+                new("Mass", "0"),
+                new("Collide", "Solid")
+            }
+        };
+
+        public static YTBComponents Button2DTemplate() => new()
+        {
+            ComponentName = "ButtonComponent2D",
+            Propiedades = new()
+            {
+                new("IsActive", "true"),
+                new("EffectiveArea", "0,0,0,0"),
+                new("Description", "None")
+            }
+        };
+
+        public static YTBComponents InputTemplate() => new()
+        {
+            ComponentName = "InputComponent",
+            Propiedades = new()
+            {
+                new("InputsInUse", ""),
+                new("GamePadIndex", ""),
+                new("KeyboardMappings", "MoveUp:W,\nMoveDown:S,\nMoveLeft:A,\nMoveRight:D,"),
+                new("MouseMappings", "")
+            }
+        };
+
+        public static YTBComponents CameraTemplate() => new()
+        {
+            ComponentName = nameof(CameraComponent3D),
+            Propiedades = new()
+            {
+                new("EntityName", ""),
+                new("InitialPosition", "0,60,30"),
+                new("OffsetCamera", "0,50,-100"),
+                new("AngleView", "60"),
+                new("NearRender", "10"),
+                new("FarRender", "3000")
+            }
+        };
+
+        public static YTBComponents TileMap2DTemplate() => new()
+        {
+            ComponentName = "TileMapComponent2D",
+            Propiedades = new() { new("TileMapPath", "") }
+        };
+
+        public static YTBComponents Font2DTemplate() => new()
+        {
+            ComponentName = "FontComponent2D",
+            Propiedades = new()
+            {
+                new("Texto", "Texto de ejemplo"),
+                new("Font", "Fonts/Hud"),
+                new("IsVisible", "true")
+            }
+        };
+
+        public static YTBComponents ShaderTemplate() => new()
+        {
+            ComponentName = "ShaderComponent",
+            Propiedades = new()
+            {
+                new("ShaderPath", ""),
+                new("IsActive", "true"),
+                new("params", "")
+            }
+        };
+
+        public static YTBComponents Model3DTemplate() => new()
+        {
+            ComponentName = "ModelComponent3D",
+            Propiedades = new()
+            {
+                new("ModelPath", ""),
+                new("IsVisible", "true"),
+                new("SphereRadius", "0"),
+                new("OffsetSphere", "0,0,0")
+            }
+        };
     }
 }

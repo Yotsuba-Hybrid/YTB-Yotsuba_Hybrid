@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using YotsubaEngine.Attributes;
 
 
 namespace YotsubaEngine.Core.Component.C_3D
@@ -8,14 +9,13 @@ namespace YotsubaEngine.Core.Component.C_3D
     /// Componente que contiene un modelo 3D para renderizado.
     /// <para>Component that holds a 3D model for rendering.</para>
     /// </summary>
-    /// <param name="model">Modelo 3D a renderizar.<para>3D model to render.</para></param>
+    [UIComponent("Modelo 3D", nameof(ModelComponent3D))]
     public struct ModelComponent3D
     {
         private Model model;
 
         /// <summary>
-        /// Modelo 3D.
-        /// <para>3D model asset.</para>
+        /// Modelo 3D (runtime, cargado desde ModelPath).
         /// </summary>
         public Model Model
         {
@@ -29,17 +29,37 @@ namespace YotsubaEngine.Core.Component.C_3D
             }
         }
 
+        /// <summary>
+        /// Ruta al modelo 3D. Bridge serializable: el parser carga Model desde aquí.
+        /// </summary>
+        [UIComponentValue("Ruta del modelo 3D", "ModelPath",
+            "Ruta del recurso de modelo registrado.",
+            "El modelo no existe en el registro.")]
+        public string ModelPath { get; set; }
+
         public RasterizerState RasterizerState { get; set; } = null;
         public Matrix[] BoneTransforms { get; private set; }
 
         /// <summary>
         /// Indica si el modelo debe renderizarse.
-        /// <para>Indicates whether the model should be rendered.</para>
         /// </summary>
+        [UIComponentValue("Visible", nameof(IsVisible), "Si el modelo se dibuja.", "Valor true/false.")]
         public bool IsVisible { get; set; } = true;
 
+        /// <summary>
+        /// Radio de la esfera de cull. Bridge serializable (SphereRadius).
+        /// </summary>
+        [UIComponentValue("Radio de esfera", "SphereRadius",
+            "Radio de la esfera usada para occlusion/cull.",
+            "Número decimal positivo.")]
         public float RadiusSphere { get; set; }
 
+        /// <summary>
+        /// Offset 3D de la esfera de cull. Bridge serializable (OffsetSphere).
+        /// </summary>
+        [UIComponentValue("Offset de esfera", "OffsetSphere",
+            "Desplazamiento de la esfera de cull respecto al modelo.",
+            "Formato: X,Y,Z.")]
         public Vector3 SphereOffset { get; set; } = Vector3.Zero;
 
         /// <summary>

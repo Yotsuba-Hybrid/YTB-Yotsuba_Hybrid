@@ -169,26 +169,68 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
     /// Componente de cámara 3D que sigue a una entidad específica en el mundo del juego.
     /// <para>3D camera component that follows a specific entity in the game world.</para>
     /// </summary>
-    public class CameraComponent3D : Camera
+    [YotsubaEngine.Attributes.UIComponent("Cámara 3D", nameof(CameraComponent3D))]
+    public partial class CameraComponent3D : Camera
     {
 
         /// <summary>
-        /// Entidad a la que seguirá la cámara.
-        /// <para>Entity that the camera will follow.</para>
+        /// Entidad a la que seguirá la cámara (runtime, indexada por nombre).
         /// </summary>
         public int EntityToFollow { get; set; }
 
         /// <summary>
+        /// Nombre de la entidad a seguir. Bridge serializable: el parser resuelve a EntityToFollow.
+        /// </summary>
+        [YotsubaEngine.Attributes.UIComponentValue("Entidad a seguir", "EntityName",
+            "Nombre de la entidad que la cámara seguirá.",
+            "La entidad no existe en la escena.",
+            ValueConverterForRead:"RenderEntityNameUI")]
+        public string EntityName { get; set; }
+
+        /// <summary>
+        /// Posición inicial de la cámara. Bridge serializable.
+        /// </summary>
+        [YotsubaEngine.Attributes.UIComponentValue("Posición inicial", "InitialPosition",
+            "Posición inicial 3D de la cámara.",
+            "Formato: X,Y,Z.")]
+        public Vector3 InitialPosition { get; set; }
+
+        /// <summary>
         /// Referencia al administrador de entidades.
-        /// <para>Reference to the entity manager.</para>
         /// </summary>
         private EntityManager EntityManager { get; set; }
 
         /// <summary>
-        /// Desfase de la cámara relativa a la posición de la entidad a seguir. Por ejemplo, para mirar por encima del jugador (0, 15, 5).
-        /// <para>Camera offset relative to the entity to follow. For example, to look above the player (0, 15, 5).</para>
+        /// Desfase de la cámara relativa a la posición de la entidad a seguir.
         /// </summary>
+        [YotsubaEngine.Attributes.UIComponentValue("Desplazamiento de cámara", nameof(OffsetCamera),
+            "Offset 3D relativo a la entidad seguida.",
+            "Formato: X,Y,Z.")]
         public Vector3 OffsetCamera { get; set; } = new Vector3(0, 50, -100);
+
+        /// <summary>
+        /// Ángulo de visión en grados. Bridge serializable (Camera lo almacena internamente en radianes).
+        /// </summary>
+        [YotsubaEngine.Attributes.UIComponentValue("Ángulo de visión", "AngleView",
+            "Field of view en grados.",
+            "Número decimal entre 0 y 180.")]
+        public float AngleViewSerialized { get; set; }
+
+        /// <summary>
+        /// Plano cercano de recorte.
+        /// </summary>
+        [YotsubaEngine.Attributes.UIComponentValue("Plano cercano", "NearRender",
+            "Distancia mínima de renderizado.",
+            "Número decimal positivo.")]
+        public float NearRender { get; set; }
+
+        /// <summary>
+        /// Plano lejano de recorte.
+        /// </summary>
+        [YotsubaEngine.Attributes.UIComponentValue("Plano lejano", "FarRender",
+            "Distancia máxima de renderizado.",
+            "Número decimal mayor que NearRender.")]
+        public float FarRender { get; set; }
 
         /// <summary>
         /// Indica si la cámara aplica orbitado alrededor del objetivo.
