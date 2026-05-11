@@ -11,5 +11,7 @@ namespace YotsubaEngine.Attributes
         public string VisibleName { get; } = name;
 
         public string SerializableName { get; } = serializableName;
+
+        public bool IsClass { get; set; }
     }
 }

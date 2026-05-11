@@ -59,6 +59,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                             new Tuple<string, string>("Color", "White"),
                             new Tuple<string, string>("SpriteEffects", "None"),
                             new Tuple<string, string>("Scale", "1"),
+                            new Tuple<string, string>("Rotation", ""),
                         }
                     },
                     new YTBComponents
@@ -91,6 +92,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                             new Tuple<string, string>("OffSetCollision", ","),
                             new Tuple<string, string>("Velocity", ","),
                             new Tuple<string, string>("Mass", ""),
+                            new Tuple<string, string>("Collide", ""),
                         }
                     },
                     new YTBComponents
@@ -150,6 +152,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                         {
                             new Tuple<string, string>("Texto", ""),
                             new Tuple<string, string>("Font", ""),
+                            new Tuple<string, string>("IsVisible", ""),
                         }
                     },
                     new YTBComponents
@@ -200,6 +203,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                             new Tuple<string, string>("Color", "White"),
                             new Tuple<string, string>("SpriteEffects", "None"),
                             new Tuple<string, string>("Scale", "1"),
+                            new Tuple<string, string>("Rotation", ""),
                         }
                     },
                     new YTBComponents
@@ -232,6 +236,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                             new Tuple<string, string>("OffSetCollision", ","),
                             new Tuple<string, string>("Velocity", ","),
                             new Tuple<string, string>("Mass", ""),
+                            new Tuple<string, string>("Collide", ""),
                         }
                     },
                     new YTBComponents
@@ -291,6 +296,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                         {
                             new Tuple<string, string>("Texto", ""),
                             new Tuple<string, string>("Font", ""),
+                            new Tuple<string, string>("IsVisible", ""),
                         }
                     },
                     new YTBComponents
@@ -356,6 +362,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                             new Tuple<string, string>("Color", "White"),
                             new Tuple<string, string>("SpriteEffects", "None"),
                             new Tuple<string, string>("Scale", "1"),
+                            new Tuple<string, string>("Rotation", ""),
                         }
                     },
                     new YTBComponents
@@ -388,6 +395,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                             new Tuple<string, string>("OffSetCollision", ","),
                             new Tuple<string, string>("Velocity", ","),
                             new Tuple<string, string>("Mass", ""),
+                            new Tuple<string, string>("Collide", ""),
                         }
                     },
                     new YTBComponents
@@ -447,6 +455,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                         {
                             new Tuple<string, string>("Texto", ""),
                             new Tuple<string, string>("Font", ""),
+                            new Tuple<string, string>("IsVisible", ""),
                         }
                     },
                     new YTBComponents
@@ -497,6 +506,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                             new Tuple<string, string>("Color", "White"),
                             new Tuple<string, string>("SpriteEffects", "None"),
                             new Tuple<string, string>("Scale", "1"),
+                            new Tuple<string, string>("Rotation", ""),
                         }
                     },
                     new YTBComponents
@@ -529,6 +539,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                             new Tuple<string, string>("OffSetCollision", ","),
                             new Tuple<string, string>("Velocity", ","),
                             new Tuple<string, string>("Mass", ""),
+                            new Tuple<string, string>("Collide", ""),
                         }
                     },
                     new YTBComponents
@@ -588,6 +599,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                         {
                             new Tuple<string, string>("Texto", ""),
                             new Tuple<string, string>("Font", ""),
+                            new Tuple<string, string>("IsVisible", ""),
                         }
                     },
                     new YTBComponents

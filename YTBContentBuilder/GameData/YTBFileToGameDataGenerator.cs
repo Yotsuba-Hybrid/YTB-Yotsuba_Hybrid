@@ -22,6 +22,7 @@ namespace YotsubaEngine.YTBContentBuilder.GameData
             public string SerializableName = "";
             public List<UIComponentValueInfo> Members = new();
             public bool HasManualConvertTo;
+            public bool IsClass;
             public string AddMethodOnEntityManager = "";
             public string FullTypeReference = "";
         }
@@ -37,12 +38,12 @@ namespace YotsubaEngine.YTBContentBuilder.GameData
         // ---- Regex ----
 
         private static readonly Regex _uiComponentRegex =
-            new(@"\[(?:YotsubaEngine\.Attributes\.)?UIComponent\(\s*""(?<visible>[^""]*)""\s*,\s*(?:nameof\((?<sn1>\w+)\)|""(?<sn2>[^""]*)"")\s*\)\]\s*(?:public\s+)?(?:partial\s+)?(?:struct|class)\s+(?<type>\w+)",
-                RegexOptions.Compiled);
+            new(@"\[(?:YotsubaEngine\.Attributes\.)?UIComponent\(\s*""(?<visible>[^""]*)""\s*,\s*(?:nameof\((?<sn1>\w+)\)|""(?<sn2>[^""]*)"")\s*(?<extra>[^\]]*)\)\]\s*(?:public\s+)?(?:partial\s+)?(?<kind>struct|class)\s+(?<type>\w+)",
+            RegexOptions.Compiled);
 
         private static readonly Regex _uiComponentValueRegex =
             new(@"\[(?:YotsubaEngine\.Attributes\.)?UIComponentValue\((?<args>[^\]]+)\)\]\s*public\s+(?<membertype>[\w\.\<\>\?\[\]]+)\s+(?<member>\w+)",
-                RegexOptions.Compiled);
+            RegexOptions.Compiled);
 
         private static readonly Regex _convertToRegex =
             new(@"ConvertTo(?<name>\w+)\s*\(\s*YTBComponents", RegexOptions.Compiled);
@@ -100,7 +101,9 @@ namespace YotsubaEngine.YTBContentBuilder.GameData
                     TypeName = compMatch.Groups["type"].Value,
                     SerializableName = compMatch.Groups["sn1"].Success
                         ? compMatch.Groups["sn1"].Value
-                        : compMatch.Groups["sn2"].Value
+                        : compMatch.Groups["sn2"].Value,
+                    IsClass = compMatch.Groups["kind"].Value == "class"
+                        || compMatch.Groups["extra"].Value.Contains("IsClass")
                 };
 
                 // Encuentra todos los [UIComponentValue] del archivo
@@ -124,15 +127,11 @@ namespace YotsubaEngine.YTBContentBuilder.GameData
 
         private static string ExtractSerializableName(string args, string memberFallback)
         {
-            // args ej: "Tamaño", nameof(Size), "Tamaño del sprite...", "..."
-            // Tomamos el 2° argumento posicional.
             var parts = SplitTopLevel(args);
             if (parts.Count < 2) return memberFallback;
             var second = parts[1].Trim();
-            // nameof(X) → X
             var nameofMatch = Regex.Match(second, @"^nameof\(\s*(\w+)\s*\)$");
             if (nameofMatch.Success) return nameofMatch.Groups[1].Value;
-            // "literal"
             if (second.StartsWith("\"") && second.EndsWith("\""))
                 return second.Substring(1, second.Length - 2);
             return memberFallback;
@@ -177,12 +176,8 @@ namespace YotsubaEngine.YTBContentBuilder.GameData
             string content = File.ReadAllText(path);
             foreach (Match m in _convertToRegex.Matches(content))
             {
-                // Convención: ConvertTo{Sufijo} donde sufijo se mapea a TypeName.
-                // Como puede no ser idéntico (ej. ConvertTo2DRigibody → RigidBodyComponent2D),
-                // no lo usamos para deducir el TypeName; en su lugar buscamos cases del switch.
             }
 
-            // Heurística más fiable: buscar "case nameof(TypeName):" en el switch principal.
             var caseRegex = new Regex(@"case\s+nameof\(\s*(\w+)\s*\)\s*:");
             foreach (Match m in caseRegex.Matches(content))
             {
@@ -213,93 +208,131 @@ namespace YotsubaEngine.YTBContentBuilder.GameData
             sb.AppendLine();
             sb.AppendLine("namespace YotsubaEngine.ActionFiles.YTB_Files");
             sb.AppendLine("{");
-            sb.AppendLine("    public partial class YTBFileToGameData");
-            sb.AppendLine("    {");
+            sb.AppendLine(" public partial class YTBFileToGameData");
+            sb.AppendLine(" {");
 
             // Helpers reutilizables
-            sb.AppendLine(@"        private static bool _G_TryParseVector2(string raw, out Vector2 v)
-        {
-            v = Vector2.Zero;
-            if (string.IsNullOrEmpty(raw)) return false;
-            var parts = raw.Split(',');
-            if (parts.Length < 2) return false;
-            if (float.TryParse(parts[0], NumberStyles.Float, CultureInfo.InvariantCulture, out var x)
-             && float.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out var y))
-            { v = new Vector2(x, y); return true; }
-            return false;
-        }
+            sb.AppendLine(@" private static bool _G_TryParseVector2(string raw, out Vector2 v)
+{
+    v = Vector2.Zero;
+    if (string.IsNullOrEmpty(raw)) return false;
+    var parts = raw.Split(',');
+    if (parts.Length < 2) return false;
+    if (float.TryParse(parts[0], NumberStyles.Float, CultureInfo.InvariantCulture, out var x)
+        && float.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out var y))
+    { v = new Vector2(x, y); return true; }
+    return false;
+}
 
-        private static bool _G_TryParseVector3(string raw, out Vector3 v)
-        {
-            v = Vector3.Zero;
-            if (string.IsNullOrEmpty(raw)) return false;
-            var parts = raw.Split(',');
-            if (parts.Length < 3) return false;
-            if (float.TryParse(parts[0], NumberStyles.Float, CultureInfo.InvariantCulture, out var x)
-             && float.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out var y)
-             && float.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out var z))
-            { v = new Vector3(x, y, z); return true; }
-            return false;
-        }
+private static bool _G_TryParseVector3(string raw, out Vector3 v)
+{
+    v = Vector3.Zero;
+    if (string.IsNullOrEmpty(raw)) return false;
+    var parts = raw.Split(',');
+    if (parts.Length < 3) return false;
+    if (float.TryParse(parts[0], NumberStyles.Float, CultureInfo.InvariantCulture, out var x)
+        && float.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out var y)
+        && float.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out var z))
+    { v = new Vector3(x, y, z); return true; }
+    return false;
+}
 
-        private static bool _G_TryParseRectangle(string raw, out Rectangle r)
-        {
-            r = default;
-            if (string.IsNullOrEmpty(raw)) return false;
-            var parts = raw.Split(',');
-            if (parts.Length < 4) return false;
-            if (int.TryParse(parts[0], out var x) && int.TryParse(parts[1], out var y)
-             && int.TryParse(parts[2], out var w) && int.TryParse(parts[3], out var h))
-            { r = new Rectangle(x, y, w, h); return true; }
-            return false;
-        }
+private static bool _G_TryParseRectangle(string raw, out Rectangle r)
+{
+    r = default;
+    if (string.IsNullOrEmpty(raw)) return false;
+    var parts = raw.Split(',');
+    if (parts.Length < 4) return false;
+    if (int.TryParse(parts[0], out var x) && int.TryParse(parts[1], out var y)
+        && int.TryParse(parts[2], out var w) && int.TryParse(parts[3], out var h))
+    { r = new Rectangle(x, y, w, h); return true; }
+    return false;
+}
 
-        private static bool _G_ShouldSkip(string[]? exclude, string name)
-        {
-            if (exclude == null || exclude.Length == 0) return false;
-            for (int i = 0; i < exclude.Length; i++) if (exclude[i] == name) return true;
-            return false;
-        }
+private static bool _G_ShouldSkip(string[]? exclude, string name)
+{
+    if (exclude == null || exclude.Length == 0) return false;
+    for (int i = 0; i < exclude.Length; i++) if (exclude[i] == name) return true;
+    return false;
+}
 ");
 
             // Métodos Parse{Type}_Generated
             foreach (var c in components)
             {
-                sb.AppendLine($"        internal static {c.TypeName} Parse{c.TypeName}_Generated(");
-                sb.AppendLine("            YTBComponents comp, string sceneName, string entityName, string[]? exclude = null)");
-                sb.AppendLine("        {");
-                sb.AppendLine($"            var result = new {c.TypeName}();");
-                sb.AppendLine("            foreach (var prop in comp.Propiedades)");
-                sb.AppendLine("            {");
-                sb.AppendLine("                if (_G_ShouldSkip(exclude, prop.Item1)) continue;");
-                sb.AppendLine("                switch (prop.Item1)");
-                sb.AppendLine("                {");
-                foreach (var m in c.Members)
+                bool isCameraClass = c.IsClass && c.TypeName == "CameraComponent3D";
+
+                if (isCameraClass)
                 {
-                    sb.AppendLine($"                    case \"{m.SerializableName}\":");
-                    sb.AppendLine("                    {");
-                    sb.AppendLine($"                        {EmitParse(m)}");
-                    sb.AppendLine("                        break;");
-                    sb.AppendLine("                    }");
+                    sb.AppendLine($" internal static {c.TypeName} Parse{c.TypeName}_Generated(");
+                    sb.AppendLine(" EntityManager entityManager, YTBComponents comp, string sceneName, string entityName, string[]? exclude = null)");
+                    sb.AppendLine(" {");
+                    sb.AppendLine(" Vector3 _initialPosition = Vector3.Zero;");
+                    sb.AppendLine(" float _angleView = 45f;");
+                    sb.AppendLine(" float _nearRender = 0.1f;");
+                    sb.AppendLine(" float _farRender = 1000f;");
+                    sb.AppendLine(" string _entityName = \"\";");
+                    sb.AppendLine(" Vector3 _offsetCamera = new Vector3(0, 50, -100);");
+                    sb.AppendLine(" foreach (var prop in comp.Propiedades)");
+                    sb.AppendLine(" {");
+                    sb.AppendLine(" if (_G_ShouldSkip(exclude, prop.Item1)) continue;");
+                    sb.AppendLine(" switch (prop.Item1)");
+                    sb.AppendLine(" {");
+                    foreach (var m in c.Members)
+                    {
+                        sb.AppendLine($" case \"{m.SerializableName}\":");
+                        sb.AppendLine(" {");
+                        sb.AppendLine($" {EmitParseForTemp(m)}");
+                        sb.AppendLine(" break;");
+                        sb.AppendLine(" }");
+                    }
+                    sb.AppendLine(" }");
+                    sb.AppendLine(" }");
+                    sb.AppendLine(" var result = new CameraComponent3D(entityManager, _initialPosition, _angleView, _nearRender, _farRender);");
+                    sb.AppendLine(" result.EntityName = _entityName;");
+                    sb.AppendLine(" result.OffsetCamera = _offsetCamera;");
+                    sb.AppendLine(" return result;");
+                    sb.AppendLine(" }");
                 }
-                sb.AppendLine("                }");
-                sb.AppendLine("            }");
-                sb.AppendLine("            return result;");
-                sb.AppendLine("        }");
+                else
+                {
+                    sb.AppendLine($" internal static {c.TypeName} Parse{c.TypeName}_Generated(");
+                    sb.AppendLine(" YTBComponents comp, string sceneName, string entityName, string[]? exclude = null)");
+                    sb.AppendLine(" {");
+                    sb.AppendLine($" var result = new {c.TypeName}();");
+                    sb.AppendLine(" foreach (var prop in comp.Propiedades)");
+                    sb.AppendLine(" {");
+                    sb.AppendLine(" if (_G_ShouldSkip(exclude, prop.Item1)) continue;");
+                    sb.AppendLine(" switch (prop.Item1)");
+                    sb.AppendLine(" {");
+                    foreach (var m in c.Members)
+                    {
+                        sb.AppendLine($" case \"{m.SerializableName}\":");
+                        sb.AppendLine(" {");
+                        sb.AppendLine($" {EmitParse(m)}");
+                        sb.AppendLine(" break;");
+                        sb.AppendLine(" }");
+                    }
+                    sb.AppendLine(" }");
+                    sb.AppendLine(" }");
+                    sb.AppendLine(" return result;");
+                    sb.AppendLine(" }");
+                }
+
                 sb.AppendLine();
             }
 
             // Diccionario de fallback para componentes nuevos no listados en el switch manual
-            sb.AppendLine("        internal static readonly Dictionary<string, Action<YotsubaEngine.Core.Entity.Yotsuba, YTBComponents, YotsubaEngine.Core.YotsubaGame.Scene, string, string>>?");
-            sb.AppendLine("            _autoGeneratedComponents = new(StringComparer.Ordinal)");
-            sb.AppendLine("        {");
+            sb.AppendLine(" internal static readonly Dictionary<string, Action<YotsubaEngine.Core.Entity.Yotsuba, YTBComponents, YotsubaEngine.Core.YotsubaGame.Scene, string, string>>?");
+            sb.AppendLine(" _autoGeneratedComponents = new(StringComparer.Ordinal)");
+            sb.AppendLine(" {");
             foreach (var c in components.Where(x => !x.HasManualConvertTo))
             {
-                sb.AppendLine($"            // [\"{c.SerializableName}\"] = (entity, comp, scene, sn, en) => {{ /* TODO: requiere AddX en EntityManager para {c.TypeName} */ }},");
+                sb.AppendLine($" // [\"{c.SerializableName}\"] = (entity, comp, scene, sn, en) => {{ /* TODO: requiere AddX en EntityManager para {c.TypeName} */ }},");
             }
-            sb.AppendLine("        };");
+            sb.AppendLine(" };");
 
-            sb.AppendLine("    }");
+            sb.AppendLine(" }");
             sb.AppendLine("}");
             return sb.ToString();
         }
@@ -322,8 +355,45 @@ namespace YotsubaEngine.YTBContentBuilder.GameData
                 "Vector3" => $"if (_G_TryParseVector3(prop.Item2, out var v)) result.{m.MemberName} = v;",
                 "Rectangle" => $"if (_G_TryParseRectangle(prop.Item2, out var v)) result.{m.MemberName} = v;",
                 "Color" => $"if (NamedColors.TryGetValue(prop.Item2, out var v)) result.{m.MemberName} = v;",
-                _ => // Enum desconocido — usamos Enum.TryParse genérico
-                     $"if (Enum.TryParse<{StripQualifier(t)}>(prop.Item2, true, out var v)) result.{m.MemberName} = v;"
+                _ => $"if (Enum.TryParse<{StripQualifier(t)}>(prop.Item2, true, out var v)) result.{m.MemberName} = v;"
+            };
+        }
+
+        private static string EmitParseForTemp(UIComponentValueInfo m)
+        {
+            string tempVar = GetTempVarName(m.MemberName);
+            string t = m.MemberTypeRaw;
+
+            if (!string.IsNullOrEmpty(m.ParseConverter))
+            {
+                return $"{tempVar} = ({StripQualifier(t)}){m.ParseConverter}(prop.Item2);";
+            }
+
+            return t switch
+            {
+                "string" => $"{tempVar} = prop.Item2;",
+                "bool" => $"if (bool.TryParse(prop.Item2, out var v)) {tempVar} = v;",
+                "int" => $"if (int.TryParse(prop.Item2, out var v)) {tempVar} = v;",
+                "float" => $"if (float.TryParse(prop.Item2, NumberStyles.Float, CultureInfo.InvariantCulture, out var v)) {tempVar} = v;",
+                "Vector2" => $"if (_G_TryParseVector2(prop.Item2, out var v)) {tempVar} = v;",
+                "Vector3" => $"if (_G_TryParseVector3(prop.Item2, out var v)) {tempVar} = v;",
+                "Rectangle" => $"if (_G_TryParseRectangle(prop.Item2, out var v)) {tempVar} = v;",
+                "Color" => $"if (NamedColors.TryGetValue(prop.Item2, out var v)) {tempVar} = v;",
+                _ => $"if (Enum.TryParse<{StripQualifier(t)}>(prop.Item2, true, out var v)) {tempVar} = v;"
+            };
+        }
+
+        private static string GetTempVarName(string memberName)
+        {
+            return memberName switch
+            {
+                "InitialPosition" => "_initialPosition",
+                "AngleViewSerialized" => "_angleView",
+                "NearRender" => "_nearRender",
+                "FarRender" => "_farRender",
+                "EntityName" => "_entityName",
+                "OffsetCamera" => "_offsetCamera",
+                _ => $"_{char.ToLower(memberName[0])}{memberName[1..]}"
             };
         }
 

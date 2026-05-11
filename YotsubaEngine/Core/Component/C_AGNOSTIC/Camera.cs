@@ -169,7 +169,7 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
     /// Componente de cámara 3D que sigue a una entidad específica en el mundo del juego.
     /// <para>3D camera component that follows a specific entity in the game world.</para>
     /// </summary>
-    [YotsubaEngine.Attributes.UIComponent("Cámara 3D", nameof(CameraComponent3D))]
+    [YotsubaEngine.Attributes.UIComponent("Cámara 3D", nameof(CameraComponent3D), IsClass = true)]
     public partial class CameraComponent3D : Camera
     {
 
