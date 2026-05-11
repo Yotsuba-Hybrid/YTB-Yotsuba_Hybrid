@@ -25,7 +25,19 @@ namespace YotsubaEngine.Graphics
         public ModelRegistry()
         {
             // Register all discovered models / Registrar todos los modelos descubiertos
+            RegisterModel("Castle/Castle");
         }
 
+        /// <summary>
+        /// Static accessors for 3D models (cached on first access).
+        /// Accesos estáticos para modelos 3D (cacheados en primer acceso).
+        /// </summary>
+        public static class Models
+        {
+            private static Model _Castle;
+            /// <summary>3D Model: Castle (Castle/Castle)</summary>
+            public static Model Castle => _Castle ??= YTBGlobalState.ContentManager.Load<Model>("Castle/Castle");
+
+        }
     }
 }

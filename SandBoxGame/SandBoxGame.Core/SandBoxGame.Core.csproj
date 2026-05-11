@@ -50,18 +50,14 @@
 
   <!-- Gum + YotsubaEngine — UseV2 == true -->
   <ItemGroup Condition="'$(UseV2)' == 'true'">
-    <ProjectReference Include="..\..\Gum\GumCommon\GumCommon.csproj" 
-                      AdditionalProperties="UseV2=true" />
-    <ProjectReference Include="..\..\YotsubaEngine\YotsubaEngine.csproj" 
-                      AdditionalProperties="UseV2=true" />
+    <ProjectReference Include="..\..\Gum\GumCommon\GumCommon.csproj" AdditionalProperties="UseV2=true" />
+    <ProjectReference Include="..\..\YotsubaEngine\YotsubaEngine.csproj" AdditionalProperties="UseV2=true" />
   </ItemGroup>
 
   <!-- Gum + YotsubaEngine — UseV2 != true -->
   <ItemGroup Condition="'$(UseV2)' != 'true'">
-    <ProjectReference Include="..\..\Gum\GumCommon\GumCommon.csproj" 
-                      AdditionalProperties="UseV2=false" />
-    <ProjectReference Include="..\..\YotsubaEngine\YotsubaEngine.csproj" 
-                      AdditionalProperties="UseV2=false" />
+    <ProjectReference Include="..\..\Gum\GumCommon\GumCommon.csproj" AdditionalProperties="UseV2=false" />
+    <ProjectReference Include="..\..\YotsubaEngine\YotsubaEngine.csproj" AdditionalProperties="UseV2=false" />
   </ItemGroup>
 
   <!-- MonoGameGum (MonoGame — UseV2 != true) -->
@@ -71,8 +67,7 @@
 
   <!-- KniGum (KNI — UseV2 == true) -->
   <ItemGroup Condition="'$(UseV2)' == 'true'">
-    <ProjectReference Include="..\..\Gum\MonoGameGum\KniGum\KniGum.csproj" 
-                      AdditionalProperties="UseV2=true" />
+    <ProjectReference Include="..\..\Gum\MonoGameGum\KniGum\KniGum.csproj" AdditionalProperties="UseV2=true" />
   </ItemGroup>
 
   <ItemGroup>
@@ -81,6 +76,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Assets\Castle\" />
     <Folder Include="Assets\Effect\" />
     <Folder Include="Content\GumProject\" />
   </ItemGroup>

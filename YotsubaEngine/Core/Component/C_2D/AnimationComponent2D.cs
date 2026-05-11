@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using YotsubaEngine.Attributes;
 using YotsubaEngine.Graphics;
 
 namespace YotsubaEngine.Core.Component.C_2D
