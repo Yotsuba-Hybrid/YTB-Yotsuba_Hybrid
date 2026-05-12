@@ -44,7 +44,7 @@ namespace YotsubaEngine.YTBContentBuilder.GameData
 
         private static readonly Regex _uiComponentValueRegex =
             new(@"\[(?:YotsubaEngine\.Attributes\.)?UIComponentValue\((?<args>[^\]]+)\)\]\s*public\s+(?<membertype>[\w\.\<\>\?\[\]]+)\s+(?<member>\w+)",
-                RegexOptions.Compiled);
+            RegexOptions.Compiled);
 
         private static readonly Regex _convertToRegex =
             new(@"ConvertTo(?<name>\w+)\s*\(\s*YTBComponents", RegexOptions.Compiled);
@@ -229,56 +229,57 @@ namespace YotsubaEngine.YTBContentBuilder.GameData
             sb.AppendLine("using YotsubaEngine.Core.Component.C_AGNOSTIC;");
             sb.AppendLine("using YotsubaEngine.Physics;");
             sb.AppendLine("using YotsubaEngine.Physics.RigidBody;");
+            sb.AppendLine("using YotsubaEngine.Core.YotsubaGame;");
             sb.AppendLine();
             sb.AppendLine("namespace YotsubaEngine.ActionFiles.YTB_Files");
             sb.AppendLine("{");
-            sb.AppendLine("    public partial class YTBFileToGameData");
-            sb.AppendLine("    {");
+            sb.AppendLine(" public partial class YTBFileToGameData");
+            sb.AppendLine(" {");
 
             // Helpers reutilizables
-            sb.AppendLine(@"        private static bool _G_TryParseVector2(string raw, out Vector2 v)
-        {
-            v = Vector2.Zero;
-            if (string.IsNullOrEmpty(raw)) return false;
-            var parts = raw.Split(',');
-            if (parts.Length < 2) return false;
-            if (float.TryParse(parts[0], NumberStyles.Float, CultureInfo.InvariantCulture, out var x)
-             && float.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out var y))
-            { v = new Vector2(x, y); return true; }
-            return false;
-        }
+            sb.AppendLine(@" private static bool _G_TryParseVector2(string raw, out Vector2 v)
+{
+    v = Vector2.Zero;
+    if (string.IsNullOrEmpty(raw)) return false;
+    var parts = raw.Split(',');
+    if (parts.Length < 2) return false;
+    if (float.TryParse(parts[0], NumberStyles.Float, CultureInfo.InvariantCulture, out var x)
+        && float.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out var y))
+    { v = new Vector2(x, y); return true; }
+    return false;
+}
 
-        private static bool _G_TryParseVector3(string raw, out Vector3 v)
-        {
-            v = Vector3.Zero;
-            if (string.IsNullOrEmpty(raw)) return false;
-            var parts = raw.Split(',');
-            if (parts.Length < 3) return false;
-            if (float.TryParse(parts[0], NumberStyles.Float, CultureInfo.InvariantCulture, out var x)
-             && float.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out var y)
-             && float.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out var z))
-            { v = new Vector3(x, y, z); return true; }
-            return false;
-        }
+private static bool _G_TryParseVector3(string raw, out Vector3 v)
+{
+    v = Vector3.Zero;
+    if (string.IsNullOrEmpty(raw)) return false;
+    var parts = raw.Split(',');
+    if (parts.Length < 3) return false;
+    if (float.TryParse(parts[0], NumberStyles.Float, CultureInfo.InvariantCulture, out var x)
+        && float.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out var y)
+        && float.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out var z))
+    { v = new Vector3(x, y, z); return true; }
+    return false;
+}
 
-        private static bool _G_TryParseRectangle(string raw, out Rectangle r)
-        {
-            r = default;
-            if (string.IsNullOrEmpty(raw)) return false;
-            var parts = raw.Split(',');
-            if (parts.Length < 4) return false;
-            if (int.TryParse(parts[0], out var x) && int.TryParse(parts[1], out var y)
-             && int.TryParse(parts[2], out var w) && int.TryParse(parts[3], out var h))
-            { r = new Rectangle(x, y, w, h); return true; }
-            return false;
-        }
+private static bool _G_TryParseRectangle(string raw, out Rectangle r)
+{
+    r = default;
+    if (string.IsNullOrEmpty(raw)) return false;
+    var parts = raw.Split(',');
+    if (parts.Length < 4) return false;
+    if (int.TryParse(parts[0], out var x) && int.TryParse(parts[1], out var y)
+        && int.TryParse(parts[2], out var w) && int.TryParse(parts[3], out var h))
+    { r = new Rectangle(x, y, w, h); return true; }
+    return false;
+}
 
-        private static bool _G_ShouldSkip(string[]? exclude, string name)
-        {
-            if (exclude == null || exclude.Length == 0) return false;
-            for (int i = 0; i < exclude.Length; i++) if (exclude[i] == name) return true;
-            return false;
-        }
+private static bool _G_ShouldSkip(string[]? exclude, string name)
+{
+    if (exclude == null || exclude.Length == 0) return false;
+    for (int i = 0; i < exclude.Length; i++) if (exclude[i] == name) return true;
+    return false;
+}
 ");
 
             // Métodos Parse{Type}_Generated — skipping classes without parameterless ctor
@@ -303,16 +304,61 @@ namespace YotsubaEngine.YTBContentBuilder.GameData
                 sb.AppendLine("                {");
                 foreach (var m in c.Members)
                 {
-                    sb.AppendLine($"                    case \"{m.SerializableName}\":");
-                    sb.AppendLine("                    {");
-                    sb.AppendLine($"                        {EmitParse(m)}");
-                    sb.AppendLine("                        break;");
-                    sb.AppendLine("                    }");
+                    sb.AppendLine($" internal static {c.TypeName} Parse{c.TypeName}_Generated(");
+                    sb.AppendLine(" EntityManager entityManager, YTBComponents comp, string sceneName, string entityName, string[]? exclude = null)");
+                    sb.AppendLine(" {");
+                    sb.AppendLine(" Vector3 _initialPosition = Vector3.Zero;");
+                    sb.AppendLine(" float _angleView = 45f;");
+                    sb.AppendLine(" float _nearRender = 0.1f;");
+                    sb.AppendLine(" float _farRender = 1000f;");
+                    sb.AppendLine(" string _entityName = \"\";");
+                    sb.AppendLine(" Vector3 _offsetCamera = new Vector3(0, 50, -100);");
+                    sb.AppendLine(" foreach (var prop in comp.Propiedades)");
+                    sb.AppendLine(" {");
+                    sb.AppendLine(" if (_G_ShouldSkip(exclude, prop.Item1)) continue;");
+                    sb.AppendLine(" switch (prop.Item1)");
+                    sb.AppendLine(" {");
+                    foreach (var m in c.Members)
+                    {
+                        sb.AppendLine($" case \"{m.SerializableName}\":");
+                        sb.AppendLine(" {");
+                        sb.AppendLine($" {EmitParseForTemp(m)}");
+                        sb.AppendLine(" break;");
+                        sb.AppendLine(" }");
+                    }
+                    sb.AppendLine(" }");
+                    sb.AppendLine(" }");
+                    sb.AppendLine(" var result = new CameraComponent3D(entityManager, _initialPosition, _angleView, _nearRender, _farRender);");
+                    sb.AppendLine(" result.EntityName = _entityName;");
+                    sb.AppendLine(" result.OffsetCamera = _offsetCamera;");
+                    sb.AppendLine(" return result;");
+                    sb.AppendLine(" }");
                 }
-                sb.AppendLine("                }");
-                sb.AppendLine("            }");
-                sb.AppendLine("            return result;");
-                sb.AppendLine("        }");
+                else
+                {
+                    sb.AppendLine($" internal static {c.TypeName} Parse{c.TypeName}_Generated(");
+                    sb.AppendLine(" YTBComponents comp, string sceneName, string entityName, string[]? exclude = null)");
+                    sb.AppendLine(" {");
+                    sb.AppendLine($" var result = new {c.TypeName}();");
+                    sb.AppendLine(" foreach (var prop in comp.Propiedades)");
+                    sb.AppendLine(" {");
+                    sb.AppendLine(" if (_G_ShouldSkip(exclude, prop.Item1)) continue;");
+                    sb.AppendLine(" switch (prop.Item1)");
+                    sb.AppendLine(" {");
+                    foreach (var m in c.Members)
+                    {
+                        sb.AppendLine($" case \"{m.SerializableName}\":");
+                        sb.AppendLine(" {");
+                        sb.AppendLine($" {EmitParse(m)}");
+                        sb.AppendLine(" break;");
+                        sb.AppendLine(" }");
+                    }
+                    sb.AppendLine(" }");
+                    sb.AppendLine(" }");
+                    sb.AppendLine(" return result;");
+                    sb.AppendLine(" }");
+                }
+
                 sb.AppendLine();
             }
 
@@ -396,9 +442,9 @@ namespace YotsubaEngine.YTBContentBuilder.GameData
             {
                 sb.AppendLine($"            // [\"{c.SerializableName}\"] = (entity, comp, scene, sn, en) => {{ /* TODO: registrar AddX en EntityManager para {c.TypeName} */ }},");
             }
-            sb.AppendLine("        };");
+            sb.AppendLine(" };");
 
-            sb.AppendLine("    }");
+            sb.AppendLine(" }");
             sb.AppendLine("}");
             return sb.ToString();
         }

@@ -14,54 +14,84 @@ using YotsubaEngine.Core.Component.C_3D;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Physics;
 using YotsubaEngine.Physics.RigidBody;
+using YotsubaEngine.Core.YotsubaGame;
 
 namespace YotsubaEngine.ActionFiles.YTB_Files
 {
-    public partial class YTBFileToGameData
-    {
-        private static bool _G_TryParseVector2(string raw, out Vector2 v)
-        {
-            v = Vector2.Zero;
-            if (string.IsNullOrEmpty(raw)) return false;
-            var parts = raw.Split(',');
-            if (parts.Length < 2) return false;
-            if (float.TryParse(parts[0], NumberStyles.Float, CultureInfo.InvariantCulture, out var x)
-             && float.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out var y))
-            { v = new Vector2(x, y); return true; }
-            return false;
-        }
+ public partial class YTBFileToGameData
+ {
+ private static bool _G_TryParseVector2(string raw, out Vector2 v)
+{
+    v = Vector2.Zero;
+    if (string.IsNullOrEmpty(raw)) return false;
+    var parts = raw.Split(',');
+    if (parts.Length < 2) return false;
+    if (float.TryParse(parts[0], NumberStyles.Float, CultureInfo.InvariantCulture, out var x)
+        && float.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out var y))
+    { v = new Vector2(x, y); return true; }
+    return false;
+}
 
-        private static bool _G_TryParseVector3(string raw, out Vector3 v)
-        {
-            v = Vector3.Zero;
-            if (string.IsNullOrEmpty(raw)) return false;
-            var parts = raw.Split(',');
-            if (parts.Length < 3) return false;
-            if (float.TryParse(parts[0], NumberStyles.Float, CultureInfo.InvariantCulture, out var x)
-             && float.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out var y)
-             && float.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out var z))
-            { v = new Vector3(x, y, z); return true; }
-            return false;
-        }
+private static bool _G_TryParseVector3(string raw, out Vector3 v)
+{
+    v = Vector3.Zero;
+    if (string.IsNullOrEmpty(raw)) return false;
+    var parts = raw.Split(',');
+    if (parts.Length < 3) return false;
+    if (float.TryParse(parts[0], NumberStyles.Float, CultureInfo.InvariantCulture, out var x)
+        && float.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out var y)
+        && float.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out var z))
+    { v = new Vector3(x, y, z); return true; }
+    return false;
+}
 
-        private static bool _G_TryParseRectangle(string raw, out Rectangle r)
-        {
-            r = default;
-            if (string.IsNullOrEmpty(raw)) return false;
-            var parts = raw.Split(',');
-            if (parts.Length < 4) return false;
-            if (int.TryParse(parts[0], out var x) && int.TryParse(parts[1], out var y)
-             && int.TryParse(parts[2], out var w) && int.TryParse(parts[3], out var h))
-            { r = new Rectangle(x, y, w, h); return true; }
-            return false;
-        }
+private static bool _G_TryParseRectangle(string raw, out Rectangle r)
+{
+    r = default;
+    if (string.IsNullOrEmpty(raw)) return false;
+    var parts = raw.Split(',');
+    if (parts.Length < 4) return false;
+    if (int.TryParse(parts[0], out var x) && int.TryParse(parts[1], out var y)
+        && int.TryParse(parts[2], out var w) && int.TryParse(parts[3], out var h))
+    { r = new Rectangle(x, y, w, h); return true; }
+    return false;
+}
 
-        private static bool _G_ShouldSkip(string[]? exclude, string name)
-        {
-            if (exclude == null || exclude.Length == 0) return false;
-            for (int i = 0; i < exclude.Length; i++) if (exclude[i] == name) return true;
-            return false;
-        }
+private static bool _G_ShouldSkip(string[]? exclude, string name)
+{
+    if (exclude == null || exclude.Length == 0) return false;
+    for (int i = 0; i < exclude.Length; i++) if (exclude[i] == name) return true;
+    return false;
+}
+
+ internal static AnimationComponent2D ParseAnimationComponent2D_Generated(
+ YTBComponents comp, string sceneName, string entityName, string[]? exclude = null)
+ {
+ var result = new AnimationComponent2D();
+ foreach (var prop in comp.Propiedades)
+ {
+ if (_G_ShouldSkip(exclude, prop.Item1)) continue;
+ switch (prop.Item1)
+ {
+ case "TextureAtlasPath":
+ {
+ result.TextureAtlasPath = prop.Item2;
+ break;
+ }
+ case "AnimationBindings":
+ {
+ result.AnimationBindings = prop.Item2;
+ break;
+ }
+ case "CurrentAnimationType":
+ {
+ if (Enum.TryParse<AnimationType>(prop.Item2, true, out var v)) result.CurrentAnimationType = v;
+ break;
+ }
+ }
+ }
+ return result;
+ }
 
         internal static TransformComponent ParseTransformComponent_Generated(
             YTBComponents comp, string sceneName, string entityName, string[]? exclude = null)
