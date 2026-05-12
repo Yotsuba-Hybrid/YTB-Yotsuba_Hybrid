@@ -205,6 +205,7 @@ namespace YotsubaEngine.YTBContentBuilder.GameData
             sb.AppendLine("using YotsubaEngine.Core.Component.C_AGNOSTIC;");
             sb.AppendLine("using YotsubaEngine.Physics;");
             sb.AppendLine("using YotsubaEngine.Physics.RigidBody;");
+            sb.AppendLine("using YotsubaEngine.Core.YotsubaGame;");
             sb.AppendLine();
             sb.AppendLine("namespace YotsubaEngine.ActionFiles.YTB_Files");
             sb.AppendLine("{");

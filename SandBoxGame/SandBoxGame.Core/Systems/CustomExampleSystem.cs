@@ -43,7 +43,7 @@ namespace SandBoxGame.Core.Systems
         public override void Render2D(SpriteBatch spriteBatch, GameTime gameTime)
         {
 
-                GumUI.Draw();
+                //GumUI.Draw();
 
         }
         public override void Dispose() { }

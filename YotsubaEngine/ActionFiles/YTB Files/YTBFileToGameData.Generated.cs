@@ -14,6 +14,7 @@ using YotsubaEngine.Core.Component.C_3D;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Physics;
 using YotsubaEngine.Physics.RigidBody;
+using YotsubaEngine.Core.YotsubaGame;
 
 namespace YotsubaEngine.ActionFiles.YTB_Files
 {
@@ -269,6 +270,30 @@ private static bool _G_ShouldSkip(string[]? exclude, string name)
  case "OffsetSphere":
  {
  if (_G_TryParseVector3(prop.Item2, out var v)) result.SphereOffset = v;
+ break;
+ }
+ }
+ }
+ return result;
+ }
+
+ internal static RigidBodyComponent3D ParseRigidBodyComponent3D_Generated(
+ YTBComponents comp, string sceneName, string entityName, string[]? exclude = null)
+ {
+ var result = new RigidBodyComponent3D();
+ foreach (var prop in comp.Propiedades)
+ {
+ if (_G_ShouldSkip(exclude, prop.Item1)) continue;
+ switch (prop.Item1)
+ {
+ case "CollisionLayer":
+ {
+ if (Enum.TryParse<CollisionLayer>(prop.Item2, true, out var v)) result.CollisionLayer = v;
+ break;
+ }
+ case "Velocity":
+ {
+ if (_G_TryParseVector3(prop.Item2, out var v)) result.Velocity = v;
  break;
  }
  }
