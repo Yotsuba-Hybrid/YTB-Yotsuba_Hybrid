@@ -184,7 +184,8 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         [YotsubaEngine.Attributes.UIComponentValue("Entidad a seguir", "EntityName",
             "Nombre de la entidad que la cámara seguirá.",
             "La entidad no existe en la escena.",
-            ValueConverterForRead:"RenderEntityNameUI")]
+            ValueConverterForRead: "RenderEntityNameUI",
+            defaultValue: "", inactiveValue: "")]
         public string EntityName { get; set; }
 
         /// <summary>
@@ -192,7 +193,8 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         /// </summary>
         [YotsubaEngine.Attributes.UIComponentValue("Posición inicial", "InitialPosition",
             "Posición inicial 3D de la cámara.",
-            "Formato: X,Y,Z.")]
+            "Formato: X,Y,Z.",
+            defaultValue: "0,60,30", inactiveValue: ",,")]
         public Vector3 InitialPosition { get; set; }
 
         /// <summary>
@@ -205,7 +207,8 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         /// </summary>
         [YotsubaEngine.Attributes.UIComponentValue("Desplazamiento de cámara", nameof(OffsetCamera),
             "Offset 3D relativo a la entidad seguida.",
-            "Formato: X,Y,Z.")]
+            "Formato: X,Y,Z.",
+            defaultValue: "0,50,-100", inactiveValue: ",,")]
         public Vector3 OffsetCamera { get; set; } = new Vector3(0, 50, -100);
 
         /// <summary>
@@ -213,7 +216,8 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         /// </summary>
         [YotsubaEngine.Attributes.UIComponentValue("Ángulo de visión", "AngleView",
             "Field of view en grados.",
-            "Número decimal entre 0 y 180.")]
+            "Número decimal entre 0 y 180.",
+            defaultValue: "60", inactiveValue: "")]
         public float AngleViewSerialized { get; set; }
 
         /// <summary>
@@ -221,7 +225,8 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         /// </summary>
         [YotsubaEngine.Attributes.UIComponentValue("Plano cercano", "NearRender",
             "Distancia mínima de renderizado.",
-            "Número decimal positivo.")]
+            "Número decimal positivo.",
+            defaultValue: "10", inactiveValue: "")]
         public float NearRender { get; set; }
 
         /// <summary>
@@ -229,7 +234,8 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         /// </summary>
         [YotsubaEngine.Attributes.UIComponentValue("Plano lejano", "FarRender",
             "Distancia máxima de renderizado.",
-            "Número decimal mayor que NearRender.")]
+            "Número decimal mayor que NearRender.",
+            defaultValue: "3000", inactiveValue: "")]
         public float FarRender { get; set; }
 
         /// <summary>

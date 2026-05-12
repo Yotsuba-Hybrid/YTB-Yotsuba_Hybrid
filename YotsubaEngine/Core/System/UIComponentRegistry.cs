@@ -43,6 +43,7 @@ namespace YotsubaEngine.Core.System
         private static readonly Dictionary<Type, UIComponent> _componentAttributes = new();
         private static readonly Dictionary<Type, ComponentMember[]> _membersByType = new();
         private static readonly Dictionary<(Type, string), Action<IUIRenderContext, string>> _renderDelegateCache = new();
+        private static readonly Dictionary<Type, Action<IUIRenderContext>?> _extraControlsCache = new();
 
         static UIComponentRegistry()
         {
@@ -142,6 +143,35 @@ namespace YotsubaEngine.Core.System
 
             var del = (Action<IUIRenderContext, string>)Delegate.CreateDelegate(typeof(Action<IUIRenderContext, string>), method);
             _renderDelegateCache[key] = del;
+            return del;
+        }
+
+        /// <summary>
+        /// Obtiene (con caché) un delegate JIT-compilado para el método estático <c>RenderExtraControls(IUIRenderContext)</c>
+        /// del componente, si está declarado. Retorna null si el componente no define controles extra.
+        /// El EntityManagerUI lo invoca al final del render, después del loop de propiedades, para mostrar
+        /// botones/sincronizaciones específicas (ej: "Sincronizar Size con Sprite" del Transform).
+        /// </summary>
+        public static Action<IUIRenderContext> GetExtraControls(Type componentType)
+        {
+            if (_extraControlsCache.TryGetValue(componentType, out var cached))
+                return cached;
+
+            var method = componentType.GetMethod(
+                "RenderExtraControls",
+                BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic,
+                binder: null,
+                types: new[] { typeof(IUIRenderContext) },
+                modifiers: null);
+
+            if (method == null)
+            {
+                _extraControlsCache[componentType] = null;
+                return null;
+            }
+
+            var del = (Action<IUIRenderContext>)Delegate.CreateDelegate(typeof(Action<IUIRenderContext>), method);
+            _extraControlsCache[componentType] = del;
             return del;
         }
     }

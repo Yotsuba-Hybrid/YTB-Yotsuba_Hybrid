@@ -25,7 +25,8 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         [UIComponentValue("Scripts", "Scripts",
             "Scripts asociados a la entidad. Formato compuesto con separadores '&;&' y '&:&'.",
             "Formato inválido.",
-            ValueConverterForRead:"RenderScriptsUI")]
+            ValueConverterForRead: "RenderScriptsUI",
+            defaultValue: "CSHARP&:&&;&", inactiveValue: "CSHARP&:&&;&")]
         public string ScriptsRaw { get; set; }
 
         /// <summary>

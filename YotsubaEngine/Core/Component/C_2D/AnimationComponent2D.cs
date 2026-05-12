@@ -24,7 +24,8 @@ namespace YotsubaEngine.Core.Component.C_2D
         [UIComponentValue("Atlas de texturas", "TextureAtlasPath",
             "Ruta al XML del atlas que contiene las animaciones.",
             "El atlas no existe o no es válido.",
-            ValueConverterForRead:"RenderTextureAtlasUI")]
+            ValueConverterForRead: "RenderTextureAtlasUI",
+            defaultValue: "", inactiveValue: "")]
         public string TextureAtlasPath { get; set; }
 
         /// <summary>
@@ -34,7 +35,8 @@ namespace YotsubaEngine.Core.Component.C_2D
         [UIComponentValue("Animaciones vinculadas", "AnimationBindings",
             "Asignaciones AnimationType→nombre de animación del atlas.",
             "Formato esperado: 'tipo:nombre,tipo:nombre' (separadores ',' y ':').",
-            ValueConverterForRead:"RenderAnimationBindingsUI")]
+            ValueConverterForRead: "RenderAnimationBindingsUI",
+            defaultValue: "", inactiveValue: "")]
         public string AnimationBindings { get; set; }
 
         /// <summary>
@@ -43,7 +45,8 @@ namespace YotsubaEngine.Core.Component.C_2D
         /// </summary>
         [UIComponentValue("Tipo de animación actual", nameof(CurrentAnimationType),
             "Animación inicial al cargar la entidad.",
-            "Debe coincidir con un valor del enum AnimationType.")]
+            "Debe coincidir con un valor del enum AnimationType.",
+            defaultValue: "none", inactiveValue: "")]
         public AnimationType CurrentAnimationType { get; set; }
 
         /// <summary>

@@ -11,12 +11,13 @@ namespace YotsubaEngine.Core.Component.C_2D
     /// <para>Represents a 2D tile map component including regions, collisions, and layers.</para>
     /// </summary>
     [UIComponent("Mapa de Tiles 2D", nameof(TileMapComponent2D))]
-    public struct TileMapComponent2D
+    public partial struct TileMapComponent2D
     {
         /// <summary>
         /// Ruta al archivo de mapa de tiles (.tmx). Bridge de serialización: al cargar, se usa para inicializar Tiles, Collisions y demás runtime state.
         /// </summary>
-        [UIComponentValue("Ruta del mapa de tiles", "TileMapPath", "Ruta al archivo .tmx generado por Tiled.", "El archivo del mapa no existe o no es válido.")]
+        [UIComponentValue("Ruta del mapa de tiles", "TileMapPath", "Ruta al archivo .tmx generado por Tiled.", "El archivo del mapa no existe o no es válido.",
+            defaultValue: "", inactiveValue: "")]
         public string TileMapPath { get; set; }
 
         /// <summary>

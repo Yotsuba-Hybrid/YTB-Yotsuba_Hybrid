@@ -15,19 +15,22 @@ namespace YotsubaEngine.Core.Component.C_2D
         /// <summary>
         /// Indica si el botón está activo y puede ejecutar acciones.
         /// </summary>
-        [UIComponentValue("Activo", nameof(IsActive), "Si el botón puede ejecutar su acción.", "Valor true/false.")]
+        [UIComponentValue("Activo", nameof(IsActive), "Si el botón puede ejecutar su acción.", "Valor true/false.",
+            defaultValue: "true", inactiveValue: "")]
         public bool IsActive { get; set; }
 
         /// <summary>
         /// Área efectiva (clickeable) del botón.
         /// </summary>
-        [UIComponentValue("Área efectiva", nameof(EffectiveArea), "Rectángulo en píxeles donde el botón es clickeable.", "Formato: X,Y,Width,Height (4 enteros).")]
+        [UIComponentValue("Área efectiva", nameof(EffectiveArea), "Rectángulo en píxeles donde el botón es clickeable.", "Formato: X,Y,Width,Height (4 enteros).",
+            defaultValue: "0,0,0,0", inactiveValue: ",,,")]
         public Rectangle EffectiveArea { get; set; }
 
         /// <summary>
         /// Descripción humana del propósito del botón.
         /// </summary>
-        [UIComponentValue("Descripción", nameof(Description), "Descripción del botón (informativa).", "Cualquier cadena es válida.")]
+        [UIComponentValue("Descripción", nameof(Description), "Descripción del botón (informativa).", "Cualquier cadena es válida.",
+            defaultValue: "None", inactiveValue: "")]
         public string Description { get; set; }
 
         /// <summary>
