@@ -22,8 +22,8 @@ namespace YotsubaEngine.YTBContentBuilder.GameData
             public string SerializableName = "";
             public List<UIComponentValueInfo> Members = new();
             public bool HasManualConvertTo;
-            public string AddMethodOnEntityManager = "";
-            public string FullTypeReference = "";
+            public bool IsClass;
+            public bool HasParameterlessCtor;
         }
 
         private sealed class UIComponentValueInfo
@@ -32,12 +32,14 @@ namespace YotsubaEngine.YTBContentBuilder.GameData
             public string MemberTypeRaw = "";
             public string SerializableName = "";
             public string? ParseConverter;
+            public string InactiveValue = "";
+            public string DefaultValue = "";
         }
 
         // ---- Regex ----
 
         private static readonly Regex _uiComponentRegex =
-            new(@"\[(?:YotsubaEngine\.Attributes\.)?UIComponent\(\s*""(?<visible>[^""]*)""\s*,\s*(?:nameof\((?<sn1>\w+)\)|""(?<sn2>[^""]*)"")\s*\)\]\s*(?:public\s+)?(?:partial\s+)?(?:struct|class)\s+(?<type>\w+)",
+            new(@"\[(?:YotsubaEngine\.Attributes\.)?UIComponent\(\s*""(?<visible>[^""]*)""\s*,\s*(?:nameof\((?<sn1>\w+)\)|""(?<sn2>[^""]*)"")\s*\)\]\s*(?:public\s+)?(?:partial\s+)?(?<kind>struct|class)\s+(?<type>\w+)",
                 RegexOptions.Compiled);
 
         private static readonly Regex _uiComponentValueRegex =
@@ -50,8 +52,6 @@ namespace YotsubaEngine.YTBContentBuilder.GameData
         /// <summary>
         /// Entry point: escanea el directorio del engine y produce el archivo Generated.cs.
         /// </summary>
-        /// <param name="engineSourcePath">Carpeta raíz del proyecto YotsubaEngine.</param>
-        /// <param name="outputFilePath">Ruta destino para YTBFileToGameData.Generated.cs.</param>
         public static void Generate(string engineSourcePath, string outputFilePath)
         {
             if (!Directory.Exists(engineSourcePath))
@@ -100,8 +100,21 @@ namespace YotsubaEngine.YTBContentBuilder.GameData
                     TypeName = compMatch.Groups["type"].Value,
                     SerializableName = compMatch.Groups["sn1"].Success
                         ? compMatch.Groups["sn1"].Value
-                        : compMatch.Groups["sn2"].Value
+                        : compMatch.Groups["sn2"].Value,
+                    IsClass = compMatch.Groups["kind"].Value == "class"
                 };
+
+                // Si es class, buscar constructor parameterless explícito.
+                if (info.IsClass)
+                {
+                    var ctorRegex = new Regex(@"public\s+" + Regex.Escape(info.TypeName) + @"\s*\(\s*\)");
+                    info.HasParameterlessCtor = ctorRegex.IsMatch(content);
+                }
+                else
+                {
+                    // Structs siempre tienen un default ctor implícito.
+                    info.HasParameterlessCtor = true;
+                }
 
                 // Encuentra todos los [UIComponentValue] del archivo
                 foreach (Match m in _uiComponentValueRegex.Matches(content))
@@ -114,6 +127,8 @@ namespace YotsubaEngine.YTBContentBuilder.GameData
                     };
                     member.SerializableName = ExtractSerializableName(args, member.MemberName);
                     member.ParseConverter = ExtractNamedArg(args, "ValueConverterForParse");
+                    member.InactiveValue = ExtractNamedStringArg(args, "inactiveValue") ?? "";
+                    member.DefaultValue = ExtractNamedStringArg(args, "defaultValue") ?? "";
                     info.Members.Add(member);
                 }
 
@@ -124,15 +139,11 @@ namespace YotsubaEngine.YTBContentBuilder.GameData
 
         private static string ExtractSerializableName(string args, string memberFallback)
         {
-            // args ej: "Tamaño", nameof(Size), "Tamaño del sprite...", "..."
-            // Tomamos el 2° argumento posicional.
             var parts = SplitTopLevel(args);
             if (parts.Count < 2) return memberFallback;
             var second = parts[1].Trim();
-            // nameof(X) → X
             var nameofMatch = Regex.Match(second, @"^nameof\(\s*(\w+)\s*\)$");
             if (nameofMatch.Success) return nameofMatch.Groups[1].Value;
-            // "literal"
             if (second.StartsWith("\"") && second.EndsWith("\""))
                 return second.Substring(1, second.Length - 2);
             return memberFallback;
@@ -140,9 +151,20 @@ namespace YotsubaEngine.YTBContentBuilder.GameData
 
         private static string? ExtractNamedArg(string args, string argName)
         {
-            var m = Regex.Match(args, argName + @"\s*=\s*(?:nameof\(\s*(\w+)\s*\)|""([^""]+)"")");
+            var m = Regex.Match(args, argName + @"\s*[:=]\s*(?:nameof\(\s*(\w+)\s*\)|""([^""]*)"")");
             if (!m.Success) return null;
             return m.Groups[1].Success ? m.Groups[1].Value : m.Groups[2].Value;
+        }
+
+        /// <summary>
+        /// Extrae un argumento nombrado cuyo valor SIEMPRE es string literal (no nameof). Más permisivo:
+        /// acepta secuencias de escape y string vacío.
+        /// </summary>
+        private static string? ExtractNamedStringArg(string args, string argName)
+        {
+            var m = Regex.Match(args, argName + @"\s*[:=]\s*""((?:[^""\\]|\\.)*)""");
+            if (!m.Success) return null;
+            return Regex.Unescape(m.Groups[1].Value);
         }
 
         private static List<string> SplitTopLevel(string args)
@@ -150,9 +172,12 @@ namespace YotsubaEngine.YTBContentBuilder.GameData
             var result = new List<string>();
             int depth = 0;
             int start = 0;
+            bool inString = false;
             for (int i = 0; i < args.Length; i++)
             {
                 char ch = args[i];
+                if (ch == '"' && (i == 0 || args[i - 1] != '\\')) inString = !inString;
+                if (inString) continue;
                 if (ch == '(' || ch == '<' || ch == '[') depth++;
                 else if (ch == ')' || ch == '>' || ch == ']') depth--;
                 else if (ch == ',' && depth == 0)
@@ -175,14 +200,8 @@ namespace YotsubaEngine.YTBContentBuilder.GameData
         {
             var result = new HashSet<string>(StringComparer.Ordinal);
             string content = File.ReadAllText(path);
-            foreach (Match m in _convertToRegex.Matches(content))
-            {
-                // Convención: ConvertTo{Sufijo} donde sufijo se mapea a TypeName.
-                // Como puede no ser idéntico (ej. ConvertTo2DRigibody → RigidBodyComponent2D),
-                // no lo usamos para deducir el TypeName; en su lugar buscamos cases del switch.
-            }
 
-            // Heurística más fiable: buscar "case nameof(TypeName):" en el switch principal.
+            // Heurística: buscar "case nameof(TypeName):" en el switch principal.
             var caseRegex = new Regex(@"case\s+nameof\(\s*(\w+)\s*\)\s*:");
             foreach (Match m in caseRegex.Matches(content))
             {
@@ -262,9 +281,17 @@ namespace YotsubaEngine.YTBContentBuilder.GameData
         }
 ");
 
-            // Métodos Parse{Type}_Generated
+            // Métodos Parse{Type}_Generated — skipping classes without parameterless ctor
             foreach (var c in components)
             {
+                if (c.IsClass && !c.HasParameterlessCtor)
+                {
+                    sb.AppendLine($"        // SKIPPED: {c.TypeName} is a class without a parameterless constructor.");
+                    sb.AppendLine($"        // Use the manual ConvertTo* method in YTBFileToGameData.cs.");
+                    sb.AppendLine();
+                    continue;
+                }
+
                 sb.AppendLine($"        internal static {c.TypeName} Parse{c.TypeName}_Generated(");
                 sb.AppendLine("            YTBComponents comp, string sceneName, string entityName, string[]? exclude = null)");
                 sb.AppendLine("        {");
@@ -289,13 +316,85 @@ namespace YotsubaEngine.YTBContentBuilder.GameData
                 sb.AppendLine();
             }
 
-            // Diccionario de fallback para componentes nuevos no listados en el switch manual
+            // _inactiveValuesByComponent + IsAllInactive
+            sb.AppendLine("        /// <summary>");
+            sb.AppendLine("        /// Mapa generado en build-time con los valores 'inactivos' por componente y propiedad.");
+            sb.AppendLine("        /// Usado por <see cref=\"IsAllInactive\"/> para decidir si un componente del .ytb debe saltarse.");
+            sb.AppendLine("        /// </summary>");
+            sb.AppendLine("        internal static readonly Dictionary<string, Dictionary<string, string>> _inactiveValuesByComponent =");
+            sb.AppendLine("            new(StringComparer.Ordinal)");
+            sb.AppendLine("        {");
+            foreach (var c in components)
+            {
+                sb.AppendLine($"            [\"{c.SerializableName}\"] = new(StringComparer.Ordinal)");
+                sb.AppendLine("            {");
+                foreach (var m in c.Members)
+                {
+                    var inactiveLiteral = m.InactiveValue
+                        .Replace("\\", "\\\\")
+                        .Replace("\"", "\\\"")
+                        .Replace("\n", "\\n")
+                        .Replace("\r", "\\r")
+                        .Replace("\t", "\\t");
+                    sb.AppendLine($"                [\"{m.SerializableName}\"] = \"{inactiveLiteral}\",");
+                }
+                sb.AppendLine("            },");
+            }
+            sb.AppendLine("        };");
+            sb.AppendLine();
+
+            sb.AppendLine(@"        /// <summary>
+        /// Devuelve true si TODAS las propiedades de <paramref name=""comp""/> coinciden con su valor inactivo
+        /// declarado por <c>[UIComponentValue.inactiveValue]</c>. Usado por el loop de carga para saltarse
+        /// componentes vacíos (reemplaza el viejo filtro contra EntityYTBXmlTemplate.GenerateNew()).
+        /// </summary>
+        internal static bool IsAllInactive(YTBComponents comp)
+        {
+            if (comp == null) return false;
+            if (!_inactiveValuesByComponent.TryGetValue(comp.ComponentName, out var map)) return false;
+            if (comp.Propiedades == null || comp.Propiedades.Count == 0) return true;
+            foreach (var prop in comp.Propiedades)
+            {
+                if (!map.TryGetValue(prop.Item1, out var inactive)) return false;
+                if (prop.Item2 != inactive) return false;
+            }
+            return true;
+        }
+");
+
+            // _defaultValuesByComponent
+            sb.AppendLine("        /// <summary>");
+            sb.AppendLine("        /// Mapa generado en build-time con los valores 'por defecto' por componente y propiedad.");
+            sb.AppendLine("        /// Usado por <c>EntityYTBXmlTemplate</c> como façade sobre el sistema de atributos.");
+            sb.AppendLine("        /// </summary>");
+            sb.AppendLine("        internal static readonly Dictionary<string, Dictionary<string, string>> _defaultValuesByComponent =");
+            sb.AppendLine("            new(StringComparer.Ordinal)");
+            sb.AppendLine("        {");
+            foreach (var c in components)
+            {
+                sb.AppendLine($"            [\"{c.SerializableName}\"] = new(StringComparer.Ordinal)");
+                sb.AppendLine("            {");
+                foreach (var m in c.Members)
+                {
+                    var defaultLiteral = m.DefaultValue
+                        .Replace("\\", "\\\\")
+                        .Replace("\"", "\\\"")
+                        .Replace("\n", "\\n")
+                        .Replace("\r", "\\r")
+                        .Replace("\t", "\\t");
+                    sb.AppendLine($"                [\"{m.SerializableName}\"] = \"{defaultLiteral}\",");
+                }
+                sb.AppendLine("            },");
+            }
+            sb.AppendLine("        };");
+            sb.AppendLine();
+
             sb.AppendLine("        internal static readonly Dictionary<string, Action<YotsubaEngine.Core.Entity.Yotsuba, YTBComponents, YotsubaEngine.Core.YotsubaGame.Scene, string, string>>?");
             sb.AppendLine("            _autoGeneratedComponents = new(StringComparer.Ordinal)");
             sb.AppendLine("        {");
-            foreach (var c in components.Where(x => !x.HasManualConvertTo))
+            foreach (var c in components.Where(x => !x.HasManualConvertTo && !(x.IsClass && !x.HasParameterlessCtor)))
             {
-                sb.AppendLine($"            // [\"{c.SerializableName}\"] = (entity, comp, scene, sn, en) => {{ /* TODO: requiere AddX en EntityManager para {c.TypeName} */ }},");
+                sb.AppendLine($"            // [\"{c.SerializableName}\"] = (entity, comp, scene, sn, en) => {{ /* TODO: registrar AddX en EntityManager para {c.TypeName} */ }},");
             }
             sb.AppendLine("        };");
 
@@ -322,7 +421,7 @@ namespace YotsubaEngine.YTBContentBuilder.GameData
                 "Vector3" => $"if (_G_TryParseVector3(prop.Item2, out var v)) result.{m.MemberName} = v;",
                 "Rectangle" => $"if (_G_TryParseRectangle(prop.Item2, out var v)) result.{m.MemberName} = v;",
                 "Color" => $"if (NamedColors.TryGetValue(prop.Item2, out var v)) result.{m.MemberName} = v;",
-                _ => // Enum desconocido — usamos Enum.TryParse genérico
+                _ =>
                      $"if (Enum.TryParse<{StripQualifier(t)}>(prop.Item2, true, out var v)) result.{m.MemberName} = v;"
             };
         }

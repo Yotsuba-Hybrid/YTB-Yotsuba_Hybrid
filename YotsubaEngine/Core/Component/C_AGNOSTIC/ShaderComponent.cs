@@ -19,19 +19,22 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         /// <summary>
         /// Ruta al archivo del shader compilado. Bridge de serialización para inicializar Effect.
         /// </summary>
-        [UIComponentValue("Ruta del sombreador", "ShaderPath", "Ruta relativa al .fx compilado.", "El archivo de shader no existe.")]
+        [UIComponentValue("Ruta del sombreador", "ShaderPath", "Ruta relativa al .fx compilado.", "El archivo de shader no existe.",
+            defaultValue: "", inactiveValue: "")]
         public string ShaderPath { get; set; }
 
         /// <summary>
         /// Indica si el shader está activo.
         /// </summary>
-        [UIComponentValue("Activo", nameof(IsActive), "Si el shader se aplica al renderizar.", "Valor true/false.")]
+        [UIComponentValue("Activo", nameof(IsActive), "Si el shader se aplica al renderizar.", "Valor true/false.",
+            defaultValue: "true", inactiveValue: "")]
         public bool IsActive { get; set; } = true;
 
         /// <summary>
         /// Parámetros adicionales (formato libre). Bridge de serialización.
         /// </summary>
-        [UIComponentValue("Parámetros", "params", "Parámetros del shader en formato libre.", "Cualquier cadena es válida.")]
+        [UIComponentValue("Parámetros", "params", "Parámetros del shader en formato libre.", "Cualquier cadena es válida.",
+            defaultValue: "", inactiveValue: "")]
         public string Params { get; set; }
     }
 }

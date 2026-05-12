@@ -34,7 +34,8 @@ namespace YotsubaEngine.Core.Component.C_3D
         /// </summary>
         [UIComponentValue("Ruta del modelo 3D", "ModelPath",
             "Ruta del recurso de modelo registrado.",
-            "El modelo no existe en el registro.")]
+            "El modelo no existe en el registro.",
+            defaultValue: "", inactiveValue: "")]
         public string ModelPath { get; set; }
 
         public RasterizerState RasterizerState { get; set; } = null;
@@ -43,7 +44,8 @@ namespace YotsubaEngine.Core.Component.C_3D
         /// <summary>
         /// Indica si el modelo debe renderizarse.
         /// </summary>
-        [UIComponentValue("Visible", nameof(IsVisible), "Si el modelo se dibuja.", "Valor true/false.")]
+        [UIComponentValue("Visible", nameof(IsVisible), "Si el modelo se dibuja.", "Valor true/false.",
+            defaultValue: "true", inactiveValue: "")]
         public bool IsVisible { get; set; } = true;
 
         /// <summary>
@@ -51,7 +53,8 @@ namespace YotsubaEngine.Core.Component.C_3D
         /// </summary>
         [UIComponentValue("Radio de esfera", "SphereRadius",
             "Radio de la esfera usada para occlusion/cull.",
-            "Número decimal positivo.")]
+            "Número decimal positivo.",
+            defaultValue: "0", inactiveValue: "")]
         public float RadiusSphere { get; set; }
 
         /// <summary>
@@ -59,7 +62,8 @@ namespace YotsubaEngine.Core.Component.C_3D
         /// </summary>
         [UIComponentValue("Offset de esfera", "OffsetSphere",
             "Desplazamiento de la esfera de cull respecto al modelo.",
-            "Formato: X,Y,Z.")]
+            "Formato: X,Y,Z.",
+            defaultValue: "0,0,0", inactiveValue: ",,")]
         public Vector3 SphereOffset { get; set; } = Vector3.Zero;
 
         /// <summary>

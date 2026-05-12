@@ -17,9 +17,22 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
         YTBComponents Component { get; }
 
         /// <summary>
+        /// Entidad YTB completa que contiene el <see cref="Component"/> actual. Útil para que un
+        /// <c>RenderExtraControls</c> consulte otros componentes hermanos (ej: el Transform busca el Sprite
+        /// para sincronizar Size con SourceRectangle).
+        /// </summary>
+        YTBEntity CurrentEntity { get; }
+
+        /// <summary>
         /// Actualiza el valor de una propiedad serializada del componente actual.
         /// </summary>
         void UpdateProperty(string propertyName, string newValue);
+
+        /// <summary>
+        /// Ruta absoluta a la carpeta Content/ del juego (usada por <c>RenderExtraControls</c> que necesitan
+        /// abrir ficheros, p. ej. el TileMap para leer dimensiones del TMX).
+        /// </summary>
+        string ContentPath { get; }
 
         /// <summary>
         /// Lista de archivos XML de atlas de texturas disponibles bajo Content/, en rutas relativas.

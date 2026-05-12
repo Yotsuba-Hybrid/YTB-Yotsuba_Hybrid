@@ -32,25 +32,29 @@ namespace YotsubaEngine.Core.Component.C_2D
         /// <summary>
         /// Desfase respecto a la colisión.
         /// </summary>
-        [UIComponentValue("Desfase de colisión", nameof(OffSetCollision), "Offset 2D del rectángulo de colisión.", "Formato: X,Y (2 números decimales).")]
+        [UIComponentValue("Desfase de colisión", nameof(OffSetCollision), "Offset 2D del rectángulo de colisión.", "Formato: X,Y (2 números decimales).",
+            defaultValue: "0,0", inactiveValue: ",")]
         public Vector2 OffSetCollision { get; set; } = Vector2.Zero;
 
         /// <summary>
         /// Velocidad del objeto en el espacio 3D.
         /// </summary>
-        [UIComponentValue("Velocidad", nameof(Velocity), "Velocidad inicial en el espacio 3D.", "Formato: X,Y,Z (3 números decimales).")]
+        [UIComponentValue("Velocidad", nameof(Velocity), "Velocidad inicial en el espacio 3D.", "Formato: X,Y,Z (3 números decimales).",
+            defaultValue: "0,0,0", inactiveValue: ",,")]
         public Vector3 Velocity { get; set; } = Vector3.Zero;
 
         /// <summary>
         /// Nivel de colisión: Solid (colisiona) o Trigger (atraviesa).
         /// </summary>
-        [UIComponentValue("Tipo de colisión", nameof(Collide), "Solid colisiona, Trigger atraviesa.", "Valor de CollisionLevel no válido.")]
+        [UIComponentValue("Tipo de colisión", nameof(Collide), "Solid colisiona, Trigger atraviesa.", "Valor de CollisionLevel no válido.",
+            defaultValue: "Solid", inactiveValue: "")]
         public CollisionLevel Collide { get; set; } = collide;
 
         /// <summary>
         /// Masa física real del objeto.
         /// </summary>
-        [UIComponentValue("Masa", nameof(Mass), "Masa física. Determina distribución de fuerza.", "La masa debe ser un número decimal válido.")]
+        [UIComponentValue("Masa", nameof(Mass), "Masa física. Determina distribución de fuerza.", "La masa debe ser un número decimal válido.",
+            defaultValue: "0", inactiveValue: "")]
         public float Mass { get; set; } = mass;
 
     }
