@@ -14,19 +14,22 @@ namespace YotsubaEngine.Core.Component.C_2D
         /// <summary>
         /// Texto a mostrar.
         /// </summary>
-        [UIComponentValue("Texto", nameof(Texto), "Texto a mostrar en pantalla.", "Cualquier cadena es válida.")]
+        [UIComponentValue("Texto", nameof(Texto), "Texto a mostrar en pantalla.", "Cualquier cadena es válida.",
+            defaultValue: "Texto de ejemplo", inactiveValue: "")]
         public string Texto { get; set; }
 
         /// <summary>
         /// Fuente para dibujar el texto.
         /// </summary>
-        [UIComponentValue("Fuente", nameof(Font), "Nombre del recurso de fuente registrado.", "Fuente no registrada en el FontRegistry.")]
+        [UIComponentValue("Fuente", nameof(Font), "Nombre del recurso de fuente registrado.", "Fuente no registrada en el FontRegistry.",
+            defaultValue: "Fonts/Hud", inactiveValue: "")]
         public string Font { get; set; }
 
         /// <summary>
         /// Indica si el elemento es visible.
         /// </summary>
-        [UIComponentValue("Visible", nameof(IsVisible), "Indica si el texto se renderiza.", "Valor true/false.")]
+        [UIComponentValue("Visible", nameof(IsVisible), "Indica si el texto se renderiza.", "Valor true/false.",
+            defaultValue: "true", inactiveValue: "")]
         public bool IsVisible { get; set; } = true;
     }
 }

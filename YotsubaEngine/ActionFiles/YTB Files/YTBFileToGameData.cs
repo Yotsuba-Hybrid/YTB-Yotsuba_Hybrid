@@ -337,7 +337,10 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                     //Agrego componentes a las entidades
                     foreach (var component in en.Components)
                     {
-                        if (EntityYTBXmlTemplate.GenerateNew().Components.Contains(component))
+                        // Componente con todas las propiedades en su valor inactivo → se ignora.
+                        // El mapa _inactiveValuesByComponent lo genera YTBContentBuilder en build-time
+                        // a partir de los [UIComponentValue(inactiveValue: "...")] declarados en cada componente.
+                        if (IsAllInactive(component))
                             continue;
                         switch (component.ComponentName)
                         {

@@ -30,8 +30,10 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 		private YTBComponents _currentComponent;
 
 		YTBComponents IUIRenderContext.Component => _currentComponent;
+		YTBEntity IUIRenderContext.CurrentEntity => _getSelectedEntity();
 		void IUIRenderContext.UpdateProperty(string propertyName, string newValue)
 			=> UpdateProperty(_currentComponent, propertyName, newValue);
+		string IUIRenderContext.ContentPath => _contentPath;
 		IReadOnlyList<string> IUIRenderContext.TextureAtlasFiles => _textureAtlasFiles;
 		List<SubtextureInfo> IUIRenderContext.ParseSubtextures(string xmlPath) => ParseSubtextures(xmlPath);
 		List<AnimationInfo> IUIRenderContext.ParseAnimations(string xmlPath) => ParseAnimations(xmlPath);
@@ -152,7 +154,6 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 			return Enum.GetNames(typeof(AnimationType));
 		}
 
-		YTBEntity BaseEntity = EntityYTBXmlTemplate.GenerateNew();
 		int itemSelected = 0;
 
 		internal string TraduceComponentName(string component)
@@ -206,7 +207,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 				ImGui.Spacing();
 				if (YTBEntity.Components == null) YTBEntity.Components = [];
 
-				int componentesValidos = YTBEntity.ComponentsCount - BaseEntity.Components.Where(x => YTBEntity.Components.Any(s => x.Equals(s))).Count();
+				int componentesValidos = YTBEntity.Components.Count(c => !YTBFileToGameData.IsAllInactive(c));
 				ImGui.SeparatorText($"{componentesValidos} COMPONENTES");
 
 
@@ -214,7 +215,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 
 				foreach (var component in YTBEntity.Components.ToImmutableArray())
 				{
-					if (EntityYTBXmlTemplate.GenerateNew().Components.Any(x => x.Equals(component))) continue;
+					if (YTBFileToGameData.IsAllInactive(component)) continue;
 
 					//// Botón para eliminar el componente
 					//// Se coloca ANTES del CollapsingHeader para mejor layout
@@ -262,6 +263,14 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 							{
 								RenderMember(component, member);
 							}
+
+							// Controles "extra" definidos por el propio componente (botones de sincronización, etc.).
+							var extra = global::YotsubaEngine.Core.System.UIComponentRegistry.GetExtraControls(compType);
+							if (extra != null)
+							{
+								ImGui.Separator();
+								extra(this);
+							}
 						}
 						else
 						{
@@ -292,215 +301,34 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 
 			if (ImGui.BeginPopupModal("Agregar Componente", ImGuiWindowFlags.AlwaysAutoResize))
 			{
-				string[] unselected = componentes.Where(w => !YTBEntity.Components.Any(a => a.Equals(w))).ToArray();
-				int contador = unselected.Count();
-				ImGui.Combo("Componentes", ref itemSelected, unselected.ToArray(), contador);
+				// Lista auto-generada desde el registro: todo tipo con [UIComponent] que aún no esté en la entidad.
+				string[] unselected = global::YotsubaEngine.Core.System.UIComponentRegistry.AllComponents
+					.Select(kv => kv.Value.SerializableName)
+					.Where(name => !YTBEntity.Components.Any(c => c.ComponentName == name))
+					.ToArray();
+				int contador = unselected.Length;
+				if (itemSelected >= contador) itemSelected = 0;
+				ImGui.Combo("Componentes", ref itemSelected, unselected, contador);
 				if (contador == 0) ImGui.CloseCurrentPopup();
-				if (ImGui.Button("Agregar", new Num.Vector2(100, 0)))
+				if (ImGui.Button("Agregar", new Num.Vector2(100, 0)) && contador > 0)
 				{
-					switch (unselected[itemSelected])
+					var selectedName = unselected[itemSelected];
+					var compType = global::YotsubaEngine.Core.System.UIComponentRegistry.GetComponentType(selectedName);
+					if (compType != null)
 					{
-						case nameof(TransformComponent):
-							if (YTBEntity.Components.Any(x => x.ComponentName == nameof(TransformComponent)))
-							{
-								YTBEntity.Components.FirstOrDefault(x => x.ComponentName == nameof(TransformComponent)).Propiedades
-									= EntityYTBXmlTemplate.TransformTemplate().Propiedades;
-							}
-							else
-							{
-								YTBEntity.Components.Add(new()
-								{
-									ComponentName = nameof(TransformComponent),
-									Propiedades = EntityYTBXmlTemplate.TransformTemplate().Propiedades
-								});
-							}
-
-							break;
-
-						case nameof(SpriteComponent2D):
-							if (YTBEntity.Components.Any(x => x.ComponentName == nameof(SpriteComponent2D)))
-							{
-								YTBEntity.Components.FirstOrDefault(x => x.ComponentName == nameof(SpriteComponent2D)).Propiedades
-									= EntityYTBXmlTemplate.Sprite2DTemplate().Propiedades;
-							}
-							else
-							{
-								YTBEntity.Components.Add(new()
-								{
-									ComponentName = nameof(SpriteComponent2D),
-									Propiedades = EntityYTBXmlTemplate.Sprite2DTemplate().Propiedades
-								});
-							}
-
-							break;
-
-						case nameof(AnimationComponent2D):
-							if (YTBEntity.Components.Any(x => x.ComponentName == nameof(AnimationComponent2D)))
-							{
-								YTBEntity.Components.FirstOrDefault(x => x.ComponentName == nameof(AnimationComponent2D)).Propiedades
-									= EntityYTBXmlTemplate.Animation2DTemplate().Propiedades;
-							}
-							else
-							{
-								YTBEntity.Components.Add(new()
-								{
-									ComponentName = nameof(AnimationComponent2D),
-									Propiedades = EntityYTBXmlTemplate.Animation2DTemplate().Propiedades
-								});
-							}
-
-							break;
-
-						case nameof(RigidBodyComponent2D):
-							if (YTBEntity.Components.Any(x => x.ComponentName == nameof(RigidBodyComponent2D)))
-							{
-								YTBEntity.Components.FirstOrDefault(x => x.ComponentName == nameof(RigidBodyComponent2D)).Propiedades
-									= EntityYTBXmlTemplate.Rigibody2DTemplate().Propiedades;
-							}
-							else
-							{
-								YTBEntity.Components.Add(new()
-								{
-									ComponentName = nameof(RigidBodyComponent2D),
-									Propiedades = EntityYTBXmlTemplate.Rigibody2DTemplate().Propiedades
-								});
-							}
-
-							break;
-
-						case nameof(ButtonComponent2D):
-							if (YTBEntity.Components.Any(x => x.ComponentName == nameof(ButtonComponent2D)))
-							{
-								YTBEntity.Components.FirstOrDefault(x => x.ComponentName == nameof(ButtonComponent2D)).Propiedades
-									= EntityYTBXmlTemplate.Button2DTemplate().Propiedades;
-							}
-							else
-							{
-								YTBEntity.Components.Add(new()
-								{
-									ComponentName = nameof(ButtonComponent2D),
-									Propiedades = EntityYTBXmlTemplate.Button2DTemplate().Propiedades
-								});
-							}
-
-							break;
-
-						case nameof(InputComponent):
-							if (YTBEntity.Components.Any(x => x.ComponentName == nameof(InputComponent)))
-							{
-								YTBEntity.Components.FirstOrDefault(x => x.ComponentName == nameof(InputComponent)).Propiedades
-									= EntityYTBXmlTemplate.InputTemplate().Propiedades;
-							}
-							else
-							{
-								YTBEntity.Components.Add(new()
-								{
-									ComponentName = nameof(InputComponent),
-									Propiedades = EntityYTBXmlTemplate.InputTemplate().Propiedades
-								});
-							}
-
-							break;
-
-					case "CameraComponent3D":
-						if (YTBEntity.Components.Any(x => x.ComponentName == "CameraComponent3D"))
+						// Construye Propiedades desde los DefaultValue declarados en cada [UIComponentValue].
+						var members = global::YotsubaEngine.Core.System.UIComponentRegistry.GetMembers(compType);
+						var props = members
+							.Select(m => new Tuple<string, string>(m.Attribute.SerializableName, m.Attribute.DefaultValue))
+							.ToList();
+						YTBEntity.Components.Add(new YTBComponents
 						{
-							YTBEntity.Components.FirstOrDefault(x => x.ComponentName == "CameraComponent3D").Propiedades
-								= EntityYTBXmlTemplate.CameraTemplate().Propiedades;
-						}
-						else
-						{
-							YTBEntity.Components.Add(new()
-							{
-								ComponentName = "CameraComponent3D",
-								Propiedades = EntityYTBXmlTemplate.CameraTemplate().Propiedades
-							});
-						}
-
-						break;
-						case nameof(ScriptComponent):
-							if (YTBEntity.Components.Any(x => x.ComponentName == nameof(ScriptComponent)))
-							{
-								YTBEntity.Components.FirstOrDefault(x => x.ComponentName == nameof(ScriptComponent)).Propiedades
-									= EntityYTBXmlTemplate.ScriptTemplate().Propiedades;
-							}
-							else
-							{
-								YTBEntity.Components.Add(new()
-								{
-									ComponentName = nameof(ScriptComponent),
-									Propiedades = EntityYTBXmlTemplate.ScriptTemplate().Propiedades
-								});
-							}
-
-							break;
-						case nameof(TileMapComponent2D):
-							if (YTBEntity.Components.Any(x => x.ComponentName == nameof(TileMapComponent2D)))
-							{
-								YTBEntity.Components.FirstOrDefault(x => x.ComponentName == nameof(TileMapComponent2D)).Propiedades
-									= EntityYTBXmlTemplate.TileMap2DTemplate().Propiedades;
-							}
-							else
-							{
-								YTBEntity.Components.Add(new()
-								{
-									ComponentName = nameof(TileMapComponent2D),
-									Propiedades = EntityYTBXmlTemplate.TileMap2DTemplate().Propiedades
-								});
-							}
-
-							break;
-						case nameof(FontComponent2D):
-							if (YTBEntity.Components.Any(x => x.ComponentName == nameof(FontComponent2D)))
-							{
-								YTBEntity.Components.FirstOrDefault(x => x.ComponentName == nameof(FontComponent2D)).Propiedades
-									= EntityYTBXmlTemplate.Font2DTemplate().Propiedades;
-							}
-							else
-							{
-								YTBEntity.Components.Add(new()
-								{
-									ComponentName = nameof(FontComponent2D),
-									Propiedades = EntityYTBXmlTemplate.Font2DTemplate().Propiedades
-								});
-							}
-
-							break;
-					case "ShaderComponent":
-						if (YTBEntity.Components.Any(x => x.ComponentName == "ShaderComponent"))
-						{
-							YTBEntity.Components.FirstOrDefault(x => x.ComponentName == "ShaderComponent").Propiedades
-								= EntityYTBXmlTemplate.ShaderTemplate().Propiedades;
-						}
-						else
-						{
-
-							YTBEntity.Components.Add(new()
-							{
-								ComponentName = "ShaderComponent",
-								Propiedades = EntityYTBXmlTemplate.ShaderTemplate().Propiedades
-							});
-						}
-
-						break;
-					case "ModelComponent3D":
-						if (YTBEntity.Components.Any(x => x.ComponentName == "ModelComponent3D"))
-						{
-							YTBEntity.Components.FirstOrDefault(x => x.ComponentName == "ModelComponent3D").Propiedades
-								= EntityYTBXmlTemplate.Model3DTemplate().Propiedades;
-						}
-						else
-						{
-							YTBEntity.Components.Add(new()
-							{
-								ComponentName = "ModelComponent3D",
-								Propiedades = EntityYTBXmlTemplate.Model3DTemplate().Propiedades
-							});
-						}
-
-						break;
+							ComponentName = selectedName,
+							Propiedades = props
+						});
 					}
 				}
+
 
 				ImGui.SameLine();
 				if (ImGui.Button("Cancelar", new Num.Vector2(100, 0)))

@@ -26,7 +26,8 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         [UIComponentValue("Entradas en uso", "InputsInUse",
             "Lista CSV de flags activos: HasMouse, HasKeyboard, HasGamepad.",
             "Valor no reconocido — use HasMouse/HasKeyboard/HasGamepad.",
-            ValueConverterForRead:"RenderInputsInUseUI")]
+            ValueConverterForRead: "RenderInputsInUseUI",
+            defaultValue: "", inactiveValue: "")]
         public string InputsInUse { get; set; }
 
         /// <summary>
@@ -40,7 +41,8 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         [UIComponentValue("Mapeo de teclado", "KeyboardMappings",
             "Mapeo Acción→Tecla. Formato: 'MoveUp:W,MoveDown:S,...'.",
             "Formato esperado: 'accion:tecla,accion:tecla' (separadores ',' y ':').",
-            ValueConverterForRead:"RenderKeyboardMappingsUI")]
+            ValueConverterForRead: "RenderKeyboardMappingsUI",
+            defaultValue: "MoveUp:W,\nMoveDown:S,\nMoveLeft:A,\nMoveRight:D,", inactiveValue: "")]
         public string KeyboardMappings { get; set; }
 
         /// <summary>
@@ -53,7 +55,8 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         /// </summary>
         [UIComponentValue("Índice de mando", nameof(GamePadIndex),
             "Índice de PlayerIndex del gamepad asignado.",
-            "Valor de PlayerIndex no válido.")]
+            "Valor de PlayerIndex no válido.",
+            defaultValue: "", inactiveValue: "")]
         public PlayerIndex GamePadIndex { get; set; } = new();
 
         /// <summary>
@@ -66,7 +69,8 @@ namespace YotsubaEngine.Core.Component.C_AGNOSTIC
         /// </summary>
         [UIComponentValue("Mapeo de ratón", "MouseMappings",
             "Mapeo Acción→Botón. Formato: 'Action:Button,...'.",
-            "Formato esperado: 'accion:boton,accion:boton'.")]
+            "Formato esperado: 'accion:boton,accion:boton'.",
+            defaultValue: "", inactiveValue: "")]
         public string MouseMappings { get; set; }
 
         /// <summary>

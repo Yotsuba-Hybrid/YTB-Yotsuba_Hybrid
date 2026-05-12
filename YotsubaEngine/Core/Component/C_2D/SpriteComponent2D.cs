@@ -28,7 +28,8 @@ namespace YotsubaEngine.Core.Component.C_2D
         /// </summary>
         [UIComponentValue("Atlas de texturas", "TextureAtlasPath", "Ruta relativa al XML del atlas dentro de Content/.",
             "El atlas no existe o no es válido.",
-            ValueConverterForRead:"RenderTextureAtlasUI")]
+            ValueConverterForRead: "RenderTextureAtlasUI",
+            defaultValue: "", inactiveValue: "")]
         public string TextureAtlasPath { get; set; }
 
         /// <summary>
@@ -36,26 +37,30 @@ namespace YotsubaEngine.Core.Component.C_2D
         /// </summary>
         [UIComponentValue("Sprite", "SpriteName", "Nombre del sprite dentro del atlas.",
             "El sprite no existe dentro del atlas seleccionado.",
-            ValueConverterForRead:"RenderSpriteNameUI")]
+            ValueConverterForRead: "RenderSpriteNameUI",
+            defaultValue: "", inactiveValue: "")]
         public string SpriteName { get; set; }
 
         /// <summary>
         /// Restringe el área de la textura a dibujar.
         /// </summary>
         [UIComponentValue("Rectángulo de origen", nameof(SourceRectangle), "Área dentro del atlas (X,Y,Width,Height).",
-            "Formato: 4 enteros separados por comas.")]
+            "Formato: 4 enteros separados por comas.",
+            defaultValue: "0,0,0,0", inactiveValue: ",,,")]
         public Rectangle SourceRectangle { get; set; } = sourceRectangle;
 
         /// <summary>
         /// Indica si el sprite debe renderizarse.
         /// </summary>
-        [UIComponentValue("Visible", nameof(IsVisible), "Si el sprite se dibuja.", "Valor true/false.")]
+        [UIComponentValue("Visible", nameof(IsVisible), "Si el sprite se dibuja.", "Valor true/false.",
+            defaultValue: "true", inactiveValue: "")]
         public bool IsVisible { get; set; } = true;
 
         /// <summary>
         /// Indica la dimensión en la que se renderizará el sprite.
         /// </summary>
-        [UIComponentValue("2.5D", "2.5D", "Si el sprite se renderiza como billboard 2.5D.", "Valor true/false.")]
+        [UIComponentValue("2.5D", "2.5D", "Si el sprite se renderiza como billboard 2.5D.", "Valor true/false.",
+            defaultValue: "false", inactiveValue: "")]
         public bool Is2_5D
         {
             get => is2_5D;
