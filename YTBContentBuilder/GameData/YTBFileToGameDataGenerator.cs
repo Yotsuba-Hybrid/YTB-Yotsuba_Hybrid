@@ -282,9 +282,20 @@ private static bool _G_ShouldSkip(string[]? exclude, string name)
 }
 ");
 
-            // Métodos Parse{Type}_Generated — skipping classes without parameterless ctor
+            // Métodos Parse{Type}_Generated.
+            //  - Caso especial CameraComponent3D: emite un método que toma EntityManager y construye
+            //    la instancia con los args del ctor a partir de propiedades parseadas a vars temporales.
+            //  - Caso "class sin ctor sin parámetros": se salta (lo cubre el manual ConvertTo*).
+            //  - Resto: emisión genérica `new T()` + asignación por propiedad.
             foreach (var c in components)
             {
+                if (c.TypeName == "CameraComponent3D")
+                {
+                    EmitCameraComponent3DParse(sb, c);
+                    sb.AppendLine();
+                    continue;
+                }
+
                 if (c.IsClass && !c.HasParameterlessCtor)
                 {
                     sb.AppendLine($"        // SKIPPED: {c.TypeName} is a class without a parameterless constructor.");
@@ -304,61 +315,16 @@ private static bool _G_ShouldSkip(string[]? exclude, string name)
                 sb.AppendLine("                {");
                 foreach (var m in c.Members)
                 {
-                    sb.AppendLine($" internal static {c.TypeName} Parse{c.TypeName}_Generated(");
-                    sb.AppendLine(" EntityManager entityManager, YTBComponents comp, string sceneName, string entityName, string[]? exclude = null)");
-                    sb.AppendLine(" {");
-                    sb.AppendLine(" Vector3 _initialPosition = Vector3.Zero;");
-                    sb.AppendLine(" float _angleView = 45f;");
-                    sb.AppendLine(" float _nearRender = 0.1f;");
-                    sb.AppendLine(" float _farRender = 1000f;");
-                    sb.AppendLine(" string _entityName = \"\";");
-                    sb.AppendLine(" Vector3 _offsetCamera = new Vector3(0, 50, -100);");
-                    sb.AppendLine(" foreach (var prop in comp.Propiedades)");
-                    sb.AppendLine(" {");
-                    sb.AppendLine(" if (_G_ShouldSkip(exclude, prop.Item1)) continue;");
-                    sb.AppendLine(" switch (prop.Item1)");
-                    sb.AppendLine(" {");
-                    foreach (var m in c.Members)
-                    {
-                        sb.AppendLine($" case \"{m.SerializableName}\":");
-                        sb.AppendLine(" {");
-                        sb.AppendLine($" {EmitParseForTemp(m)}");
-                        sb.AppendLine(" break;");
-                        sb.AppendLine(" }");
-                    }
-                    sb.AppendLine(" }");
-                    sb.AppendLine(" }");
-                    sb.AppendLine(" var result = new CameraComponent3D(entityManager, _initialPosition, _angleView, _nearRender, _farRender);");
-                    sb.AppendLine(" result.EntityName = _entityName;");
-                    sb.AppendLine(" result.OffsetCamera = _offsetCamera;");
-                    sb.AppendLine(" return result;");
-                    sb.AppendLine(" }");
+                    sb.AppendLine($"                    case \"{m.SerializableName}\":");
+                    sb.AppendLine("                    {");
+                    sb.AppendLine($"                        {EmitParse(m)}");
+                    sb.AppendLine("                        break;");
+                    sb.AppendLine("                    }");
                 }
-                else
-                {
-                    sb.AppendLine($" internal static {c.TypeName} Parse{c.TypeName}_Generated(");
-                    sb.AppendLine(" YTBComponents comp, string sceneName, string entityName, string[]? exclude = null)");
-                    sb.AppendLine(" {");
-                    sb.AppendLine($" var result = new {c.TypeName}();");
-                    sb.AppendLine(" foreach (var prop in comp.Propiedades)");
-                    sb.AppendLine(" {");
-                    sb.AppendLine(" if (_G_ShouldSkip(exclude, prop.Item1)) continue;");
-                    sb.AppendLine(" switch (prop.Item1)");
-                    sb.AppendLine(" {");
-                    foreach (var m in c.Members)
-                    {
-                        sb.AppendLine($" case \"{m.SerializableName}\":");
-                        sb.AppendLine(" {");
-                        sb.AppendLine($" {EmitParse(m)}");
-                        sb.AppendLine(" break;");
-                        sb.AppendLine(" }");
-                    }
-                    sb.AppendLine(" }");
-                    sb.AppendLine(" }");
-                    sb.AppendLine(" return result;");
-                    sb.AppendLine(" }");
-                }
-
+                sb.AppendLine("                }");
+                sb.AppendLine("            }");
+                sb.AppendLine("            return result;");
+                sb.AppendLine("        }");
                 sb.AppendLine();
             }
 
@@ -442,11 +408,79 @@ private static bool _G_ShouldSkip(string[]? exclude, string name)
             {
                 sb.AppendLine($"            // [\"{c.SerializableName}\"] = (entity, comp, scene, sn, en) => {{ /* TODO: registrar AddX en EntityManager para {c.TypeName} */ }},");
             }
-            sb.AppendLine(" };");
+            sb.AppendLine("        };");
 
-            sb.AppendLine(" }");
+            sb.AppendLine("    }");
             sb.AppendLine("}");
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Emite un Parse_Generated especializado para CameraComponent3D: parsea cada propiedad
+        /// a una variable temporal local, construye la instancia con los args requeridos por el
+        /// constructor y asigna el resto de propiedades por setter.
+        /// </summary>
+        private static void EmitCameraComponent3DParse(StringBuilder sb, UIComponentInfo c)
+        {
+            sb.AppendLine($"        internal static {c.TypeName} Parse{c.TypeName}_Generated(");
+            sb.AppendLine("            YotsubaEngine.Core.YotsubaGame.EntityManager entityManager, YTBComponents comp, string sceneName, string entityName, string[]? exclude = null)");
+            sb.AppendLine("        {");
+            // Declaración de temporales (matchean los args del ctor + props extra).
+            sb.AppendLine("            Vector3 _initialPosition = Vector3.Zero;");
+            sb.AppendLine("            float _angleView = 45f;");
+            sb.AppendLine("            float _nearRender = 0.1f;");
+            sb.AppendLine("            float _farRender = 1000f;");
+            sb.AppendLine("            string _entityName = \"\";");
+            sb.AppendLine("            Vector3 _offsetCamera = new Vector3(0, 50, -100);");
+            sb.AppendLine("            foreach (var prop in comp.Propiedades)");
+            sb.AppendLine("            {");
+            sb.AppendLine("                if (_G_ShouldSkip(exclude, prop.Item1)) continue;");
+            sb.AppendLine("                switch (prop.Item1)");
+            sb.AppendLine("                {");
+            foreach (var m in c.Members)
+            {
+                sb.AppendLine($"                    case \"{m.SerializableName}\":");
+                sb.AppendLine("                    {");
+                sb.AppendLine($"                        {EmitParseForTemp(m)}");
+                sb.AppendLine("                        break;");
+                sb.AppendLine("                    }");
+            }
+            sb.AppendLine("                }");
+            sb.AppendLine("            }");
+            sb.AppendLine("            var result = new CameraComponent3D(entityManager, _initialPosition, _angleView, _nearRender, _farRender);");
+            sb.AppendLine("            result.EntityName = _entityName;");
+            sb.AppendLine("            result.OffsetCamera = _offsetCamera;");
+            sb.AppendLine("            return result;");
+            sb.AppendLine("        }");
+        }
+
+        /// <summary>
+        /// Igual que <see cref="EmitParse"/> pero asigna a una variable local temporal <c>_&lt;memberName&gt;</c>
+        /// en vez de a <c>result.&lt;memberName&gt;</c>. Usado por la emisión especial de Camera.
+        /// </summary>
+        private static string EmitParseForTemp(UIComponentValueInfo m)
+        {
+            string varName = "_" + char.ToLowerInvariant(m.MemberName[0]) + m.MemberName.Substring(1);
+
+            if (!string.IsNullOrEmpty(m.ParseConverter))
+            {
+                return $"{varName} = ({StripQualifier(m.MemberTypeRaw)}){m.ParseConverter}(prop.Item2);";
+            }
+
+            string t = m.MemberTypeRaw;
+            return t switch
+            {
+                "string" => $"{varName} = prop.Item2;",
+                "bool" => $"if (bool.TryParse(prop.Item2, out var v)) {varName} = v;",
+                "int" => $"if (int.TryParse(prop.Item2, out var v)) {varName} = v;",
+                "float" => $"if (float.TryParse(prop.Item2, NumberStyles.Float, CultureInfo.InvariantCulture, out var v)) {varName} = v;",
+                "Vector2" => $"if (_G_TryParseVector2(prop.Item2, out var v)) {varName} = v;",
+                "Vector3" => $"if (_G_TryParseVector3(prop.Item2, out var v)) {varName} = v;",
+                "Rectangle" => $"if (_G_TryParseRectangle(prop.Item2, out var v)) {varName} = v;",
+                "Color" => $"if (NamedColors.TryGetValue(prop.Item2, out var v)) {varName} = v;",
+                _ =>
+                    $"if (Enum.TryParse<{StripQualifier(t)}>(prop.Item2, true, out var v)) {varName} = v;"
+            };
         }
 
         private static string EmitParse(UIComponentValueInfo m)
