@@ -10,7 +10,7 @@ namespace YotsubaEngine.YTBContentBuilder.GameData
     /// <summary>
     /// Genera <c>YTBFileToGameData.Generated.cs</c> a partir del análisis (regex-based) de los archivos
     /// fuente del engine, buscando <c>[UIComponent]</c> y <c>[UIComponentValue]</c>.
-    /// Produce código estático (sin reflexión) compatible con AOT/Release/Debug.
+    /// Esto produce código estático (sin reflexión) compatible con AOT/Release/Debug.
     /// </summary>
     public static class YTBFileToGameDataGenerator
     {
