@@ -80,6 +80,7 @@ namespace YotsubaEngine.Core.System.S_3D
             if (Models.Length is 0 && ytb3DComponents.Length is 0) return;
 
             CameraComponent3D camera = EntityManager.Camera;
+            if (camera is null) return;
             camera.Update();
 
             //-:cnd:noEmit
