@@ -12,6 +12,7 @@ namespace YotsubaEngine.Runtime.CPR
 {
     public class Collision_Prediction_Runtime_3D : YTB_Runtime
     {
+        public static int DebugRegisteredEntitiesCount { get; private set; }
         private static bool DistanceIsSetted = false;
 
         public static int UnPhysicalCollisionDistance
@@ -61,6 +62,7 @@ namespace YotsubaEngine.Runtime.CPR
                     EntityPoint[entity.Id] = point;
                 }
             }
+            DebugRegisteredEntitiesCount = Entities.Count;
 
             EventManager.Instance.Subscribe<OnEntityRigidBody3DIsAdded>(EntityAdd);
             EventManager.Instance.Subscribe<OnEntityTransformIsAdded>(EntityAdd);
@@ -73,6 +75,7 @@ namespace YotsubaEngine.Runtime.CPR
             if (!EntityPoint.TryGetValue(entityId, out Point3 lastPoint))
             {
                 RegisterEntity(entityId);
+                Console.WriteLine($"[YTB/Debug] CPR auto-repair: re-registered entity {entityId} missing from EntityPoint.");
 
                 if (!EntityPoint.TryGetValue(entityId, out lastPoint))
                 {
@@ -195,6 +198,7 @@ namespace YotsubaEngine.Runtime.CPR
                 list.Add(entityId);
 
             EntityPoint[entityId] = point;
+            DebugRegisteredEntitiesCount = Entities.Count;
         }
 
         private Point3 GetSpatialHash(ref TransformComponent transform)
