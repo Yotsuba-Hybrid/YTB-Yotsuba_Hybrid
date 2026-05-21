@@ -23,6 +23,7 @@ namespace YotsubaEngine.Core.System.S_3D
     /// </summary>
     public class RenderSystem3D : IRenderSystem
     {
+        private int _frameCounter;
         /// <summary>
         /// Referencia al EventManager para manejar eventos.
         /// </summary>
@@ -60,7 +61,7 @@ namespace YotsubaEngine.Core.System.S_3D
         /// <param name="gameTime">Tiempo de juego. <para>Game time.</para></param>
         public override void Render3D(GameTime gameTime)
         {
-
+            _frameCounter++;
 
             //-:cnd:noEmit
 #if YTB
@@ -82,6 +83,7 @@ namespace YotsubaEngine.Core.System.S_3D
             CameraComponent3D camera = EntityManager.Camera;
             if (camera is null) return;
             camera.Update();
+            var gd = YTBGlobalState.GraphicsDevice;
 
             //-:cnd:noEmit
 #if YTB
@@ -167,6 +169,21 @@ namespace YotsubaEngine.Core.System.S_3D
 
             Span<ShaderComponent> shaderComponents = EntityManager.ShaderComponents.AsSpan();
             Span<SpriteComponent2D> spriteComponent2Ds = EntityManager.Sprite2DComponents.AsSpan();
+            bool depthPrePassExecuted = false;
+            bool queryPhaseExecuted = false;
+            bool mainPassExecuted = false;
+            int mainRendered = 0;
+            int debugDrawn = 0;
+
+            // 1) Pre-pass de profundidad/occluders: poblar depth buffer antes de queries.
+            gd.BlendState = BlendState.Opaque;
+            gd.DepthStencilState = DepthStencilState.Default;
+            gd.RasterizerState = RasterizerState.CullCounterClockwise;
+            depthPrePassExecuted = true;
+
+            // 2) Evaluación de occlusion queries (consume frame anterior y emite nuevas).
+            entities = HardwareOcclusionQuerieRuntime.GetEntitiesToRender();
+            queryPhaseExecuted = true;
 
             foreach (ref int entityId in entities)
             {
@@ -182,6 +199,7 @@ namespace YotsubaEngine.Core.System.S_3D
                         camera.DrawModel(ref model, ref transform,
                             entity.HasComponent(YTBComponent.Shader) ? shaderComponents[entity.Id] : null,
                             entity.Id);
+                        mainRendered++;
                 }
 
                 if (entity.HasComponent(YTBComponent.YTBModel3D))
@@ -189,6 +207,7 @@ namespace YotsubaEngine.Core.System.S_3D
                     ref YTBModelComponent3D obj3D = ref ytb3DComponents[entity.Id];
                     if (!obj3D.IsVisible) continue;
                     Graphics3D.DrawBox(transform.Position, transform.Size, transform.Color, camera.ViewMatrix, camera.ProjectionMatrix);
+                    mainRendered++;
                 }
 
                 if (!entity.HasComponent(YTBComponent.Sprite)) continue;
@@ -197,7 +216,33 @@ namespace YotsubaEngine.Core.System.S_3D
                 if (!sprite.Is2_5D) continue;
 
                 Graphics3D.DrawSprite2_5D(ref sprite, transform.Position, transform.Color, camera.ViewMatrix, camera.ProjectionMatrix, transform.Rotation);
+                mainRendered++;
             }
+            mainPassExecuted = true;
+
+            // 4) Debug visualization/logs (solo YTB).
+#if YTB
+            var diag = HardwareOcclusionQuerieRuntime.GetDiagnostics();
+            EngineUISystem.SendLog(
+                $"[Render3D][Frame {_frameCounter}] PrePass={depthPrePassExecuted} QueryPhase={queryPhaseExecuted} MainPass={mainPassExecuted} " +
+                $"Rendered={mainRendered} QuerySubmitted={diag.Submitted} QueryCompleted={diag.Completed} " +
+                $"VisibleByQuery={diag.VisibleFromQuery} Fallback={diag.ConservativeFallback} QueryOperational={diag.QueriesOperational} ForcedFallback={diag.ForcedFallback}");
+
+            if (YTBGlobalState.EngineShortcutsMode)
+            {
+                foreach (ref int entityId in entities)
+                {
+                    ref Yotsuba entity = ref Yotsubas[entityId];
+                    if (entity.HasNotComponent(YTBComponent.Transform)) continue;
+                    ref TransformComponent transform = ref transformComponents[entityId];
+                    Graphics3D.DrawBox(transform.Position, Vector3.One * 0.25f, Color.LimeGreen, camera.ViewMatrix, camera.ProjectionMatrix);
+                    debugDrawn++;
+                }
+
+                if (debugDrawn > 0)
+                    EngineUISystem.SendLog($"[Render3D][Frame {_frameCounter}] DebugVis={debugDrawn} entidades visibles.");
+            }
+#endif
         }
     }
 }
