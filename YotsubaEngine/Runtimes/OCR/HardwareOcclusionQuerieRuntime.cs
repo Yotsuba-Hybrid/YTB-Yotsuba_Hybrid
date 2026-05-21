@@ -27,6 +27,10 @@ namespace YotsubaEngine.Runtime.OCR
         public string ToLogLine()
             => $"[OCR][Frame {FrameIndex}] RPR={RprPredictedCount} OCR Visible={OcrVisibleCount} Occluded={OcrOccludedCount} PendingQueries={PendingQueriesCount} IsOccludedTransitions={OcclusionTransitionsCount}";
     }
+        public static int DebugVisibleCount { get; private set; }
+        public static int DebugOccludedCount { get; private set; }
+        public static int DebugActiveQueriesCount { get; private set; }
+        public static int DebugCompletedQueriesCount { get; private set; }
 
         private Render_Prediction_Runtime_3D RenderPredictionRuntime3D;
 
@@ -44,6 +48,13 @@ namespace YotsubaEngine.Runtime.OCR
         public bool InstrumentationEnabled { get; set; } = true;
         public bool UseOcrCulling { get; set; } = true;
         public OcclusionInstrumentationFrame LastFrameInstrumentation { get; private set; }
+        private bool OcclusionQueriesOperational;
+        private bool OcclusionQueriesForcedFallback;
+        private int LastSubmittedQueries;
+        private int LastCompletedQueries;
+        private int LastVisibleFromQuery;
+        private int LastConservativeFallback;
+
         public override void InitializeSystem(EntityManager entities)
         {
             EntityManager = entities;
@@ -52,17 +63,25 @@ namespace YotsubaEngine.Runtime.OCR
             RenderPredictionRuntime3D = new();
             Graphics3D = new();
             RenderPredictionRuntime3D.InitializeSystem(entities);
+            OcclusionQueriesOperational = true;
+            OcclusionQueriesForcedFallback = false;
         }
 
         /// <summary>
-        /// Realiza el Frustum Culling y el Occlusion Culling, devolviendo solo los IDs a dibujar.
-        /// DEBE llamarse DESPUÉS de dibujar el escenario estático.
+        /// Evalúa resultados de occlusion queries previamente emitidas y programa nuevas queries para el frame siguiente.
+        /// Contrato: la fase de pre-pass de profundidad debe haber ocurrido antes de esta llamada en el mismo frame.
+        /// Si el estado de queries no es válido, hace fallback conservador determinista (sin ocultar por query).
         /// </summary>
         private YTB<int> CalculateVisibility()
         {
             CameraComponent3D camera = EntityManager.Camera;
             YTB<int> visibility = EntityToReturn;
             EntityToReturn.Clear();
+            DebugVisibleCount = 0;
+            DebugOccludedCount = 0;
+            DebugActiveQueriesCount = 0;
+            DebugCompletedQueriesCount = 0;
+            if (camera is null) return visibility;
 
             var gd = YTBGlobalState.GraphicsDevice;
             Span<Yotsuba> GlobalEntities = GetEntitiesAsSpan();
@@ -70,6 +89,10 @@ namespace YotsubaEngine.Runtime.OCR
             Span<ModelComponent3D> modelComponents = GetModelsComponentsAsSpan();
 
             BoundingFrustum cameraFrustum = new BoundingFrustum(camera.ViewMatrix * camera.ProjectionMatrix);
+            int submittedQueries = 0;
+            int completedQueries = 0;
+            int visibleByQuery = 0;
+            int conservativeFallback = 0;
 
             // Guardar estado actual
             var oldBlendState = gd.BlendState;
@@ -95,6 +118,8 @@ namespace YotsubaEngine.Runtime.OCR
                 if(entity.HasNotComponent(YTBComponent.Model3D))
                 {
                     visibility.Add(entityId);
+                    DebugVisibleCount++;
+                    conservativeFallback++;
                     continue;
                 }
 
@@ -113,12 +138,34 @@ namespace YotsubaEngine.Runtime.OCR
                 // 2. FASE 1: FRUSTUM CULLING (CPU)
                 if (cameraFrustum.Intersects(entitySphere))
                 {
+                    if (!OcclusionQueriesOperational || OcclusionQueriesForcedFallback)
+                    {
+                        visibility.Add(entityId);
+                        model.IsOccluded = false;
+                        model.IsQueryActive = false;
+                        conservativeFallback++;
+                        continue;
+                    }
+
                     // Inicializar el query si es nuevo
                     if (model.OcclusionQuery == null)
                     {
-                        model.OcclusionQuery = new OcclusionQuery(gd);
-                        model.IsOccluded = false;
-                        model.IsQueryActive = false;
+                        try
+                        {
+                            model.OcclusionQuery = new OcclusionQuery(gd);
+                            model.IsOccluded = false;
+                            model.IsQueryActive = false;
+                        }
+                        catch
+                        {
+                            OcclusionQueriesOperational = false;
+                            OcclusionQueriesForcedFallback = true;
+                            visibility.Add(entityId);
+                            model.IsOccluded = false;
+                            model.IsQueryActive = false;
+                            conservativeFallback++;
+                            continue;
+                        }
                     }
 
                     // 3. LEER RESPUESTA DEL FRAME ANTERIOR (Sin congelar CPU)
@@ -126,6 +173,14 @@ namespace YotsubaEngine.Runtime.OCR
                     {
                         model.IsOccluded = (model.OcclusionQuery.PixelCount == 0);
                         model.IsQueryActive = false;
+                        DebugCompletedQueriesCount++;
+                    }
+                    else if (model.IsQueryActive && model.OcclusionQuery == null)
+                    {
+                        model.IsQueryActive = false;
+                        model.IsOccluded = false;
+                        Console.WriteLine($"[YTB/Debug] OCR auto-repair: query state reset for entity {entityId} (active without query).");
+                        completedQueries++;
                     }
 
                     if (previousOccludedState != model.IsOccluded)
@@ -139,6 +194,12 @@ namespace YotsubaEngine.Runtime.OCR
                     {
                         visibleCount++;
                         visibility.Add(entityId);
+                        DebugVisibleCount++;
+                    }
+                    else
+                    {
+                        DebugOccludedCount++;
+                        visibleByQuery++;
                     }
                     else
                     {
@@ -160,6 +221,7 @@ namespace YotsubaEngine.Runtime.OCR
 
                         model.IsQueryActive = true;
                         model.IsOccluded = false; // Prevención de popping
+                        submittedQueries++;
                     }
                     else
                     {
@@ -167,10 +229,23 @@ namespace YotsubaEngine.Runtime.OCR
                     }
                 }
             }
+            foreach (int entityId in entitiesSpan)
+            {
+                if (entityId < 0 || entityId >= modelComponents.Length) continue;
+                ref ModelComponent3D model = ref modelComponents[entityId];
+                if (model.OcclusionQuery != null && model.IsQueryActive)
+                {
+                    DebugActiveQueriesCount++;
+                }
+            }
 
             // Restaurar estados originales de la GPU
             gd.BlendState = oldBlendState;
             gd.DepthStencilState = oldDepthStencil;
+            LastSubmittedQueries = submittedQueries;
+            LastCompletedQueries = completedQueries;
+            LastVisibleFromQuery = visibleByQuery;
+            LastConservativeFallback = conservativeFallback;
 
             LastFrameInstrumentation = new OcclusionInstrumentationFrame
             {
@@ -202,6 +277,9 @@ namespace YotsubaEngine.Runtime.OCR
             Span<int> entities = CalculateVisibility().AsSpan();
             return entities;
         }
+
+        public (bool QueriesOperational, bool ForcedFallback, int Submitted, int Completed, int VisibleFromQuery, int ConservativeFallback) GetDiagnostics()
+            => (OcclusionQueriesOperational, OcclusionQueriesForcedFallback, LastSubmittedQueries, LastCompletedQueries, LastVisibleFromQuery, LastConservativeFallback);
 
         public override void Dispose()
         {
