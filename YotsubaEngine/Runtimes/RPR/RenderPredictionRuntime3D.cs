@@ -121,11 +121,6 @@ namespace YotsubaEngine.Runtime.RPR
             Entities.Add(entityId);
         }
 
-        private void UnregisterEntity(int entityId)
-        {
-            Entities.RemoveFast(entityId);
-        }
-
         public override void Dispose()
         {
             EventManager.Instance.Unsubscribe<OnEntityModelComponentIsAdded>(EntityAdd);

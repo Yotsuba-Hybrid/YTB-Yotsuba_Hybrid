@@ -153,11 +153,6 @@ namespace YotsubaEngine.Runtime.OCR
 
                         model.OcclusionUncertain = false;
                         model.IsQueryActive = false;
-                        DebugCompletedQueriesCount++;
-                    }
-                    else if (model.IsQueryActive && model.OcclusionQuery == null)
-                    {
-                        model.IsQueryActive = false;
                         model.IsOccluded = false;
                         Console.WriteLine($"[YTB/Debug] OCR auto-repair: query state reset for entity {entityId} (active without query).");
                         completedQueries++;
