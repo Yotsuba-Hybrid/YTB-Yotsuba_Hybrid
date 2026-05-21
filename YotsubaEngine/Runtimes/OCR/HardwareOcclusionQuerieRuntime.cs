@@ -1,6 +1,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Diagnostics;
+using System.Text;
 using YotsubaEngine.Core.Component.C_3D;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;
@@ -13,6 +15,19 @@ namespace YotsubaEngine.Runtime.OCR
 {
     public class Hardware_Occlusion_Querie_Runtime : YTB_Runtime
     {
+    public readonly struct OcclusionInstrumentationFrame
+    {
+        public int FrameIndex { get; init; }
+        public int RprPredictedCount { get; init; }
+        public int OcrVisibleCount { get; init; }
+        public int OcrOccludedCount { get; init; }
+        public int OcclusionTransitionsCount { get; init; }
+        public int PendingQueriesCount { get; init; }
+
+        public string ToLogLine()
+            => $"[OCR][Frame {FrameIndex}] RPR={RprPredictedCount} OCR Visible={OcrVisibleCount} Occluded={OcrOccludedCount} PendingQueries={PendingQueriesCount} IsOccludedTransitions={OcclusionTransitionsCount}";
+    }
+
         private Render_Prediction_Runtime_3D RenderPredictionRuntime3D;
 
         private Graphics3D Graphics3D;
@@ -23,6 +38,12 @@ namespace YotsubaEngine.Runtime.OCR
         };
 
         private YTB<int> EntityToReturn { get; set; } 
+        private int _frameIndex;
+        private readonly StringBuilder _transitionLogBuilder = new();
+
+        public bool InstrumentationEnabled { get; set; } = true;
+        public bool UseOcrCulling { get; set; } = true;
+        public OcclusionInstrumentationFrame LastFrameInstrumentation { get; private set; }
         public override void InitializeSystem(EntityManager entities)
         {
             EntityManager = entities;
@@ -61,6 +82,12 @@ namespace YotsubaEngine.Runtime.OCR
             gd.DepthStencilState = DepthStencilState.Default;
 
             Span<int> entitiesSpan = RenderPredictionRuntime3D.GetEntitieIdsCanRender3D();
+            int visibleCount = 0;
+            int occludedCount = 0;
+            int transitions = 0;
+            int pendingQueries = 0;
+            _transitionLogBuilder.Clear();
+            _frameIndex++;
             foreach (int entityId in entitiesSpan)
             {
                 ref Yotsuba entity = ref GlobalEntities[entityId];
@@ -68,10 +95,12 @@ namespace YotsubaEngine.Runtime.OCR
                 if(entity.HasNotComponent(YTBComponent.Model3D))
                 {
                     visibility.Add(entityId);
+                    continue;
                 }
 
                 ref TransformComponent transform = ref transformComponents[entityId];
                 ref ModelComponent3D model = ref modelComponents[entityId];
+                bool previousOccludedState = model.IsOccluded;
 
                 // 1. Matriz de Mundo Cacheada
                 float yaw = MathHelper.ToRadians(transform.Rotation);
@@ -99,10 +128,21 @@ namespace YotsubaEngine.Runtime.OCR
                         model.IsQueryActive = false;
                     }
 
-                    // 4. AÑADIR A LISTA DE VISIBLES
-                    if (!model.IsOccluded)
+                    if (previousOccludedState != model.IsOccluded)
                     {
+                        transitions++;
+                        _transitionLogBuilder.Append($" entityId={entityId}:{previousOccludedState}->{model.IsOccluded};");
+                    }
+
+                    // 4. AÑADIR A LISTA DE VISIBLES
+                    if (!UseOcrCulling || !model.IsOccluded)
+                    {
+                        visibleCount++;
                         visibility.Add(entityId);
+                    }
+                    else
+                    {
+                        occludedCount++;
                     }
 
                     // 5. INICIAR NUEVA PRUEBA (Dibujar caja invisible a la GPU)
@@ -121,12 +161,38 @@ namespace YotsubaEngine.Runtime.OCR
                         model.IsQueryActive = true;
                         model.IsOccluded = false; // Prevención de popping
                     }
+                    else
+                    {
+                        pendingQueries++;
+                    }
                 }
             }
 
             // Restaurar estados originales de la GPU
             gd.BlendState = oldBlendState;
             gd.DepthStencilState = oldDepthStencil;
+
+            LastFrameInstrumentation = new OcclusionInstrumentationFrame
+            {
+                FrameIndex = _frameIndex,
+                RprPredictedCount = entitiesSpan.Length,
+                OcrVisibleCount = visibleCount,
+                OcrOccludedCount = occludedCount,
+                OcclusionTransitionsCount = transitions,
+                PendingQueriesCount = pendingQueries
+            };
+
+            if (InstrumentationEnabled)
+            {
+                Debug.WriteLine(LastFrameInstrumentation.ToLogLine());
+#if YTB
+                YotsubaEngine.Core.System.YotsubaEngineUI.EngineUISystem.SendLog(LastFrameInstrumentation.ToLogLine());
+                if (_transitionLogBuilder.Length > 0)
+                {
+                    YotsubaEngine.Core.System.YotsubaEngineUI.EngineUISystem.SendLog($"[OCR][Frame {_frameIndex}] Transitions:{_transitionLogBuilder}");
+                }
+#endif
+            }
 
             return visibility;
         }
