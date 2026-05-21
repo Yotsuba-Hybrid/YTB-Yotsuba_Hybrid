@@ -35,8 +35,7 @@ namespace YotsubaEngine.Runtime.CPR
 
         public Dictionary<Point3, YTB<int>> SpatialHashGrid;
         private Dictionary<int, Point3> EntityPoint;
-        private const int SafeCollisionDistance = 1;
-        private static int unPhysicalCollisionDistance;
+        private static int unPhysicalCollisionDistance = 1;
 
         public override void InitializeSystem(EntityManager entityManager)
         {
@@ -47,6 +46,11 @@ namespace YotsubaEngine.Runtime.CPR
             EntityPoint = new Dictionary<int, Point3>();
             Entities = new();
             EntityManager = entityManager;
+
+            if (unPhysicalCollisionDistance <= 0)
+            {
+                unPhysicalCollisionDistance = 1;
+            }
 
             Span<TransformComponent> transformComponents = GetTransformComponentsAsSpan();
             Span<RigidBodyComponent3D> rigidBodyComponents = GetRigidBody3DComponentsAsSpan();

@@ -42,19 +42,8 @@ namespace YotsubaEngine.Runtime.OCR
         };
 
         private YTB<int> EntityToReturn { get; set; } 
-        private int _frameIndex;
-        private readonly StringBuilder _transitionLogBuilder = new();
 
-        public bool InstrumentationEnabled { get; set; } = true;
-        public bool UseOcrCulling { get; set; } = true;
-        public OcclusionInstrumentationFrame LastFrameInstrumentation { get; private set; }
-        private bool OcclusionQueriesOperational;
-        private bool OcclusionQueriesForcedFallback;
-        private int LastSubmittedQueries;
-        private int LastCompletedQueries;
-        private int LastVisibleFromQuery;
-        private int LastConservativeFallback;
-
+        private const int OcclusionHideConfirmationFrames = 3;
         public override void InitializeSystem(EntityManager entities)
         {
             EntityManager = entities;
@@ -74,14 +63,17 @@ namespace YotsubaEngine.Runtime.OCR
         /// </summary>
         private YTB<int> CalculateVisibility()
         {
-            CameraComponent3D camera = EntityManager.Camera;
             YTB<int> visibility = EntityToReturn;
             EntityToReturn.Clear();
-            DebugVisibleCount = 0;
-            DebugOccludedCount = 0;
-            DebugActiveQueriesCount = 0;
-            DebugCompletedQueriesCount = 0;
-            if (camera is null) return visibility;
+            CameraComponent3D camera = EntityManager.Camera;
+            if (camera == null)
+            {
+                // Fallback seguro: sin cámara no hacemos OCR, devolvemos candidatos RPR completos.
+                Span<int> fallbackEntities = RenderPredictionRuntime3D.GetEntitieIdsCanRender3D();
+                for (int i = 0; i < fallbackEntities.Length; i++)
+                    visibility.Add(fallbackEntities[i]);
+                return visibility;
+            }
 
             var gd = YTBGlobalState.GraphicsDevice;
             Span<Yotsuba> GlobalEntities = GetEntitiesAsSpan();
@@ -118,8 +110,6 @@ namespace YotsubaEngine.Runtime.OCR
                 if(entity.HasNotComponent(YTBComponent.Model3D))
                 {
                     visibility.Add(entityId);
-                    DebugVisibleCount++;
-                    conservativeFallback++;
                     continue;
                 }
 
@@ -128,9 +118,8 @@ namespace YotsubaEngine.Runtime.OCR
                 bool previousOccludedState = model.IsOccluded;
 
                 // 1. Matriz de Mundo Cacheada
-                float yaw = MathHelper.ToRadians(transform.Rotation);
                 Matrix worldMatrix = Matrix.CreateScale(transform.Scale)
-                                   * Matrix.CreateRotationY(yaw)
+                                   * Matrix.CreateRotationY(transform.Rotation)
                                    * Matrix.CreateTranslation(transform.Position);
 
                 BoundingSphere entitySphere = model.GetWorldBoundingSphere(worldMatrix);
@@ -143,35 +132,26 @@ namespace YotsubaEngine.Runtime.OCR
                         visibility.Add(entityId);
                         model.IsOccluded = false;
                         model.IsQueryActive = false;
-                        conservativeFallback++;
-                        continue;
-                    }
-
-                    // Inicializar el query si es nuevo
-                    if (model.OcclusionQuery == null)
-                    {
-                        try
-                        {
-                            model.OcclusionQuery = new OcclusionQuery(gd);
-                            model.IsOccluded = false;
-                            model.IsQueryActive = false;
-                        }
-                        catch
-                        {
-                            OcclusionQueriesOperational = false;
-                            OcclusionQueriesForcedFallback = true;
-                            visibility.Add(entityId);
-                            model.IsOccluded = false;
-                            model.IsQueryActive = false;
-                            conservativeFallback++;
-                            continue;
-                        }
+                        model.OccludedFrameStreak = 0;
+                        model.OcclusionUncertain = true;
                     }
 
                     // 3. LEER RESPUESTA DEL FRAME ANTERIOR (Sin congelar CPU)
                     if (model.IsQueryActive && model.OcclusionQuery.IsComplete)
                     {
-                        model.IsOccluded = (model.OcclusionQuery.PixelCount == 0);
+                        bool occludedThisFrame = model.OcclusionQuery.PixelCount == 0;
+                        if (occludedThisFrame)
+                        {
+                            model.OccludedFrameStreak++;
+                            model.IsOccluded = model.OccludedFrameStreak >= OcclusionHideConfirmationFrames;
+                        }
+                        else
+                        {
+                            model.OccludedFrameStreak = 0;
+                            model.IsOccluded = false;
+                        }
+
+                        model.OcclusionUncertain = false;
                         model.IsQueryActive = false;
                         DebugCompletedQueriesCount++;
                     }
@@ -189,8 +169,8 @@ namespace YotsubaEngine.Runtime.OCR
                         _transitionLogBuilder.Append($" entityId={entityId}:{previousOccludedState}->{model.IsOccluded};");
                     }
 
-                    // 4. AÑADIR A LISTA DE VISIBLES
-                    if (!UseOcrCulling || !model.IsOccluded)
+                    // 4. Política temporal conservadora: render si incierto, visible o en transición.
+                    if (model.OcclusionUncertain || !model.IsOccluded)
                     {
                         visibleCount++;
                         visibility.Add(entityId);
@@ -220,12 +200,7 @@ namespace YotsubaEngine.Runtime.OCR
                         model.OcclusionQuery.End();
 
                         model.IsQueryActive = true;
-                        model.IsOccluded = false; // Prevención de popping
-                        submittedQueries++;
-                    }
-                    else
-                    {
-                        pendingQueries++;
+                        model.OcclusionUncertain = true;
                     }
                 }
             }

@@ -81,6 +81,15 @@ namespace YotsubaEngine.Core.Component.C_3D
         /// Asumimos que es visible (false) por defecto.
         /// </summary>
         internal bool IsOccluded { get; set; }
+        /// <summary>
+        /// Frames consecutivos con resultado "ocluido" confirmados por GPU.
+        /// </summary>
+        internal int OccludedFrameStreak { get; set; }
+
+        /// <summary>
+        /// Cuando es true, el resultado de visibilidad es incierto y se fuerza render conservador.
+        /// </summary>
+        internal bool OcclusionUncertain { get; set; } = true;
         public ModelComponent3D(Model model)
         {
             Model = model;
