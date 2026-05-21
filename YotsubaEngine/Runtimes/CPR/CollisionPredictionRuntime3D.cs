@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using YotsubaEngine.Core.Component.C_3D;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;
@@ -13,6 +12,7 @@ namespace YotsubaEngine.Runtime.CPR
     public class Collision_Prediction_Runtime_3D : YTB_Runtime
     {
         private static bool DistanceIsSetted = false;
+        private const int SafeCollisionDistance = 1;
 
         public static int UnPhysicalCollisionDistance
         {
@@ -21,7 +21,7 @@ namespace YotsubaEngine.Runtime.CPR
             {
                 if (DistanceIsSetted) return;
                 DistanceIsSetted = true;
-                if (value <= 0) unPhysicalCollisionDistance = 1;
+                if (value <= 0) unPhysicalCollisionDistance = SafeCollisionDistance;
                 else
                 unPhysicalCollisionDistance = value;
             }
@@ -30,7 +30,7 @@ namespace YotsubaEngine.Runtime.CPR
 
         public Dictionary<Point3, YTB<int>> SpatialHashGrid;
         private Dictionary<int, Point3> EntityPoint;
-        private static int unPhysicalCollisionDistance;
+        private static int unPhysicalCollisionDistance = SafeCollisionDistance;
 
         public override void InitializeSystem(EntityManager entityManager)
         {
@@ -40,25 +40,16 @@ namespace YotsubaEngine.Runtime.CPR
             Entities = new();
             EntityManager = entityManager;
 
-            Span<TransformComponent> transformComponents = GetTransformComponentsAsSpan();
-            Span<RigidBodyComponent3D> rigidBodyComponents = GetRigidBody3DComponentsAsSpan();
+            if (unPhysicalCollisionDistance <= 0)
+            {
+                unPhysicalCollisionDistance = SafeCollisionDistance;
+            }
+
             foreach (ref Yotsuba entity in GetEntitiesAsSpan())
             {
                 if (entity.HasComponent(YTBComponent.Rigibody3D) && entity.HasComponent(YTBComponent.Transform))
                 {
-                    Entities.Add(entity.Id);
-                    ref TransformComponent transform = ref transformComponents[entity.Id];
-                    ref RigidBodyComponent3D rigidBody = ref rigidBodyComponents[entity.Id];
-
-                    Point3 point = GetSpatialHash(ref transform);
-                    if (!SpatialHashGrid.TryGetValue(point, out YTB<int> list))
-                    {
-                        list = SpatialGridStorage.Rent();
-                        SpatialHashGrid.Add(point, list);
-                    }
-                    list.Add(entity.Id);
-
-                    EntityPoint[entity.Id] = point;
+                    RegisterEntity(entity.Id);
                 }
             }
 

@@ -23,6 +23,8 @@ namespace YotsubaEngine.Runtime.OCR
         };
 
         private YTB<int> EntityToReturn { get; set; } 
+
+        private const int OcclusionHideConfirmationFrames = 3;
         public override void InitializeSystem(EntityManager entities)
         {
             EntityManager = entities;
@@ -39,9 +41,17 @@ namespace YotsubaEngine.Runtime.OCR
         /// </summary>
         private YTB<int> CalculateVisibility()
         {
-            CameraComponent3D camera = EntityManager.Camera;
             YTB<int> visibility = EntityToReturn;
             EntityToReturn.Clear();
+            CameraComponent3D camera = EntityManager.Camera;
+            if (camera == null)
+            {
+                // Fallback seguro: sin cámara no hacemos OCR, devolvemos candidatos RPR completos.
+                Span<int> fallbackEntities = RenderPredictionRuntime3D.GetEntitieIdsCanRender3D();
+                for (int i = 0; i < fallbackEntities.Length; i++)
+                    visibility.Add(fallbackEntities[i]);
+                return visibility;
+            }
 
             var gd = YTBGlobalState.GraphicsDevice;
             Span<Yotsuba> GlobalEntities = GetEntitiesAsSpan();
@@ -68,15 +78,15 @@ namespace YotsubaEngine.Runtime.OCR
                 if(entity.HasNotComponent(YTBComponent.Model3D))
                 {
                     visibility.Add(entityId);
+                    continue;
                 }
 
                 ref TransformComponent transform = ref transformComponents[entityId];
                 ref ModelComponent3D model = ref modelComponents[entityId];
 
                 // 1. Matriz de Mundo Cacheada
-                float yaw = MathHelper.ToRadians(transform.Rotation);
                 Matrix worldMatrix = Matrix.CreateScale(transform.Scale)
-                                   * Matrix.CreateRotationY(yaw)
+                                   * Matrix.CreateRotationY(transform.Rotation)
                                    * Matrix.CreateTranslation(transform.Position);
 
                 BoundingSphere entitySphere = model.GetWorldBoundingSphere(worldMatrix);
@@ -90,17 +100,31 @@ namespace YotsubaEngine.Runtime.OCR
                         model.OcclusionQuery = new OcclusionQuery(gd);
                         model.IsOccluded = false;
                         model.IsQueryActive = false;
+                        model.OccludedFrameStreak = 0;
+                        model.OcclusionUncertain = true;
                     }
 
                     // 3. LEER RESPUESTA DEL FRAME ANTERIOR (Sin congelar CPU)
                     if (model.IsQueryActive && model.OcclusionQuery.IsComplete)
                     {
-                        model.IsOccluded = (model.OcclusionQuery.PixelCount == 0);
+                        bool occludedThisFrame = model.OcclusionQuery.PixelCount == 0;
+                        if (occludedThisFrame)
+                        {
+                            model.OccludedFrameStreak++;
+                            model.IsOccluded = model.OccludedFrameStreak >= OcclusionHideConfirmationFrames;
+                        }
+                        else
+                        {
+                            model.OccludedFrameStreak = 0;
+                            model.IsOccluded = false;
+                        }
+
+                        model.OcclusionUncertain = false;
                         model.IsQueryActive = false;
                     }
 
-                    // 4. AÑADIR A LISTA DE VISIBLES
-                    if (!model.IsOccluded)
+                    // 4. Política temporal conservadora: render si incierto, visible o en transición.
+                    if (model.OcclusionUncertain || !model.IsOccluded)
                     {
                         visibility.Add(entityId);
                     }
@@ -119,7 +143,7 @@ namespace YotsubaEngine.Runtime.OCR
                         model.OcclusionQuery.End();
 
                         model.IsQueryActive = true;
-                        model.IsOccluded = false; // Prevención de popping
+                        model.OcclusionUncertain = true;
                     }
                 }
             }
