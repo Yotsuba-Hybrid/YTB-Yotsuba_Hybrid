@@ -8,6 +8,7 @@ using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.Contract;
 #if YTB
 using YotsubaEngine.Core.System.YotsubaEngineUI;
+using YotsubaEngine.Core.System.YotsubaEngineUI.UI;
 #endif
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Exceptions;
@@ -218,6 +219,9 @@ namespace YotsubaEngine.Core.System.S_3D
                 Graphics3D.DrawSprite2_5D(ref sprite, transform.Position, transform.Color, camera.ViewMatrix, camera.ProjectionMatrix, transform.Rotation);
                 mainRendered++;
             }
+
+#if YTB && DEBUG
+            if (DebugOverlayUI.ShowOcrOverlay)
             mainPassExecuted = true;
 
             // 4) Debug visualization/logs (solo YTB).
@@ -233,6 +237,15 @@ namespace YotsubaEngine.Core.System.S_3D
                 foreach (ref int entityId in entities)
                 {
                     ref Yotsuba entity = ref Yotsubas[entityId];
+                    if (entity.HasNotComponent(YTBComponent.Model3D) || entity.HasNotComponent(YTBComponent.Transform))
+                        continue;
+
+                    ref TransformComponent transform = ref transformComponents[entity.Id];
+                    ref var model = ref Models[entity.Id];
+                    Color stateColor = model.IsOccluded ? Color.Red : Color.LimeGreen;
+                    float size = model.RadiusSphere > 0f ? model.RadiusSphere * 2f : 1f;
+                    Graphics3D.DrawBox(transform.Position + model.SphereOffset, new Vector3(size), stateColor, camera.ViewMatrix, camera.ProjectionMatrix);
+                }
                     if (entity.HasNotComponent(YTBComponent.Transform)) continue;
                     ref TransformComponent transform = ref transformComponents[entityId];
                     Graphics3D.DrawBox(transform.Position, Vector3.One * 0.25f, Color.LimeGreen, camera.ViewMatrix, camera.ProjectionMatrix);

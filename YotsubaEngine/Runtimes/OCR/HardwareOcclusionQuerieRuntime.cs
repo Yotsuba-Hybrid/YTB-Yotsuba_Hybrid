@@ -13,6 +13,11 @@ namespace YotsubaEngine.Runtime.OCR
 {
     public class Hardware_Occlusion_Querie_Runtime : YTB_Runtime
     {
+        public static int DebugVisibleCount { get; private set; }
+        public static int DebugOccludedCount { get; private set; }
+        public static int DebugActiveQueriesCount { get; private set; }
+        public static int DebugCompletedQueriesCount { get; private set; }
+
         private Render_Prediction_Runtime_3D RenderPredictionRuntime3D;
 
         private Graphics3D Graphics3D;
@@ -52,6 +57,10 @@ namespace YotsubaEngine.Runtime.OCR
             CameraComponent3D camera = EntityManager.Camera;
             YTB<int> visibility = EntityToReturn;
             EntityToReturn.Clear();
+            DebugVisibleCount = 0;
+            DebugOccludedCount = 0;
+            DebugActiveQueriesCount = 0;
+            DebugCompletedQueriesCount = 0;
             if (camera is null) return visibility;
 
             var gd = YTBGlobalState.GraphicsDevice;
@@ -83,6 +92,7 @@ namespace YotsubaEngine.Runtime.OCR
                 if(entity.HasNotComponent(YTBComponent.Model3D))
                 {
                     visibility.Add(entityId);
+                    DebugVisibleCount++;
                     conservativeFallback++;
                     continue;
                 }
@@ -136,6 +146,13 @@ namespace YotsubaEngine.Runtime.OCR
                     {
                         model.IsOccluded = (model.OcclusionQuery.PixelCount == 0);
                         model.IsQueryActive = false;
+                        DebugCompletedQueriesCount++;
+                    }
+                    else if (model.IsQueryActive && model.OcclusionQuery == null)
+                    {
+                        model.IsQueryActive = false;
+                        model.IsOccluded = false;
+                        Console.WriteLine($"[YTB/Debug] OCR auto-repair: query state reset for entity {entityId} (active without query).");
                         completedQueries++;
                     }
 
@@ -143,6 +160,11 @@ namespace YotsubaEngine.Runtime.OCR
                     if (!model.IsOccluded)
                     {
                         visibility.Add(entityId);
+                        DebugVisibleCount++;
+                    }
+                    else
+                    {
+                        DebugOccludedCount++;
                         visibleByQuery++;
                     }
 
@@ -163,6 +185,15 @@ namespace YotsubaEngine.Runtime.OCR
                         model.IsOccluded = false; // Prevención de popping
                         submittedQueries++;
                     }
+                }
+            }
+            foreach (int entityId in entitiesSpan)
+            {
+                if (entityId < 0 || entityId >= modelComponents.Length) continue;
+                ref ModelComponent3D model = ref modelComponents[entityId];
+                if (model.OcclusionQuery != null && model.IsQueryActive)
+                {
+                    DebugActiveQueriesCount++;
                 }
             }
 

@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.System.S_2D;
+using YotsubaEngine.Runtime.CPR;
+using YotsubaEngine.Runtime.OCR;
 using Num = System.Numerics;
 
 namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
@@ -46,6 +48,9 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
         /// <para>Shows font drag handles by default.</para>
         /// </summary>
         public static bool ShowFontHandles { get; set; } = false; // Mostrar handles de texto por defecto en debug
+        public static bool ShowCprDebug { get; set; } = false;
+        public static bool ShowOcrDebug { get; set; } = false;
+        public static bool ShowOcrOverlay { get; set; } = false;
 
         // Lista de colisiones detectadas (será actualizada por PhysicsSystem2D)
         private static readonly List<CollisionPair> _activeCollisions = new();
@@ -145,6 +150,9 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
                 bool showCollList = ShowCollisionList;
                 bool showButtonLogs = ShowButtonLogs;
                 bool showFontHandles = ShowFontHandles;
+                bool showCprDebug = ShowCprDebug;
+                bool showOcrDebug = ShowOcrDebug;
+                bool showOcrOverlay = ShowOcrOverlay;
 
                 if (ImGui.Checkbox("Mostrar Colisiones Entidades", ref showEntityColl))
                     ShowEntityCollisions = showEntityColl;
@@ -163,9 +171,28 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
                     
                 if (ImGui.Checkbox("Mostrar Handles de Texto", ref showFontHandles))
                     ShowFontHandles = showFontHandles;
+                if (ImGui.Checkbox("CPR Debug", ref showCprDebug))
+                    ShowCprDebug = showCprDebug;
+                if (ImGui.Checkbox("OCR Debug", ref showOcrDebug))
+                    ShowOcrDebug = showOcrDebug;
+                if (ImGui.Checkbox("Overlay OCR Vis/Ocl", ref showOcrOverlay))
+                    ShowOcrOverlay = showOcrOverlay;
 
                 ImGui.Spacing();
                 ImGui.Separator();
+
+                if (ShowCprDebug)
+                {
+                    ImGui.SeparatorText("CPR");
+                    ImGui.Text($"Entidades CPR registradas: {Collision_Prediction_Runtime_3D.DebugRegisteredEntitiesCount}");
+                }
+
+                if (ShowOcrDebug)
+                {
+                    ImGui.SeparatorText("OCR");
+                    ImGui.Text($"Visibles: {Hardware_Occlusion_Querie_Runtime.DebugVisibleCount} | Ocluidas: {Hardware_Occlusion_Querie_Runtime.DebugOccludedCount}");
+                    ImGui.Text($"Query activa: {Hardware_Occlusion_Querie_Runtime.DebugActiveQueriesCount} | completa: {Hardware_Occlusion_Querie_Runtime.DebugCompletedQueriesCount}");
+                }
 
                 if (ImGui.Button("Limpiar Colisiones"))
                 {
