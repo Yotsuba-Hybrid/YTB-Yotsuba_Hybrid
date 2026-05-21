@@ -64,6 +64,9 @@ namespace YotsubaEngine.Runtime.CPR
 
             EventManager.Instance.Subscribe<OnEntityRigidBody3DIsAdded>(EntityAdd);
             EventManager.Instance.Subscribe<OnEntityTransformIsAdded>(EntityAdd);
+            EventManager.Instance.Subscribe<OnEntityRemoved>(EntityRemoved);
+            EventManager.Instance.Subscribe<OnEntityTransformIsRemoved>(EntityComponentRemoved);
+            EventManager.Instance.Subscribe<OnEntityRigidBody3DIsRemoved>(EntityComponentRemoved);
         }
 
         public YTB<int> IsPhysicalPossibleCollide(ref TransformComponent transformComponent, int entityId, YTB<int> entitiesCanCollide)
@@ -152,6 +155,21 @@ namespace YotsubaEngine.Runtime.CPR
                 RegisterEntity(added.Entity.Id);
         }
 
+        private void EntityRemoved(OnEntityRemoved removed)
+        {
+            UnregisterEntity(removed.EntityId);
+        }
+
+        private void EntityComponentRemoved(OnEntityTransformIsRemoved removed)
+        {
+            UnregisterEntity(removed.EntityId);
+        }
+
+        private void EntityComponentRemoved(OnEntityRigidBody3DIsRemoved removed)
+        {
+            UnregisterEntity(removed.EntityId);
+        }
+
         private void RegisterEntity(int entityId)
         {
             bool alreadyRegistered = false;
@@ -197,6 +215,29 @@ namespace YotsubaEngine.Runtime.CPR
             EntityPoint[entityId] = point;
         }
 
+
+
+        private void UnregisterEntity(int entityId)
+        {
+            Entities.RemoveFast(entityId);
+
+            if (EntityPoint.TryGetValue(entityId, out Point3 point))
+            {
+                if (SpatialHashGrid.TryGetValue(point, out YTB<int> list))
+                {
+                    list.RemoveFast(entityId);
+                    if (list.Count == 0)
+                    {
+                        SpatialHashGrid.Remove(point);
+                        list.Clear();
+                        SpatialGridStorage.Return(list);
+                    }
+                }
+
+                EntityPoint.Remove(entityId);
+            }
+        }
+
         private Point3 GetSpatialHash(ref TransformComponent transform)
         {
             return new(
@@ -211,6 +252,18 @@ namespace YotsubaEngine.Runtime.CPR
             DistanceIsSetted = false;
             EventManager.Instance.Unsubscribe<OnEntityRigidBody3DIsAdded>(EntityAdd);
             EventManager.Instance.Unsubscribe<OnEntityTransformIsAdded>(EntityAdd);
+            EventManager.Instance.Unsubscribe<OnEntityRemoved>(EntityRemoved);
+            EventManager.Instance.Unsubscribe<OnEntityTransformIsRemoved>(EntityComponentRemoved);
+            EventManager.Instance.Unsubscribe<OnEntityRigidBody3DIsRemoved>(EntityComponentRemoved);
+
+            foreach (var kv in SpatialHashGrid)
+            {
+                kv.Value.Clear();
+                SpatialGridStorage.Return(kv.Value);
+            }
+            SpatialHashGrid.Clear();
+            EntityPoint.Clear();
+            Entities.Clear();
             base.Dispose();
             GC.SuppressFinalize(this);
         }
