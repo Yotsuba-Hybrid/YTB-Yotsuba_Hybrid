@@ -3,7 +3,7 @@ using YotsubaEngine.Core.Component.C_2D;
 using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Runtime.CPR.Events;
-using YotsubaEngine.Runtime.RPR.Events;
+using YotsubaEngine.Runtime.Events;
 
 namespace YotsubaEngine.Runtime.RPR
 {

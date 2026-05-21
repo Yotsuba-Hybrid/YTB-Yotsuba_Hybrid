@@ -7,7 +7,7 @@ using YotsubaEngine.Exceptions;
 using YotsubaEngine.Graphics;
 using YotsubaEngine.HighestPerformanceTypes;
 using YotsubaEngine.Runtime.CPR.Events;
-using YotsubaEngine.Runtime.RPR.Events;
+using YotsubaEngine.Runtime.Events;
 
 namespace YotsubaEngine.Core.YotsubaGame
 {
