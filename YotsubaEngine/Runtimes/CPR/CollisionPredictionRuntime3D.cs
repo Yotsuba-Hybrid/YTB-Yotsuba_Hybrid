@@ -8,6 +8,7 @@ using YotsubaEngine.Core.System.YotsubaEngineUI;
 #endif
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.HighestPerformanceTypes;
+using System.Diagnostics;
 using YotsubaEngine.Runtime.CPR.Events;
 
 namespace YotsubaEngine.Runtime.CPR
