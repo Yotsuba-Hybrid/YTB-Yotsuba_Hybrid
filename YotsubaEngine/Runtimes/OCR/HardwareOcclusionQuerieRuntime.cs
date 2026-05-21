@@ -42,6 +42,7 @@ namespace YotsubaEngine.Runtime.OCR
             CameraComponent3D camera = EntityManager.Camera;
             YTB<int> visibility = EntityToReturn;
             EntityToReturn.Clear();
+            if (camera is null) return visibility;
 
             var gd = YTBGlobalState.GraphicsDevice;
             Span<Yotsuba> GlobalEntities = GetEntitiesAsSpan();
@@ -68,6 +69,7 @@ namespace YotsubaEngine.Runtime.OCR
                 if(entity.HasNotComponent(YTBComponent.Model3D))
                 {
                     visibility.Add(entityId);
+                    continue;
                 }
 
                 ref TransformComponent transform = ref transformComponents[entityId];
