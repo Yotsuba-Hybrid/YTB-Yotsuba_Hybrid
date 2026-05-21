@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Diagnostics;
 using YotsubaEngine.Core.Component.C_2D;
 using YotsubaEngine.Core.Component.C_3D;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
@@ -37,6 +38,9 @@ namespace YotsubaEngine.Core.System.S_3D
 
         private Hardware_Occlusion_Querie_Runtime HardwareOcclusionQuerieRuntime;
 
+        public void SetOcclusionCullingEnabled(bool enabled)
+            => HardwareOcclusionQuerieRuntime.UseOcrCulling = enabled;
+
         /// <summary>
         /// Inicializa el sistema de renderizado 3D.
         /// <para>Initializes the 3D render system.</para>
@@ -70,6 +74,12 @@ namespace YotsubaEngine.Core.System.S_3D
                 if (GameWontRun.GameWontRunByException) return;
 #endif
             //+:cnd:noEmit
+
+            bool depthReadyForOcclusion = ReferenceEquals(YTBGlobalState.GraphicsDevice.DepthStencilState, DepthStencilState.Default);
+            Debug.WriteLine($"[Render3D] DepthReadyBeforeOcrQuery={depthReadyForOcclusion}");
+#if YTB
+            EngineUISystem.SendLog($"[Render3D] DepthReadyBeforeOcrQuery={depthReadyForOcclusion}");
+#endif
 
             Span<int> entities = HardwareOcclusionQuerieRuntime.GetEntitiesToRender();
             Span<Yotsuba> Yotsubas = GetEntitiesAsSpan();
