@@ -306,7 +306,7 @@ namespace YotsubaEngine.Core.YotsubaGame
             /// <param name="component">Componente de cuerpo rígido. <para>Rigid body component.</para></param>
         public void AddRigidbody3DComponent(Yotsuba entity, RigidBodyComponent3D component)
         {
-            YotsubaEntities[entity.Id].AddComponent(YTBComponent.Rigibody2D);
+            YotsubaEntities[entity.Id].AddComponent(YTBComponent.Rigibody3D);
             Rigidbody3DComponents[(uint)entity.Id] = component;
             EventManager.Instance.Publish<OnEntityRigidBody3DIsAdded>(new(YotsubaEntities[entity.Id]));
         }

@@ -478,7 +478,7 @@ private static bool _G_ShouldSkip(string[]? exclude, string name)
                 ["SphereRadius"] = "",
                 ["OffsetSphere"] = ",,",
             },
-            ["ModelComponent3D"] = new(StringComparer.Ordinal)
+            ["RigidBodyComponent3D"] = new(StringComparer.Ordinal)
             {
                 ["CollisionLayer"] = "",
                 ["Velocity"] = "",
@@ -580,7 +580,7 @@ private static bool _G_ShouldSkip(string[]? exclude, string name)
                 ["SphereRadius"] = "0",
                 ["OffsetSphere"] = "0,0,0",
             },
-            ["ModelComponent3D"] = new(StringComparer.Ordinal)
+            ["RigidBodyComponent3D"] = new(StringComparer.Ordinal)
             {
                 ["CollisionLayer"] = "",
                 ["Velocity"] = "",

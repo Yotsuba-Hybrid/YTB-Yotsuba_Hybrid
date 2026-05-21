@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using YotsubaEngine.Core.Component.C_3D;
 using YotsubaEngine.Core.Component.C_AGNOSTIC;
 using YotsubaEngine.Core.Entity;
@@ -20,6 +21,8 @@ namespace YotsubaEngine.Runtime.CPR
             {
                 if (DistanceIsSetted) return;
                 DistanceIsSetted = true;
+                if (value <= 0) unPhysicalCollisionDistance = 1;
+                else
                 unPhysicalCollisionDistance = value;
             }
         }
@@ -67,7 +70,16 @@ namespace YotsubaEngine.Runtime.CPR
         {
             entitiesCanCollide.Clear();
             Point3 point = GetSpatialHash(ref transformComponent);
-            Point3 lastPoint = EntityPoint[entityId];
+            if (!EntityPoint.TryGetValue(entityId, out Point3 lastPoint))
+            {
+                RegisterEntity(entityId);
+
+                if (!EntityPoint.TryGetValue(entityId, out lastPoint))
+                {
+                    // En YTB mode: log claro
+                    return entitiesCanCollide;
+                }
+            }
 
             if (point != lastPoint)
             {
@@ -142,17 +154,45 @@ namespace YotsubaEngine.Runtime.CPR
 
         private void RegisterEntity(int entityId)
         {
-            Entities.Add(entityId);
+            bool alreadyRegistered = false;
+            Span<int> entitiesSpan = Entities.AsSpan();
+
+            for (int i = 0; i < entitiesSpan.Length; i++)
+            {
+                if (entitiesSpan[i] == entityId)
+                {
+                    alreadyRegistered = true;
+                    break;
+                }
+            }
+
+            if (!alreadyRegistered)
+                Entities.Add(entityId);
+
             ref TransformComponent transform = ref GetTransformComponent(entityId);
-            ref RigidBodyComponent3D rigidBody = ref GetRigidBody3DComponent(entityId);
 
             Point3 point = GetSpatialHash(ref transform);
+
             if (!SpatialHashGrid.TryGetValue(point, out YTB<int> list))
             {
                 list = SpatialGridStorage.Rent();
                 SpatialHashGrid.Add(point, list);
             }
-            list.Add(entityId);
+
+            bool alreadyInCell = false;
+            Span<int> cellSpan = list.AsSpan();
+
+            for (int i = 0; i < cellSpan.Length; i++)
+            {
+                if (cellSpan[i] == entityId)
+                {
+                    alreadyInCell = true;
+                    break;
+                }
+            }
+
+            if (!alreadyInCell)
+                list.Add(entityId);
 
             EntityPoint[entityId] = point;
         }

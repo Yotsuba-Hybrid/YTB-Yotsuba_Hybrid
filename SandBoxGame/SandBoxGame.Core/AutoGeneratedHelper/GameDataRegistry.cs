@@ -33,11 +33,11 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 
         private static YTBScene BuildScene_0()
         {
-            var entities = new List<YTBEntity>(1);
+            var entities = new List<YTBEntity>(3);
             BuildScene_0_Batch_0(entities);
             return new YTBScene
             {
-                Name = "Index",
+                Name = "main",
                 Entities = entities
             };
         }
@@ -46,49 +46,19 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
         {
             e.Add(new YTBEntity
             {
-                Name = "MainCamera",
+                Name = "Entidad_2",
                 Components = new List<YTBComponents>
                 {
                     new YTBComponents
                     {
-                        ComponentName = "CameraComponent3D",
+                        ComponentName = "SpriteComponent2D",
                         Propiedades = new List<Tuple<string, string>>
                         {
-                            new Tuple<string, string>("EntityName", "MainCamera"),
-                            new Tuple<string, string>("InitialPosition", "0,60,30"),
-                            new Tuple<string, string>("OffsetCamera", "0,50,-100"),
-                            new Tuple<string, string>("AngleView", "60"),
-                            new Tuple<string, string>("NearRender", "10"),
-                            new Tuple<string, string>("FarRender", "3000"),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "InputComponent",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("InputsInUse", ""),
-                            new Tuple<string, string>("KeyboardMappings", ""),
-                            new Tuple<string, string>("GamePadIndex", ""),
-                            new Tuple<string, string>("MouseMappings", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "ScriptComponent",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("Scripts", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "ShaderComponent",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("ShaderPath", ""),
-                            new Tuple<string, string>("IsActive", ""),
-                            new Tuple<string, string>("params", ""),
+                            new Tuple<string, string>("TextureAtlasPath", "Spritesheets/SpriteSheet.xml"),
+                            new Tuple<string, string>("SpriteName", "Banner Oshi No Ko"),
+                            new Tuple<string, string>("SourceRectangle", "0,0,850,1500"),
+                            new Tuple<string, string>("IsVisible", "true"),
+                            new Tuple<string, string>("2.5D", "false"),
                         }
                     },
                     new YTBComponents
@@ -96,94 +66,64 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                         ComponentName = "TransformComponent",
                         Propiedades = new List<Tuple<string, string>>
                         {
-                            new Tuple<string, string>("Position", "0,0,0"),
-                            new Tuple<string, string>("Size", "100,100,0"),
-                            new Tuple<string, string>("Color", "White"),
-                            new Tuple<string, string>("SpriteEffects", "None"),
+                            new Tuple<string, string>("Size", "850,1500,0"),
                             new Tuple<string, string>("Scale", "1"),
                             new Tuple<string, string>("Rotation", "0"),
+                            new Tuple<string, string>("Position", "-853.1495,410.47668,1"),
+                            new Tuple<string, string>("SpriteEffects", "None"),
+                            new Tuple<string, string>("Color", "White"),
                         }
                     },
-                    new YTBComponents
-                    {
-                        ComponentName = "ModelComponent3D",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("ModelPath", ""),
-                            new Tuple<string, string>("IsVisible", ""),
-                            new Tuple<string, string>("SphereRadius", ""),
-                            new Tuple<string, string>("OffsetSphere", ",,"),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "AnimationComponent2D",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("TextureAtlasPath", ""),
-                            new Tuple<string, string>("AnimationBindings", ""),
-                            new Tuple<string, string>("CurrentAnimationType", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "ButtonComponent2D",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("IsActive", ""),
-                            new Tuple<string, string>("EffectiveArea", ",,,"),
-                            new Tuple<string, string>("Description", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "FontComponent2D",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("Texto", ""),
-                            new Tuple<string, string>("Font", ""),
-                            new Tuple<string, string>("IsVisible", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "RigidBodyComponent2D",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("OffSetCollision", ","),
-                            new Tuple<string, string>("Velocity", ",,"),
-                            new Tuple<string, string>("Collide", ""),
-                            new Tuple<string, string>("Mass", ""),
-                        }
-                    },
+                }
+            });
+            e.Add(new YTBEntity
+            {
+                Name = "Entidad_2 - Copia",
+                Components = new List<YTBComponents>
+                {
                     new YTBComponents
                     {
                         ComponentName = "SpriteComponent2D",
                         Propiedades = new List<Tuple<string, string>>
                         {
-                            new Tuple<string, string>("TextureAtlasPath", ""),
-                            new Tuple<string, string>("SpriteName", ""),
-                            new Tuple<string, string>("SourceRectangle", ",,,"),
-                            new Tuple<string, string>("IsVisible", ""),
-                            new Tuple<string, string>("2.5D", ""),
+                            new Tuple<string, string>("TextureAtlasPath", "Spritesheets/SpriteSheet.xml"),
+                            new Tuple<string, string>("SpriteName", "Banner Oshi No Ko"),
+                            new Tuple<string, string>("SourceRectangle", "0,0,850,1500"),
+                            new Tuple<string, string>("IsVisible", "true"),
+                            new Tuple<string, string>("2.5D", "false"),
                         }
                     },
                     new YTBComponents
                     {
-                        ComponentName = "TileMapComponent2D",
+                        ComponentName = "TransformComponent",
                         Propiedades = new List<Tuple<string, string>>
                         {
-                            new Tuple<string, string>("TileMapPath", ""),
+                            new Tuple<string, string>("Size", "850,1500,0"),
+                            new Tuple<string, string>("Scale", "1"),
+                            new Tuple<string, string>("Rotation", "0"),
+                            new Tuple<string, string>("Position", "0,0,1"),
+                            new Tuple<string, string>("SpriteEffects", "None"),
+                            new Tuple<string, string>("Color", "White"),
                         }
                     },
+                }
+            });
+            e.Add(new YTBEntity
+            {
+                Name = "Camera",
+                Components = new List<YTBComponents>
+                {
                     new YTBComponents
                     {
-                        ComponentName = "CustomComponent",
+                        ComponentName = "CameraComponent3D",
                         Propiedades = new List<Tuple<string, string>>
                         {
-                            new Tuple<string, string>("Property1", ""),
-                            new Tuple<string, string>("Property2", ""),
-                            new Tuple<string, string>("Property3", ""),
+                            new Tuple<string, string>("EntityName", "Camera"),
+                            new Tuple<string, string>("InitialPosition", "0,60,30"),
+                            new Tuple<string, string>("OffsetCamera", "0,50,-100"),
+                            new Tuple<string, string>("AngleView", "60"),
+                            new Tuple<string, string>("NearRender", "10"),
+                            new Tuple<string, string>("FarRender", "3000"),
                         }
                     },
                 }
@@ -192,11 +132,11 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 
         private static YTBScene BuildScene_1()
         {
-            var entities = new List<YTBEntity>(3);
+            var entities = new List<YTBEntity>(2);
             BuildScene_1_Batch_0(entities);
             return new YTBScene
             {
-                Name = "Main",
+                Name = "Index",
                 Entities = entities
             };
         }
@@ -223,414 +163,42 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                     },
                     new YTBComponents
                     {
-                        ComponentName = "InputComponent",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("InputsInUse", ""),
-                            new Tuple<string, string>("KeyboardMappings", ""),
-                            new Tuple<string, string>("GamePadIndex", ""),
-                            new Tuple<string, string>("MouseMappings", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "ScriptComponent",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("Scripts", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "ShaderComponent",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("ShaderPath", ""),
-                            new Tuple<string, string>("IsActive", ""),
-                            new Tuple<string, string>("params", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
                         ComponentName = "TransformComponent",
                         Propiedades = new List<Tuple<string, string>>
                         {
-                            new Tuple<string, string>("Position", "0,0,0"),
                             new Tuple<string, string>("Size", "100,100,0"),
-                            new Tuple<string, string>("Color", "White"),
-                            new Tuple<string, string>("SpriteEffects", "None"),
                             new Tuple<string, string>("Scale", "1"),
                             new Tuple<string, string>("Rotation", "0"),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "ModelComponent3D",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("ModelPath", ""),
-                            new Tuple<string, string>("IsVisible", ""),
-                            new Tuple<string, string>("SphereRadius", ""),
-                            new Tuple<string, string>("OffsetSphere", ",,"),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "AnimationComponent2D",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("TextureAtlasPath", ""),
-                            new Tuple<string, string>("AnimationBindings", ""),
-                            new Tuple<string, string>("CurrentAnimationType", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "ButtonComponent2D",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("IsActive", ""),
-                            new Tuple<string, string>("EffectiveArea", ",,,"),
-                            new Tuple<string, string>("Description", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "FontComponent2D",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("Texto", ""),
-                            new Tuple<string, string>("Font", ""),
-                            new Tuple<string, string>("IsVisible", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "RigidBodyComponent2D",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("OffSetCollision", ","),
-                            new Tuple<string, string>("Velocity", ",,"),
-                            new Tuple<string, string>("Collide", ""),
-                            new Tuple<string, string>("Mass", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "SpriteComponent2D",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("TextureAtlasPath", ""),
-                            new Tuple<string, string>("SpriteName", ""),
-                            new Tuple<string, string>("SourceRectangle", ",,,"),
-                            new Tuple<string, string>("IsVisible", ""),
-                            new Tuple<string, string>("2.5D", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "TileMapComponent2D",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("TileMapPath", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "CustomComponent",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("Property1", ""),
-                            new Tuple<string, string>("Property2", ""),
-                            new Tuple<string, string>("Property3", ""),
+                            new Tuple<string, string>("Position", "0,0,1"),
+                            new Tuple<string, string>("SpriteEffects", "None"),
+                            new Tuple<string, string>("Color", "White"),
                         }
                     },
                 }
             });
             e.Add(new YTBEntity
             {
-                Name = "Entidad_2",
+                Name = "3D",
                 Components = new List<YTBComponents>
                 {
-                    new YTBComponents
-                    {
-                        ComponentName = "CameraComponent3D",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("EntityName", ""),
-                            new Tuple<string, string>("InitialPosition", ",,"),
-                            new Tuple<string, string>("OffsetCamera", ",,"),
-                            new Tuple<string, string>("AngleView", ""),
-                            new Tuple<string, string>("NearRender", ""),
-                            new Tuple<string, string>("FarRender", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "InputComponent",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("InputsInUse", ""),
-                            new Tuple<string, string>("KeyboardMappings", ""),
-                            new Tuple<string, string>("GamePadIndex", ""),
-                            new Tuple<string, string>("MouseMappings", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "ScriptComponent",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("Scripts", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "ShaderComponent",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("ShaderPath", ""),
-                            new Tuple<string, string>("IsActive", ""),
-                            new Tuple<string, string>("params", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "TransformComponent",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("Size", ",,"),
-                            new Tuple<string, string>("Scale", ""),
-                            new Tuple<string, string>("Rotation", ""),
-                            new Tuple<string, string>("Position", ",,"),
-                            new Tuple<string, string>("SpriteEffects", ""),
-                            new Tuple<string, string>("Color", ""),
-                        }
-                    },
                     new YTBComponents
                     {
                         ComponentName = "ModelComponent3D",
                         Propiedades = new List<Tuple<string, string>>
                         {
-                            new Tuple<string, string>("ModelPath", ""),
-                            new Tuple<string, string>("IsVisible", ""),
-                            new Tuple<string, string>("SphereRadius", ""),
-                            new Tuple<string, string>("OffsetSphere", ",,"),
+                            new Tuple<string, string>("ModelPath", "Castle/Castle"),
+                            new Tuple<string, string>("IsVisible", "true"),
+                            new Tuple<string, string>("SphereRadius", "0"),
+                            new Tuple<string, string>("OffsetSphere", "0,0,0"),
                         }
                     },
                     new YTBComponents
                     {
-                        ComponentName = "AnimationComponent2D",
+                        ComponentName = "RigidBodyComponent3D",
                         Propiedades = new List<Tuple<string, string>>
                         {
-                            new Tuple<string, string>("TextureAtlasPath", ""),
-                            new Tuple<string, string>("AnimationBindings", ""),
-                            new Tuple<string, string>("CurrentAnimationType", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "ButtonComponent2D",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("IsActive", ""),
-                            new Tuple<string, string>("EffectiveArea", ",,,"),
-                            new Tuple<string, string>("Description", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "FontComponent2D",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("Texto", ""),
-                            new Tuple<string, string>("Font", ""),
-                            new Tuple<string, string>("IsVisible", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "RigidBodyComponent2D",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("OffSetCollision", ","),
-                            new Tuple<string, string>("Velocity", ",,"),
-                            new Tuple<string, string>("Collide", ""),
-                            new Tuple<string, string>("Mass", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "SpriteComponent2D",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("TextureAtlasPath", ""),
-                            new Tuple<string, string>("SpriteName", ""),
-                            new Tuple<string, string>("SourceRectangle", ",,,"),
-                            new Tuple<string, string>("IsVisible", ""),
-                            new Tuple<string, string>("2.5D", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "TileMapComponent2D",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("TileMapPath", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "CustomComponent",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("Property1", ""),
-                            new Tuple<string, string>("Property2", ""),
-                            new Tuple<string, string>("Property3", ""),
-                        }
-                    },
-                }
-            });
-            e.Add(new YTBEntity
-            {
-                Name = "Entidad_3",
-                Components = new List<YTBComponents>
-                {
-                    new YTBComponents
-                    {
-                        ComponentName = "CameraComponent3D",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("EntityName", ""),
-                            new Tuple<string, string>("InitialPosition", ",,"),
-                            new Tuple<string, string>("OffsetCamera", ",,"),
-                            new Tuple<string, string>("AngleView", ""),
-                            new Tuple<string, string>("NearRender", ""),
-                            new Tuple<string, string>("FarRender", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "InputComponent",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("InputsInUse", ""),
-                            new Tuple<string, string>("KeyboardMappings", ""),
-                            new Tuple<string, string>("GamePadIndex", ""),
-                            new Tuple<string, string>("MouseMappings", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "ScriptComponent",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("Scripts", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "ShaderComponent",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("ShaderPath", ""),
-                            new Tuple<string, string>("IsActive", ""),
-                            new Tuple<string, string>("params", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "TransformComponent",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("Size", ",,"),
-                            new Tuple<string, string>("Scale", ""),
-                            new Tuple<string, string>("Rotation", ""),
-                            new Tuple<string, string>("Position", ",,"),
-                            new Tuple<string, string>("SpriteEffects", ""),
-                            new Tuple<string, string>("Color", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "ModelComponent3D",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("ModelPath", ""),
-                            new Tuple<string, string>("IsVisible", ""),
-                            new Tuple<string, string>("SphereRadius", ""),
-                            new Tuple<string, string>("OffsetSphere", ",,"),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "AnimationComponent2D",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("TextureAtlasPath", ""),
-                            new Tuple<string, string>("AnimationBindings", ""),
-                            new Tuple<string, string>("CurrentAnimationType", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "ButtonComponent2D",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("IsActive", ""),
-                            new Tuple<string, string>("EffectiveArea", ",,,"),
-                            new Tuple<string, string>("Description", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "FontComponent2D",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("Texto", ""),
-                            new Tuple<string, string>("Font", ""),
-                            new Tuple<string, string>("IsVisible", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "RigidBodyComponent2D",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("OffSetCollision", ","),
-                            new Tuple<string, string>("Velocity", ",,"),
-                            new Tuple<string, string>("Collide", ""),
-                            new Tuple<string, string>("Mass", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "SpriteComponent2D",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("TextureAtlasPath", ""),
-                            new Tuple<string, string>("SpriteName", ""),
-                            new Tuple<string, string>("SourceRectangle", ",,,"),
-                            new Tuple<string, string>("IsVisible", ""),
-                            new Tuple<string, string>("2.5D", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "TileMapComponent2D",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("TileMapPath", ""),
-                        }
-                    },
-                    new YTBComponents
-                    {
-                        ComponentName = "CustomComponent",
-                        Propiedades = new List<Tuple<string, string>>
-                        {
-                            new Tuple<string, string>("Property1", ""),
-                            new Tuple<string, string>("Property2", ""),
-                            new Tuple<string, string>("Property3", ""),
+                            new Tuple<string, string>("CollisionLayer", "Main"),
+                            new Tuple<string, string>("Velocity", "0,0,0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,"),
                         }
                     },
                 }

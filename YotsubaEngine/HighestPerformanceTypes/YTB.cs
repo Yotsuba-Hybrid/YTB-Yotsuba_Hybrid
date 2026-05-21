@@ -144,11 +144,13 @@ namespace YotsubaEngine.HighestPerformanceTypes
         /// <param name="item">El elemento a eliminar del YTB. <para>The element to remove from the YTB.</para></param>
         /// <remarks>Si el elemento no se encuentra, el YTB permanece sin cambios. <para>If the element is not found, the YTB remains unchanged.</para></remarks>
         /// <returns>Retorna true si el elemento fue encontrado y eliminado; de lo contrario, false. <para>Returns true if the element was found and removed; otherwise, false.</para></returns>
-        public void RemoveFast(T item)
+        public bool RemoveFast(T item)
         {
             int index = Array.IndexOf(_arr, item, 0, Count);
+            if (index < 0) return false;
             _arr[index] = _arr[--Count];
             _arr[Count] = default!;
+            return true;
         }
 
         /// <summary>
