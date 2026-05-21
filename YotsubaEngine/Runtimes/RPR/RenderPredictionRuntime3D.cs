@@ -29,7 +29,7 @@ namespace YotsubaEngine.Runtime.RPR
 
                 if((entity.HasComponent(YTBComponent.Model3D) || entity.HasComponent(YTBComponent.YTBModel3D)))
                 {
-                    Entities.Add(entity.Id);
+                    RegisterEntity(entity.Id);
                 }
 
                 if (entity.HasComponent(YTBComponent.Sprite))
@@ -38,7 +38,7 @@ namespace YotsubaEngine.Runtime.RPR
 
                     if (sprite.Is2_5D)
                     {
-                        Entities.Add(entity.Id);
+                        RegisterEntity(entity.Id);
                     }
                 }
             }
@@ -94,25 +94,14 @@ namespace YotsubaEngine.Runtime.RPR
 
         private void RegisterEntity(int entityId)
         {
-            bool founded = false;
-
             ReadOnlySpan<int> entitieIds = Entities.AsReadOnlySpan();
-            foreach (var enID in entitieIds)
+            for (int i = 0; i < entitieIds.Length; i++)
             {
-                if (!founded)
-                {
-                    if (enID == entityId)
-                    {
-                        founded = true;
-                        break;
-                    }
-                }
+                if (entitieIds[i] == entityId)
+                    return;
             }
 
-            if (!founded)
-            {
-                Entities.Add(entityId);
-            }
+            Entities.Add(entityId);
         }
 
         public override void Dispose()
