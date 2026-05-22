@@ -4,6 +4,7 @@ using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Runtime.CPR.Events;
 using YotsubaEngine.Runtime.Events;
+using YotsubaEngine.Runtime.RPR.Events;
 
 namespace YotsubaEngine.Runtime.RPR
 {
@@ -83,6 +84,11 @@ namespace YotsubaEngine.Runtime.RPR
         private void EntityRemoved(OnEntityRemoved removed)
         {
             UnregisterEntity(removed.EntityId);
+        }
+
+        private void UnregisterEntity(int entityId)
+        {
+            Entities.RemoveFast(entityId);
         }
 
         private void EntityComponentRemoved(OnEntityTransformIsRemoved removed) => UnregisterEntity(removed.EntityId);

@@ -169,7 +169,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
                             new Tuple<string, string>("Size", "100,100,0"),
                             new Tuple<string, string>("Scale", "1"),
                             new Tuple<string, string>("Rotation", "0"),
-                            new Tuple<string, string>("Position", "0,0,1"),
+                            new Tuple<string, string>("Position", "-500,-500,-500"),
                             new Tuple<string, string>("SpriteEffects", "None"),
                             new Tuple<string, string>("Color", "White"),
                         }

@@ -49,7 +49,7 @@ namespace YotsubaEngine.Core.System.S_3D
             if (camera == null)
             {
 #if YTB
-                EngineUISystem.SendWarning($"{nameof(RenderSystem3D)}: cámara nula, se omite render 3D de forma segura.");
+                EngineUISystem.SendLog($"{nameof(RenderSystem3D)}: cámara nula, se omite render 3D de forma segura.");
 #endif
                 return;
             }

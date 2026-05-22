@@ -10,6 +10,8 @@ using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.HighestPerformanceTypes;
 using System.Diagnostics;
 using YotsubaEngine.Runtime.CPR.Events;
+using YotsubaEngine.Runtime.RPR.Events;
+using YotsubaEngine.Runtime.Events;
 
 namespace YotsubaEngine.Runtime.CPR
 {
