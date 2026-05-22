@@ -64,8 +64,11 @@ public partial class Baseline3DPathTests
         map.Remove(0);
 
         var tmp = new YTB<int>();
-        ref var t = ref em.TransformComponents[0];
-        var ex = Record.Exception(() => cpr.IsPhysicalPossibleCollide(ref t, 0, tmp));
+        var ex = Record.Exception(() => {
+            ref var t = ref em.TransformComponents[0];
+
+            cpr.IsPhysicalPossibleCollide(ref t, 0, tmp);
+         });
 
         Assert.Null(ex);
         cpr.Dispose();
@@ -177,8 +180,12 @@ public partial class Baseline3DPathTests
         var e = new Yotsuba(0);
         em.AddEntity(ref e);
         em.AddTransformComponent(e, new TransformComponent());
-        em.Camera = new CameraComponent3D();
-
+        em.Camera = new CameraComponent3D(
+            em,
+            new Vector3(0, 60, 30),
+            60f,
+            10f,
+            3000f);
         var ocr = new YotsubaEngine.Runtime.OCR.Hardware_Occlusion_Querie_Runtime();
         ocr.InitializeSystem(em);
 

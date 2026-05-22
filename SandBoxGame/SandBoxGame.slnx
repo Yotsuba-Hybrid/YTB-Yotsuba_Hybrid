@@ -90,6 +90,11 @@
 <BuildType Solution="YTB|*" Project="Release" />
 </Project>
 </Folder>
+<Folder Name="/Tests/">
+<Project Path="../YotsubaEngine.Tests.csproj">
+<BuildType Solution="YTB|*" Project="Release" />
+</Project>
+</Folder>
 <Folder Name="/YotsubaEngine/">
 <Project Path="../YotsubaEngine/YotsubaEngine.csproj" />
 <Project Path="../YTBContentBuilder/YTBContentBuilder.csproj" Id="e5a9f17e-eb06-43ba-95c1-033dec5340af" />
