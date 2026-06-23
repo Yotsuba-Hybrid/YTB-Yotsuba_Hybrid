@@ -11,10 +11,9 @@ namespace YotsubaEngine.Core.Component.C_3D
     /// </summary>
     /// <param name="collide">Nivel de colisión: Solid o Trigger.<para>Collision level: Solid or Trigger.</para></param>
     /// <param name="mass">Masa física real del objeto. Valor por defecto: 1.0f.<para>Physical mass of the object. Default: 1.0f.</para></param>
-    [UIComponent("Cuerpo Rigido 3D", nameof(ModelComponent3D))]
+    [UIComponent("Cuerpo Rigido 3D", nameof(RigidBodyComponent3D))]
     public struct RigidBodyComponent3D(CollisionLevel collide, float mass = 1.0f)
     {
-        /// </summary>
         [UIComponentValue("Capa de Colision", "CollisionLayer", "",
             "")]
         public CollisionLayer CollisionLayer { get; set; } = CollisionLayer.Main;
@@ -24,7 +23,7 @@ namespace YotsubaEngine.Core.Component.C_3D
         /// <para>Velocity of the 3D object.</para>
         /// </summary>
         [UIComponentValue("Velocidad de la entidad", "Velocity", "",
-          "")]
+          "DEBE TENER X, Y, Z")]
         public Vector3 Velocity { get; set; } = Vector3.Zero;
 
         /// <summary>

@@ -207,7 +207,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 				ImGui.Spacing();
 				if (YTBEntity.Components == null) YTBEntity.Components = [];
 
-				int componentesValidos = YTBEntity.Components.Count(c => !YTBFileToGameData.IsAllInactive(c));
+				int componentesValidos = YTBEntity.Components.Count;
 				ImGui.SeparatorText($"{componentesValidos} COMPONENTES");
 
 
@@ -215,7 +215,7 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 
 				foreach (var component in YTBEntity.Components.ToImmutableArray())
 				{
-					if (YTBFileToGameData.IsAllInactive(component)) continue;
+			
 
 					//// Botón para eliminar el componente
 					//// Se coloca ANTES del CollapsingHeader para mejor layout
@@ -1767,29 +1767,12 @@ namespace YotsubaEngine.Core.System.YotsubaEngineUI.UI
 			public string Value { get; set; } = "0";
 		}
 
-		/// <summary>
-		/// "Elimina" el componente copiando las propiedades del template vacío.
-		/// Esto hace que el componente se oculte de la UI y no se procese en runtime.
-		/// </summary>
-		private void DeleteComponent(YTBComponents component)
-		{
-			// Obtener el template vacío (GenerateNew() contiene componentes con valores vacíos)
-			var emptyEntity = EntityYTBXmlTemplate.GenerateNew();
-			var emptyComponent = emptyEntity.Components.FirstOrDefault(c => c.ComponentName == component.ComponentName);
-
-			if (emptyComponent == null)
-			{
-				Console.WriteLine($"Advertencia: No se encontró template vacío para el componente '{component.ComponentName}'");
-				return;
-			}
-
-			// Copiar las propiedades del template vacío al componente actual
-			// Esto hará que el componente coincida con el template vacío y se "oculte"
-			component.Propiedades.Clear();
-			component.Propiedades.AddRange(emptyComponent.Propiedades);
-			
-			Console.WriteLine($"Componente '{component.ComponentName}' eliminado (igualado al template vacío)");
-		}
+	private void DeleteComponent(YTBComponents component)
+	{
+		var entity = _getSelectedEntity();
+		if (entity != null)
+			entity.Components.Remove(component);
+	}
 
 		// Helper classes (SubtextureInfo / AnimationInfo) viven en SubtextureInfo.cs en el mismo namespace.
 

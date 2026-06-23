@@ -3,6 +3,7 @@ using YotsubaEngine.Core.Component.C_2D;
 using YotsubaEngine.Core.Entity;
 using YotsubaEngine.Core.YotsubaGame;
 using YotsubaEngine.Runtime.CPR.Events;
+using YotsubaEngine.Runtime.Events;
 using YotsubaEngine.Runtime.RPR.Events;
 
 namespace YotsubaEngine.Runtime.RPR
@@ -29,7 +30,7 @@ namespace YotsubaEngine.Runtime.RPR
 
                 if((entity.HasComponent(YTBComponent.Model3D) || entity.HasComponent(YTBComponent.YTBModel3D)))
                 {
-                    Entities.Add(entity.Id);
+                    RegisterEntity(entity.Id);
                 }
 
                 if (entity.HasComponent(YTBComponent.Sprite))
@@ -38,7 +39,7 @@ namespace YotsubaEngine.Runtime.RPR
 
                     if (sprite.Is2_5D)
                     {
-                        Entities.Add(entity.Id);
+                        RegisterEntity(entity.Id);
                     }
                 }
             }
@@ -54,6 +55,12 @@ namespace YotsubaEngine.Runtime.RPR
             EventManager.Instance.Subscribe<OnEntityModelComponentIsAdded>(EntityAdd);
             EventManager.Instance.Subscribe<OnEntityYTBModelIsAdded>(EntityAdd);
             EventManager.Instance.Subscribe<OnSpriteIsSettedAs2_5D>(EntityAdd);
+            EventManager.Instance.Subscribe<OnEntityRemoved>(EntityRemoved);
+            EventManager.Instance.Subscribe<OnEntityTransformIsRemoved>(EntityComponentRemoved);
+            EventManager.Instance.Subscribe<OnEntityModelComponentIsRemoved>(EntityComponentRemoved);
+            EventManager.Instance.Subscribe<OnEntityYTBModelIsRemoved>(EntityComponentRemoved);
+            EventManager.Instance.Subscribe<OnSpriteNoLonger2_5D>(EntityComponentRemoved);
+            EventManager.Instance.Subscribe<OnEntitySpriteIsRemoved>(EntityComponentRemoved);
         }
 
         private void EntityAdd(OnSpriteIsSettedAs2_5D d)
@@ -73,6 +80,22 @@ namespace YotsubaEngine.Runtime.RPR
                 }
             }
         }
+
+        private void EntityRemoved(OnEntityRemoved removed)
+        {
+            UnregisterEntity(removed.EntityId);
+        }
+
+        private void UnregisterEntity(int entityId)
+        {
+            Entities.RemoveFast(entityId);
+        }
+
+        private void EntityComponentRemoved(OnEntityTransformIsRemoved removed) => UnregisterEntity(removed.EntityId);
+        private void EntityComponentRemoved(OnEntityModelComponentIsRemoved removed) => UnregisterEntity(removed.EntityId);
+        private void EntityComponentRemoved(OnEntityYTBModelIsRemoved removed) => UnregisterEntity(removed.EntityId);
+        private void EntityComponentRemoved(OnSpriteNoLonger2_5D removed) => UnregisterEntity(removed.EntityId);
+        private void EntityComponentRemoved(OnEntitySpriteIsRemoved removed) => UnregisterEntity(removed.EntityId);
 
         private void EntityAdd(OnEntityYTBModelIsAdded added)
         {
@@ -94,25 +117,14 @@ namespace YotsubaEngine.Runtime.RPR
 
         private void RegisterEntity(int entityId)
         {
-            bool founded = false;
-
             ReadOnlySpan<int> entitieIds = Entities.AsReadOnlySpan();
-            foreach (var enID in entitieIds)
+            for (int i = 0; i < entitieIds.Length; i++)
             {
-                if (!founded)
-                {
-                    if (enID == entityId)
-                    {
-                        founded = true;
-                        break;
-                    }
-                }
+                if (entitieIds[i] == entityId)
+                    return;
             }
 
-            if (!founded)
-            {
-                Entities.Add(entityId);
-            }
+            Entities.Add(entityId);
         }
 
         public override void Dispose()
@@ -121,6 +133,13 @@ namespace YotsubaEngine.Runtime.RPR
             EventManager.Instance.Unsubscribe<OnEntityTransformIsAdded>(EntityAdd);
             EventManager.Instance.Unsubscribe<OnEntityYTBModelIsAdded>(EntityAdd);
             EventManager.Instance.Unsubscribe<OnSpriteIsSettedAs2_5D>(EntityAdd);
+            EventManager.Instance.Unsubscribe<OnEntityRemoved>(EntityRemoved);
+            EventManager.Instance.Unsubscribe<OnEntityTransformIsRemoved>(EntityComponentRemoved);
+            EventManager.Instance.Unsubscribe<OnEntityModelComponentIsRemoved>(EntityComponentRemoved);
+            EventManager.Instance.Unsubscribe<OnEntityYTBModelIsRemoved>(EntityComponentRemoved);
+            EventManager.Instance.Unsubscribe<OnSpriteNoLonger2_5D>(EntityComponentRemoved);
+            EventManager.Instance.Unsubscribe<OnEntitySpriteIsRemoved>(EntityComponentRemoved);
+            Entities.Clear();
             GC.SuppressFinalize(this);
             base.Dispose();
         }

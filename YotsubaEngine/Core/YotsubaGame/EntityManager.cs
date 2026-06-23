@@ -7,6 +7,7 @@ using YotsubaEngine.Exceptions;
 using YotsubaEngine.Graphics;
 using YotsubaEngine.HighestPerformanceTypes;
 using YotsubaEngine.Runtime.CPR.Events;
+using YotsubaEngine.Runtime.Events;
 using YotsubaEngine.Runtime.RPR.Events;
 
 namespace YotsubaEngine.Core.YotsubaGame
@@ -306,7 +307,7 @@ namespace YotsubaEngine.Core.YotsubaGame
             /// <param name="component">Componente de cuerpo rígido. <para>Rigid body component.</para></param>
         public void AddRigidbody3DComponent(Yotsuba entity, RigidBodyComponent3D component)
         {
-            YotsubaEntities[entity.Id].AddComponent(YTBComponent.Rigibody2D);
+            YotsubaEntities[entity.Id].AddComponent(YTBComponent.Rigibody3D);
             Rigidbody3DComponents[(uint)entity.Id] = component;
             EventManager.Instance.Publish<OnEntityRigidBody3DIsAdded>(new(YotsubaEntities[entity.Id]));
         }
@@ -410,6 +411,51 @@ namespace YotsubaEngine.Core.YotsubaGame
             YtbModelComponents[(uint)entity.Id] = component;
             EventManager.Instance.Publish<OnEntityYTBModelIsAdded>(new OnEntityYTBModelIsAdded(entity));
         }
+
+        public void RemoveEntity(int entityId)
+        {
+            EventManager.Instance.Publish<OnEntityRemoved>(new(entityId));
+        }
+
+        public void RemoveTransformComponent(int entityId)
+        {
+            YotsubaEntities[entityId].RemoveComponent(YTBComponent.Transform);
+            EventManager.Instance.Publish<OnEntityTransformIsRemoved>(new(entityId));
+        }
+
+        public void RemoveRigidbody3DComponent(int entityId)
+        {
+            YotsubaEntities[entityId].RemoveComponent(YTBComponent.Rigibody3D);
+            EventManager.Instance.Publish<OnEntityRigidBody3DIsRemoved>(new(entityId));
+        }
+
+        public void RemoveModelComponent3D(int entityId)
+        {
+            YotsubaEntities[entityId].RemoveComponent(YTBComponent.Model3D);
+            EventManager.Instance.Publish<OnEntityModelComponentIsRemoved>(new(entityId));
+        }
+
+        public void RemoveYTBObject3D(int entityId)
+        {
+            YotsubaEntities[entityId].RemoveComponent(YTBComponent.YTBModel3D);
+            EventManager.Instance.Publish<OnEntityYTBModelIsRemoved>(new(entityId));
+        }
+
+        public void RemoveSpriteComponent(int entityId)
+        {
+            YotsubaEntities[entityId].RemoveComponent(YTBComponent.Sprite);
+            EventManager.Instance.Publish<OnEntitySpriteIsRemoved>(new(entityId));
+        }
+
+        public void SetSprite2_5D(int entityId, bool is2_5D)
+        {
+            ref SpriteComponent2D sprite = ref Sprite2DComponents[entityId];
+            bool previous = sprite.Is2_5D;
+            sprite.Is2_5D = is2_5D;
+            if (is2_5D && !previous) EventManager.Instance.Publish<OnSpriteIsSettedAs2_5D>(new());
+            else if (!is2_5D && previous) EventManager.Instance.Publish<OnSpriteNoLonger2_5D>(new(entityId));
+        }
+
     }
 }
 

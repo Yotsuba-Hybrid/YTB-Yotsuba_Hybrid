@@ -106,6 +106,11 @@ namespace YotsubaEngine.Core.YotsubaGame
         /// </summary>
         private TileMapSystem2D TilemapSystem;
 
+        /// <summary>
+        /// Sistema que se encarga de las fisicas 3D
+        /// </summary>
+        private PhysicsSystem3D PhysicsSystem3D;
+
 #if YTB
         /// <summary>
         /// Clase propia del engine (NO SE EJECUTA EN PRODUCCION) que coordina los subsistemas UI. Mantiene referencias compartidas
@@ -140,6 +145,7 @@ namespace YotsubaEngine.Core.YotsubaGame
             AnimationSystem2D = new AnimationSystem2D();
             ButtonSystem2D = new ButtonSystem2D();
             PhysicsSystem2D = new PhysicsSystem2D();
+            PhysicsSystem3D = new PhysicsSystem3D();
             RenderSystem2D = new RenderSystem2D();
             RenderSystem3D = new RenderSystem3D();
             CameraSystem = new CameraSystem(_graphics);
@@ -180,6 +186,7 @@ namespace YotsubaEngine.Core.YotsubaGame
             TilemapSystem.InitializeSystem(EntityManager);
             FontSystem2D.InitializeSystem(EntityManager);
             SystemBuilder.InitializeSystem(EntityManager);
+            PhysicsSystem3D.InitializeSystem(EntityManager);
             //-:cnd:noEmit
 #if YTB
             DragAndDropSystem.InitializeSystem(EntityManager);
@@ -225,6 +232,7 @@ namespace YotsubaEngine.Core.YotsubaGame
 
             if (EntityManager.YotsubaEntities == null || EntityManager.YotsubaEntities.Count == 0) return;
             PhysicsSystem2D.UpdateSystem(gameTime);
+            PhysicsSystem3D.UpdateSystem(gameTime);
             ButtonSystem2D.UpdateSystem(gameTime);
             AnimationSystem2D.UpdateSystem(gameTime);
             CameraSystem.UpdateSystem(gameTime);
@@ -333,6 +341,7 @@ namespace YotsubaEngine.Core.YotsubaGame
             AnimationSystem2D.Dispose();
             ButtonSystem2D.Dispose();
             PhysicsSystem2D.Dispose();
+            PhysicsSystem3D.Dispose();
             RenderSystem3D.Dispose();
             CameraSystem.Dispose();
             InputSystem.Dispose();

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "5y2/PzcwFEw=",
+  "dgSpecHash": "Qe5kvyGlttA=",
   "success": true,
-  "projectFilePath": "c:\\YTBEngine\\YotsubaHybrid\\SandBoxGame\\SandBoxGame.Core\\SandBoxGame.Core.csproj",
+  "projectFilePath": "C:\\YTBEngine\\YotsubaHybrid\\SandBoxGame\\SandBoxGame.Core\\SandBoxGame.Core.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Usuario\\.nuget\\packages\\csvhelper\\33.1.0\\csvhelper.33.1.0.nupkg.sha512",
     "C:\\Users\\Usuario\\.nuget\\packages\\flatredball.interpolationcore\\2025.4.22.1\\flatredball.interpolationcore.2025.4.22.1.nupkg.sha512",

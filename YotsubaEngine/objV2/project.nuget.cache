@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "lXdTxyHHjEs=",
+  "dgSpecHash": "hGwLMfK2rDE=",
   "success": true,
-  "projectFilePath": "c:\\YTBEngine\\YotsubaHybrid\\YotsubaEngine\\YotsubaEngine.csproj",
+  "projectFilePath": "C:\\YTBEngine\\YotsubaHybrid\\YotsubaEngine\\YotsubaEngine.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Usuario\\.nuget\\packages\\nkast.xna.framework\\4.2.9001\\nkast.xna.framework.4.2.9001.nupkg.sha512",
     "C:\\Users\\Usuario\\.nuget\\packages\\nkast.xna.framework.audio\\4.2.9001\\nkast.xna.framework.audio.4.2.9001.nupkg.sha512",

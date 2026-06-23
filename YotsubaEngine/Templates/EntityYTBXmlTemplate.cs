@@ -12,30 +12,14 @@ namespace YotsubaEngine.Templates
     /// </summary>
     public static class EntityYTBXmlTemplate
     {
-        /// <summary>
-        /// Construye una entidad por defecto con TODOS los componentes registrados (cada uno con sus
-        /// <c>defaultValue</c> declarados). Reemplaza el cuerpo hardcoded original que tenía un <c>List&lt;YTBComponents&gt;</c> literal.
-        /// </summary>
-        internal static YTBEntity GenerateNew()
-        {
-            var components = new List<YTBComponents>();
-            foreach (var kv in YTBFileToGameData._defaultValuesByComponent)
-            {
-                components.Add(TemplateFor(kv.Key));
-            }
-            // CustomComponent es un placeholder genérico fuera del sistema de atributos: lo añadimos a mano.
-            components.Add(new YTBComponents
-            {
-                ComponentName = "CustomComponent",
-                Propiedades = new List<Tuple<string, string>>
-                {
-                    new("Property1", ""),
-                    new("Property2", ""),
-                    new("Property3", "")
-                }
-            });
-            return new YTBEntity { Name = "", Components = components };
-        }
+	/// <summary>
+	/// Construye una entidad nueva con lista de componentes vacía.
+	/// Los componentes se añaden explícitamente vía el modal "Agregar Componente" del editor.
+	/// </summary>
+	internal static YTBEntity GenerateNew()
+	{
+		return new YTBEntity { Name = "", Components = new List<YTBComponents>() };
+	}
 
         /// <summary>
         /// Construye un <see cref="YTBComponents"/> para el tipo cuyo <c>SerializableName</c> coincida con <paramref name="componentName"/>,

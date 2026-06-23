@@ -179,7 +179,8 @@ namespace YotsubaEngine.Core.System.S_3D
 
                                     //if (CheckExactGeometry(meshA, ref matrixA, meshB, ref matrixB, out collisionNormal, out penetrationDepth))
                                     {
-                                        exactCollisionDetected = true;
+                                        CalculateSpherePenetration(exactPartA, exactPartB, out collisionNormal, out penetrationDepth);
+                                        exactCollisionDetected = penetrationDepth > 0f;
                                         hitPartA = meshA.Name; // Registramos exactamente qué malla chocó
                                         hitPartB = meshB.Name;
                                         break;
@@ -404,9 +405,24 @@ namespace YotsubaEngine.Core.System.S_3D
             }
             else
             {
-                // El centro de la esfera está hundido profundamente dentro de la caja
-                normal = Vector3.Up;
-                depth = sphere.Radius;
+                // El centro de la esfera está dentro de la caja: elegimos eje mínimo de salida.
+                float toMinX = sphere.Center.X - box.Min.X;
+                float toMaxX = box.Max.X - sphere.Center.X;
+                float toMinY = sphere.Center.Y - box.Min.Y;
+                float toMaxY = box.Max.Y - sphere.Center.Y;
+                float toMinZ = sphere.Center.Z - box.Min.Z;
+                float toMaxZ = box.Max.Z - sphere.Center.Z;
+
+                float minDistance = toMinX;
+                normal = new Vector3(-1f, 0f, 0f);
+
+                if (toMaxX < minDistance) { minDistance = toMaxX; normal = new Vector3(1f, 0f, 0f); }
+                if (toMinY < minDistance) { minDistance = toMinY; normal = new Vector3(0f, -1f, 0f); }
+                if (toMaxY < minDistance) { minDistance = toMaxY; normal = new Vector3(0f, 1f, 0f); }
+                if (toMinZ < minDistance) { minDistance = toMinZ; normal = new Vector3(0f, 0f, -1f); }
+                if (toMaxZ < minDistance) { minDistance = toMaxZ; normal = new Vector3(0f, 0f, 1f); }
+
+                depth = sphere.Radius + Math.Max(0f, minDistance);
             }
         }
 
@@ -430,9 +446,9 @@ namespace YotsubaEngine.Core.System.S_3D
             // La penetración real y la normal del impacto se determinan por el eje donde el hundimiento fue MENOR
             depth = Math.Min(overlapX, Math.Min(overlapY, overlapZ));
 
-            if (depth == overlapX) normal = new Vector3(Math.Sign(delta.X), 0, 0);
-            else if (depth == overlapY) normal = new Vector3(0, Math.Sign(delta.Y), 0);
-            else normal = new Vector3(0, 0, Math.Sign(delta.Z));
+            if (depth == overlapX) normal = new Vector3(delta.X >= 0 ? 1f : -1f, 0f, 0f);
+            else if (depth == overlapY) normal = new Vector3(0f, delta.Y >= 0 ? 1f : -1f, 0f);
+            else normal = new Vector3(0f, 0f, delta.Z >= 0 ? 1f : -1f);
         }
 
         /// <summary>
@@ -452,7 +468,7 @@ namespace YotsubaEngine.Core.System.S_3D
         public static Matrix CreateWorldMatrix(ref TransformComponent transform, ref RigidBodyComponent3D rigidBody)
         {
             Matrix scale = Matrix.CreateScale(transform.Scale);
-            Matrix rotation = Matrix.CreateRotationY(MathHelper.ToRadians(transform.Rotation));
+            Matrix rotation = Matrix.CreateRotationY(transform.Rotation);
             Vector3 finalPosition = transform.Position + rigidBody.OffSetCollision;
             Matrix translation = Matrix.CreateTranslation(finalPosition);
 
