@@ -22,8 +22,8 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
 
             var config = new YTBConfig
             {
-                GameName = "Yotsuba Engine",
-                Author = "MyName",
+                GameName = "YotsubaGame",
+                Author = "YourName",
                 EngineVersion = "1.0"
             };
 
@@ -36,7 +36,7 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
             BuildScene_0_Batch_0(entities);
             return new YTBScene
             {
-                Name = "Index",
+                Name = "First Scene",
                 Entities = entities
             };
         }
@@ -45,12 +45,12 @@ namespace YotsubaEngine.ActionFiles.YTB_Files
         {
             e.Add(new YTBEntity
             {
-                Name = "MainCamera",
+                Name = "Camera",
                 Components = new List<YTBComponents>
                 {
                     new YTBComponents
                     {
-                        ComponentName = "CameraComponent3D",
+                        ComponentName = "ModelComponent3D",
                         Propiedades = new List<Tuple<string, string>>
                         {
                             new Tuple<string, string>("EntityName", "3D"),

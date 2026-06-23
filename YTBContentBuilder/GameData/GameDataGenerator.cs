@@ -85,7 +85,8 @@ namespace YotsubaEngine.YTBContentBuilder.GameData
 
             if (File.Exists(configFilePath))
             {
-                using var configDoc = JsonDocument.Parse(File.ReadAllText(configFilePath));
+                string configContent = File.ReadAllText(configFilePath);
+                using var configDoc = JsonDocument.Parse(string.IsNullOrEmpty(configContent) ? "{}" : configContent);
                 var configRoot = configDoc.RootElement;
 
                 string gameName = GetJsonString(configRoot, "GameName", "YotsubaGame");

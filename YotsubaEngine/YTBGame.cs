@@ -194,7 +194,11 @@ namespace YotsubaEngine
             //Permitir caracteristicas avanzadas, como la oclusion del runtime
             graphicsDeviceManager.GraphicsProfile = GraphicsProfile.HiDef;
 
-            graphicsDeviceManager.ApplyChanges();
+            //graphicsDeviceManager.ApplyChanges(); // Disabled: triggers swapchain null crash on Vulkan/MoltenVK (MonoGame issue #9076)
+            if (YTBGlobalState.Platform == Platforms.Desktop_VK)
+            {
+                graphicsDeviceManager.PreferredDepthStencilFormat = DepthFormat.None;
+            }
             GraphicsDevice = _graphics.GraphicsDevice;
             YTBGlobalState.GraphicsDeviceManager = graphicsDeviceManager;
 

@@ -64,178 +64,23 @@ private static bool _G_ShouldSkip(string[]? exclude, string name)
     return false;
 }
 
-        internal static AnimationComponent2D ParseAnimationComponent2D_Generated(
+        internal static RigidBodyComponent3D ParseRigidBodyComponent3D_Generated(
             YTBComponents comp, string sceneName, string entityName, string[]? exclude = null)
         {
-            var result = new AnimationComponent2D();
+            var result = new RigidBodyComponent3D();
             foreach (var prop in comp.Propiedades)
             {
                 if (_G_ShouldSkip(exclude, prop.Item1)) continue;
                 switch (prop.Item1)
                 {
-                    case "TextureAtlasPath":
+                    case "CollisionLayer":
                     {
-                        result.TextureAtlasPath = prop.Item2;
-                        break;
-                    }
-                    case "AnimationBindings":
-                    {
-                        result.AnimationBindings = prop.Item2;
-                        break;
-                    }
-                    case "CurrentAnimationType":
-                    {
-                        if (Enum.TryParse<AnimationType>(prop.Item2, true, out var v)) result.CurrentAnimationType = v;
-                        break;
-                    }
-                }
-            }
-            return result;
-        }
-
-        internal static ButtonComponent2D ParseButtonComponent2D_Generated(
-            YTBComponents comp, string sceneName, string entityName, string[]? exclude = null)
-        {
-            var result = new ButtonComponent2D();
-            foreach (var prop in comp.Propiedades)
-            {
-                if (_G_ShouldSkip(exclude, prop.Item1)) continue;
-                switch (prop.Item1)
-                {
-                    case "IsActive":
-                    {
-                        if (bool.TryParse(prop.Item2, out var v)) result.IsActive = v;
-                        break;
-                    }
-                    case "EffectiveArea":
-                    {
-                        if (_G_TryParseRectangle(prop.Item2, out var v)) result.EffectiveArea = v;
-                        break;
-                    }
-                    case "Description":
-                    {
-                        result.Description = prop.Item2;
-                        break;
-                    }
-                }
-            }
-            return result;
-        }
-
-        internal static FontComponent2D ParseFontComponent2D_Generated(
-            YTBComponents comp, string sceneName, string entityName, string[]? exclude = null)
-        {
-            var result = new FontComponent2D();
-            foreach (var prop in comp.Propiedades)
-            {
-                if (_G_ShouldSkip(exclude, prop.Item1)) continue;
-                switch (prop.Item1)
-                {
-                    case "Texto":
-                    {
-                        result.Texto = prop.Item2;
-                        break;
-                    }
-                    case "Font":
-                    {
-                        result.Font = prop.Item2;
-                        break;
-                    }
-                    case "IsVisible":
-                    {
-                        if (bool.TryParse(prop.Item2, out var v)) result.IsVisible = v;
-                        break;
-                    }
-                }
-            }
-            return result;
-        }
-
-        internal static RigidBodyComponent2D ParseRigidBodyComponent2D_Generated(
-            YTBComponents comp, string sceneName, string entityName, string[]? exclude = null)
-        {
-            var result = new RigidBodyComponent2D();
-            foreach (var prop in comp.Propiedades)
-            {
-                if (_G_ShouldSkip(exclude, prop.Item1)) continue;
-                switch (prop.Item1)
-                {
-                    case "OffSetCollision":
-                    {
-                        if (_G_TryParseVector2(prop.Item2, out var v)) result.OffSetCollision = v;
+                        if (Enum.TryParse<CollisionLayer>(prop.Item2, true, out var v)) result.CollisionLayer = v;
                         break;
                     }
                     case "Velocity":
                     {
                         if (_G_TryParseVector3(prop.Item2, out var v)) result.Velocity = v;
-                        break;
-                    }
-                    case "Collide":
-                    {
-                        if (Enum.TryParse<CollisionLevel>(prop.Item2, true, out var v)) result.Collide = v;
-                        break;
-                    }
-                    case "Mass":
-                    {
-                        if (float.TryParse(prop.Item2, NumberStyles.Float, CultureInfo.InvariantCulture, out var v)) result.Mass = v;
-                        break;
-                    }
-                }
-            }
-            return result;
-        }
-
-        internal static SpriteComponent2D ParseSpriteComponent2D_Generated(
-            YTBComponents comp, string sceneName, string entityName, string[]? exclude = null)
-        {
-            var result = new SpriteComponent2D();
-            foreach (var prop in comp.Propiedades)
-            {
-                if (_G_ShouldSkip(exclude, prop.Item1)) continue;
-                switch (prop.Item1)
-                {
-                    case "TextureAtlasPath":
-                    {
-                        result.TextureAtlasPath = prop.Item2;
-                        break;
-                    }
-                    case "SpriteName":
-                    {
-                        result.SpriteName = prop.Item2;
-                        break;
-                    }
-                    case "SourceRectangle":
-                    {
-                        if (_G_TryParseRectangle(prop.Item2, out var v)) result.SourceRectangle = v;
-                        break;
-                    }
-                    case "IsVisible":
-                    {
-                        if (bool.TryParse(prop.Item2, out var v)) result.IsVisible = v;
-                        break;
-                    }
-                    case "2.5D":
-                    {
-                        if (bool.TryParse(prop.Item2, out var v)) result.Is2_5D = v;
-                        break;
-                    }
-                }
-            }
-            return result;
-        }
-
-        internal static TileMapComponent2D ParseTileMapComponent2D_Generated(
-            YTBComponents comp, string sceneName, string entityName, string[]? exclude = null)
-        {
-            var result = new TileMapComponent2D();
-            foreach (var prop in comp.Propiedades)
-            {
-                if (_G_ShouldSkip(exclude, prop.Item1)) continue;
-                switch (prop.Item1)
-                {
-                    case "TileMapPath":
-                    {
-                        result.TileMapPath = prop.Item2;
                         break;
                     }
                 }
@@ -277,30 +122,6 @@ private static bool _G_ShouldSkip(string[]? exclude, string name)
             return result;
         }
 
-        internal static RigidBodyComponent3D ParseRigidBodyComponent3D_Generated(
-            YTBComponents comp, string sceneName, string entityName, string[]? exclude = null)
-        {
-            var result = new RigidBodyComponent3D();
-            foreach (var prop in comp.Propiedades)
-            {
-                if (_G_ShouldSkip(exclude, prop.Item1)) continue;
-                switch (prop.Item1)
-                {
-                    case "CollisionLayer":
-                    {
-                        if (Enum.TryParse<CollisionLayer>(prop.Item2, true, out var v)) result.CollisionLayer = v;
-                        break;
-                    }
-                    case "Velocity":
-                    {
-                        if (_G_TryParseVector3(prop.Item2, out var v)) result.Velocity = v;
-                        break;
-                    }
-                }
-            }
-            return result;
-        }
-
         internal static InputComponent ParseInputComponent_Generated(
             YTBComponents comp, string sceneName, string entityName, string[]? exclude = null)
         {
@@ -328,25 +149,6 @@ private static bool _G_ShouldSkip(string[]? exclude, string name)
                     case "MouseMappings":
                     {
                         result.MouseMappings = prop.Item2;
-                        break;
-                    }
-                }
-            }
-            return result;
-        }
-
-        internal static ScriptComponent ParseScriptComponent_Generated(
-            YTBComponents comp, string sceneName, string entityName, string[]? exclude = null)
-        {
-            var result = new ScriptComponent();
-            foreach (var prop in comp.Propiedades)
-            {
-                if (_G_ShouldSkip(exclude, prop.Item1)) continue;
-                switch (prop.Item1)
-                {
-                    case "Scripts":
-                    {
-                        result.ScriptsRaw = prop.Item2;
                         break;
                     }
                 }
@@ -427,6 +229,204 @@ private static bool _G_ShouldSkip(string[]? exclude, string name)
             return result;
         }
 
+        internal static ScriptComponent ParseScriptComponent_Generated(
+            YTBComponents comp, string sceneName, string entityName, string[]? exclude = null)
+        {
+            var result = new ScriptComponent();
+            foreach (var prop in comp.Propiedades)
+            {
+                if (_G_ShouldSkip(exclude, prop.Item1)) continue;
+                switch (prop.Item1)
+                {
+                    case "Scripts":
+                    {
+                        result.ScriptsRaw = prop.Item2;
+                        break;
+                    }
+                }
+            }
+            return result;
+        }
+
+        internal static SpriteComponent2D ParseSpriteComponent2D_Generated(
+            YTBComponents comp, string sceneName, string entityName, string[]? exclude = null)
+        {
+            var result = new SpriteComponent2D();
+            foreach (var prop in comp.Propiedades)
+            {
+                if (_G_ShouldSkip(exclude, prop.Item1)) continue;
+                switch (prop.Item1)
+                {
+                    case "TextureAtlasPath":
+                    {
+                        result.TextureAtlasPath = prop.Item2;
+                        break;
+                    }
+                    case "SpriteName":
+                    {
+                        result.SpriteName = prop.Item2;
+                        break;
+                    }
+                    case "SourceRectangle":
+                    {
+                        if (_G_TryParseRectangle(prop.Item2, out var v)) result.SourceRectangle = v;
+                        break;
+                    }
+                    case "IsVisible":
+                    {
+                        if (bool.TryParse(prop.Item2, out var v)) result.IsVisible = v;
+                        break;
+                    }
+                    case "2.5D":
+                    {
+                        if (bool.TryParse(prop.Item2, out var v)) result.Is2_5D = v;
+                        break;
+                    }
+                }
+            }
+            return result;
+        }
+
+        internal static TileMapComponent2D ParseTileMapComponent2D_Generated(
+            YTBComponents comp, string sceneName, string entityName, string[]? exclude = null)
+        {
+            var result = new TileMapComponent2D();
+            foreach (var prop in comp.Propiedades)
+            {
+                if (_G_ShouldSkip(exclude, prop.Item1)) continue;
+                switch (prop.Item1)
+                {
+                    case "TileMapPath":
+                    {
+                        result.TileMapPath = prop.Item2;
+                        break;
+                    }
+                }
+            }
+            return result;
+        }
+
+        internal static ButtonComponent2D ParseButtonComponent2D_Generated(
+            YTBComponents comp, string sceneName, string entityName, string[]? exclude = null)
+        {
+            var result = new ButtonComponent2D();
+            foreach (var prop in comp.Propiedades)
+            {
+                if (_G_ShouldSkip(exclude, prop.Item1)) continue;
+                switch (prop.Item1)
+                {
+                    case "IsActive":
+                    {
+                        if (bool.TryParse(prop.Item2, out var v)) result.IsActive = v;
+                        break;
+                    }
+                    case "EffectiveArea":
+                    {
+                        if (_G_TryParseRectangle(prop.Item2, out var v)) result.EffectiveArea = v;
+                        break;
+                    }
+                    case "Description":
+                    {
+                        result.Description = prop.Item2;
+                        break;
+                    }
+                }
+            }
+            return result;
+        }
+
+        internal static RigidBodyComponent2D ParseRigidBodyComponent2D_Generated(
+            YTBComponents comp, string sceneName, string entityName, string[]? exclude = null)
+        {
+            var result = new RigidBodyComponent2D();
+            foreach (var prop in comp.Propiedades)
+            {
+                if (_G_ShouldSkip(exclude, prop.Item1)) continue;
+                switch (prop.Item1)
+                {
+                    case "OffSetCollision":
+                    {
+                        if (_G_TryParseVector2(prop.Item2, out var v)) result.OffSetCollision = v;
+                        break;
+                    }
+                    case "Velocity":
+                    {
+                        if (_G_TryParseVector3(prop.Item2, out var v)) result.Velocity = v;
+                        break;
+                    }
+                    case "Collide":
+                    {
+                        if (Enum.TryParse<CollisionLevel>(prop.Item2, true, out var v)) result.Collide = v;
+                        break;
+                    }
+                    case "Mass":
+                    {
+                        if (float.TryParse(prop.Item2, NumberStyles.Float, CultureInfo.InvariantCulture, out var v)) result.Mass = v;
+                        break;
+                    }
+                }
+            }
+            return result;
+        }
+
+        internal static AnimationComponent2D ParseAnimationComponent2D_Generated(
+            YTBComponents comp, string sceneName, string entityName, string[]? exclude = null)
+        {
+            var result = new AnimationComponent2D();
+            foreach (var prop in comp.Propiedades)
+            {
+                if (_G_ShouldSkip(exclude, prop.Item1)) continue;
+                switch (prop.Item1)
+                {
+                    case "TextureAtlasPath":
+                    {
+                        result.TextureAtlasPath = prop.Item2;
+                        break;
+                    }
+                    case "AnimationBindings":
+                    {
+                        result.AnimationBindings = prop.Item2;
+                        break;
+                    }
+                    case "CurrentAnimationType":
+                    {
+                        if (Enum.TryParse<AnimationType>(prop.Item2, true, out var v)) result.CurrentAnimationType = v;
+                        break;
+                    }
+                }
+            }
+            return result;
+        }
+
+        internal static FontComponent2D ParseFontComponent2D_Generated(
+            YTBComponents comp, string sceneName, string entityName, string[]? exclude = null)
+        {
+            var result = new FontComponent2D();
+            foreach (var prop in comp.Propiedades)
+            {
+                if (_G_ShouldSkip(exclude, prop.Item1)) continue;
+                switch (prop.Item1)
+                {
+                    case "Texto":
+                    {
+                        result.Texto = prop.Item2;
+                        break;
+                    }
+                    case "Font":
+                    {
+                        result.Font = prop.Item2;
+                        break;
+                    }
+                    case "IsVisible":
+                    {
+                        if (bool.TryParse(prop.Item2, out var v)) result.IsVisible = v;
+                        break;
+                    }
+                }
+            }
+            return result;
+        }
+
         /// <summary>
         /// Mapa generado en build-time con los valores 'inactivos' por componente y propiedad.
         /// Usado por <see cref="IsAllInactive"/> para decidir si un componente del .ytb debe saltarse.
@@ -434,42 +434,10 @@ private static bool _G_ShouldSkip(string[]? exclude, string name)
         internal static readonly Dictionary<string, Dictionary<string, string>> _inactiveValuesByComponent =
             new(StringComparer.Ordinal)
         {
-            ["AnimationComponent2D"] = new(StringComparer.Ordinal)
+            ["ModelComponent3D"] = new(StringComparer.Ordinal)
             {
-                ["TextureAtlasPath"] = "",
-                ["AnimationBindings"] = "",
-                ["CurrentAnimationType"] = "",
-            },
-            ["ButtonComponent2D"] = new(StringComparer.Ordinal)
-            {
-                ["IsActive"] = "",
-                ["EffectiveArea"] = ",,,",
-                ["Description"] = "",
-            },
-            ["FontComponent2D"] = new(StringComparer.Ordinal)
-            {
-                ["Texto"] = "",
-                ["Font"] = "",
-                ["IsVisible"] = "",
-            },
-            ["RigidBodyComponent2D"] = new(StringComparer.Ordinal)
-            {
-                ["OffSetCollision"] = ",",
-                ["Velocity"] = ",,",
-                ["Collide"] = "",
-                ["Mass"] = "",
-            },
-            ["SpriteComponent2D"] = new(StringComparer.Ordinal)
-            {
-                ["TextureAtlasPath"] = "",
-                ["SpriteName"] = "",
-                ["SourceRectangle"] = ",,,",
-                ["IsVisible"] = "",
-                ["2.5D"] = "",
-            },
-            ["TileMapComponent2D"] = new(StringComparer.Ordinal)
-            {
-                ["TileMapPath"] = "",
+                ["CollisionLayer"] = "",
+                ["Velocity"] = "",
             },
             ["ModelComponent3D"] = new(StringComparer.Ordinal)
             {
@@ -490,10 +458,6 @@ private static bool _G_ShouldSkip(string[]? exclude, string name)
                 ["GamePadIndex"] = "",
                 ["MouseMappings"] = "",
             },
-            ["ScriptComponent"] = new(StringComparer.Ordinal)
-            {
-                ["Scripts"] = "CSHARP&:&&;&",
-            },
             ["ShaderComponent"] = new(StringComparer.Ordinal)
             {
                 ["ShaderPath"] = "",
@@ -508,6 +472,47 @@ private static bool _G_ShouldSkip(string[]? exclude, string name)
                 ["Position"] = ",,",
                 ["SpriteEffects"] = "",
                 ["Color"] = "",
+            },
+            ["ScriptComponent"] = new(StringComparer.Ordinal)
+            {
+                ["Scripts"] = "CSHARP&:&&;&",
+            },
+            ["SpriteComponent2D"] = new(StringComparer.Ordinal)
+            {
+                ["TextureAtlasPath"] = "",
+                ["SpriteName"] = "",
+                ["SourceRectangle"] = ",,,",
+                ["IsVisible"] = "",
+                ["2.5D"] = "",
+            },
+            ["TileMapComponent2D"] = new(StringComparer.Ordinal)
+            {
+                ["TileMapPath"] = "",
+            },
+            ["ButtonComponent2D"] = new(StringComparer.Ordinal)
+            {
+                ["IsActive"] = "",
+                ["EffectiveArea"] = ",,,",
+                ["Description"] = "",
+            },
+            ["RigidBodyComponent2D"] = new(StringComparer.Ordinal)
+            {
+                ["OffSetCollision"] = ",",
+                ["Velocity"] = ",,",
+                ["Collide"] = "",
+                ["Mass"] = "",
+            },
+            ["AnimationComponent2D"] = new(StringComparer.Ordinal)
+            {
+                ["TextureAtlasPath"] = "",
+                ["AnimationBindings"] = "",
+                ["CurrentAnimationType"] = "",
+            },
+            ["FontComponent2D"] = new(StringComparer.Ordinal)
+            {
+                ["Texto"] = "",
+                ["Font"] = "",
+                ["IsVisible"] = "",
             },
         };
 
@@ -536,42 +541,10 @@ private static bool _G_ShouldSkip(string[]? exclude, string name)
         internal static readonly Dictionary<string, Dictionary<string, string>> _defaultValuesByComponent =
             new(StringComparer.Ordinal)
         {
-            ["AnimationComponent2D"] = new(StringComparer.Ordinal)
+            ["ModelComponent3D"] = new(StringComparer.Ordinal)
             {
-                ["TextureAtlasPath"] = "",
-                ["AnimationBindings"] = "",
-                ["CurrentAnimationType"] = "none",
-            },
-            ["ButtonComponent2D"] = new(StringComparer.Ordinal)
-            {
-                ["IsActive"] = "true",
-                ["EffectiveArea"] = "0,0,0,0",
-                ["Description"] = "None",
-            },
-            ["FontComponent2D"] = new(StringComparer.Ordinal)
-            {
-                ["Texto"] = "Texto de ejemplo",
-                ["Font"] = "Fonts/Hud",
-                ["IsVisible"] = "true",
-            },
-            ["RigidBodyComponent2D"] = new(StringComparer.Ordinal)
-            {
-                ["OffSetCollision"] = "0,0",
-                ["Velocity"] = "0,0,0",
-                ["Collide"] = "Solid",
-                ["Mass"] = "0",
-            },
-            ["SpriteComponent2D"] = new(StringComparer.Ordinal)
-            {
-                ["TextureAtlasPath"] = "",
-                ["SpriteName"] = "",
-                ["SourceRectangle"] = "0,0,0,0",
-                ["IsVisible"] = "true",
-                ["2.5D"] = "false",
-            },
-            ["TileMapComponent2D"] = new(StringComparer.Ordinal)
-            {
-                ["TileMapPath"] = "",
+                ["CollisionLayer"] = "",
+                ["Velocity"] = "",
             },
             ["ModelComponent3D"] = new(StringComparer.Ordinal)
             {
@@ -592,10 +565,6 @@ private static bool _G_ShouldSkip(string[]? exclude, string name)
                 ["GamePadIndex"] = "",
                 ["MouseMappings"] = "",
             },
-            ["ScriptComponent"] = new(StringComparer.Ordinal)
-            {
-                ["Scripts"] = "CSHARP&:&&;&",
-            },
             ["ShaderComponent"] = new(StringComparer.Ordinal)
             {
                 ["ShaderPath"] = "",
@@ -610,6 +579,47 @@ private static bool _G_ShouldSkip(string[]? exclude, string name)
                 ["Position"] = "0,0,1",
                 ["SpriteEffects"] = "None",
                 ["Color"] = "White",
+            },
+            ["ScriptComponent"] = new(StringComparer.Ordinal)
+            {
+                ["Scripts"] = "CSHARP&:&&;&",
+            },
+            ["SpriteComponent2D"] = new(StringComparer.Ordinal)
+            {
+                ["TextureAtlasPath"] = "",
+                ["SpriteName"] = "",
+                ["SourceRectangle"] = "0,0,0,0",
+                ["IsVisible"] = "true",
+                ["2.5D"] = "false",
+            },
+            ["TileMapComponent2D"] = new(StringComparer.Ordinal)
+            {
+                ["TileMapPath"] = "",
+            },
+            ["ButtonComponent2D"] = new(StringComparer.Ordinal)
+            {
+                ["IsActive"] = "true",
+                ["EffectiveArea"] = "0,0,0,0",
+                ["Description"] = "None",
+            },
+            ["RigidBodyComponent2D"] = new(StringComparer.Ordinal)
+            {
+                ["OffSetCollision"] = "0,0",
+                ["Velocity"] = "0,0,0",
+                ["Collide"] = "Solid",
+                ["Mass"] = "0",
+            },
+            ["AnimationComponent2D"] = new(StringComparer.Ordinal)
+            {
+                ["TextureAtlasPath"] = "",
+                ["AnimationBindings"] = "",
+                ["CurrentAnimationType"] = "none",
+            },
+            ["FontComponent2D"] = new(StringComparer.Ordinal)
+            {
+                ["Texto"] = "Texto de ejemplo",
+                ["Font"] = "Fonts/Hud",
+                ["IsVisible"] = "true",
             },
         };
 

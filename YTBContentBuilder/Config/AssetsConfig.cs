@@ -28,6 +28,7 @@ namespace YotsubaEngine.YTBContentBuilder
 
 
             // exclude bin / obj paths
+            contentCollection.Exclude<WildcardRule>("*.ico");
             contentCollection.Exclude<RegexRule>("bin/");
             contentCollection.Exclude<RegexRule>("obj/");
             contentCollection.Exclude<WildcardRule>("*.mgcb");
