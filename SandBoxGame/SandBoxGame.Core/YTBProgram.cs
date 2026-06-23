@@ -180,7 +180,7 @@ namespace SandBoxGame.Core
             // Configurar la ruta ra�z del Content Manager para que apunte a los assets compilados
             Content.RootDirectory = YTBGlobalState.CompiledAssetsFolderName;
 
-            _graphics.PreferMultiSampling = true;
+            _graphics.PreferMultiSampling = YTBGlobalState.Platform != Platforms.Desktop_VK;
 
 
             // Configure screen orientations.
